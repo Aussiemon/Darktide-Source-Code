@@ -153,7 +153,7 @@ end
 template.update_function = function (parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
+	local yaw, pitch = parent:_spread_yaw_pitch()
 	local charge_level = parent:_get_current_charge_level() or 0
 
 	if yaw and pitch then

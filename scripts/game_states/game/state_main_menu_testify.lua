@@ -35,6 +35,9 @@ local StateMainMenuTestify = {
 			return Testify.RETRY
 		end
 	end,
+	wait_for_state_main_menu = function (state_main_menu)
+		return
+	end,
 }
 
 return StateMainMenuTestify

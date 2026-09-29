@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	exp_wastes = {
-		coordinates = "loc_mission_coordinates_exp_wastes",
 		expedition_template = "wastes",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "expedition",
@@ -18,7 +17,7 @@ local mission_templates = {
 		objectives = "expedition_loading",
 		pacing_template = "expedition",
 		path_type = "open",
-		pickup_pool = "expedition_distribution_pool",
+		pickup_pool = "empty_distribution_pool",
 		texture_big = "content/ui/textures/missions/exp_wastes_big",
 		texture_medium = "content/ui/textures/missions/exp_wastes_medium",
 		texture_small = "content/ui/textures/missions/exp_wastes_small",
@@ -91,6 +90,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_expedition_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

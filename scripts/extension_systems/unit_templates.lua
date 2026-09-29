@@ -20,6 +20,7 @@ local UNIT_TEMPLATES = {
 	"pickup",
 	"player_character_social_hub",
 	"player_character",
+	"predicted_unit",
 	"psyker_force_field",
 	"shooting_range_loadout",
 	"shooting_range_locked_indicator",

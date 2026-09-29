@@ -1,21 +1,10 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/breach_charge.lua
 
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 
-weapon_template.action_inputs = {
-	wield = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				inputs = wield_inputs,
-			},
-		},
-	},
-}
+weapon_template.action_inputs = table.shallow_copy(BaseTemplateSettings.action_inputs)
 weapon_template.action_input_hierarchy = {
 	{
 		input = "wield",
@@ -23,23 +12,21 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
+	action_unwield = BaseTemplateSettings.generate_unwield_action({
 		anim_event = "unequip",
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
+	}),
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "deploy",
 		kind = "wield",
 		total_time = 0.1,
 		uninterruptible = true,
+		allowed_chain_actions = {},
 	},
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.ammo_template = "no_ammo"
 weapon_template.keywords = {
 	"devices",

@@ -288,7 +288,7 @@ HudElementInteraction._update_tag_input_information = function (self, interactee
 			end
 		end
 	else
-		local smart_tag_extension = ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
+		local smart_tag_extension = interactee_unit and ScriptUnit.has_extension(interactee_unit, "smart_tag_system")
 
 		if smart_tag_extension and smart_tag_extension:can_tag(player_unit) then
 			input_text_tag = _get_input_text("smart_tag", "loc_tag_smart_tag")

@@ -24,6 +24,7 @@ local UiWidget = require("scripts/managers/ui/ui_widget")
 local UiWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local ViewElementPlayerStats = require("scripts/ui/view_elements/view_element_player_stats/view_element_player_stats")
 local ViewElementProfilePresets = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets")
 local Views = require("scripts/ui/views/views")
 local ITEM_TYPES = UiSettings.ITEM_TYPES
@@ -31,6 +32,37 @@ local ALLOWED_DUPLICATE_SLOTS = InventoryBackgroundViewSettings.allowed_duplicat
 local ALLOWED_EMPTY_SLOTS = InventoryBackgroundViewSettings.allowed_empty_slots
 local IGNORED_SLOTS = InventoryBackgroundViewSettings.ignored_validation_slots
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
+
+local function _preset_item_id(item)
+	if not item then
+		return
+	end
+
+	if math.is_uuid(item.gear_id) then
+		return item.gear_id
+	end
+
+	return item.name
+end
+
+local function _items_match_for_preset(preview_item, preset_item)
+	if not preview_item and not preset_item then
+		return true
+	end
+
+	if not preview_item or not preset_item then
+		return false
+	end
+
+	local preview_has_uuid = math.is_uuid(preview_item.gear_id)
+	local preset_has_uuid = math.is_uuid(preset_item.gear_id)
+
+	if preview_has_uuid and preset_has_uuid then
+		return preview_item.gear_id == preset_item.gear_id
+	end
+
+	return preview_item.name == preset_item.name
+end
 
 local function _is_valid_item_change(new_item, previous_item)
 	local item_gear_id = new_item and new_item.gear_id
@@ -198,7 +230,7 @@ InventoryBackgroundView._setup_background_frames_by_archetype = function (self, 
 
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.corner_top_left.content.texture = frame_textures.left_upper
+	widgets_by_name.corner_top_left.content.texture = frame_textures.left_upper_inventory
 	widgets_by_name.corner_bottom_left.content.texture = frame_textures.left_lower
 	widgets_by_name.corner_top_right.content.texture = frame_textures.right_upper
 	widgets_by_name.corner_bottom_right.content.texture = frame_textures.right_lower
@@ -579,11 +611,13 @@ end
 InventoryBackgroundView._equip_and_validate_item = function (self, slot_name, item, force_update)
 	self:_equip_slot_item(slot_name, item, force_update)
 	self:_update_loadout_validation()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView.event_inventory_view_equip_item = function (self, slot_name, item, force_update)
 	local new_item = self:_get_item(item)
-	local item_id = new_item and (new_item.gear_id or new_item.always_owned and new_item.name)
+	local item_id = _preset_item_id(new_item)
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if active_profile_preset_id then
@@ -604,6 +638,8 @@ end
 InventoryBackgroundView.event_change_wield_slot = function (self, slot_name)
 	self:_set_preview_wield_slot_name(slot_name)
 	self:_update_presentation_wield_item()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView.event_discard_items = function (self, gear_ids)
@@ -653,10 +689,16 @@ InventoryBackgroundView.event_discard_items = function (self, gear_ids)
 		end
 
 		self:_update_loadout_validation()
+
+		self._profile_updated = true
 	end)
 end
 
 InventoryBackgroundView.event_player_talent_node_updated = function (self, original_equipped_talents)
+	if self._active_view ~= "talent_builder_view" then
+		return
+	end
+
 	local equipped_talents = table.clone(original_equipped_talents)
 
 	self:_update_has_empty_talent_nodes(equipped_talents, nil)
@@ -673,12 +715,18 @@ InventoryBackgroundView.event_player_talent_node_updated = function (self, origi
 
 	self:_save_current_talents_to_profile_preset()
 	self:_update_missing_warning_marker()
+
+	self._profile_updated = true
 end
 
-InventoryBackgroundView.event_player_specialization_talent_node_updated = function (self, equipped_talents)
-	self:_update_has_empty_talent_nodes(nil, equipped_talents)
+InventoryBackgroundView.event_player_specialization_talent_node_updated = function (self, selected_nodes)
+	if self._active_view ~= "broker_stimm_builder_view" then
+		return
+	end
 
-	self._current_profile_equipped_specialization_talents = equipped_talents
+	self:_update_has_empty_talent_nodes(nil, selected_nodes)
+
+	self._current_profile_equipped_specialization_talents = table.clone(selected_nodes)
 
 	self:_save_current_talents_to_profile_preset()
 	self:_update_missing_warning_marker()
@@ -686,6 +734,8 @@ end
 
 InventoryBackgroundView.event_player_profile_updated = function (self)
 	self:_update_has_empty_talent_nodes()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView.event_weapon_cosmetic_updated = function (self, item)
@@ -694,15 +744,29 @@ InventoryBackgroundView.event_weapon_cosmetic_updated = function (self, item)
 
 	Managers.data_service.gear:invalidate_gear_cache()
 
-	if self._inventory_items[gear_id] then
-		self._inventory_items[gear_id] = item
+	local inventory_items = self._inventory_items
+
+	if inventory_items[gear_id] then
+		inventory_items[gear_id] = item
 	end
 
-	if self._current_profile_equipped_items[slot_name] and self._current_profile_equipped_items[slot_name].gear_id == gear_id then
+	local function _is_same_equipped(equipped_item)
+		if not equipped_item then
+			return false
+		end
+
+		if equipped_item.gear_id == gear_id then
+			return true
+		end
+
+		return false
+	end
+
+	if _is_same_equipped(self._current_profile_equipped_items[slot_name]) then
 		self._current_profile_equipped_items[slot_name] = item
 	end
 
-	if self._preview_profile_equipped_items[slot_name] and self._preview_profile_equipped_items[slot_name].gear_id == gear_id then
+	if _is_same_equipped(self._preview_profile_equipped_items[slot_name]) then
 		local force_update = true
 
 		self:_equip_and_validate_item(slot_name, item, force_update)
@@ -713,7 +777,7 @@ InventoryBackgroundView.event_weapon_cosmetic_updated = function (self, item)
 	local profile = self._presentation_profile
 	local loadout = profile and profile.loadout
 
-	if loadout and loadout[slot_name] and loadout[slot_name].gear_id == gear_id then
+	if loadout and _is_same_equipped(loadout[slot_name]) then
 		loadout[slot_name] = item
 	end
 end
@@ -755,8 +819,8 @@ InventoryBackgroundView._equip_local_changes = function (self)
 		if not self._invalid_slots[slot_name] and not self._duplicated_slots[slot_name] and self:_valid_slot_for_archetype(slot_name) then
 			local item = self:_get_item(preview_loadout[slot_name])
 			local previous_item = self:_get_item(original_equips[slot_name])
-			local item_gear_id = item and item.gear_id
 			local valid_item_change = _is_valid_item_change(item, previous_item)
+			local item_gear_id = valid_item_change and item and item.gear_id or nil
 
 			if valid_item_change then
 				if item then
@@ -775,7 +839,7 @@ InventoryBackgroundView._equip_local_changes = function (self)
 			end
 
 			if current_preset and self._modified_slots[slot_name] then
-				ProfileUtils.save_item_id_for_profile_preset(current_preset_id, slot_name, item_gear_id)
+				ProfileUtils.save_item_id_for_profile_preset(current_preset_id, slot_name, _preset_item_id(item))
 			end
 		end
 	end
@@ -794,8 +858,12 @@ InventoryBackgroundView._equip_local_changes = function (self)
 		promises[#promises + 1] = Items.unequip_slots(unequip_slots)
 	end
 
-	if #promises > 0 then
+	local has_promises = #promises > 0
+
+	if has_promises then
 		return Promise.all(unpack(promises))
+	elseif equip_items then
+		Items.refresh_equipped_items()
 	end
 end
 
@@ -847,6 +915,8 @@ InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 	self:_play_sound(UiSoundEvents.weapons_swap)
 	self:_set_preview_wield_slot_name(slot_name)
 	self:_update_presentation_wield_item()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView.has_new_items_by_type = function (self, item_type)
@@ -1752,6 +1822,17 @@ InventoryBackgroundView._on_panel_option_pressed = function (self, index)
 	if settings.enter then
 		settings.enter()
 	end
+
+	self:_show_player_stats_from_tab_index(index)
+end
+
+InventoryBackgroundView._show_player_stats_from_tab_index = function (self, index)
+	if self._player_stats and self._top_panel then
+		local selected_index = index or self._top_panel:selected_index()
+		local index_to_show_player_stats = selected_index == 1 or selected_index == 4
+
+		self._player_stats:show(index_to_show_player_stats)
+	end
 end
 
 InventoryBackgroundView._can_swap_weapon = function (self)
@@ -1811,8 +1892,10 @@ end
 InventoryBackgroundView._setup_profile_presets = function (self)
 	self._profile_presets_element = self:_add_element(ViewElementProfilePresets, "profile_presets", 90, nil, "profile_presets_pivot")
 
-	self:_register_event("event_on_profile_preset_changed")
-	self:_register_event("event_on_player_preset_created")
+	if not self._event_list.event_on_profile_preset_changed then
+		self:_register_event("event_on_profile_preset_changed")
+		self:_register_event("event_on_player_preset_created")
+	end
 
 	local current_preset_id = ProfileUtils.get_active_profile_preset_id()
 	local current_preset = current_preset_id and ProfileUtils.get_profile_preset(current_preset_id)
@@ -1836,38 +1919,13 @@ InventoryBackgroundView._setup_profile_presets = function (self)
 
 				if preset_item_name and preset_item_name == equipped_item_name and preset_item_gear_id ~= equipped_item_gear_id and is_cosmetic then
 					Log.info("InventoryBackgroundView", "Modifying preset slot data in %s so that backend and preset match", slot_name)
-					ProfileUtils.save_item_id_for_profile_preset(preset_id, slot_name, equipped_item_gear_id)
+					ProfileUtils.save_item_id_for_profile_preset(preset_id, slot_name, _preset_item_id(equipped_item))
 				end
 			end
 		end
 	end
 
-	if current_preset then
-		local preset_loadout = current_preset.loadout
-
-		if preset_loadout then
-			for slot_name, item in pairs(self._preview_profile_equipped_items) do
-				if self:_valid_slot_for_archetype(slot_name) then
-					local preview_item = self:_get_item(item)
-					local preset_item_gear_id = preset_loadout[slot_name]
-					local item_gear_id = preview_item and preview_item.gear_id
-
-					if item_gear_id ~= preset_item_gear_id then
-						local preset_item = self:_get_item(preset_item_gear_id)
-
-						Log.warning("InventoryBackgroundView", "Deselecting active preset due to previewed item %s in slot %s not matching expected item %s", item and item.name or nil, slot_name, preset_item and preset_item.name or nil)
-						self._profile_presets_element:remove_active_profile_preset()
-
-						current_preset = nil
-
-						break
-					end
-				end
-			end
-		end
-	end
-
-	self:event_on_profile_preset_changed(current_preset)
+	self:_update_loadout_validation()
 end
 
 InventoryBackgroundView._remove_profile_presets = function (self)
@@ -1931,10 +1989,10 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 						for jj = 1, #nodes do
 							local node = nodes[jj]
 							local widget_name = node.widget_name
-							local node_tier = selected_nodes[widget_name]
+							local selection_data = selected_nodes[widget_name]
 
-							if node_tier then
-								new_talents[widget_name] = node_tier
+							if selection_data then
+								new_talents[widget_name] = selection_data
 							end
 						end
 					end
@@ -1945,16 +2003,20 @@ InventoryBackgroundView.event_on_player_preset_created = function (self, profile
 		local loadout = profile.loadout
 
 		for slot_name, item in pairs(loadout) do
-			if self:_valid_slot_for_archetype(slot_name) and item.gear_id then
-				new_loadout[slot_name] = item.gear_id
+			local item_id = _preset_item_id(item)
+
+			if self:_valid_slot_for_archetype(slot_name) and item_id then
+				new_loadout[slot_name] = item_id
 			end
 		end
 
 		local presentation_loadout = self._preview_profile_equipped_items
 
 		for slot_name, item in pairs(presentation_loadout) do
-			if self:_valid_slot_for_archetype(slot_name) and item.gear_id then
-				new_loadout[slot_name] = item.gear_id
+			local item_id = _preset_item_id(item)
+
+			if self:_valid_slot_for_archetype(slot_name) and item_id then
+				new_loadout[slot_name] = item_id
 			end
 		end
 	end
@@ -1971,6 +2033,44 @@ end
 InventoryBackgroundView.event_on_profile_preset_changed = function (self, profile_preset, on_preset_deleted)
 	local player = self._preview_player
 	local profile = player:profile()
+	local previous_profile_preset_id = self._active_profile_preset_id
+
+	if previous_profile_preset_id and not on_preset_deleted then
+		local archetype = profile.archetype
+		local talent_layout_file_path = archetype.talent_layout_file_path
+		local previous_preset = ProfileUtils.get_profile_preset(previous_profile_preset_id)
+		local preset_talents = previous_preset.talents or {}
+
+		if talent_layout_file_path then
+			local active_layout = require(talent_layout_file_path)
+
+			self._current_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+
+			TalentLayoutParser.validate_talent_layouts(self._current_profile_equipped_talents, {
+				active_layout,
+			}, true)
+
+			local is_talent_selection_valid = TalentLayoutParser.is_talent_selection_valid(profile, "talent_layout_file_path", preset_talents)
+
+			if is_talent_selection_valid then
+				self._valid_profile_equipped_talents = TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents)
+			end
+		end
+
+		local specialization_talent_layout_file_path = archetype.specialization_talent_layout_file_path
+
+		if specialization_talent_layout_file_path then
+			local specialization_layout = require(specialization_talent_layout_file_path)
+
+			self._current_profile_equipped_specialization_talents = TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", preset_talents)
+
+			TalentLayoutParser.validate_talent_layouts(self._current_profile_equipped_specialization_talents, {
+				specialization_layout,
+			}, true)
+		end
+
+		self:_save_current_talents_to_profile_preset(previous_profile_preset_id)
+	end
 
 	if profile_preset and profile_preset.loadout then
 		local equipped_previous_slots = {}
@@ -2024,6 +2124,8 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 				specialization_layout,
 			}, true)
 		end
+
+		self:_save_current_talents_to_profile_preset()
 	end
 
 	self._active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
@@ -2045,6 +2147,8 @@ InventoryBackgroundView.event_on_profile_preset_changed = function (self, profil
 	end
 
 	self:_update_has_empty_talent_nodes()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView._has_loadout_slot = function (self, slots)
@@ -2072,12 +2176,13 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if not presets or #presets == 0 or not active_profile_preset_id then
-		local loadout = self._current_profile_equipped_items
-		local is_read_only = false
-		local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, is_read_only)
 		local player = self._preview_player
 		local profile = player:profile()
 		local talents = self._current_profile_equipped_talents
+		local specialization_talents = self._current_profile_equipped_specialization_talents
+		local loadout = self._current_profile_equipped_items
+		local is_read_only = profile.is_local_profile
+		local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, is_read_only)
 		local show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 		local show_modified = not table.is_empty(modified_slots) or self._modified_talents
 		local invalid_talents = false
@@ -2088,7 +2193,7 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 			show_warning = true
 		end
 
-		if talents and not TalentLayoutParser.is_talent_selection_valid(profile, "specialization_talent_layout_file_path", talents) then
+		if specialization_talents and not TalentLayoutParser.is_talent_selection_valid(profile, "specialization_talent_layout_file_path", specialization_talents) then
 			invalid_specialization_talents = true
 			show_warning = true
 		end
@@ -2108,13 +2213,13 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 		local profile = player:profile()
 		local active_talent_version = TalentLayoutParser.talents_version(profile)
 
-		for ii = 1, #presets do
-			local preset = presets[ii]
+		for i = 1, #presets do
+			local preset = presets[i]
 			local loadout = preset and preset.loadout
 
 			if loadout then
 				local active_preset = preset.id == active_profile_preset_id
-				local is_read_only = not active_preset
+				local is_read_only = not active_preset or profile.is_local_profile
 				local invalid_slots, modified_slots, duplicated_slots = self:_validate_loadout(loadout, is_read_only)
 				local show_warning = not table.is_empty(invalid_slots) or not table.is_empty(duplicated_slots)
 				local show_modified = not table.is_empty(modified_slots)
@@ -2138,7 +2243,9 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 					show_warning = true
 				end
 
-				self._profile_presets_element:show_profile_preset_missing_items_warning(show_warning, show_modified, preset.id)
+				if self._profile_presets_element then
+					self._profile_presets_element:show_profile_preset_missing_items_warning(show_warning, show_modified, preset.id)
+				end
 
 				if active_preset then
 					self._invalid_slots = table.merge(table.merge({}, invalid_slots), duplicated_slots)
@@ -2147,7 +2254,9 @@ InventoryBackgroundView._update_missing_warning_marker = function (self)
 					self._invalid_specialization_talents = invalid_specialization_talents
 					self._modified_talents = modified_talents
 
-					self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
+					if self._profile_presets_element then
+						self._profile_presets_element:set_current_profile_loadout_status(show_warning, show_modified)
+					end
 				end
 			end
 		end
@@ -2381,23 +2490,19 @@ InventoryBackgroundView.event_inventory_set_cosmetics_target_camera_offset = fun
 end
 
 InventoryBackgroundView.on_exit = function (self)
-	if not self._is_readonly and self:is_inventory_synced() then
-		self:_equip_local_changes()
-		self:_apply_current_talents_to_profile()
-	end
-
-	self:_unload_portrait_icon()
-	self:_unload_portrait_frame(self._ui_renderer)
-	self:_unload_insignia(self._ui_renderer)
-	Managers.data_service.talents:release_icons(self._talent_icons_package_ids)
-
 	if self._active_view then
 		if Managers.ui:view_active(self._active_view) then
-			Managers.ui:close_view(self._active_view)
+			Managers.ui:close_view(self._active_view, true)
 		end
 
 		self._active_view = nil
 		self._active_view_context = nil
+	end
+
+	if not self._is_readonly and self:is_inventory_synced() then
+		self:_equip_local_changes()
+		self:_apply_current_talents_to_profile()
+		self:_save_current_talents_to_profile_preset()
 	end
 
 	if self._ui_weapon_spawner then
@@ -2418,32 +2523,69 @@ InventoryBackgroundView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
+	self:_unload_portrait_icon()
+	self:_unload_portrait_frame(self._ui_renderer)
+	self:_unload_insignia(self._ui_renderer)
+	Managers.data_service.talents:release_icons(self._talent_icons_package_ids)
 	InventoryBackgroundView.super.on_exit(self)
 end
 
-InventoryBackgroundView._save_current_talents_to_profile_preset = function (self)
+local function _replace_layout_talents(profile, layout_key, source_nodes, out_talents)
+	local layout_path = profile.archetype[layout_key]
+
+	if not layout_path then
+		return
+	end
+
+	local nodes = require(layout_path).nodes
+
+	for i = 1, #nodes do
+		out_talents[nodes[i].widget_name] = nil
+	end
+
+	TalentLayoutParser.filter_layout_talents(profile, layout_key, source_nodes, out_talents)
+end
+
+InventoryBackgroundView._save_current_talents_to_profile_preset = function (self, preset_id)
 	if not self._is_own_player or self._is_readonly then
 		return
 	end
 
-	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+	local active_profile_preset_id = preset_id or ProfileUtils.get_active_profile_preset_id()
 
-	if active_profile_preset_id then
-		local player = self._preview_player
-		local profile = player:profile()
-		local all_talents = {}
-		local active_talents_version = TalentLayoutParser.talents_version(profile)
-
-		if self._current_profile_equipped_talents then
-			TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", self._current_profile_equipped_talents, all_talents)
-		end
-
-		if self._current_profile_equipped_specialization_talents then
-			TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", self._current_profile_equipped_specialization_talents, all_talents)
-		end
-
-		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, all_talents, active_talents_version)
+	if not active_profile_preset_id then
+		return
 	end
+
+	local current_talents = self._current_profile_equipped_talents
+	local current_specialization_talents = self._current_profile_equipped_specialization_talents
+	local active_view = self._active_view
+	local overlay_class = active_view == "talent_builder_view" and current_talents
+	local overlay_spec = active_view == "broker_stimm_builder_view" and current_specialization_talents
+
+	if not overlay_class and not overlay_spec then
+		return
+	end
+
+	local player = self._preview_player
+	local profile = player:profile()
+	local preset = ProfileUtils.get_profile_preset(active_profile_preset_id)
+	local preset_talents = preset and preset.talents or {}
+	local all_talents = {}
+	local active_talents_version = TalentLayoutParser.talents_version(profile)
+
+	TalentLayoutParser.filter_layout_talents(profile, "talent_layout_file_path", preset_talents, all_talents)
+	TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", preset_talents, all_talents)
+
+	if overlay_class then
+		_replace_layout_talents(profile, "talent_layout_file_path", overlay_class, all_talents)
+	end
+
+	if overlay_spec then
+		_replace_layout_talents(profile, "specialization_talent_layout_file_path", overlay_spec, all_talents)
+	end
+
+	ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, all_talents, active_talents_version)
 end
 
 local _talents_by_talent_name = {}
@@ -2463,8 +2605,9 @@ InventoryBackgroundView._has_companion = function (self, profile)
 		for node_id, node in pairs(nodes) do
 			local widget_name = node.widget_name
 			local talent_name = node.talent
+			local tier = talent_name and current_equipped_talents and current_equipped_talents[widget_name]
 
-			if talent_name and current_equipped_talents and current_equipped_talents[widget_name] and current_equipped_talents[widget_name] > 0 then
+			if tier and tier > 0 then
 				_talents_by_talent_name[talent_name] = current_equipped_talents[widget_name]
 			end
 		end
@@ -2641,7 +2784,16 @@ InventoryBackgroundView._update_profile_preset_hold_input = function (self, inpu
 end
 
 InventoryBackgroundView.draw = function (self, dt, t, input_service, layer)
+	self._stored_input = nil
+
+	local player_stats_using_input = self._player_stats and self._player_stats:is_using_input()
+
 	if not self:is_inventory_synced() then
+		input_service = input_service:null_service()
+	end
+
+	if player_stats_using_input then
+		self._stored_input = input_service
 		input_service = input_service:null_service()
 	end
 
@@ -2653,6 +2805,8 @@ InventoryBackgroundView._draw_widgets = function (self, dt, t, input_service, ui
 end
 
 InventoryBackgroundView.update = function (self, dt, t, input_service)
+	self._stored_input = nil
+
 	if not self._preview_player or self._preview_player.__deleted then
 		self:_handle_back_pressed()
 
@@ -2662,9 +2816,15 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 	local profile_preset_handling_input = self:profile_preset_handling_input()
 	local active_view = self._active_view
 	local view_instance = active_view and Managers.ui:view_instance(active_view)
+	local player_stats_using_input = self._player_stats and self._player_stats:is_using_input()
 
 	if view_instance and view_instance.block_input then
-		view_instance:block_input(profile_preset_handling_input)
+		view_instance:block_input(player_stats_using_input or profile_preset_handling_input)
+	end
+
+	if player_stats_using_input then
+		self._stored_input = input_service
+		input_service = input_service:null_service()
 	end
 
 	if Managers.ui:get_client_loadout_waiting_state() then
@@ -2750,9 +2910,119 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		self:_check_mastery_sync_status()
 	end
 
+	if self._profile_updated and self:is_inventory_synced() and self._presentation_profile then
+		if not self._player_stats then
+			local layer = 100
+
+			self._player_stats = self:_add_element(ViewElementPlayerStats, "player_stats", layer)
+
+			self:_show_player_stats_from_tab_index()
+		end
+
+		local stats_profile = self._presentation_profile and table.clone_instance(self._presentation_profile) or {}
+		local active_talent_loadout = self._active_talent_loadout
+
+		if active_talent_loadout and self._current_profile_equipped_talents then
+			stats_profile.talents = {}
+
+			local nodes = active_talent_loadout.nodes
+
+			for node_id, node in pairs(nodes) do
+				local widget_name = node.widget_name
+				local talent_name = node.talent
+				local tier = talent_name and self._current_profile_equipped_talents and self._current_profile_equipped_talents[widget_name]
+
+				if tier and tier > 0 then
+					stats_profile.talents[talent_name] = self._current_profile_equipped_talents[widget_name]
+				end
+			end
+		end
+
+		self._player_stats:assign_profile(stats_profile, self._preview_player, self._preview_wield_slot_name)
+
+		self._profile_updated = false
+	end
+
 	local pass_input, pass_draw = InventoryBackgroundView.super.update(self, dt, t, input_service)
 
 	return pass_input, pass_draw
+end
+
+InventoryBackgroundView._update_elements = function (self, dt, t, input_service)
+	local elements = self._elements
+	local player_stats_element = elements and elements.player_stats
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				if element == player_stats_element and self._stored_input then
+					element:update(dt, t, self._stored_input)
+				else
+					element:update(dt, t, input_service)
+				end
+			end
+		end
+	end
+end
+
+InventoryBackgroundView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local elements = self._elements
+	local player_stats_element = elements and elements.player_stats
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				if element == player_stats_element and self._stored_input then
+					element:draw(dt, t, ui_renderer, render_settings, self._stored_input)
+				else
+					element:draw(dt, t, ui_renderer, render_settings, input_service)
+				end
+			end
+		end
+	end
+end
+
+InventoryBackgroundView._validate_active_preset_with_server_items = function (self)
+	local current_preset_id = ProfileUtils.get_active_profile_preset_id()
+	local current_preset = current_preset_id and ProfileUtils.get_profile_preset(current_preset_id)
+
+	if not current_preset then
+		return
+	end
+
+	local preset_loadout = current_preset.loadout
+
+	if preset_loadout then
+		for slot_name, item in pairs(self._preview_profile_equipped_items) do
+			if self:_valid_slot_for_archetype(slot_name) then
+				local preview_item = self:_get_item(item)
+				local stored_id = preset_loadout[slot_name]
+				local preset_item = self:_get_item(stored_id)
+
+				if not _items_match_for_preset(preview_item, preset_item) then
+					local stored_ref = stored_id
+
+					if type(stored_id) == "table" then
+						stored_ref = stored_id.gear_id or stored_id.name
+					end
+
+					Log.warning("InventoryBackgroundView", "Deselecting active preset due to server item %s using gear_id %s, not matching preset item %s, stored as %s, in slot %s", preview_item and preview_item.name or "nil", preview_item and preview_item.gear_id or "nil", preset_item and preset_item.name or "nil", tostring(stored_ref), slot_name)
+					self._profile_presets_element:remove_active_profile_preset()
+					self:event_on_profile_preset_changed(nil)
+
+					return
+				end
+			end
+		end
+	end
+
+	self._active_profile_preset_id = current_preset_id
 end
 
 InventoryBackgroundView._setup_inventory = function (self)
@@ -2773,7 +3043,7 @@ InventoryBackgroundView._setup_inventory = function (self)
 
 	if self._is_own_player and not self._is_readonly then
 		self:_setup_profile_presets()
-		self:_update_loadout_validation()
+		self:_validate_active_preset_with_server_items()
 
 		local items = self._inventory_items
 		local new_items, new_items_by_type = self:_get_valid_new_items(items)
@@ -2783,6 +3053,8 @@ InventoryBackgroundView._setup_inventory = function (self)
 	end
 
 	self:_update_equipped_items()
+
+	self._profile_updated = true
 end
 
 InventoryBackgroundView._spawn_profile = function (self, profile, is_companion_visible)
@@ -2942,7 +3214,10 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 
 		self._inventory_items = items
 
-		return Managers.data_service.mastery:get_all_masteries()
+		local profile = player:profile()
+		local archetype = profile.archetype
+
+		return Managers.data_service.mastery:get_all_masteries_by_archetype(archetype.name)
 	end):next(function (masteries_data)
 		if self._destroyed then
 			return
@@ -2950,7 +3225,7 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 
 		self._syncing_mastery = {}
 		self.masteries_data = masteries_data or {}
-		self._mastery_traits = Managers.data_service.mastery:get_all_traits_data(masteries_data)
+		self._mastery_traits = Mastery.get_all_traits_data(masteries_data)
 
 		Managers.data_service.mastery:check_and_claim_all_masteries_levels(masteries_data):next(function (data)
 			if self._destroyed then
@@ -2968,6 +3243,16 @@ InventoryBackgroundView._fetch_inventory_items = function (self)
 			end
 
 			self._has_mastery_points_available = Mastery.has_available_points(self.masteries_data, self._mastery_traits)
+		end):catch(function (error)
+			if self._destroyed then
+				return
+			end
+
+			Log.error("InventoryBackgroundView", "Failed to claim mastery levels: %s", tostring(error))
+
+			for id, mastery_data in pairs(self.masteries_data) do
+				self._syncing_mastery[id] = nil
+			end
 		end)
 
 		self._has_mastery_points_available = Mastery.has_available_points(self.masteries_data, self._mastery_traits)
@@ -3062,8 +3347,9 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 			local item = self:_get_item(item_data)
 			local item_gear_id = item and item.gear_id
 			local fallback_item = MasterItems.find_fallback_item(slot_name)
+			local is_fallback_default = item and not item.always_owned and fallback_item and item.name == fallback_item.name
 
-			if not item or item and not item.always_owned and fallback_item and item.name == fallback_item.name then
+			if not item or is_fallback_default then
 				invalid_slots[slot_name] = true
 			else
 				for checked_slot_name, checked_load_data in pairs(loadout) do
@@ -3252,10 +3538,27 @@ InventoryBackgroundView._get_item = function (self, item_data)
 		return
 	end
 
-	local gear_id = type(item_data) == "table" and math.is_uuid(item_data.gear_id) and item_data.gear_id or type(item_data) == "string" and math.is_uuid(item_data) and item_data
-	local item = gear_id and self:_get_inventory_item_by_id(gear_id) or type(item_data) == "table" and item_data.always_owned and item_data or type(item_data) == "string" and MasterItems.get_item(item_data)
+	local gear_id = type(item_data) == "table" and math.is_uuid(item_data.gear_id) and item_data.gear_id or type(item_data) == "string" and math.is_uuid(item_data) and item_data or nil
+	local item_name = type(item_data) == "table" and item_data.name or type(item_data) == "string" and not math.is_uuid(item_data) and item_data or nil
+	local item = gear_id and self:_get_inventory_item_by_id(gear_id)
 
-	return item or nil
+	if item and type(item_data) == "table" and math.is_uuid(gear_id) and item.gear_id == gear_id then
+		item = item_data
+	end
+
+	if not item and type(item_data) == "table" and item_data.always_owned then
+		item = item_data
+	end
+
+	if not item and type(item_data) == "string" then
+		local master_item = MasterItems.get_item(item_data)
+
+		if master_item and master_item.always_owned then
+			item = master_item
+		end
+	end
+
+	return item
 end
 
 return InventoryBackgroundView

@@ -22,7 +22,7 @@ view_element_campaign_mission_list_settings.debrief_settings = {
 		60,
 	},
 }
-view_element_campaign_mission_list_settings.panel_height = 48
+view_element_campaign_mission_list_settings.panel_height = 55
 view_element_campaign_mission_list_settings.debrief_videos = {
 	player_journey_01 = "debriefing_01",
 	player_journey_010 = "debriefing_12",
@@ -44,6 +44,9 @@ view_element_campaign_mission_list_settings.debrief_videos = {
 	story_nomansland_01 = "debriefing_nml_01",
 	story_nomansland_02 = "debriefing_nml_02",
 	story_nomansland_03 = "debriefing_nml_03",
+	story_spillway_01 = "debriefing_spillway_01",
+	story_spillway_02 = "debriefing_spillway_02",
+	story_spillway_03 = "debriefing_spillway_03",
 }
 
 return settings("ViewElementCampaignMissionListSettings", view_element_campaign_mission_list_settings)

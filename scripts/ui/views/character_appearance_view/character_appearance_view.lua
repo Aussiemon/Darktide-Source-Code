@@ -12,7 +12,7 @@ local Definitions = require("scripts/ui/views/character_appearance_view/characte
 local HomePlanets = require("scripts/settings/character/home_planets")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local ItemSourceSettings = require("scripts/settings/item/item_source_settings_new")
+local ItemSourceSettings = require("scripts/settings/item/item_source_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerHeight = require("scripts/utilities/player_height")
 local Popups = require("scripts/utilities/ui/popups")
@@ -178,7 +178,9 @@ CharacterAppearanceView.on_enter = function (self)
 
 		self._original_name = player:name()
 		self._original_companion_name = player:companion_name()
-		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles():next(function (data)
+		self._fetch_all_profiles_promise = Managers.data_service.profiles:fetch_all_profiles()
+
+		self._fetch_all_profiles_promise:next(function (data)
 			self._character_create = CharacterCreate:new(item_definitions, data.gear, profile)
 
 			self._character_create_promise:resolve()
@@ -370,9 +372,7 @@ CharacterAppearanceView._get_pages = function (self)
 				end
 			end
 
-			local valid_archetype = archetype == "broker"
-
-			valid_archetype = valid_archetype or archetype == "cryptic"
+			local valid_archetype = archetype == "broker" or archetype == "cryptic"
 
 			if valid_archetype and previous_page.index > page.index then
 				self:_trigger_transition_fade_animation(true)
@@ -1386,8 +1386,8 @@ CharacterAppearanceView._get_pages = function (self)
 			self:_play_sound(UISoundEvents.character_appearence_stop_voice_preview)
 
 			if self._voice_sample_source then
-				local world = Managers.ui:world()
-				local wwise_world = Managers.world:wwise_world(world)
+				local ui_world = Managers.ui:world()
+				local wwise_world = Managers.world:wwise_world(ui_world)
 
 				WwiseWorld.destroy_manual_source(wwise_world, self._voice_sample_source)
 
@@ -1398,6 +1398,32 @@ CharacterAppearanceView._get_pages = function (self)
 
 			if archetype == "cryptic" then
 				return self:_fetch_suggested_names()
+			end
+		end,
+		update = function ()
+			if self._voice_sample_source then
+				local world = Managers.ui:world()
+				local wwise_world = Managers.world:wwise_world(world)
+				local sound_id
+
+				for i = 1, #self._page_grids[1].widgets do
+					local grid_widget = self._page_grids[1].widgets[i]
+
+					sound_id = grid_widget.content.sound_id
+
+					if sound_id and WwiseWorld.is_playing(wwise_world, sound_id) then
+						break
+					end
+				end
+
+				if sound_id and self._waveform_screen_unit then
+					local parameter_name = "cryptic_voice_meter"
+					local meter_value = WwiseWorld.get_source_parameter(wwise_world, parameter_name, self._voice_sample_source) + 48
+
+					meter_value = meter_value > 0 and meter_value / 48 or 0
+
+					Unit.set_scalar_for_materials(self._waveform_screen_unit, "volume", meter_value)
+				end
 			end
 		end,
 		grids = {
@@ -2569,11 +2595,13 @@ CharacterAppearanceView._setup_profile_background = function (self)
 	local profile = self._character_create:profile()
 	local selected_archetype = profile.archetype
 	local selected_archetype_name = selected_archetype.name
+	local corner_frames = UISettings.inventory_frames_by_archetype[selected_archetype_name]
+	local corners_widget_content = self._widgets_by_name.corners.content
 
-	self._widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_upper
-	self._widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_upper
-	self._widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_archetype_name].left_lower
-	self._widgets_by_name.corners.content.right_lower = UISettings.inventory_frames_by_archetype[selected_archetype_name].right_lower
+	corners_widget_content.left_lower = corner_frames.left_lower
+	corners_widget_content.left_upper = corner_frames.left_upper
+	corners_widget_content.right_lower = corner_frames.right_lower
+	corners_widget_content.right_upper = corner_frames.right_upper
 end
 
 CharacterAppearanceView.event_register_character_spawn_point = function (self, spawn_point_unit)
@@ -2784,7 +2812,7 @@ CharacterAppearanceView._show_final_popup = function (self)
 								}) then
 									Managers.data_service.profiles:set_character_height(character_id, profile_character_height)
 
-									real_profile.personal.character_height = profile_character_height
+									real_profile.character_height = profile_character_height
 
 									local breed_name = archetype.breed
 									local breed = Breeds[breed_name]
@@ -3422,6 +3450,16 @@ CharacterAppearanceView._update_continue_button = function (self, check_id, disa
 	if previous_active_error_id ~= active_error_id then
 		widget.content.active_error_id = active_error_id
 		self._widgets_by_name.error_continue.content.text = active_error_id and widget.content.disabled_by_id and widget.content.disabled_by_id[active_error_id] or ""
+
+		local scenegraph_width = self:_scenegraph_size("error_input")
+		local error_width, error_height = Text.text_size(self._ui_renderer, self._widgets_by_name.error_continue.content.text, self._widgets_by_name.error_continue.style.text, {
+			scenegraph_width,
+			0,
+		})
+		local margin = 20
+
+		self:_set_scenegraph_size("error_input", nil, error_height + margin)
+		self:_set_scenegraph_size("error_input_content", math.min(error_width + margin, scenegraph_width), error_height + margin)
 	end
 
 	local is_continue_disabled = widget.content.disabled_by_id and not table.is_empty(widget.content.disabled_by_id)
@@ -3642,11 +3680,12 @@ CharacterAppearanceView._get_planet_options = function (self)
 
 				if frames_by_planet then
 					local frames = frames_by_planet[id]
+					local corners_widget_content = self._widgets_by_name.corners.content
 
-					self._widgets_by_name.corners.content.left_upper = frames.right_upper
-					self._widgets_by_name.corners.content.right_upper = frames.right_upper
-					self._widgets_by_name.corners.content.left_lower = frames.left_lower
-					self._widgets_by_name.corners.content.right_lower = frames.right_lower
+					corners_widget_content.left_lower = frames.left_lower
+					corners_widget_content.left_upper = frames.left_upper
+					corners_widget_content.right_lower = frames.right_lower
+					corners_widget_content.right_upper = frames.right_upper
 				end
 
 				if option.rotation then
@@ -3714,7 +3753,7 @@ CharacterAppearanceView._generate_appearance_grid_widgets = function (self, grid
 
 		visible = visible and parent_available
 
-		if mute_unique_icon and reason and RESTRICTION_DATAS[reason].unique_reason then
+		if mute_unique_icon and reason and RESTRICTION_DATAS[reason] and RESTRICTION_DATAS[reason].unique_reason then
 			reason = nil
 			reason_display_name = nil
 		end
@@ -5186,7 +5225,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 
 	local body_options = self._character_create:slot_item_options("slot_body_torso")
 
-	if #body_options > 1 then
+	if #body_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_torso",
 			icon = "content/ui/materials/icons/item_types/cryptic_torso",
@@ -5526,7 +5565,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 
 	local arm_options = self._character_create:slot_item_options("slot_body_arms")
 
-	if #arm_options > 1 then
+	if #arm_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_arms",
 			icon = "content/ui/materials/icons/item_types/cryptic_arms",
@@ -5601,7 +5640,7 @@ CharacterAppearanceView._get_appearance_options = function (self)
 
 	local leg_options = self._character_create:slot_item_options("slot_body_legs")
 
-	if #leg_options > 1 then
+	if #leg_options > 1 and archetype_name == "cryptic" then
 		appearance_options[#appearance_options + 1] = {
 			camera_focus = "slot_body_legs",
 			icon = "content/ui/materials/icons/item_types/cryptic_legs",
@@ -6252,7 +6291,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		local selected_option = eye_options[1]
 		local ignored_params = current_option.search_params
 		local current_override_data = {}
-		local current_material_override_items = current_option.material_override_items
+		local current_eye_option = self._character_create:slot_item("slot_body_eye_color")
+		local current_material_override_items = current_eye_option.material_override_items
 
 		if current_material_override_items then
 			for ii = 1, #current_material_override_items do
@@ -6281,8 +6321,8 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 		for ii = 1, #eye_options do
 			local found = true
 			local eye_option = eye_options[ii]
-			local material_override_items = eye_option.material_override_items
 			local override_data = {}
+			local material_override_items = eye_option.material_override_items
 
 			if material_override_items then
 				for jj = 1, #material_override_items do
@@ -6312,7 +6352,21 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 				if not ignored_params[name] then
 					local current_eye_override_value = current_override_data[name]
 
-					if not current_eye_override_value or override_value and current_eye_override_value ~= override_value then
+					if not current_eye_override_value then
+						found = false
+
+						break
+					end
+
+					if type(override_value) == "table" then
+						for jj = 1, #override_value do
+							if current_eye_override_value[jj] ~= override_value[jj] then
+								found = false
+
+								break
+							end
+						end
+					elseif current_eye_override_value ~= override_value then
 						found = false
 
 						break
@@ -6335,6 +6389,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			{
 				grid_columns = 2,
 				icon_background = "content/ui/textures/icons/appearances/backgrounds/scars",
+				mute_unique_icon = true,
 				slot_name = "slot_companion_body_skin_color",
 				template = "icon_small_texture_hsv",
 				type = "dog_skin",
@@ -7314,16 +7369,14 @@ CharacterAppearanceView._get_voice_options = function (self)
 	_set_initial_voice_screen_component_values(self._voice_screen_component, voice_effects[RTPC_EFFECT_X], voice_effects[RTPC_EFFECT_Y], voice_effects[RTPC_EFFECT_SLIDER])
 
 	local function on_voice_value_updated(value_x, value_y)
-		for ii = 1, #self._page_grids[1].widgets do
-			if value_y then
-				_set_voice_character_create_values(self._character_create, value_x, value_y, nil)
-				_set_voice_wwise_values(self._voice_sample_source, value_x, value_y, nil)
-				_set_voice_screen_component_values(self._voice_screen_component, value_x, value_y, nil)
-			else
-				_set_voice_character_create_values(self._character_create, nil, nil, value_x)
-				_set_voice_wwise_values(self._voice_sample_source, nil, nil, value_x)
-				_set_voice_screen_component_values(self._voice_screen_component, nil, nil, value_x)
-			end
+		if value_y then
+			_set_voice_character_create_values(self._character_create, value_x, value_y, nil)
+			_set_voice_wwise_values(self._voice_sample_source, value_x, value_y, nil)
+			_set_voice_screen_component_values(self._voice_screen_component, value_x, value_y, nil)
+		else
+			_set_voice_character_create_values(self._character_create, nil, nil, value_x)
+			_set_voice_wwise_values(self._voice_sample_source, nil, nil, value_x)
+			_set_voice_screen_component_values(self._voice_screen_component, nil, nil, value_x)
 		end
 	end
 
@@ -8285,7 +8338,7 @@ CharacterAppearanceView._fetch_suggested_names = function (self)
 				self._character_create:set_name(random_name)
 			end
 
-			if not self._companion_name_status.custom then
+			if not self._companion_name_status.custom and not self._is_barber_mindwipe then
 				local random_name = self._character_create:randomize_companion_name()
 
 				self._character_create:set_companion_name(random_name)
@@ -8299,7 +8352,7 @@ CharacterAppearanceView._fetch_suggested_names = function (self)
 				self._character_create:set_name(random_name)
 			end
 
-			if not self._companion_name_status.custom then
+			if not self._companion_name_status.custom and not self._is_barber_mindwipe then
 				local random_name = self._character_create:randomize_companion_name()
 
 				self._character_create:set_companion_name(random_name)

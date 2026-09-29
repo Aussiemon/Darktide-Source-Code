@@ -42,14 +42,6 @@ weapon_template.action_input_hierarchy = {
 						input = "unwield_to_previous",
 						transition = "base",
 					},
-					{
-						input = "combat_ability",
-						transition = "base",
-					},
-					{
-						input = "grenade_ability",
-						transition = "base",
-					},
 				},
 			},
 			{
@@ -58,14 +50,6 @@ weapon_template.action_input_hierarchy = {
 			},
 			{
 				input = "unwield_to_previous",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
 				transition = "base",
 			},
 		},
@@ -92,14 +76,6 @@ weapon_template.action_input_hierarchy = {
 						input = "unwield_to_previous",
 						transition = "base",
 					},
-					{
-						input = "combat_ability",
-						transition = "base",
-					},
-					{
-						input = "grenade_ability",
-						transition = "base",
-					},
 				},
 			},
 			{
@@ -108,14 +84,6 @@ weapon_template.action_input_hierarchy = {
 			},
 			{
 				input = "unwield_to_previous",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
 				transition = "base",
 			},
 		},
@@ -130,14 +98,6 @@ weapon_template.action_input_hierarchy = {
 	},
 	{
 		input = "unwield_to_previous",
-		transition = "base",
-	},
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
-	{
-		input = "grenade_ability",
 		transition = "base",
 	},
 	{

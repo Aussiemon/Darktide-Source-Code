@@ -24,10 +24,13 @@ SlotSystem.init = function (self, extension_system_creation_context, ...)
 	self._update_slots_user_units = {}
 	self._update_slots_user_units_prioritized = {}
 	self._target_units = {}
+	self._current_target_index = 1
 	self._current_user_index = 1
 	self._next_occupied_slot_count_update = 0
 	self._next_disabled_slot_count_update = 0
 	self._next_slot_sound_update = 0
+	self._force_revalidate_target_units = 0
+	self._force_revalidate_slots_user_units = 0
 	self._next_unique_target_index = 1
 end
 
@@ -87,6 +90,7 @@ SlotSystem.on_add_extension = function (self, world, unit, extension_name, exten
 		extension.ladder_character_state_component = unit_data_extension:read_component("ladder_character_state")
 		extension.all_slots = Slot.create_slots(unit)
 		extension.position = Vector3Box(POSITION_LOOKUP[unit])
+		extension.raw_position = Vector3Box(POSITION_LOOKUP[unit])
 		extension.moved_at = 0
 		extension.next_slot_status_update_at = 0
 		extension.num_occupied_slots = 0
@@ -260,6 +264,7 @@ local function _new_random_goal_uniformly_distributed_with_inside_from_outside_o
 end
 
 local Vector3_dot, Vector3_distance, Vector3_distance_sq = Vector3.dot, Vector3.distance, Vector3.distance_squared
+local Vector3Box_unbox, Vector3Box_store = Vector3Box.unbox, Vector3Box.store
 local IMPROVE_WAIT_SLOT_MIN_FREQUENCY = 1
 local IMPROVE_WAIT_SLOT_MAX_FREQUENCY = 2
 local MIN_DISTANCE, WAITING_ON_SLOT_DISTANCE = 0.2, 2
@@ -271,15 +276,15 @@ SlotSystem._improve_slot_position = function (self, user_unit, user_slot_extensi
 	local slot, waiting_on_slot = user_slot_extension.slot, user_slot_extension.wait_slot
 
 	if slot then
-		if slot.ghost_position.x ~= 0 then
-			position = slot.ghost_position:unbox()
+		if slot.has_ghost_position then
+			position = Vector3Box_unbox(slot.ghost_position)
 		else
-			position = slot.absolute_position:unbox()
+			position = Vector3Box_unbox(slot.absolute_position)
 		end
 
 		slot_component.is_waiting_on_slot = false
 	elseif waiting_on_slot then
-		local queue_position = waiting_on_slot.queue_position:unbox()
+		local queue_position = Vector3Box_unbox(waiting_on_slot.queue_position)
 		local should_improve_wait_slot_position = t > user_slot_extension.improve_wait_slot_position_t
 
 		if should_improve_wait_slot_position then
@@ -341,7 +346,7 @@ SlotSystem.user_unit_slot_position = function (self, user_unit)
 	local slot = user_slot_extension.slot or user_slot_extension.wait_slot
 
 	if slot then
-		return slot.absolute_position:unbox()
+		return Vector3Box_unbox(slot.absolute_position)
 	end
 
 	return nil
@@ -443,17 +448,34 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 
 	local nav_world, traverse_logic = self._nav_world, self._traverse_logic
 	local unit_extension_data = self._unit_extension_data
-	local max_slot_update_override = self._max_slot_update_override
+	local max_target_updates = SlotSystemSettings.max_target_updates_per_frame
+	local target_index = self._current_target_index
+	local target_update_counter = 0
+	local target_failed_counter = 0
+	local force_revalidate_target_units = self._force_revalidate_target_units
 
-	for i = 1, target_units_n do
-		local target_unit = target_units[i]
-		local target_slot_extension = unit_extension_data[target_unit]
-		local successful = self:_update_target_slots(t, target_unit, target_units, unit_extension_data, target_slot_extension, nav_world, traverse_logic)
-
-		if not max_slot_update_override and successful then
-			break
+	while target_update_counter < max_target_updates and target_failed_counter < target_units_n do
+		if target_units_n < target_index then
+			target_index = 1
 		end
+
+		local force_update = force_revalidate_target_units > 0
+		local target_unit = target_units[target_index]
+		local target_slot_extension = unit_extension_data[target_unit]
+		local successful = self:_update_target_slots(t, target_unit, target_units, unit_extension_data, target_slot_extension, nav_world, traverse_logic, force_update)
+
+		if successful then
+			target_update_counter = target_update_counter + 1
+			force_revalidate_target_units = force_revalidate_target_units - 1
+		else
+			target_failed_counter = target_failed_counter + 1
+		end
+
+		target_index = target_index + 1
 	end
+
+	self._current_target_index = target_index
+	self._force_revalidate_target_units = force_revalidate_target_units > 0 and force_revalidate_target_units or 0
 
 	if t > self._next_occupied_slot_count_update then
 		self:_update_occupied_slots(unit_extension_data)
@@ -484,8 +506,11 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 
 	local update_slots_user_units = self._update_slots_user_units
 	local update_slots_user_units_n = #update_slots_user_units
-	local max_user_updates = max_slot_update_override and update_slots_user_units_n or math.min(SlotSystemSettings.max_user_updates_per_frame, update_slots_user_units_n)
-	local max_user_loops = max_slot_update_override and update_slots_user_units_n or math.min(SlotSystemSettings.max_user_loops_per_frame, update_slots_user_units_n)
+	local force_revalidate_slots_user_units = self._force_revalidate_slots_user_units
+	local max_user_updates_per_frame = SlotSystemSettings.max_user_updates_per_frame
+	local user_updates_per_frame = force_revalidate_slots_user_units > 0 and max_user_updates_per_frame.revalidate or max_user_updates_per_frame.default
+	local max_user_updates = math.min(user_updates_per_frame, update_slots_user_units_n)
+	local max_user_loops = math.min(SlotSystemSettings.max_user_loops_per_frame, update_slots_user_units_n)
 	local index, update_counter, loop_counter = self._current_user_index, 0, 0
 
 	while update_counter < max_user_updates and loop_counter < max_user_loops do
@@ -504,14 +529,15 @@ SlotSystem.physics_async_update = function (self, context, dt, t)
 	end
 
 	self._current_user_index = index
-	self._max_slot_update_override = nil
+	self._force_revalidate_slots_user_units = math.max(force_revalidate_slots_user_units - loop_counter, 0)
 end
 
 local GwNavQueries_inside_position_from_outside_position = GwNavQueries.inside_position_from_outside_position
+local NavQueries_position_on_mesh = NavQueries.position_on_mesh
 
 local function _get_target_position_on_navmesh(target_position, nav_world, traverse_logic)
 	local above_limit, below_limit = SlotSystemSettings.z_max_difference_above, SlotSystemSettings.z_max_difference_below
-	local position_on_navmesh = NavQueries.position_on_mesh(nav_world, target_position, above_limit, below_limit, traverse_logic)
+	local position_on_navmesh = NavQueries_position_on_mesh(nav_world, target_position, above_limit, below_limit, traverse_logic)
 
 	if position_on_navmesh then
 		return position_on_navmesh
@@ -527,7 +553,7 @@ local function _get_target_position_on_navmesh(target_position, nav_world, trave
 	end
 
 	below_limit = SlotSystemSettings.slot_z_max_down
-	position_on_navmesh = NavQueries.position_on_mesh(nav_world, target_position, above_limit, below_limit, traverse_logic)
+	position_on_navmesh = NavQueries_position_on_mesh(nav_world, target_position, above_limit, below_limit, traverse_logic)
 
 	if position_on_navmesh then
 		return position_on_navmesh
@@ -547,7 +573,7 @@ end
 
 local Vector3_length_squared = Vector3.length_squared
 
-SlotSystem._update_target_slots = function (self, t, target_unit, target_units, unit_extension_data, target_slot_extension, nav_world, traverse_logic)
+SlotSystem._update_target_slots = function (self, t, target_unit, target_units, unit_extension_data, target_slot_extension, nav_world, traverse_logic, force_update)
 	local dist_sq = 0
 	local is_on_ladder = false
 	local ladder_unit, bottom, top
@@ -571,11 +597,26 @@ SlotSystem._update_target_slots = function (self, t, target_unit, target_units, 
 	end
 
 	local real_target_unit_position = POSITION_LOOKUP[target_unit]
+
+	if not force_update and not is_on_ladder and is_on_ladder == was_on_ladder then
+		local status_update_due = t > target_slot_extension.next_slot_status_update_at
+		local moved_at = target_slot_extension.moved_at
+		local stop_update_pending = moved_at and t - moved_at > SlotSystemSettings.target_slots_update
+
+		if not status_update_due and not stop_update_pending then
+			local last_raw_position = Vector3Box_unbox(target_slot_extension.raw_position)
+			local raw_dist_sq = Vector3_distance_sq(real_target_unit_position, last_raw_position)
+
+			if raw_dist_sq <= SlotSystemSettings.target_slots_moved_distance_sq then
+				return false
+			end
+		end
+	end
+
 	local target_unit_position = is_on_ladder and real_target_unit_position or _get_target_position_on_navmesh(real_target_unit_position, nav_world, traverse_logic)
-	local target_unit_position_known = target_slot_extension.position:unbox()
+	local target_unit_position_known = Vector3Box_unbox(target_slot_extension.position)
 	local outside_navmesh_at_t = target_slot_extension.outside_navmesh_at_t
 	local outside_navmesh = false
-	local force_update = self._max_slot_update_override
 
 	if target_unit_position then
 		dist_sq = Vector3_distance_sq(target_unit_position, target_unit_position_known)
@@ -595,7 +636,8 @@ SlotSystem._update_target_slots = function (self, t, target_unit, target_units, 
 	if dist_sq > SlotSystemSettings.target_slots_moved_distance_sq or is_on_ladder ~= was_on_ladder or is_on_ladder and t > target_slot_extension.next_slot_status_update_at then
 		local should_offset_slot = true
 
-		target_slot_extension.position:store(target_unit_position)
+		Vector3Box_store(target_slot_extension.position, target_unit_position)
+		Vector3Box_store(target_slot_extension.raw_position, real_target_unit_position)
 		Slot.update_target_slots_positions(target_unit, target_units, unit_extension_data, should_offset_slot, nav_world, traverse_logic, is_on_ladder, ladder_unit, bottom, top, outside_navmesh)
 
 		target_slot_extension.moved_at = t
@@ -667,7 +709,7 @@ end
 SlotSystem._update_user_unit_blackboard_components = function (self, user_slot_extension)
 	local slot = user_slot_extension.slot
 	local has_slot = slot ~= nil
-	local has_ghost_slot = has_slot and slot.ghost_position.x ~= 0
+	local has_ghost_slot = has_slot and slot.has_ghost_position
 	local slot_component = user_slot_extension.slot_component
 
 	slot_component.has_slot = has_slot
@@ -748,7 +790,8 @@ SlotSystem.allow_nav_tag_layer = function (self, layer_name, layer_allowed)
 		GwNavTagLayerCostTable.forbid_layer(nav_tag_cost_table, layer_id)
 	end
 
-	self._max_slot_update_override = true
+	self._force_revalidate_target_units = #self._target_units
+	self._force_revalidate_slots_user_units = #self._update_slots_user_units
 end
 
 SlotSystem.is_traverse_logic_initialized = function (self)

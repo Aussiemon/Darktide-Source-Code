@@ -14,6 +14,12 @@ local function _initialize_breed_specific_game_object_data(game_object_type, gam
 		game_object_data.effect_template_variation_id = -1
 		game_object_data.level_unit_id = NetworkConstants.invalid_level_unit_id
 	end
+
+	if game_object_type == "minion_wizard_boss" then
+		game_object_data.safe_zone = 21
+		game_object_data.time_t_stop = 1
+		game_object_data.arming_t = 1
+	end
 end
 
 local minion_unit_template = {

@@ -10,7 +10,6 @@ local WalletSettings = require("scripts/settings/wallet_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
 local LiveEvents = require("scripts/settings/live_event/live_events")
 local InputDevice = require("scripts/managers/input/input_device")
-local Promise = require("scripts/foundation/utilities/promise")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
@@ -904,12 +903,11 @@ local EntryBodyTemplates = {
 
 				if parent._promise_container then
 					parent._promise_container:cancel_on_destroy(Managers.data_service.global_stats:get(global_stat_settings.category)):next(function (stats)
-						local stat_a, stat_b = 0, 0
 						local faction_a_id = faction_settings.pure.id
 						local faction_b_id = faction_settings.impure.id
+						local stat_a = stats[global_stats[faction_a_id]] or 0
+						local stat_b = stats[global_stats[faction_b_id]] or 0
 
-						stat_a = stats[global_stats[faction_a_id]] or 0
-						stat_b = stats[global_stats[faction_b_id]] or 0
 						content[global_stats[faction_a_id]] = stat_a
 						content[global_stats[faction_b_id]] = stat_b
 						content.tug_o_war_ready = true
@@ -960,32 +958,115 @@ local default_progress_bar_passes = table.append(experience_bar_passes, {
 		style = Styles.event_progress_bar.progress_text,
 	},
 })
+local OBJECTIVE_STATUS_STYLE_IDS = {
+	"progress_text",
+	"objective_complete",
+	"objective_lock",
+}
+
+local function objective_bar_visibility_function(content, style)
+	return not content.no_bar
+end
+
+local objective_bar_passes = table.clone(BarPassTemplates.experience_bar)
+
+for i = 1, #objective_bar_passes do
+	objective_bar_passes[i].visibility_function = objective_bar_visibility_function
+end
+
+local objective_progress_bar_passes = table.append(objective_bar_passes, {
+	{
+		pass_type = "text",
+		scenegraph_id = "event_progress_bar",
+		style_id = "progress_text",
+		value_id = "progress_text",
+		style = Styles.event_progress_bar.objective_progress_text,
+		visibility_function = function (content, style)
+			return not content.locked and not content.complete
+		end,
+	},
+	{
+		pass_type = "text",
+		scenegraph_id = "event_progress_bar",
+		style_id = "objective_label",
+		value_id = "objective_label",
+		style = Styles.event_progress_bar.objective_label,
+	},
+	{
+		pass_type = "text",
+		scenegraph_id = "event_progress_bar",
+		style_id = "objective_complete",
+		value_id = "objective_complete",
+		value = Settings.objective_complete_glyph,
+		style = Styles.event_progress_bar.objective_complete,
+		visibility_function = function (content, style)
+			return content.complete == true
+		end,
+	},
+	{
+		pass_type = "text",
+		scenegraph_id = "event_progress_bar",
+		style_id = "objective_lock",
+		value_id = "objective_lock",
+		value = Settings.objective_lock_glyph,
+		style = Styles.event_progress_bar.objective_lock,
+		visibility_function = function (content, style)
+			return content.locked == true
+		end,
+	},
+})
 local ProgressBarTemplates = {
 	default = {
-		widget_template = UIWidget.create_definition(default_progress_bar_passes, "event_progress_bar", event_progress_bar_content_override),
-		init = function (parent, widget, event, ui_renderer)
-			if not event then
+		widget_template = UIWidget.create_definition(objective_progress_bar_passes, "event_progress_bar", event_progress_bar_content_override),
+		init = function (parent, widget, event, ui_renderer, segment)
+			if not event or not segment then
 				return
 			end
 
-			local event_progress_bar_content = widget.content
-			local event_progress_bar_style = widget.style
-			local current_progress = Managers.live_event:event_progress(nil, event.id)
-			local tiers = event.tiers or {}
-			local num_tiers = #tiers
-			local max_progress = math.max(tiers[num_tiers] and tiers[num_tiers].target or 1, 1)
+			local content, style = widget.content, widget.style
+			local span = segment.span or 0
+			local progress = segment.progress or 0
+			local fraction = span > 0 and math.clamp(progress / span, 0, 1) or segment.complete and 1 or 0
 
-			current_progress = math.clamp(current_progress, 0, max_progress)
+			content.progress = fraction
+			content.current_progress = fraction
+			content.max_progress = span
+			content.locked = segment.locked == true
+			content.complete = segment.complete == true
+			content.no_bar = segment.no_bar == true
+			content.progress_text = segment.status
+			content.objective_label = segment.label
+			style.bar.color = Color.golden_rod(255, true)
+			widget.offset[2] = segment.row_offset or 0
 
-			local actual_progress = math.clamp(current_progress / max_progress, 0, 1)
+			local label_style = style.objective_label
+			local status_x, status_y
 
-			event_progress_bar_content.progress = actual_progress or 0
-			event_progress_bar_content.current_progress = actual_progress or 0
-			event_progress_bar_content.max_progress = max_progress
-			event_progress_bar_content.progress_text = string.format("%d / %d", current_progress, max_progress)
-			event_progress_bar_style.bar.color = Color.golden_rod(255, true)
+			if content.no_bar then
+				local text_y = Styles.sizes.objective_no_bar_text_offset
 
-			parent:_set_current_event_progress(current_progress)
+				label_style.size[1] = segment.text_width
+				label_style.size[2] = segment.text_height
+				label_style.offset[2] = text_y
+				status_x = 0
+				status_y = text_y + segment.status_offset
+			else
+				local label_width = TextUtilities.text_width(ui_renderer, segment.label, label_style, label_style.size)
+
+				status_x = math.min(label_width, label_style.size[1]) + Styles.event_progress_bar.objective_status_spacing
+				status_y = style.progress_text.offset[2]
+			end
+
+			for _, style_id in ipairs(OBJECTIVE_STATUS_STYLE_IDS) do
+				local status_style = style[style_id]
+
+				status_style.offset[1] = status_x
+				status_style.offset[2] = status_y
+
+				if content.no_bar then
+					status_style.size[2] = segment.status_height
+				end
+			end
 		end,
 	},
 }
@@ -1017,16 +1098,88 @@ local function _default_initialize_function(parent, composition, event, event_da
 		widget.offset[1] = page_offset_x
 	end
 
-	local should_increase_size = false
+	local max_stacked_rewards = 0
 	local rewards_template = composition.rewards
 	local entry_reward_widgets = {}
 	local reward_widgets = {}
 	local line_widgets = {}
+	local scenegraph = parent._ui_scenegraph
+	local rewards_box_width = scenegraph.rewards_box.size[1]
+	local tile_width, tile_height = Styles.sizes.reward_size[1], Styles.sizes.reward_size[2]
+	local segment_progress = event and Managers.live_event:event_segment_progress(nil, event.id) or {}
+	local segment_count = #segment_progress
+	local segment_by_tier = {}
+	local segment_tiers = event and event.tiers or {}
+	local bar_node_height = scenegraph.event_progress_bar.size[2]
+	local rewards_box_gap = scenegraph.rewards_box.world_position[2] - scenegraph.event_progress_bar.world_position[2]
+	local label_style = Styles.event_progress_bar.objective_label
+	local status_style = Styles.event_progress_bar.objective_progress_text
+	local status_spacing = Styles.event_progress_bar.objective_status_spacing
+	local tile_spacing = Styles.sizes.objective_no_bar_reward_spacing
+	local no_bar_text_offset = Styles.sizes.objective_no_bar_text_offset
+	local rewards_box_inset = (Settings.default_progress_bar_size[1] - rewards_box_width) * 0.5
+	local segment_content_top = 0
+
+	for s = segment_count, 1, -1 do
+		local segment = segment_progress[s]
+
+		segment.no_bar = (segment.span or 0) <= 1
+		segment.label = segment.condition and Localize(segment.condition, true, {
+			target = segment.ceiling,
+		}) or ""
+		segment.status = string.format("%d / %d", segment.progress or 0, segment.span or 0)
+		segment.reward_count = 0
+		segment.reward_index = 0
+
+		for tier_index = segment.first_tier or 1, segment.last_tier or 0 do
+			segment_by_tier[tier_index] = segment
+
+			local tier = segment_tiers[tier_index]
+			local tier_rewards = tier and tier.rewards
+
+			segment.reward_count = segment.reward_count + (tier_rewards and #tier_rewards or 0)
+		end
+
+		local content_up, content_down
+
+		if segment.no_bar then
+			local rewards_width = segment.reward_count > 0 and segment.reward_count * tile_width + (segment.reward_count - 1) * tile_spacing or 0
+
+			segment.rewards_start = rewards_box_width - 2 + tile_width * 0.5 - rewards_width
+			segment.text_width = math.max(segment.rewards_start + rewards_box_inset - Styles.sizes.objective_no_bar_text_margin, tile_width)
+			segment.text_height = TextUtilities.text_height(ui_renderer, segment.label, label_style, {
+				segment.text_width,
+			}, true)
+			segment.status_height = TextUtilities.text_height(ui_renderer, segment.status, status_style, {
+				status_style.size[1],
+			}, true)
+			segment.status_offset = segment.status_height + status_spacing
+
+			local text_top = bar_node_height + no_bar_text_offset - segment.text_height
+			local text_bottom = bar_node_height + no_bar_text_offset + segment.status_offset
+
+			segment.text_centre = (text_top + text_bottom) * 0.5
+			content_up = -math.min(text_top, segment.text_centre - tile_height * 0.5)
+			content_down = math.max(text_bottom, segment.text_centre + tile_height * 0.5)
+		else
+			content_up = -rewards_box_gap
+			content_down = bar_node_height + math.max(label_style.offset[2], status_style.offset[2])
+		end
+
+		if s == segment_count then
+			segment.row_offset = 0
+		else
+			segment.row_offset = segment_content_top - Styles.sizes.objective_row_spacing - content_down
+		end
+
+		segment_content_top = segment.row_offset - content_up
+	end
+
+	local segment_stack_extent = segment_count > 0 and -segment_progress[1].row_offset or 0
 
 	if event and rewards_template then
 		local tiers = event.tiers or {}
 		local bar_width = Settings.default_progress_bar_size[1]
-		local rewards_box_width = parent._ui_scenegraph.rewards_box.size[1]
 		local num_tiers = #tiers
 		local max_target_exp = math.max(tiers[num_tiers] and tiers[num_tiers].target or 1, 1)
 
@@ -1050,45 +1203,70 @@ local function _default_initialize_function(parent, composition, event, event_da
 
 					reward_widgets[#reward_widgets + 1] = reward_widget
 
-					local line_widget_definition = UIWidget.create_definition({
-						{
-							pass_type = "texture",
-							style_id = "line",
-							value = "content/ui/materials/mission_board/mission_line",
-							value_id = "line",
-							style = Styles.reward.bar_connection_line,
-						},
-					}, "event_progress_bar")
-					local line_widget = UIWidget.init("line_" .. tier_index .. "_" .. reward_index, line_widget_definition)
-
-					line_widgets[#line_widgets + 1] = line_widget
-
 					local tier_target_exp = tier.target or 1
-					local rewards_spacing = tier_target_exp / max_target_exp * rewards_box_width
-					local line_spacing = tier_target_exp / max_target_exp * bar_width
-					local offset_x = rewards_spacing - 2
+					local bar_fraction = tier_target_exp / max_target_exp
+					local row_offset = 0
+					local no_bar_x, no_bar_y
 
-					reward_widget.offset[1] = page_offset_x + offset_x - Styles.sizes.reward_size[1] / 2
-					line_widget.offset[1] = page_offset_x + line_spacing - 2
+					do
+						local segment = segment_by_tier[tier_index]
+						local prev_ceiling = segment and segment.prev_ceiling or 0
+						local span = segment and segment.span or 0
 
-					local has_reward_with_same_target = false
+						bar_fraction = span > 0 and math.clamp((tier_target_exp - prev_ceiling) / span, 0, 1) or 1
+						row_offset = segment and segment.row_offset or 0
+						reward_widget.content.segment_prev_ceiling = prev_ceiling
+						reward_widget.content.segment_progress = segment and segment.progress or 0
+						reward_widget.content.segment_locked = segment and segment.locked == true
+
+						if segment and segment.no_bar then
+							segment.reward_index = segment.reward_index + 1
+							no_bar_x = segment.rewards_start + (segment.reward_index - 1) * (tile_width + tile_spacing)
+							no_bar_y = segment.text_centre - tile_height * 0.5 - rewards_box_gap
+						end
+					end
+
+					local line_widget
+
+					if not no_bar_x then
+						local line_widget_definition = UIWidget.create_definition({
+							{
+								pass_type = "texture",
+								style_id = "line",
+								value = "content/ui/materials/mission_board/mission_line",
+								value_id = "line",
+								style = Styles.reward.bar_connection_line,
+							},
+						}, "event_progress_bar")
+
+						line_widget = UIWidget.init("line_" .. tier_index .. "_" .. reward_index, line_widget_definition)
+						line_widgets[#line_widgets + 1] = line_widget
+						line_widget.offset[1] = page_offset_x + bar_fraction * bar_width - 2
+						line_widget.offset[2] = row_offset
+					end
+
+					local offset_x = bar_fraction * rewards_box_width - 2
+
+					reward_widget.offset[1] = no_bar_x and page_offset_x + no_bar_x or page_offset_x + offset_x - tile_width / 2
+
+					local same_target_count = 0
 
 					for m = 1, #reward_widgets do
 						local widget = reward_widgets[m]
 						local content = widget.content
 
 						if content.tier_xp == tier.target and widget ~= reward_widget then
-							has_reward_with_same_target = true
-							should_increase_size = true
-
-							break
+							same_target_count = same_target_count + 1
 						end
 					end
 
-					if has_reward_with_same_target then
-						reward_widget.offset[2] = -(Styles.sizes.reward_size[2] + 10)
+					if no_bar_x then
+						reward_widget.offset[2] = row_offset + no_bar_y
+					elseif same_target_count > 0 then
+						max_stacked_rewards = math.max(max_stacked_rewards, same_target_count + 1)
+						reward_widget.offset[2] = row_offset - same_target_count * (tile_height + 10)
 					else
-						reward_widget.offset[2] = -(j - 1) * (Styles.sizes.reward_size[2] + 10)
+						reward_widget.offset[2] = row_offset - (j - 1) * (tile_height + 10)
 					end
 				else
 					Log.warning("LiveEventsView", "No reward template found for reward type %s", tostring(reward.type))
@@ -1097,8 +1275,7 @@ local function _default_initialize_function(parent, composition, event, event_da
 		end
 	elseif event_data and event_data.item_rewards then
 		local item_rewards = event_data.item_rewards
-		local rewards_box_width = parent._ui_scenegraph.rewards_box.size[1]
-		local reward_start_x = rewards_box_width * 0.5 - Styles.sizes.reward_size[1] * 0.5
+		local reward_start_x = rewards_box_width * 0.5 - tile_width * 0.5
 
 		for reward_index, reward in pairs(item_rewards) do
 			local reward_template = rewards_template.item_local
@@ -1110,34 +1287,39 @@ local function _default_initialize_function(parent, composition, event, event_da
 				reward_template.init(parent, reward_widget, reward, {})
 
 				reward_widgets[#reward_widgets + 1] = reward_widget
-				reward_widget.offset[1] = page_offset_x + reward_start_x + (reward_index - 1) * (Styles.sizes.reward_size[1] + 40)
-				reward_widget.offset[2] = Styles.sizes.reward_size[2]
+				reward_widget.offset[1] = page_offset_x + reward_start_x + (reward_index - 1) * (tile_width + 40)
+				reward_widget.offset[2] = tile_height
 			end
 		end
 
-		total_height = total_height + Styles.sizes.reward_size[2] + 80
+		total_height = total_height + tile_height + 80
 	end
 
 	entry_reward_widgets.rewards = reward_widgets
 	entry_reward_widgets.lines = line_widgets
 	entry_widgets.rewards = entry_reward_widgets
 
-	if should_increase_size then
-		total_height = total_height + Styles.sizes.reward_size[2] + 10
+	if max_stacked_rewards > 0 then
+		total_height = total_height + (max_stacked_rewards - 1) * (tile_height + 10)
 	end
 
 	local progress_bar_template = composition.progress_bar
 
 	if event and progress_bar_template then
 		local widget_definition = progress_bar_template.widget_template
-		local widget = UIWidget.init("progress_bar", widget_definition)
+		local bar_widgets = {}
 
-		entry_widgets.progress_bar = widget
+		for s = 1, segment_count do
+			local widget = UIWidget.init("progress_bar_" .. s, widget_definition)
 
-		progress_bar_template.init(parent, widget, event, ui_renderer)
+			progress_bar_template.init(parent, widget, event, ui_renderer, segment_progress[s])
 
-		widget.offset[1] = page_offset_x
-		total_height = total_height + 260
+			widget.offset[1] = page_offset_x
+			bar_widgets[s] = widget
+		end
+
+		total_height = total_height + 260 + segment_stack_extent
+		entry_widgets.progress_bar = bar_widgets
 	end
 
 	return entry_widgets, total_height
@@ -1167,7 +1349,9 @@ local function _default_draw_function(parent, dt, t, ui_renderer, render_setting
 	end
 
 	if entry_widgets.progress_bar then
-		UIWidget.draw(entry_widgets.progress_bar, ui_renderer)
+		for _, bar_widget in pairs(entry_widgets.progress_bar) do
+			UIWidget.draw(bar_widget, ui_renderer)
+		end
 	end
 end
 
@@ -1196,7 +1380,9 @@ local function _default_destroy_function(parent, entry_widgets, ui_renderer)
 	end
 
 	if entry_widgets.progress_bar then
-		UIWidget.destroy(ui_renderer, entry_widgets.progress_bar)
+		for _, bar_widget in pairs(entry_widgets.progress_bar) do
+			UIWidget.destroy(ui_renderer, bar_widget)
+		end
 	end
 
 	table.clear(entry_widgets)
@@ -1289,10 +1475,10 @@ local leftover_choice_page = {
 		local faction_a_buff = faction_a_settings and faction_a_settings.buff
 
 		if faction_a_buff then
-			local faction_a_buff_data = BuffTemplates[faction_a_buff]
+			local faction_a_buff_template = BuffTemplates[faction_a_buff]
 
-			if faction_a_buff_data and faction_a_buff_data.display_description then
-				left_side_choice_content.boons_description = Localize(faction_a_buff_data.display_description)
+			if faction_a_buff_template.display_description then
+				left_side_choice_content.boons_description = Localize(faction_a_buff_template.display_description)
 			end
 		end
 
@@ -1308,10 +1494,10 @@ local leftover_choice_page = {
 		local faction_b_buff = faction_b_settings and faction_b_settings.buff
 
 		if faction_b_buff then
-			local faction_b_buff_data = BuffTemplates[faction_b_buff]
+			local faction_b_buff_template = BuffTemplates[faction_b_buff]
 
-			if faction_b_buff_data and faction_b_buff_data.display_description then
-				right_side_choice_content.boons_description = Localize(faction_b_buff_data.display_description)
+			if faction_b_buff_template.display_description then
+				right_side_choice_content.boons_description = Localize(faction_b_buff_template.display_description)
 			end
 		end
 
@@ -1425,5 +1611,35 @@ local leftover_choice_page = {
 Templates.leftover = table.clone_instance(Templates.default)
 
 table.insert(Templates.leftover.pages, 1, leftover_choice_page)
+
+Templates.torment = {
+	pages = {
+		{
+			composition = {
+				entry_body = EntryBodyTemplates.skulls_guns,
+				rewards = RewardTemplates.default,
+				progress_bar = ProgressBarTemplates.default,
+			},
+			initialize = function (parent, composition, event, event_data, page_index)
+				local entry_widgets, total_height = _default_initialize_function(parent, composition, event, event_data, page_index)
+				local LiveEventTormentProgressView = require("scripts/ui/views/live_events_view/live_event_torment_progress_view/live_event_torment_progress_view")
+				local widget = entry_widgets.entry_body
+
+				widget.content.event_view_button_hotspot.pressed_callback = LiveEventTormentProgressView.open
+				widget.content.event_view_button_text = Localize("loc_torment_progress_view_open_cta")
+
+				return entry_widgets, total_height
+			end,
+			draw = function (parent, dt, t, ui_renderer, render_settings, input_service, entry_widgets)
+				_default_draw_function(parent, dt, t, ui_renderer, render_settings, input_service, entry_widgets)
+
+				if input_service:get("gamepad_secondary_action_pressed") then
+					entry_widgets.entry_body.content.event_view_button_hotspot.pressed_callback()
+				end
+			end,
+			destroy = _default_destroy_function,
+		},
+	},
+}
 
 return Templates

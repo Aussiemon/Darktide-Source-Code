@@ -38,7 +38,7 @@ local talent_settings = {
 		},
 		psyker_cooldown = {
 			cooldown = 0.5,
-			duration = 5,
+			duration = 3,
 		},
 		coherency_aura_size_increase = {
 			radius = 0.75,
@@ -75,7 +75,7 @@ local talent_settings = {
 		},
 		reload_speed_warp = {
 			reload_speed = 0.3,
-			threshold = 0.75,
+			threshold = 0.8,
 			warp_charge = 0.15,
 		},
 		soulblaze_reduces_damage_taken = {
@@ -98,6 +98,16 @@ local talent_settings = {
 		},
 		psyker_damage_to_peril_conversion = {
 			percent = 0.25,
+		},
+		psyker_weapon_attacks_peril_equilibrium = {
+			threshold = 0.75,
+			warp_charge_percent = 0.02,
+		},
+		psyker_increased_warp_damage = {
+			warp_damage = 0.15,
+		},
+		psyker_increased_blitz_damage = {
+			damage = 0.2,
 		},
 		psyker_damage_resistance_stun_immunity = {
 			dr = 0.9,
@@ -204,7 +214,7 @@ local talent_settings = {
 		},
 		offensive_1_3 = {
 			distance = 4,
-			num_stacks = 3,
+			num_stacks = 2,
 		},
 		coop_1 = {
 			on_kill_proc_chance = 0.04,
@@ -224,6 +234,7 @@ local talent_settings = {
 			min_toughness_damage_multiplier = 0.9,
 		},
 		defensive_3 = {
+			movement_speed = 0.05,
 			reload_decrease_movement_reduction = 0,
 			vent_warp_charge_decrease_movement_reduction = 0,
 		},

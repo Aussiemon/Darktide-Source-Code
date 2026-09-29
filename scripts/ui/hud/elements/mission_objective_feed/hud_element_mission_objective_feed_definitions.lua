@@ -1155,6 +1155,7 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			drop_shadow = true,
 			font_size = 20,
 			horizontal_alignment = "left",
+			text_fit_with = true,
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "top",
 			vertical_alignment = "top",

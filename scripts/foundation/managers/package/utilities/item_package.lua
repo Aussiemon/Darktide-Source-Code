@@ -20,16 +20,19 @@ ItemPackage._require_level_items = function (level_name, item_data)
 	if next(component_item_data_fields) == nil then
 		for component_name, component in pairs(components) do
 			if component.component_data then
-				for data_name, data_info in pairs(component.component_data) do
-					if data_info.filter == "item" then
-						component_item_data_fields[component_name] = component_item_data_fields[component_name] or {}
-						component_item_data_fields[component_name][data_name] = data_info.ui_type
-					end
+				local editor_only = false
 
+				for data_name, data_info in pairs(component.component_data) do
 					if data_name == "editor_only" then
+						editor_only = data_info.value or false
+					elseif data_info.filter == "item" then
 						component_item_data_fields[component_name] = component_item_data_fields[component_name] or {}
-						component_item_data_fields[component_name][data_name] = data_info.value or false
+						component_item_data_fields[component_name][data_name] = data_info
 					end
+				end
+
+				if component_item_data_fields[component_name] then
+					component_item_data_fields[component_name].editor_only = editor_only
 				end
 			end
 		end
@@ -52,15 +55,23 @@ ItemPackage._require_level_items = function (level_name, item_data)
 			dynamic_data_path[3] = "component_data"
 
 			if component_item_data_fields[component_name] then
-				for data_field, data_type in pairs(component_item_data_fields[component_name]) do
-					dynamic_data_path[4] = data_field
+				local editor_only_component_default = component_item_data_fields[component_name].editor_only
 
-					local editor_only_component_default = component_item_data_fields[component_name].editor_only
+				for data_field, data_info in pairs(component_item_data_fields[component_name]) do
+					if data_field ~= "editor_only" then
+						local data_type = data_info.ui_type
 
-					if data_type == "resource" then
-						ItemPackage._get_item_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
-					elseif data_type == "resource_array" then
-						ItemPackage._get_items_data_from_component(level_name, item_data, unit_data, editor_only_component_default, dynamic_data_path)
+						dynamic_data_path[4] = data_field
+
+						if data_type == "resource" then
+							ItemPackage._get_item_data_from_component(item_data, unit_data, editor_only_component_default, dynamic_data_path)
+						elseif data_type == "resource_array" then
+							ItemPackage._get_items_data_from_component(level_name, item_data, unit_data, editor_only_component_default, dynamic_data_path)
+						elseif data_type == "struct_array" then
+							ItemPackage._get_items_data_from_component_struct(level_name, item_data, unit_data, editor_only_component_default, dynamic_data_path, data_info.definition, data_info.control_order)
+						else
+							ferror("Unknown data type %s for component %s data field %s", data_type, component_name, data_field)
+						end
 					end
 				end
 			end
@@ -111,10 +122,10 @@ ItemPackage._get_items_data_from_component = function (level_name, items, unit_d
 
 	if not editor_only then
 		local num_items = DynamicData.get_table_size(unit_data, unpack(path)) or 0
+		local found = 0
 		local i = 1
-		local found_items = 0
 
-		while found_items < num_items do
+		while found <= num_items do
 			path[#path + 1] = i
 			path[#path + 1] = "resource"
 
@@ -125,7 +136,7 @@ ItemPackage._get_items_data_from_component = function (level_name, items, unit_d
 					ItemPackage._add_item_ref(items, field_value)
 				end
 
-				found_items = found_items + 1
+				found = found + 1
 			end
 
 			table.remove(path, #path)
@@ -134,8 +145,63 @@ ItemPackage._get_items_data_from_component = function (level_name, items, unit_d
 			i = i + 1
 
 			if i > 50 then
-				found_items = num_items
+				found = num_items + 1
 			end
+		end
+	end
+end
+
+ItemPackage._get_items_data_from_component_struct = function (level_name, items, unit_data, editor_only_component_default, path, struct_definition, control_order)
+	local editor_only_idx = table.find(control_order, "editor_only")
+	local num_items = DynamicData.get_table_size(unit_data, unpack(path)) or 0
+	local found = 0
+	local i = 1
+
+	while found <= num_items do
+		path[#path + 1] = i
+
+		if DynamicData.has(unit_data, unpack(path)) then
+			if editor_only_idx then
+				local field_name = control_order[editor_only_idx]
+
+				path[#path + 1] = field_name
+				editor_only_component_default = DynamicData.get(unit_data, unpack(path))
+
+				table.remove(path, #path)
+			end
+
+			for j = 1, #control_order do
+				local field_name = control_order[j]
+				local field_data = struct_definition[field_name]
+
+				if field_data.filter == "item" then
+					path[#path + 1] = field_name
+
+					local ui_type = field_data.ui_type
+
+					if ui_type == "resource" then
+						ItemPackage._get_item_data_from_component(items, unit_data, editor_only_component_default, path)
+					elseif ui_type == "resource_array" then
+						ItemPackage._get_items_data_from_component(level_name, items, unit_data, editor_only_component_default, path)
+					elseif ui_type == "resource_struct" then
+						ItemPackage._get_items_data_from_component_struct(level_name, items, unit_data, editor_only_component_default, path, field_data.definition, field_data.control_order)
+					else
+						ferror("Unknown data type %s for data field %s", ui_type, field_name)
+					end
+
+					table.remove(path, #path)
+				end
+			end
+
+			found = found + 1
+		end
+
+		table.remove(path, #path)
+
+		i = i + 1
+
+		if i > 50 then
+			found = num_items + 1
 		end
 	end
 end

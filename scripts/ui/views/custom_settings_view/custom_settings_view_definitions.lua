@@ -5,11 +5,20 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local custom_settings_view_settings = require("scripts/ui/views/custom_settings_view/custom_settings_view_settings")
 local title_text_style = table.clone(UIFontSettings.header_2)
 
 title_text_style.text_horizontal_alignment = "center"
 title_text_style.text_vertical_alignment = "top"
 
+local scrollbar_width = custom_settings_view_settings.scrollbar_width
+local settings_grid_width = custom_settings_view_settings.settings_grid_width
+local grid_height = custom_settings_view_settings.grid_height
+local grid_blur_edge_size = custom_settings_view_settings.grid_blur_edge_size
+local mask_size = {
+	settings_grid_width + grid_blur_edge_size[1] * 2,
+	grid_height + grid_blur_edge_size[2] * 2,
+}
 local scenegraph_definitions = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -31,7 +40,7 @@ local scenegraph_definitions = {
 		parent = "canvas",
 		vertical_alignment = "center",
 		size = {
-			1500,
+			1800,
 			1080,
 		},
 		position = {
@@ -61,7 +70,7 @@ local scenegraph_definitions = {
 		size = ButtonPassTemplates.terminal_button.size,
 		position = {
 			0,
-			470,
+			420,
 			1,
 		},
 	},
@@ -84,7 +93,7 @@ local scenegraph_definitions = {
 		parent = "area",
 		vertical_alignment = "center",
 		size = {
-			1720,
+			1800,
 			880,
 		},
 		position = {
@@ -98,8 +107,8 @@ local scenegraph_definitions = {
 		parent = "setting_base",
 		vertical_alignment = "center",
 		size = {
-			1720,
-			880,
+			settings_grid_width,
+			grid_height,
 		},
 		position = {
 			0,
@@ -108,12 +117,12 @@ local scenegraph_definitions = {
 		},
 	},
 	grid_content_pivot = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		parent = "grid_start",
-		vertical_alignment = "center",
+		vertical_alignment = "top",
 		size = {
-			1720,
-			880,
+			settings_grid_width,
+			grid_height,
 		},
 		position = {
 			0,
@@ -125,10 +134,7 @@ local scenegraph_definitions = {
 		horizontal_alignment = "center",
 		parent = "grid_start",
 		vertical_alignment = "center",
-		size = {
-			1720,
-			880,
-		},
+		size = mask_size,
 		position = {
 			0,
 			0,
@@ -136,26 +142,26 @@ local scenegraph_definitions = {
 		},
 	},
 	grid_content_scrollbar = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "right",
 		parent = "grid_start",
 		vertical_alignment = "center",
 		size = {
-			1720,
-			880,
+			scrollbar_width,
+			grid_height,
 		},
 		position = {
+			20,
 			0,
-			0,
-			2,
+			3,
 		},
 	},
 	grid_content_interaction = {
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		parent = "grid_start",
 		vertical_alignment = "top",
 		size = {
-			1720,
-			880,
+			settings_grid_width + scrollbar_width * 2,
+			grid_height,
 		},
 		position = {
 			0,
@@ -282,8 +288,9 @@ local widget_definitions = {
 			},
 		},
 	}, "grid_content_mask"),
-	grid_content_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "grid_content_scrollbar", {
+	grid_content_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "grid_content_scrollbar", {
 		scroll_speed = 10,
+		using_custom_gamepad_navigation = true,
 	}),
 	options_grid_interaction = UIWidget.create_definition({
 		{
@@ -310,6 +317,17 @@ local widget_definitions = {
 		},
 	}, "screen"),
 }
+local legend_inputs = {
+	{
+		alignment = "left_alignment",
+		display_name = "loc_settings_menu_close_menu",
+		input_action = "back",
+		on_pressed_callback = "cb_on_back_pressed",
+		visibility_function = function (parent)
+			return parent:should_show_close_legend()
+		end,
+	},
+}
 local accessibility_widget_definitions = {
 	title_settings = UIWidget.create_definition({
 		{
@@ -326,4 +344,5 @@ return {
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definitions,
 	accessibility_widget_definitions = accessibility_widget_definitions,
+	legend_inputs = legend_inputs,
 }

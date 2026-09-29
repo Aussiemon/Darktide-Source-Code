@@ -11,8 +11,8 @@ local _button_size = {
 	728 * _size_multiplier,
 }
 local _preview_size = {
-	432 * _size_multiplier,
-	728 * _size_multiplier,
+	200 * _size_multiplier,
+	200 * _size_multiplier,
 }
 local button_background_glow = {
 	pass_type = "texture",

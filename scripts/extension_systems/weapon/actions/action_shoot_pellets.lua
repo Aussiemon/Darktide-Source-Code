@@ -278,6 +278,14 @@ ActionShootPellets._save_pellet_hits = function (self, shotshell_template, hit_r
 				break
 			end
 
+			local can_collide = true
+
+			can_collide = Health.can_actor_collide_with_attack_type(hit_unit, hit_actor, "ranged")
+
+			if not can_collide then
+				break
+			end
+
 			num_hits = num_hits + 1
 
 			local hit_entry = pellet_hits.hit_results[num_hits]
@@ -777,8 +785,8 @@ ActionShootPellets._can_play_impact_fx = function (self, hit_unit, num_impact_fx
 	return false, num_impact_fx
 end
 
-ActionShootPellets.server_correction_occurred = function (self)
-	ActionShootPellets.super.server_correction_occurred(self)
+ActionShootPellets.server_correction_occurred = function (self, ...)
+	ActionShootPellets.super.server_correction_occurred(self, ...)
 	table.clear(self._hit_units)
 	table.clear(self._suppressed_hits_per_unit)
 	table.clear(self._suppressed_hit_positions_per_unit)

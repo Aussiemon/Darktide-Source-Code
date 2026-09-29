@@ -15,7 +15,6 @@ local archetype_data = {
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/adamant_terminal",
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/adamant_terminal_shadow",
 	archetype_name = "loc_class_adamant_name",
-	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/adamant",
 	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/adamant/class_selection_top_adamant",
 	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/adamant/class_selection_top_adamant_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_adamant/class_selection_adamant",
@@ -28,7 +27,6 @@ local archetype_data = {
 	character_creation_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/character_customization/character_customization_adamant",
 	companion_breed = "companion_dog",
 	deluxe_dlc = "adamant_deluxe",
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_adamant",
 	health = 200,
 	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_adamant",
 	knocked_down_health = 1000,
@@ -40,6 +38,8 @@ local archetype_data = {
 	portrait_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/portrait/portrait_adamant",
 	requires_dlc = "adamant",
 	spawn_companions_from_talent_func = nil,
+	specialization_talent_layout_file_path = nil,
+	specialization_talent_package_path = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/adamant_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/adamant",
 	toughness = ArchetypeToughnessTemplates.adamant,
@@ -49,11 +49,23 @@ local archetype_data = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	talents = ArchetypeTalents.adamant,
 	base_talents = {
-		adamant_area_buff_drone = 1,
-		adamant_command_dog_with_tag = 1,
-		adamant_companion_aura = 1,
-		adamant_companion_damage_per_level = 1,
-		adamant_grenade = 1,
+		adamant_area_buff_drone = {
+			target_slot = "slot_combat_ability",
+			tier = 1,
+		},
+		adamant_grenade = {
+			target_slot = "slot_grenade_ability",
+			tier = 1,
+		},
+		adamant_companion_aura = {
+			tier = 1,
+		},
+		adamant_companion_damage_per_level = {
+			tier = 1,
+		},
+		adamant_command_dog_with_tag = {
+			tier = 1,
+		},
 	},
 	skip_onboarding_chapters = {
 		inventory_popup = true,

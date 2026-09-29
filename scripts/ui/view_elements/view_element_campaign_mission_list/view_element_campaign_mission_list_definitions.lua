@@ -607,7 +607,7 @@ local function create_debrief_widget(scenegraph_id, is_locked)
 			visibility_function = function (content, style)
 				local hotspot = content.hotspot
 
-				return InputDevice.gamepad_active and hotspot.parent_is_selected
+				return InputDevice.gamepad_active and hotspot.parent_is_selected and not is_locked
 			end,
 			change_function = function (content, style, animation, dt)
 				if not InputDevice.gamepad_active then
@@ -785,7 +785,7 @@ local function create_list_panel_widget(scenegraph_id)
 
 				style.text_color = (hotspot.is_hover or hotspot.is_selected) and style.selected_color or style.default_color
 
-				local font_size = 22 + 2 * hotspot.anim_hover_progress
+				local font_size = Styles.list_panel.panel_button_campaign_title.font_size + 2 * hotspot.anim_hover_progress
 
 				font_size = font_size + 3 * hotspot.anim_select_progress
 				style.font_size = font_size

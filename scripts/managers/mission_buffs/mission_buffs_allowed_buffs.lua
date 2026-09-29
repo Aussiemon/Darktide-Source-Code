@@ -12,7 +12,6 @@ allowed_buffs.legendary_buffs = {
 		"hordes_buff_explode_enemies_on_ranged_kill",
 		"hordes_buff_aoe_shock_closest_enemy_on_interval",
 		"hordes_buff_staggering_pulse",
-		"hordes_buff_extra_ability_charge",
 		"hordes_buff_random_damage_immunity",
 		"hordes_buff_big_weakspot_damage_increase",
 		"hordes_buff_bleeding_and_burning_on_melee_hit",
@@ -32,7 +31,9 @@ local legendary_grenade_buffs_applied_to_all = {
 }
 
 allowed_buffs.legendary_buffs.veteran = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		veteran_frag_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
@@ -64,7 +65,9 @@ allowed_buffs.legendary_buffs.veteran = {
 	},
 }
 allowed_buffs.legendary_buffs.zealot = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		zealot_shock_grenade = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
@@ -91,7 +94,9 @@ allowed_buffs.legendary_buffs.zealot = {
 	},
 }
 allowed_buffs.legendary_buffs.psyker = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		psyker_smite = {
 			"hordes_buff_psyker_brain_burst_burns_and_bleeds_on_hit",
@@ -120,7 +125,9 @@ allowed_buffs.legendary_buffs.psyker = {
 	},
 }
 allowed_buffs.legendary_buffs.ogryn = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		ogryn_grenade_frag = table.append(table.shallow_copy(legendary_grenade_buffs_applied_to_all), {
 			"hordes_buff_spawn_dome_shield_on_grenade_explosion",
@@ -155,7 +162,9 @@ allowed_buffs.legendary_buffs.ogryn = {
 	},
 }
 allowed_buffs.legendary_buffs.adamant = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		adamant_shock_mine = {
 			"hordes_buff_adamant_mine_explosion",
@@ -181,7 +190,9 @@ allowed_buffs.legendary_buffs.adamant = {
 }
 allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade_improved = table.clone(allowed_buffs.legendary_buffs.adamant.grenade_ability.adamant_grenade)
 allowed_buffs.legendary_buffs.broker = {
-	generic = {},
+	generic = {
+		"hordes_buff_extra_ability_charge",
+	},
 	grenade_ability = {
 		broker_missile_launcher = {
 			"hordes_buff_broker_missile_launcher_special_kill_restores_grenade",
@@ -213,6 +224,7 @@ allowed_buffs.legendary_buffs.broker = {
 allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade_improved = table.clone(allowed_buffs.legendary_buffs.broker.grenade_ability.broker_flash_grenade)
 allowed_buffs.legendary_buffs.cryptic = {
 	generic = {
+		"hordes_buff_extra_ability_charge",
 		"hordes_buff_cryptic_dodge_costs_cooldown",
 	},
 	grenade_ability = {

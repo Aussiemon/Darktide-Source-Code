@@ -214,7 +214,7 @@ end
 
 ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
 	local connected_peer_channel_ids = self._connected_peers
-	local generated_name = ProfileUtils.generate_random_name(profile)
+	local generated_name = ProfileUtils.bot_character_name(profile)
 
 	generated_name = string.format("%s {#color(216,229,207,120)}[%s]{#reset()}", generated_name, Text.localize_to_upper("loc_bot_tag"))
 	profile.name = generated_name

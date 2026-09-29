@@ -64,6 +64,43 @@ local ranged_base = {
 
 table.merge(ranged_base, base_template)
 
+local summoner_base = table.clone(ranged_base)
+
+summoner_base.summon = {
+	amount = "number",
+	next_summon_t = "number",
+}
+summoner_base.slot = nil
+summoner_base.blocked = nil
+summoner_base.suppression = nil
+summoner_base.teleport = {
+	should_fly = "boolean",
+	teleport_allowed = "boolean",
+	teleport_position = "Vector3Box",
+	teleport_state = "string",
+	teleport_timings_t = "number",
+}
+
+local summoner_boss = table.clone(summoner_base)
+
+summoner_boss.abilites = {
+	ability_position = "Vector3Box",
+	base_ground_attack_allowed = "boolean",
+	basic_attack_multiplier = "number",
+	current_ability = "string",
+	default_look_at_position = "Vector3Box",
+	exhaust_duration = "number",
+	in_basic_attack = "boolean",
+	is_enraged = "boolean",
+	skip_exhaust_intro = "boolean",
+	t_to_next_base_attack = "number",
+}
+summoner_boss.toughness = {
+	max_toughness = "number",
+	toughness_damage = "number",
+	toughness_percent = "number",
+}
+
 local ranged_cover_user = table.clone(ranged_base)
 
 ranged_cover_user.cover = {
@@ -279,6 +316,8 @@ renegade_radio_operator.summon = {
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,
+	summoner_base = summoner_base,
+	summoner_boss = summoner_boss,
 	netgunner = netgunner,
 	ranged_base = ranged_base,
 	ranged_cover_user = ranged_cover_user,

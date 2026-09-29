@@ -44,6 +44,8 @@ TriggerExtension.init = function (self, extension_init_context, unit, ...)
 	self._trigger_condition = nil
 	self._trigger_action = nil
 	self._volume_event_system = Managers.state.extension:system("volume_event_system")
+	self._on_activate_callback = nil
+	self._on_deactivate_callback = nil
 end
 
 TriggerExtension.destroy = function (self)

@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_archives = {
-		coordinates = "loc_mission_coordinates_cm_archives",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_cm_archives",
@@ -56,9 +55,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	fm_resurgence = {
-		coordinates = "loc_mission_coordinates_fm_resurgence",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_fm_resurgence",
@@ -97,9 +98,32 @@ local mission_templates = {
 		testify_flags = {},
 		health_station = {},
 		mission_brief_vo = {
-			vo_profile = "boon_vendor_a",
+			vo_profile = "boon_vendor_s",
 			wwise_route_key = 1,
+			mission_giver_packs = {
+				boon_vendor_s = {
+					"shipmistress",
+					"boon_vendor",
+					"tertium_noble",
+					briefing_voice_order = {
+						"boon_vendor_s",
+						"tertium_noble_male_s",
+						"shipmistress_s",
+						"tertium_noble_male_s",
+						"boon_vendor_s",
+						"tertium_noble_male_s",
+					},
+					skip_voices = {
+						boon_vendor_a = true,
+						tertium_noble_a = true,
+						tertium_noble_b = true,
+					},
+				},
+			},
 			vo_events = {
+				"mission_resurgence_brief_pre_a",
+				"mission_resurgence_brief_pre_b",
+				"mission_resurgence_brief_pre_c",
 				"mission_resurgence_brief_a",
 				"mission_resurgence_brief_b",
 				"mission_resurgence_brief_c",
@@ -112,9 +136,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	hm_complex = {
-		coordinates = "loc_mission_coordinates_hm_complex",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/throneside/missions/mission_hm_complex",
@@ -167,6 +193,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

@@ -2,7 +2,6 @@
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MinionState = require("scripts/utilities/minion_state")
-local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local RESOURCES = {
 	vfx = {

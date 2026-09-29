@@ -147,6 +147,25 @@ BotTargetSelection.monster_weight = function (unit, target_unit, target_breed, t
 	return monster_weight, false
 end
 
+local DEFAULT_INVULNERABLE_WEIGHT = -math.huge
+
+BotTargetSelection.invulnerable_weight = function (target_unit)
+	if not ScriptUnit.has_extension(target_unit, "toughness_system") then
+		return 0
+	end
+
+	local toughness_extension = ScriptUnit.extension(target_unit, "toughness_system")
+	local is_target_invulnerable = toughness_extension and toughness_extension:is_invulnerable()
+
+	if not is_target_invulnerable then
+		return 0
+	end
+
+	local invulnerable_weight = DEFAULT_INVULNERABLE_WEIGHT
+
+	return invulnerable_weight
+end
+
 local DEFAULT_CURRENT_TARGET_WEIGHT = 0.2
 
 BotTargetSelection.current_target_weight = function (target_unit, current_target_enemy)

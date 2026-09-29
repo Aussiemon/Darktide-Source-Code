@@ -41,6 +41,11 @@ local ARGS = {
 			use_network_lookup = "archetype_talent_names",
 		},
 	},
+	{
+		block_prediction = true,
+		default_value = true,
+		name = "first_time_affected",
+	},
 }
 local NUM_ARGS = #ARGS
 

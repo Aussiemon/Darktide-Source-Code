@@ -1769,7 +1769,6 @@ damage_templates.arc_grenade = {
 damage_templates.arc_grenade_chain_jump_damage = {
 	ignore_hitzone_multiplier = true,
 	ignore_stagger_reduction = true,
-	skip_on_hit_proc = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = {

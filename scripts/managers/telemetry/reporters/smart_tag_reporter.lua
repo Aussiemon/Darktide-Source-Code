@@ -7,10 +7,6 @@ SmartTagReporter.init = function (self)
 	self._reports = {}
 end
 
-SmartTagReporter.update = function (self, dt, t)
-	return
-end
-
 SmartTagReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

@@ -138,7 +138,7 @@ templates.gadget_cooldown_reduction = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = -0.05,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.05,
 	},
 }
 templates.gadget_sprint_cost_reduction = {

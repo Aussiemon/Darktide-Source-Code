@@ -1,0 +1,33 @@
+﻿-- chunkname: @scripts/settings/circumstance/templates/live_event_nurgle_explosion_2026_circumstance_template.lua
+
+local BaseLiveEventTemplate = require("scripts/settings/circumstance/templates/base_live_event_template")
+local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circumstance_utils")
+local core_mutators = {
+	"mutator_live_event_only_beast",
+	"mutator_nurgle_explosion_2026_headshot_parasite_enemies",
+	"mutator_nurgle_explosion_2026_player_buffs",
+}
+local base_templates = CircumstanceUtils.inherit(BaseLiveEventTemplate, core_mutators, {
+	"stats_live_event_nurgle_explosion_2026",
+	"extra_ammo_pickups",
+}, "nurgle_explosion_2026")
+local circumstance_templates = table.reduce({
+	base_templates,
+}, table.merge, {})
+
+circumstance_templates.nurgle_explosion_2026.ui.display_name = "loc_circumstance_nurgle_explosion_2026_01_title"
+circumstance_templates.nurgle_explosion_2026.ui.description = "loc_circumstance_nurgle_explosion_2026_01_description"
+circumstance_templates.nurgle_explosion_2026_hunt_grou.ui.display_name = "loc_circumstance_nurgle_explosion_2026_02_title"
+circumstance_templates.nurgle_explosion_2026_hunt_grou.ui.description = "loc_circumstance_nurgle_explosion_2026_02_description"
+circumstance_templates.nurgle_explosion_2026_more_res.ui.display_name = "loc_circumstance_nurgle_explosion_2026_03_title"
+circumstance_templates.nurgle_explosion_2026_more_res.ui.description = "loc_circumstance_nurgle_explosion_2026_03_description"
+circumstance_templates.nurgle_explosion_2026_darkness.ui.display_name = "loc_circumstance_nurgle_explosion_2026_04_title"
+circumstance_templates.nurgle_explosion_2026_darkness.ui.description = "loc_circumstance_nurgle_explosion_2026_04_description"
+circumstance_templates.nurgle_explosion_2026_gas.ui.display_name = "loc_circumstance_nurgle_explosion_2026_05_title"
+circumstance_templates.nurgle_explosion_2026_gas.ui.description = "loc_circumstance_nurgle_explosion_2026_05_description"
+circumstance_templates.nurgle_explosion_2026_ventilation.ui.display_name = "loc_circumstance_nurgle_explosion_2026_06_title"
+circumstance_templates.nurgle_explosion_2026_ventilation.ui.description = "loc_circumstance_nurgle_explosion_2026_06_description"
+circumstance_templates.nurgle_explosion_2026_waves_spec.ui.display_name = "loc_circumstance_nurgle_explosion_2026_07_title"
+circumstance_templates.nurgle_explosion_2026_waves_spec.ui.description = "loc_circumstance_nurgle_explosion_2026_07_description"
+
+return circumstance_templates

@@ -5,6 +5,7 @@ local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local UnitTemplate = require("scripts/extension_systems/unit_templates/utilities/unit_template")
+local Breed = require("scripts/utilities/breed")
 local GAME_OBJECT_TYPE = "item_projectile"
 local item_projectile_unit_template = {
 	local_unit = function (unit_name, position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit)
@@ -75,13 +76,16 @@ local item_projectile_unit_template = {
 				})
 			end
 
+			local unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local is_player_breed = breed and Breed.is_player(breed)
 			local owner_buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 
-			if owner_buff_extension then
+			if is_player_breed and owner_buff_extension then
 				local stat_buffs = owner_buff_extension:stat_buffs()
 				local keywords = owner_buff_extension:keywords()
 
-				config:add("ProjectileUnitBuffExtension", {
+				config:add("PlayerProjectileUnitBuffExtension", {
 					stat_buffs = table.shallow_copy(stat_buffs),
 					keywords = table.shallow_copy(keywords),
 				})
@@ -126,6 +130,20 @@ local item_projectile_unit_template = {
 
 		if projectile_template.uses_script_components then
 			config:add("ComponentExtension")
+		end
+
+		local health_component_data = projectile_template.health_component_data
+
+		if health_component_data then
+			config:add("PropHealthExtension", {
+				health = health_component_data.max_health,
+				has_health_bar = health_component_data.has_health_bar,
+				hit_mass = health_component_data.hit_mass,
+				is_unkillable = health_component_data.unkillable,
+				is_invulnerable = health_component_data.invulnerable,
+				invulnerable_when_carried = health_component_data.invulnerable_when_carried,
+				attack_type_validation_func = health_component_data.attack_type_validation_func,
+			})
 		end
 
 		game_object_data.item_id = item_id
@@ -181,6 +199,14 @@ local item_projectile_unit_template = {
 			config:add("ComponentExtension")
 		end
 
+		local health_component_data = projectile_template.health_component_data
+
+		if health_component_data then
+			config:add("PropHealthExtension", {
+				has_health_bar = health_component_data.has_health_bar,
+			})
+		end
+
 		local spawn_flow_event = projectile_template.spawn_flow_event
 
 		if spawn_flow_event then
@@ -188,9 +214,31 @@ local item_projectile_unit_template = {
 		end
 	end,
 	local_unit_spawned = function (unit, template_context, game_object_data, item, projectile_template, starting_state, direction, speed, momentum_or_angular_velocity, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side_or_nil)
+		local health_component_data = projectile_template.health_component_data
+
+		if health_component_data then
+			local starts_enabled = true
+			local component_ext = ScriptUnit.extension(unit, "component_system")
+
+			component_ext:add_component("PropHealth", unit, starts_enabled, health_component_data)
+		end
+
 		Unit.flow_event(unit, "lua_extensions_ready")
 	end,
 	husk_unit_spawned = function (unit, template_context, game_session, game_object_id, owner_id)
+		local go_field = GameSession.game_object_field
+		local projectile_template_name_id = go_field(game_session, game_object_id, "projectile_template_id")
+		local projectile_template_name = NetworkLookup.projectile_template_names[projectile_template_name_id]
+		local projectile_template = ProjectileTemplates[projectile_template_name]
+		local health_component_data = projectile_template.health_component_data
+
+		if health_component_data then
+			local starts_enabled = true
+			local component_ext = ScriptUnit.extension(unit, "component_system")
+
+			component_ext:add_component("PropHealth", unit, starts_enabled, health_component_data)
+		end
+
 		Unit.flow_event(unit, "lua_extensions_ready")
 	end,
 	pre_unit_destroyed = function (unit)

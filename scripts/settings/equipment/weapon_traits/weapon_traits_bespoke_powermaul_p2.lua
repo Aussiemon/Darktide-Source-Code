@@ -575,33 +575,21 @@ templates.weapon_trait_bespoke_powermaul_p2_block_has_chance_to_stun = {
 	buffs = {
 		weapon_trait_bespoke_powermaul_p2_block_has_chance_to_stun = {
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.1,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.15,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.2,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.25,
 				},

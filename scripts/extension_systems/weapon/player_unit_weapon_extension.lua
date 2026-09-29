@@ -2,6 +2,7 @@
 
 local Action = require("scripts/utilities/action/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
+local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local Ammo = require("scripts/utilities/ammo")
@@ -27,6 +28,7 @@ local proc_events = BuffSettings.proc_events
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local slot_configuration_by_type = PlayerCharacterConstants.slot_configuration_by_type
 local template_types = WeaponTweakTemplateSettings.template_types
+local TRANSITION_TYPES = ActionHandlerSettings.transition_types
 local _block_anim_event
 local enabled_quick_swap_event = false
 local PlayerUnitWeaponExtension = class("PlayerUnitWeaponExtension")
@@ -204,6 +206,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_sweep.sweep_aborted_actor_index = nil
 	action_sweep.is_sticky = false
 	action_sweep.attack_direction = Vector3.zero()
+	action_sweep.sticky_start_orientation = Quaternion.identity()
 	action_sweep.sweep_state = "before_damage_window"
 
 	local action_shoot = unit_data_extension:write_component("action_shoot")
@@ -729,11 +732,11 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	weapon_tweak_templates_component.weapon_chain_lightning_template_name = weapon_template.weapon_chain_lightning_template or "none"
 	weapon_tweak_templates_component.weapon_shout_template_name = weapon_template.weapon_shout_template_name or "none"
 
-	action_handler:set_active_template("weapon_action", weapon_template.name)
+	action_handler:set_active_template("weapon_action", weapon_template.name, slot_name)
 	Wwise.set_state("wielded_weapon", weapon_template.name)
 
 	if not skip_wield_action then
-		self:_start_action(action_name, action_settings, t, false, "on_slot_wielded")
+		self:_start_action(action_name, action_settings, t, false, TRANSITION_TYPES.on_slot_wielded)
 	end
 end
 
@@ -772,7 +775,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.weapon_handling_template_name = "none"
 	weapon_tweak_templates_component.weapon_shout_template_name = "none"
 
-	self._action_handler:set_active_template("weapon_action", "none")
+	self._action_handler:set_active_template("weapon_action", "none", nil)
 
 	local inventory_slot_component = weapon.inventory_slot_component
 	local buffs = weapon.buffs
@@ -838,7 +841,7 @@ PlayerUnitWeaponExtension._start_action = function (self, action_name, action_se
 	self._action_handler:start_action("weapon_action", action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params)
 end
 
-PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
+PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit, from_frame, to_frame)
 	local weapon, wielded_slot = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local action_objects, actions
 
@@ -849,7 +852,7 @@ PlayerUnitWeaponExtension.server_correction_occurred = function (self, unit)
 
 	local action_params = self:_fill_action_params(weapon, self._unit, wielded_slot)
 
-	self._action_handler:server_correction_occurred("weapon_action", action_objects, action_params, actions)
+	self._action_handler:server_correction_occurred(unit, from_frame, to_frame, "weapon_action", action_objects, action_params, actions)
 end
 
 PlayerUnitWeaponExtension.start_action = function (self, action_name, t)
@@ -857,7 +860,7 @@ PlayerUnitWeaponExtension.start_action = function (self, action_name, t)
 	local weapon_template = weapon.weapon_template
 	local action_settings = Action.action_settings(weapon_template, action_name)
 	local used_input
-	local transition_type = "forced"
+	local transition_type = TRANSITION_TYPES.forced
 
 	self:_start_action(action_name, action_settings, t, used_input, transition_type)
 end
@@ -1065,9 +1068,9 @@ PlayerUnitWeaponExtension.action_settings_from_action_input = function (self, ac
 	end
 
 	local weapon = self:_wielded_weapon(inventory_component, self._weapons)
-	local actions = weapon.weapon_template.actions
+	local sorted_actions = weapon.weapon_template.sorted_actions
 
-	return self._action_handler:action_settings_from_action_input("weapon_action", actions, action_input)
+	return self._action_handler:action_settings_from_action_input("weapon_action", sorted_actions, action_input)
 end
 
 local temp_table = {}
@@ -1101,6 +1104,7 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	temp_table.action_module_charge_component = self._action_module_charge_component
 	temp_table.action_module_position_finder_component = self._action_module_position_finder_component
 	temp_table.action_module_target_finder_component = self._action_module_target_finder_component
+	temp_table.slot_name = wielded_slot
 
 	return temp_table
 end
@@ -1178,6 +1182,7 @@ PlayerUnitWeaponExtension.set_wielded_weapon_weapon_special_active = function (s
 			if param_table then
 				param_table.t = t
 				param_table.num_special_charges = inventory_slot_component.num_special_charges
+				param_table.wielded_slot = wielded_slot
 
 				buff_extension:add_proc_event(proc_events.on_weapon_special_activate, param_table)
 			end

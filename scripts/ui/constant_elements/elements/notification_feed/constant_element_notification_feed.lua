@@ -124,6 +124,15 @@ local function _remove_player_frame_cb_func(widget, ui_renderer)
 	widget.dirty = true
 end
 
+local function _remove_raw_icon_cb_func(widget, ui_renderer)
+	UiWidget.set_visible(widget, ui_renderer, false)
+
+	local material_values = widget.style.icon.material_values
+
+	material_values.use_placeholder_texture = 1
+	material_values.texture_icon = nil
+end
+
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
 local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking", "penance_item_can_be_claimed", "player_assist", "collectible", "helped_collect_collectible", "destructible", "minion_loot_steal", "minion_loot_drop", "player_loot_drop", "mutator", "havoc_status")
 
@@ -302,6 +311,13 @@ ConstantElementNotificationFeed._event_player_authenticated = function (self)
 
 	self._assist_notifications_enabled = assist_notifications_enabled
 	self._crafting_pickup_notifications_enabled = crafting_pickup_notifications_enabled
+end
+
+ConstantElementNotificationFeed._on_raw_icon_loaded = function (self, notification, icon)
+	local widget = notification.widget
+	local material_values = widget.style.icon.material_values
+
+	material_values.use_placeholder_texture = 0
 end
 
 ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notification, item, grid_index, rows, columns, render_target)
@@ -1395,6 +1411,17 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 				end
 			end
 
+			if notification.icon_loaded_info then
+				_remove_raw_icon_cb_func(widget, ui_renderer)
+
+				local icon_loaded_info = notification.icon_loaded_info
+				local icon_load_id = icon_loaded_info.icon_load_id
+
+				Managers.package:release(icon_load_id)
+
+				notification.icon_loaded_info = nil
+			end
+
 			if notification.item_loaded_info then
 				local item_loaded_info = notification.item_loaded_info
 				local icon_load_id = item_loaded_info.icon_load_id
@@ -1480,6 +1507,25 @@ ConstantElementNotificationFeed._create_notification_entry = function (self, not
 
 	if init then
 		init(self, widget, notification_data)
+	end
+
+	local icon = notification_data.icon
+
+	if icon then
+		local on_load_callback = callback(self, "_on_raw_icon_loaded", notification, icon)
+		local can_load = Application.can_get_resource("package", icon)
+
+		if can_load then
+			local reference_name = name
+			local icon_load_id = Managers.package:load(icon, reference_name, on_load_callback, true, false)
+
+			notification.icon_loaded_info = {
+				icon_load_id = icon_load_id,
+				reference_name = reference_name,
+			}
+		else
+			on_load_callback()
+		end
 	end
 
 	local item = notification_data.item

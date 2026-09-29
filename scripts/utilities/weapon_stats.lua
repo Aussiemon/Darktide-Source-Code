@@ -534,7 +534,9 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 
 							for chain_input, chain_data in pairs(chain_actions) do
 								if action_name == chain_data.action_name then
-									rate_of_fire = math.min(chain_data.chain_time or math.huge, total_time) / action_time_scale
+									local chain_time = type(chain_data.chain_time) == "table" and chain_data.chain_time.default or chain_data.chain_time
+
+									rate_of_fire = math.min(chain_time or math.huge, total_time) / action_time_scale
 
 									break
 								end
@@ -1147,14 +1149,14 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 						resolved_table = resolved_table[path]
 
 						if not resolved_table then
-							resolved_table = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+							resolved_table = WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE
 
 							break
 						end
 					end
 				end
 
-				local default_lerp = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+				local default_lerp = WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE
 
 				current = _resolve_damage_template_lerps(weapon_template, target_name, stat_data, resolved_table or default_lerp, nil, 0)
 			else

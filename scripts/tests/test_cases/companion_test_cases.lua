@@ -22,7 +22,9 @@ CompanionTestCases.spawn_and_despawn_dog_with_lone_wolf_talent = function (case_
 		}
 
 		params.talents = {
-			adamant_disable_companion = 1,
+			adamant_disable_companion = {
+				tier = 1,
+			},
 		}
 
 		Testify:make_request("apply_select_talents", params)
@@ -63,7 +65,9 @@ CompanionTestCases.check_lone_wolf_talent_and_coherency_interaction = function (
 		TestifySnippets.wait(5)
 
 		params.talents = {
-			adamant_companion_coherency = 1,
+			adamant_companion_coherency = {
+				tier = 1,
+			},
 		}
 
 		Testify:make_request("apply_select_talents", params)
@@ -71,17 +75,23 @@ CompanionTestCases.check_lone_wolf_talent_and_coherency_interaction = function (
 
 		params.talents = {
 			adamant_companion_coherency = nil,
-			adamant_disable_companion = 1,
-			adamant_reload_speed_aura = 1,
+			adamant_reload_speed_aura = {
+				tier = 1,
+			},
+			adamant_disable_companion = {
+				tier = 1,
+			},
 		}
 
 		Testify:make_request("apply_select_talents", params)
 		TestifySnippets.wait(5)
 
 		params.talents = {
-			adamant_companion_coherency = 1,
 			adamant_disable_companion = nil,
 			adamant_reload_speed_aura = nil,
+			adamant_companion_coherency = {
+				tier = 1,
+			},
 		}
 
 		Testify:make_request("apply_select_talents", params)

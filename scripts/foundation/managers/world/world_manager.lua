@@ -134,6 +134,24 @@ WorldManager.is_world_enabled = function (self, name)
 	end
 end
 
+WorldManager.join_physics = function (self)
+	for _, world in pairs(self._worlds) do
+		local is_physics_thread_locked = ScriptWorld.is_physics_thread_locked(world)
+
+		if is_physics_thread_locked then
+			ScriptWorld.physics_fetch_queries(world)
+		end
+	end
+
+	for _, world in pairs(self._disabled_worlds) do
+		local is_physics_thread_locked = ScriptWorld.is_physics_thread_locked(world)
+
+		if is_physics_thread_locked then
+			ScriptWorld.physics_fetch_queries(world)
+		end
+	end
+end
+
 WorldManager.update = function (self, dt, t)
 	self.locked = true
 

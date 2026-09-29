@@ -39,7 +39,7 @@ local stagger_results = AttackSettings.stagger_results
 local talent_settings_1 = TalentSettings.ogryn_1
 local talent_settings_2 = TalentSettings.ogryn_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
-local _passive_revive_conditional, _big_bull_add_stacks
+local _passive_revive_conditional
 local templates = {}
 
 table.make_unique(templates)
@@ -376,7 +376,7 @@ templates.ogryn_rending_on_elite_kills = {
 		[proc_events.on_hit] = 1,
 	},
 	proc_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1,
+		[stat_buffs.rending_multiplier] = 0.15,
 	},
 	check_proc_func = CheckProcFunctions.on_elite_kill,
 	related_talents = {
@@ -438,7 +438,7 @@ templates.ogryn_repeat_taunt = {
 }
 templates.ogryn_taunt_staggers_reduce_cooldown = {
 	class_name = "proc_buff",
-	cooldown_reduction_percentage = 0.02,
+	cooldown_reduction_percentage = 0.015,
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1,
@@ -464,7 +464,7 @@ templates.ogryn_taunt_staggers_reduce_cooldown = {
 
 		local cd_reduction = template_context.template.cooldown_reduction_percentage
 
-		ability_extension:reduce_ability_cooldown_percentage(ability_type, cd_reduction)
+		ability_extension:restore_ability_charge_percentage(ability_type, cd_reduction)
 
 		template_data.next_proc_t = t + 0.1
 	end,
@@ -500,7 +500,12 @@ templates.ogryn_blocking_ranged_taunts = {
 			return
 		end
 
-		local unit_data_extension = ScriptUnit.extension(affected_unit, "unit_data_system")
+		local unit_data_extension = ScriptUnit.has_extension(affected_unit, "unit_data_system")
+
+		if not unit_data_extension then
+			return
+		end
+
 		local breed = unit_data_extension:breed()
 		local is_monster = breed.tags.monster
 
@@ -796,7 +801,7 @@ templates.ogryn_recieve_damage_taken_increase_debuff = {
 	predicted = false,
 	refresh_duration_on_stack = true,
 	stat_buffs = {
-		[stat_buffs.damage_taken_modifier] = 0.1,
+		[stat_buffs.damage_taken_modifier] = 0.15,
 	},
 }
 templates.ogryn_decrease_suppressed_decay = {
@@ -892,6 +897,7 @@ templates.ogryn_charge_speed_on_lunge = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	hud_priority = 3,
 	predicted = false,
+	skip_tactical_overlay = true,
 	active_duration = talent_settings_2.combat_ability.active_duration,
 	proc_events = {
 		[proc_events.on_lunge_end] = talent_settings_2.combat_ability.on_lunge_end_proc_chance,
@@ -899,9 +905,6 @@ templates.ogryn_charge_speed_on_lunge = {
 	proc_stat_buffs = {
 		[stat_buffs.movement_speed] = talent_settings_2.combat_ability.movement_speed,
 		[stat_buffs.melee_attack_speed] = talent_settings_2.combat_ability.melee_attack_speed,
-	},
-	related_talents = {
-		"ogryn_charge",
 	},
 }
 templates.ogryn_charge_bleed = {
@@ -1214,10 +1217,10 @@ templates.ogryn_friend_grenade_replenishment = {
 		local next_grenade_t = template_data.next_grenade_t
 
 		if not next_grenade_t then
-			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+			local ability_charge_regen_time = ability_extension:max_regen_time_for_ability_charge("grenade_ability")
 
-			template_data.next_grenade_t = t + cooldown
-			template_data.cooldown = cooldown
+			template_data.next_grenade_t = t + ability_charge_regen_time
+			template_data.ability_charge_regen_time = ability_charge_regen_time
 
 			return
 		end
@@ -1248,7 +1251,7 @@ templates.ogryn_friend_grenade_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_grenade_t - t
-		local percentage_left = time_until_next / template_data.cooldown
+		local percentage_left = time_until_next / template_data.ability_charge_regen_time
 
 		return 1 - percentage_left
 	end,
@@ -1481,7 +1484,7 @@ templates.ogryn_cooldown_on_elite_kills_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings_2.coop_3.increased_cooldown_regeneration)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings_2.coop_3.increased_cooldown_regeneration)
 		end
 	end,
 	related_talents = {
@@ -1670,6 +1673,7 @@ local breed_name_size = {
 	chaos_armored_infected = 1,
 	chaos_beast_of_nurgle = 10,
 	chaos_daemonhost = 8,
+	chaos_daemonhost_torment = 8,
 	chaos_hound = 3,
 	chaos_hound_mutator = 3,
 	chaos_lesser_mutated_poxwalker = 1,
@@ -1716,118 +1720,9 @@ local breed_name_size = {
 	renegade_twin_captain = 2,
 	renegade_twin_captain_two = 2,
 	renegade_vanguard = 1,
+	renegade_wizard = 1,
 }
 
-function _big_bull_add_stacks(template_context, stacks)
-	local unit = template_context.unit
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-	if buff_extension then
-		local t = FixedFrame.get_latest_fixed_time()
-
-		for i = 1, stacks do
-			buff_extension:add_internally_controlled_buff("ogryn_big_bully_heavy_hits_buff", t)
-		end
-	end
-end
-
-templates.ogryn_big_bully_heavy_hits = {
-	class_name = "proc_buff",
-	predicted = false,
-	proc_events = {
-		[proc_events.on_hit] = 1,
-		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
-	},
-	start_func = function (template_data, template_context)
-		template_data.stacks = 0
-	end,
-	specific_proc_func = {
-		on_sweep_start = function (params, template_data, template_context)
-			template_data.in_sweep = params.is_heavy
-		end,
-		on_hit = function (params, template_data, template_context)
-			local stagger_result = params.stagger_result
-
-			if stagger_result ~= stagger_results.stagger then
-				return
-			end
-
-			local breed_name = params.breed_name
-			local stacks = breed_name_size[breed_name] or 0
-
-			if not template_data.in_sweep then
-				_big_bull_add_stacks(template_context, stacks)
-
-				return
-			end
-
-			template_data.stacks = template_data.stacks + stacks
-		end,
-		on_sweep_finish = function (params, template_data, template_context)
-			template_data.sweep_done = true
-			template_data.in_sweep = nil
-		end,
-	},
-	update_func = function (template_data, template_context, dt, t)
-		if template_data.sweep_done then
-			template_data.sweep_done = nil
-			template_data.delay = 0.1
-		end
-
-		if not template_data.delay then
-			return
-		end
-
-		if template_data.delay > 0 then
-			template_data.delay = template_data.delay - dt
-
-			return
-		end
-
-		if template_data.delay <= 0 then
-			local stacks = template_data.stacks or 0
-
-			_big_bull_add_stacks(template_context, stacks)
-
-			template_data.stacks = 0
-			template_data.delay = nil
-		end
-	end,
-}
-templates.ogryn_big_bully_heavy_hits_buff = {
-	allow_proc_while_active = true,
-	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_staggering_increases_damage",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	hud_priority = 3,
-	predicted = false,
-	refresh_duration_on_stack = true,
-	duration = talent_settings_2.offensive_2_2.duration,
-	proc_events = {
-		[proc_events.on_sweep_start] = 1,
-		[proc_events.on_sweep_finish] = 1,
-	},
-	stat_buffs = {
-		[stat_buffs.melee_heavy_damage] = talent_settings_2.offensive_2_2.melee_heavy_damage,
-	},
-	max_stacks = talent_settings_2.offensive_2_2.max_stacks,
-	specific_proc_func = {
-		on_sweep_start = function (params, template_data, template_context)
-			template_data.can_finish = params.is_heavy
-			template_data.finished = nil
-		end,
-		on_sweep_finish = function (params, template_data, template_context)
-			template_data.finished = true
-		end,
-	},
-	conditional_exit_func = function (template_data, template_context)
-		return template_data.can_finish and template_data.finished
-	end,
-	realated_talents = {
-		"ogryn_staggering_increases_damage",
-	},
-}
 templates.ogryn_melee_revenge_damage = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -2136,7 +2031,7 @@ templates.ogryn_no_ammo_consumption_passive_cooldown_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings_1.spec_passive_1.increased_cooldown_regeneration)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings_1.spec_passive_1.increased_cooldown_regeneration)
 		end
 	end,
 	related_talents = {
@@ -3609,7 +3504,7 @@ templates.ogryn_block_all_attacks_perfect_damage_boost = {
 		return template_data.finish
 	end,
 	related_talents = {
-		"ogryn_block_all_attacks_perfect",
+		"ogryn_block_all_attacks",
 	},
 }
 templates.ogryn_crit_damage_increase = {
@@ -3844,6 +3739,115 @@ templates.ogryn_damage_taken_by_all_increases_strength_tdr_max_buff = {
 		local max_stacks = ally_defense_max_stacks
 
 		return num_stacks < max_stacks
+	end,
+}
+templates.ogryn_free_reload_after_ability = {
+	allow_proc_while_active = true,
+	class_name = "proc_buff",
+	force_predicted_proc = true,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_combat_ability] = 1,
+	},
+	proc_func = function (params, template_data, template_context, t)
+		if params.ogryn_free_reload_consumed then
+			return
+		end
+
+		template_context.buff_extension:add_internally_controlled_buff("ogryn_free_reload_after_ability_effect", t)
+	end,
+	related_talents = {
+		"ogryn_free_reload_after_ability",
+	},
+}
+templates.ogryn_free_reload_after_ability_effect = {
+	always_show_in_hud = true,
+	class_name = "proc_buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/ogryn/ogryn_bracing_reduces_damage_taken",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
+	hud_priority = 1,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = true,
+	proc_events = {
+		[proc_events.on_reload_start] = 1,
+		[proc_events.on_reload] = 1,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+
+		template_data.unit_data_extension = unit_data_extension
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		template_data.weapon_action_component = unit_data_extension:read_component("weapon_action")
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+
+		local slot_secondary_component = unit_data_extension:write_component("slot_secondary")
+
+		slot_secondary_component.free_ammunition_transfer = true
+		template_data.slot_secondary_component = slot_secondary_component
+		template_data.done = false
+	end,
+	refresh_func = function (template_data, template_context)
+		template_data.done = false
+
+		local slot_secondary_component = template_data.slot_secondary_component
+
+		if slot_secondary_component then
+			slot_secondary_component.free_ammunition_transfer = true
+		end
+	end,
+	specific_proc_func = {
+		[proc_events.on_reload_start] = function (params, template_data, template_context)
+			if params.shotgun then
+				return
+			end
+
+			local slot_secondary_component = template_data.slot_secondary_component
+
+			if slot_secondary_component and slot_secondary_component.free_ammunition_transfer then
+				Ammo.move_clip_to_reserve(slot_secondary_component)
+			end
+		end,
+		[proc_events.on_reload] = function (params, template_data, template_context)
+			template_data.done = true
+		end,
+	},
+	conditional_exit_func = function (template_data, template_context)
+		local inventory_component = template_data.inventory_component
+		local visual_loadout_extension = template_data.visual_loadout_extension
+		local wielded_slot_id = inventory_component.wielded_slot
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
+		local _, current_action = Action.current_action(template_data.weapon_action_component, weapon_template)
+		local action_kind = current_action and current_action.kind
+		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
+
+		return template_data.done and not is_reloading
+	end,
+	stop_func = function (template_data, template_context)
+		local slot_secondary_component = template_data.slot_secondary_component
+
+		if slot_secondary_component then
+			slot_secondary_component.free_ammunition_transfer = false
+		end
+	end,
+	related_talents = {
+		"ogryn_free_reload_after_ability",
+	},
+}
+templates.ogryn_passive_ammo_replenishment = {
+	class_name = "interval_buff",
+	predicted = false,
+	interval = talent_settings_shared.ogryn_passive_ammo_replenishment.interval,
+	percent_ammo_replenish_per_tick = talent_settings_shared.ogryn_passive_ammo_replenishment.percent_ammo_replenish_per_tick,
+	interval_func = function (template_data, template_context, template, time_since_start, t, dt)
+		if not template_context.is_server then
+			return
+		end
+
+		local unit = template_context.unit
+
+		Ammo.add_to_all_slots(unit, template.percent_ammo_replenish_per_tick)
 	end,
 }
 

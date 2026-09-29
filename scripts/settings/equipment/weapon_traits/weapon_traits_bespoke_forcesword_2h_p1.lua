@@ -146,6 +146,17 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = {
 				},
 			},
 		},
+		limit_stacks = {
+			format_type = "number",
+			find_value = {
+				buff_template_name = "weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit",
+				find_value_type = "trait_override",
+				path = {
+					"target_buff_data",
+					"num_stacks_on_proc_special",
+				},
+			},
+		},
 		max_stacks = {
 			format_type = "number",
 			find_value = {
@@ -164,24 +175,28 @@ templates.weapon_trait_bespoke_forcesword_2h_p1_warp_burninating_on_crit = {
 				target_buff_data = {
 					max_stacks = 3,
 					num_stacks_on_proc = 1,
+					num_stacks_on_proc_special = 1,
 				},
 			},
 			{
 				target_buff_data = {
 					max_stacks = 6,
 					num_stacks_on_proc = 2,
+					num_stacks_on_proc_special = 1,
 				},
 			},
 			{
 				target_buff_data = {
 					max_stacks = 9,
 					num_stacks_on_proc = 3,
+					num_stacks_on_proc_special = 2,
 				},
 			},
 			{
 				target_buff_data = {
 					max_stacks = 12,
 					num_stacks_on_proc = 4,
+					num_stacks_on_proc_special = 3,
 				},
 			},
 		},

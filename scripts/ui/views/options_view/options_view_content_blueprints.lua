@@ -917,7 +917,7 @@ blueprints.keybind = {
 		local content = widget.content
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
 
-		content.text = parent:_localize(display_name)
+		content.text = entry.display_text or parent:_localize(display_name)
 		content.entry = entry
 		content.entry.value_width = content.entry.value_width or settings_value_width
 		content.key_unassigned_string = Managers.localization:localize("loc_keybind_unassigned")
@@ -992,18 +992,35 @@ local controller_image_height = 594
 local controller_image_input_services = {
 	"Ingame",
 }
-local controller_image_input_devices = {}
+local controller_image_input_devices = {
+	InputUtils.last_gamepad_device_type(),
+}
 
-if IS_PLAYSTATION then
-	controller_image_input_devices[#controller_image_input_devices + 1] = "ps4_controller"
-else
-	controller_image_input_devices[#controller_image_input_devices + 1] = "xbox_controller"
+local function _sync_controller_image_device(widget)
+	local device_type = InputUtils.last_gamepad_device_type()
+	local content = widget.content
+	local show_ps = device_type == "ps4_controller"
+
+	content.show_ps_controller = show_ps
+	content.controller_image_device = device_type
+	controller_image_input_devices[1] = device_type
+
+	if IS_WINDOWS then
+		if show_ps then
+			content.image = "content/ui/materials/controller_image_ps5"
+		else
+			content.image = "content/ui/materials/controller_image_xbox"
+		end
+	end
 end
 
 local temp_input_display_values = {}
 
 local function controller_image_apply_text_function(widget)
+	_sync_controller_image_device(widget)
+
 	local content = widget.content
+	local save_manager = Managers.save
 	local style = widget.style
 
 	if IS_XBS or IS_PLAYSTATION or IS_WINDOWS then
@@ -1013,6 +1030,7 @@ local function controller_image_apply_text_function(widget)
 
 		table.clear(temp_input_display_values)
 
+		local entries_by_button = {}
 		local input_manager = Managers.input
 
 		for _, service_type in ipairs(controller_image_input_services) do
@@ -1084,10 +1102,18 @@ local function controller_image_apply_text_function(widget)
 end
 
 local controller_image_pass_template = {}
+local _controller_pass_visibility
 
 local function add_to_controller_template(entry)
+	if _controller_pass_visibility then
+		entry.visibility_function = _controller_pass_visibility
+	end
+
 	controller_image_pass_template[#controller_image_pass_template + 1] = entry
 end
+
+local controller_text_input_size = 220
+local controller_text_right_pos = 1000 - controller_text_input_size
 
 if IS_PLAYSTATION then
 	add_to_controller_template({
@@ -1110,6 +1136,36 @@ if IS_PLAYSTATION then
 			color = Color.terminal_text_body(255, true),
 		},
 	})
+elseif IS_WINDOWS then
+	add_to_controller_template({
+		pass_type = "texture",
+		style_id = "image",
+		value = "content/ui/materials/controller_image_xbox",
+		value_id = "image",
+		style = {
+			horizontal_alignment = "left",
+			vertical_alignment = "top",
+			size = {
+				970,
+				controller_image_height,
+			},
+			offset = {
+				30,
+				0,
+				0,
+			},
+			color = Color.terminal_text_body(255, true),
+		},
+	})
+end
+
+if IS_PLAYSTATION or IS_WINDOWS then
+	if IS_WINDOWS then
+		function _controller_pass_visibility(content)
+			return content.show_ps_controller
+		end
+	end
+
 	add_to_controller_template({
 		pass_type = "text",
 		style_id = "ps4_controller_touch",
@@ -1122,10 +1178,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 75,
 				3,
 			},
@@ -1144,7 +1200,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1166,7 +1222,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1188,7 +1244,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			additional_inputs = {
 				"ps4_controller_l3",
@@ -1213,7 +1269,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1235,7 +1291,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1257,7 +1313,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1279,7 +1335,7 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1301,10 +1357,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 264,
 				3,
 			},
@@ -1323,10 +1379,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 139,
 				3,
 			},
@@ -1345,10 +1401,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 136 + 65,
 				3,
 			},
@@ -1367,10 +1423,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 327,
 				3,
 			},
@@ -1389,10 +1445,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 245 + 145,
 				3,
 			},
@@ -1411,10 +1467,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 276 + 176,
 				3,
 			},
@@ -1433,10 +1489,10 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 307 + 208,
 				3,
 			},
@@ -1455,40 +1511,53 @@ if IS_PLAYSTATION then
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			additional_inputs = {
 				"ps4_controller_r3",
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 338 + 240,
 				3,
 			},
 			text_color = Color.text_default(255, true),
 		},
 	})
-else
-	add_to_controller_template({
-		pass_type = "texture",
-		style_id = "image",
-		value = "content/ui/materials/controller_image_xbox",
-		value_id = "image",
-		style = {
-			horizontal_alignment = "left",
-			vertical_alignment = "top",
-			size = {
-				970,
-				controller_image_height,
+
+	_controller_pass_visibility = nil
+end
+
+if not IS_PLAYSTATION then
+	if IS_XBS then
+		add_to_controller_template({
+			pass_type = "texture",
+			style_id = "image",
+			value = "content/ui/materials/controller_image_xbox",
+			value_id = "image",
+			style = {
+				horizontal_alignment = "left",
+				vertical_alignment = "top",
+				size = {
+					970,
+					controller_image_height,
+				},
+				offset = {
+					30,
+					0,
+					0,
+				},
+				color = Color.terminal_text_body(255, true),
 			},
-			offset = {
-				30,
-				0,
-				0,
-			},
-			color = Color.terminal_text_body(255, true),
-		},
-	})
+		})
+	end
+
+	if IS_WINDOWS then
+		function _controller_pass_visibility(content)
+			return not content.show_ps_controller
+		end
+	end
+
 	add_to_controller_template({
 		pass_type = "text",
 		style_id = "xbox_controller_back",
@@ -1501,7 +1570,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1523,7 +1592,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1545,7 +1614,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1567,7 +1636,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			additional_inputs = {
 				"xbox_controller_left_thumb",
@@ -1592,7 +1661,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1614,7 +1683,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1636,7 +1705,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1658,7 +1727,7 @@ else
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
 				30,
@@ -1680,10 +1749,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 110,
 				3,
 			},
@@ -1702,10 +1771,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 173,
 				3,
 			},
@@ -1724,10 +1793,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 172 + 65,
 				3,
 			},
@@ -1746,10 +1815,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 308,
 				3,
 			},
@@ -1768,10 +1837,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 195 + 177,
 				3,
 			},
@@ -1790,10 +1859,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 226 + 208,
 				3,
 			},
@@ -1812,10 +1881,10 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 257 + 240,
 				3,
 			},
@@ -1834,19 +1903,21 @@ else
 			text_horizontal_alignment = "right",
 			text_vertical_alignment = "bottom",
 			size = {
-				250,
+				controller_text_input_size,
 			},
 			additional_inputs = {
 				"xbox_controller_right_thumb",
 			},
 			offset = {
-				750,
+				controller_text_right_pos,
 				-controller_image_height - 35 + 338 + 240,
 				3,
 			},
 			text_color = Color.text_default(255, true),
 		},
 	})
+
+	_controller_pass_visibility = nil
 end
 
 blueprints.controller_image = {
@@ -1879,8 +1950,10 @@ blueprints.controller_image = {
 		if player and save_manager then
 			local account_data = save_manager:account_data()
 			local saved_layout_name = account_data.input_settings.controller_layout
+			local device_type = InputUtils.last_gamepad_device_type()
+			local device_changed = content.controller_image_device ~= device_type
 
-			if content.controller_layout ~= saved_layout_name then
+			if content.controller_layout ~= saved_layout_name or device_changed then
 				content.controller_layout = saved_layout_name
 
 				controller_image_apply_text_function(widget)

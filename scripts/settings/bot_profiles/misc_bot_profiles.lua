@@ -6,6 +6,7 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function misc_bot_profiles(all_profiles)
 	all_profiles.darktide_seven_01 = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "veteran_male_a",
@@ -36,6 +37,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_02 = {
 		archetype = "ogryn",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "ogryn_a",
@@ -62,6 +64,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_03 = {
 		archetype = "zealot",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "zealot_female_c",
@@ -88,6 +91,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_04 = {
 		archetype = "psyker",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "psyker_male_a",
@@ -114,6 +118,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_05 = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "veteran_female_b",
@@ -140,6 +145,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_06 = {
 		archetype = "zealot",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
 		selected_voice = "zealot_male_b",
@@ -167,6 +173,7 @@ local function misc_bot_profiles(all_profiles)
 	}
 	all_profiles.darktide_seven_07 = {
 		archetype = "psyker",
+		character_height = 1,
 		current_level = 1,
 		gender = "female",
 		selected_voice = "psyker_female_a",

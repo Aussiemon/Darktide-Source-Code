@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/onboarding_handler/onboarding_templates.lua
 
 local UI_POPUP_INFO_DURATION = 10
+local DifficultySettings = require("scripts/settings/difficulty/difficulty_settings")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ItemUtils = require("scripts/utilities/items")
 local MissionObjectiveGoal = require("scripts/extension_systems/mission_objective/utilities/mission_objective_goal")
@@ -189,13 +190,7 @@ local function _has_new_difficulty()
 	return new_difficulty_unlocked
 end
 
-local difficulty_mappings = {
-	auric = 5,
-	damnation = 4,
-	heresy = 3,
-	malice = 2,
-	uprising = 1,
-}
+local difficulty_mappings = DifficultySettings.difficulty_mapping
 
 local function _highest_difficulty_num()
 	local player = _get_player()

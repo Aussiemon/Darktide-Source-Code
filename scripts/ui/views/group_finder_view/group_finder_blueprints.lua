@@ -4,7 +4,6 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local Colors = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
-local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local Text = require("scripts/utilities/ui/text")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
@@ -947,12 +946,12 @@ local function generate_blueprints_func(grid_size)
 						drop_shadow = true,
 						font_size = 22,
 						font_type = "proxima_nova_bold",
-						horizontal_alignment = "center",
-						text_horizontal_alignment = "right",
+						horizontal_alignment = "left",
+						text_horizontal_alignment = "left",
 						text_vertical_alignment = "center",
 						vertical_alignment = "center",
 						size_addition = {
-							-40,
+							-90,
 							-20,
 						},
 						text_color = {
@@ -962,7 +961,7 @@ local function generate_blueprints_func(grid_size)
 							67,
 						},
 						offset = {
-							0,
+							70,
 							0,
 							8,
 						},
@@ -1080,6 +1079,9 @@ local function generate_blueprints_func(grid_size)
 						if color and default_color and hover_color then
 							Colors.color_lerp(default_color, hover_color, progress, color)
 						end
+					end,
+					visibility_function = function (content)
+						return not content.no_active_havoc_order
 					end,
 				},
 			},
@@ -2430,8 +2432,7 @@ local function generate_blueprints_func(grid_size)
 							sub_header_text = first_selected_tag and first_selected_tag.text or "-"
 
 							local difficulty_name = first_selected_tag.difficulty
-							local difficulty_index = Danger.index_by_name(difficulty_name)
-							local danger_settings = DangerSettings[difficulty_index]
+							local danger_settings = Danger.danger_by_name(difficulty_name)
 
 							if danger_settings then
 								style.difficulty_icon.visible = true
@@ -3264,8 +3265,7 @@ local function generate_blueprints_func(grid_size)
 
 				local tag = element.tag
 				local difficulty_name = tag.difficulty
-				local difficulty_index = Danger.index_by_name(difficulty_name)
-				local danger_settings = DangerSettings[difficulty_index]
+				local danger_settings = Danger.danger_by_name(difficulty_name)
 
 				if danger_settings then
 					content.difficulty_icon = danger_settings.icon
@@ -3473,7 +3473,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							10,
 						},
 						default_color = Color.terminal_frame(nil, true),
 						selected_color = Color.terminal_frame_selected(nil, true),
@@ -3492,7 +3492,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							10,
+							11,
 						},
 						default_color = Color.terminal_corner(nil, true),
 						selected_color = Color.terminal_corner_selected(nil, true),
@@ -4018,7 +4018,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							8,
 						},
 						color = {
 							105,
@@ -4038,7 +4038,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							7,
 						},
 						color = {
 							150,
@@ -4065,7 +4065,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							8,
+							9,
 						},
 						uvs = {
 							{
@@ -4108,7 +4108,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							9,
+							10,
 						},
 					},
 					visibility_function = function (content, style)
@@ -4122,7 +4122,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							5,
+							6,
 						},
 						color = Color.black(220, true),
 					},
@@ -4143,7 +4143,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							6,
+							7,
 						},
 					},
 					visibility_function = function (content, style)
@@ -4166,7 +4166,7 @@ local function generate_blueprints_func(grid_size)
 						offset = {
 							0,
 							0,
-							7,
+							8,
 						},
 						size_addition = {
 							0,
@@ -4211,8 +4211,7 @@ local function generate_blueprints_func(grid_size)
 						background_texture_style.material_values.texture_map = background_texture
 					end
 
-					local difficulty_index = Danger.index_by_name(difficulty_name)
-					local danger_settings = DangerSettings[difficulty_index]
+					local danger_settings = Danger.danger_by_name(difficulty_name)
 
 					if danger_settings then
 						style.difficulty_icon.visible = true

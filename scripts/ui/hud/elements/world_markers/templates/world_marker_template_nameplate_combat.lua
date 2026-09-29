@@ -132,6 +132,11 @@ local function _cb_event_titles_in_mission_setting_changed(self, option_type)
 	local marker = self
 	local data = marker.data
 	local header_text = ""
+	local unit_is_alive = HEALTH_ALIVE[marker.unit]
+
+	if not unit_is_alive then
+		return
+	end
 
 	if option_type and option_type == "color_changed" then
 		local player_slot = data:slot()

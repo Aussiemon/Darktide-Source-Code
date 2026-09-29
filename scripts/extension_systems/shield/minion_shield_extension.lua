@@ -10,6 +10,9 @@ local Stagger = require("scripts/utilities/attack/stagger")
 local attack_results = AttackSettings.attack_results
 local stagger_types = StaggerSettings.stagger_types
 local push = AttackSettings.attack_types.push
+local shout = AttackSettings.attack_types.shout
+local explosion = AttackSettings.attack_types.explosion
+local melee = AttackSettings.attack_types.melee
 local MinionShieldExtension = class("MinionShieldExtension")
 local IS_BLOCKING_INITIALLY = true
 local IS_ALIVE_INITALLY = true
@@ -259,6 +262,16 @@ MinionShieldExtension._check_for_ignore_override = function (self, stagger_type)
 	return stagger_type, duration_scale, length_scale
 end
 
+MinionShieldExtension.remap_forced_stagger_type = function (self, stagger_type)
+	local charge_and_explosion_stagger_type = self._template.charge_and_explosion_stagger_type
+
+	if charge_and_explosion_stagger_type and self._shield_component.is_blocking and stagger_type == stagger_types.explosion then
+		return charge_and_explosion_stagger_type
+	end
+
+	return stagger_type
+end
+
 local DEFAULT_MULTIPLIER = 1
 local IGNORED_DAMAGE_KEYWORDS = {
 	arc_chain = true,
@@ -305,6 +318,12 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 		self._last_push_t = t
 	end
 
+	local is_charge_collision = attack_type == melee and damage_profile.is_push
+
+	if (attack_type == shout or is_charge_collision) and template.charge_and_explosion_stagger_type then
+		return template.charge_and_explosion_stagger_type, 1, 1
+	end
+
 	local override_multiplier = damage_profile.shield_multiplier or DEFAULT_MULTIPLIER
 
 	stagger_strength = override_multiplier * (stagger_strength or 0)
@@ -334,7 +353,14 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 	end
 
 	if open_up_threshold <= hit_strength then
-		stagger_type, duration_scale, length_scale = stagger_types.shield_heavy_block, 1, 1
+		local is_explosion = attack_type == explosion or damage_profile.stagger_category == "explosion"
+		local open_up_stagger_type = stagger_types.shield_heavy_block
+
+		if is_explosion and template.charge_and_explosion_stagger_type then
+			open_up_stagger_type = template.charge_and_explosion_stagger_type
+		end
+
+		stagger_type, duration_scale, length_scale = open_up_stagger_type, 1, 1
 
 		local skip_open_up_vfx = self._template.skip_open_up_vfx
 

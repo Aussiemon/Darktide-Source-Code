@@ -19,6 +19,7 @@ LocomotionSystem.init = function (self, extension_system_creation_context, ...)
 	LocomotionSystem.super.init(self, extension_system_creation_context, ...)
 
 	self._spawned_deployables = {}
+	self._vector_fields_data = {}
 
 	local game_session = extension_system_creation_context.game_session
 

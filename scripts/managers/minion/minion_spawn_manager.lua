@@ -45,6 +45,32 @@ MinionSpawnManager.replacement_breed = function (self, breed_name)
 	return replacement_breed
 end
 
+MinionSpawnManager.inject_replacement_breeds = function (self, breeds_to_add)
+	if not self._mutator_breed_data then
+		self._mutator_breed_data = {
+			breed_replacement = breeds_to_add,
+		}
+	elseif self._mutator_breed_data and self._mutator_breed_data.breed_replacement then
+		for name, replacement in pairs(breeds_to_add) do
+			if not self._mutator_breed_data.breed_replacement[name] then
+				self._mutator_breed_data.breed_replacement[name] = replacement
+			end
+		end
+	end
+end
+
+MinionSpawnManager.remove_injected_breeds = function (self, breeds_to_remove)
+	local breed_data = self._mutator_breed_data and self._mutator_breed_data.breed_replacement
+
+	if not breed_data then
+		return
+	end
+
+	for name in pairs(breeds_to_remove) do
+		breed_data[name] = nil
+	end
+end
+
 MinionSpawnManager.delete_units = function (self)
 	local spawned_minions = self._spawned_minions
 	local num_spawned = self._num_spawned_minions

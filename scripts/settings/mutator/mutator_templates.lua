@@ -28,6 +28,9 @@ _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutato
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_barren_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_leftover_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_endless_hordes_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_torment_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_story_spillway_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/live_event_mutator_templates/mutator_live_event_nurgle_explosion_2026_templates")
 
 for name, mutator_data in pairs(mutator_templates) do
 	mutator_data.name = name

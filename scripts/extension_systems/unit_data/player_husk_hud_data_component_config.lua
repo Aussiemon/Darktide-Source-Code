@@ -52,18 +52,18 @@ local husk_hud_data_component_config = {
 		"is_crouching",
 	},
 	grenade_ability = {
-		"cooldown",
-		"cooldown_paused",
+		"resource",
+		"resource_regen_paused",
 		"num_charges",
 	},
 	combat_ability = {
-		"cooldown",
-		"cooldown_paused",
+		"resource",
+		"resource_regen_paused",
 		"num_charges",
 	},
 	pocketable_ability = {
-		"cooldown",
-		"cooldown_paused",
+		"resource",
+		"resource_regen_paused",
 		"num_charges",
 	},
 	weapon_lock_view = {

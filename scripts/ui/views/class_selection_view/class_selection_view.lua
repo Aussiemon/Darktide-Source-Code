@@ -714,10 +714,15 @@ ClassSelectionView._update_archetype_info = function (self)
 	widget.style.description.offset[2] = widget.style.divider.offset[2] + widget.style.divider.size[2] + vertical_margin
 	widget.content.title = title
 	widget.content.description = Localize(selected_archetype.archetype_description)
-	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_upper
-	widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_upper
-	widgets_by_name.corners.content.left_lower = UISettings.inventory_frames_by_archetype[selected_archetype.name].left_lower
-	widgets_by_name.corners.content.right_lower = UISettings.inventory_frames_by_archetype[selected_archetype.name].right_lower
+
+	local selected_archetype_name = selected_archetype.name
+	local corner_frames = UISettings.inventory_frames_by_archetype[selected_archetype_name]
+	local corners_widget_content = widgets_by_name.corners.content
+
+	corners_widget_content.left_lower = corner_frames.left_lower
+	corners_widget_content.left_upper = corner_frames.left_upper
+	corners_widget_content.right_lower = corner_frames.right_lower
+	corners_widget_content.right_upper = corner_frames.right_upper
 end
 
 ClassSelectionView._update_choose_button_text = function (self)

@@ -237,6 +237,7 @@ MinionCustomization.component_data = {
 	},
 	attachment_material_override_items = {
 		category = "Attachments",
+		filter = "item",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {

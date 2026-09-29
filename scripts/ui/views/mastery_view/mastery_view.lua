@@ -572,9 +572,6 @@ MasteryView._unlock_progress_animation_update = function (self, dt, t)
 
 	if self._threshold_animation_id and self:_is_animation_completed(self._threshold_animation_id) then
 		self._threshold_animation_id = nil
-
-		local traits = self._traits
-
 		self._widgets_by_name.mastery_unlock_bar.style.progress_bar.material_values.tier_icon_intensity = 1
 
 		if unlocked_rarity_level == MAX_RARITY_LEVEL then
@@ -1086,42 +1083,32 @@ end
 
 MasteryView._setup_milestones = function (self)
 	local milestones = self._milestones
-	local milestone_rewards_by_level = {}
-	local max_level = 0
+	local wintrack_rewards = {}
 
 	for i = 1, #milestones do
 		local milestone = milestones[i]
-		local milestone_data = {
-			widget_type = "wintrack",
-			icon = milestone.icon,
-			display_name = milestone.display_name,
-			text = milestone.text,
-			icon_size = milestone.icon_size,
-			icon_color = milestone.icon_color,
-			icon_material_values = milestone.icon_material_values,
-			type = milestone.type,
-		}
+		local rewards_data = {}
 
-		max_level = math.max(max_level, milestone.level)
-		milestone_rewards_by_level[milestone.level] = milestone_rewards_by_level[milestone.level] or {}
+		for reward_id, reward in pairs(milestone.rewards) do
+			if reward.ui then
+				local reward_data = {
+					widget_type = "wintrack",
+					icon = reward.ui.icon,
+					display_name = reward.ui.display_name,
+					text = reward.ui.text,
+					icon_size = reward.ui.icon_size,
+					icon_color = reward.ui.icon_color,
+					icon_material_values = reward.ui.icon_material_values,
+					type = reward.ui.type,
+				}
 
-		local next_index = #milestone_rewards_by_level[milestone.level] + 1
-
-		milestone_rewards_by_level[milestone.level][next_index] = milestone_data
-	end
-
-	for i = 1, max_level do
-		if not milestone_rewards_by_level[i] then
-			milestone_rewards_by_level[i] = {}
+				rewards_data[#rewards_data + 1] = reward_data
+			end
 		end
-	end
 
-	local wintrack_rewards = {}
-
-	for level, rewards in pairs(milestone_rewards_by_level) do
 		wintrack_rewards[#wintrack_rewards + 1] = {
-			points_required = level,
-			items = rewards,
+			points_required = i,
+			items = rewards_data,
 		}
 	end
 
@@ -1145,7 +1132,6 @@ end
 MasteryView._can_trait_be_acquired = function (self, trait_item_element)
 	local points_available = self._mastery.points_available
 	local unlocked_rarity_level = Mastery.get_max_blessing_rarity_unlocked_level_by_points_spent(self._traits)
-	local rarity = trait_item_element.rarity
 	local next_rarity = trait_item_element.next_rarity
 	local reached_max_rarity = trait_item_element.rarity == trait_item_element.next_rarity
 	local cost = trait_item_element.cost
@@ -1180,10 +1166,6 @@ MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
 
 	self._selected_trait = config
 
-	local rarity = config.rarity
-	local next_rarity = config.next_rarity
-	local reached_max_rarity = config.rarity == config.next_rarity
-	local item = config.item
 	local trait = self._selected_trait
 	local rarity = trait.next_rarity
 	local trait_name = trait.name
@@ -1232,7 +1214,6 @@ MasteryView._cb_trait_left_pressed = function (self, trait_widget, config)
 	end
 
 	local points_in_threshold = next_threshold - current_threshold
-	local time_added = TIME_PER_BAR / points_in_threshold
 
 	if previous_unlocked_rarity_level < MAX_RARITY_LEVEL then
 		self._progress_per_point = self._progress_per_point or {}
@@ -1275,7 +1256,6 @@ MasteryView._unselect_trait = function (self)
 		for i = 1, #self._trait_widgets do
 			local widget = self._trait_widgets[i]
 			local content = widget.content
-			local style = widget.style
 
 			if content.hotspot then
 				content.hotspot.is_selected = false
@@ -1371,7 +1351,6 @@ end
 
 MasteryView._find_closest_neighbour_horizontal = function (self, index, input_direction)
 	local grid_settings = MasteryViewSettings.trait_grid_settings
-	local rows = grid_settings[1]
 	local columns = grid_settings[2]
 	local max_index
 
@@ -1423,7 +1402,6 @@ MasteryView._handle_input = function (self, input_service, dt, t)
 			for i = 1, #self._trait_widgets do
 				local widget = self._trait_widgets[i]
 				local content = widget.content
-				local style = widget.style
 
 				if content.hotspot then
 					if i ~= new_selection_index then
@@ -1453,7 +1431,6 @@ MasteryView._on_navigation_input_changed = function (self)
 			for i = 1, #self._trait_widgets do
 				local widget = self._trait_widgets[i]
 				local content = widget.content
-				local style = widget.style
 
 				if content.hotspot then
 					if i ~= self._selected_trait_index then
@@ -1468,7 +1445,6 @@ MasteryView._on_navigation_input_changed = function (self)
 		for i = 1, #self._trait_widgets do
 			local widget = self._trait_widgets[i]
 			local content = widget.content
-			local style = widget.style
 
 			if content.hotspot then
 				content.hotspot.is_selected = false

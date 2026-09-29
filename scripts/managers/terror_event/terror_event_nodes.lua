@@ -491,8 +491,8 @@ TerrorEventNodes.spawn_by_points = {
 
 			BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, aggro_state, group_id, nil, spawn_delay)
 
-			local group = group_system:group_from_id(group_id)
 			local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]
+			local group = group_system:group_from_id(group_id)
 
 			if horde_group_sound_event_names and not node.passive then
 				local start_event, stop_event = horde_group_sound_event_names.start, horde_group_sound_event_names.stop
@@ -612,14 +612,13 @@ TerrorEventNodes.try_inject_special_minion = {
 		local points = node.points * difficulty_scale
 		local wanted_sub_faction = Managers.state.pacing:current_faction()
 		local breed_pool = BreedQueries.match_minions_by_tags(breed_tags, nil, wanted_sub_faction)
+		local spawner_group = node.spawner_group
 		local breed, breed_amount = BreedQueries.pick_random_minion_by_points(breed_pool, points)
 		local breed_name = breed.name
 
 		if node.max_breed_amount then
 			breed_amount = math.min(node.max_breed_amount, breed_amount)
 		end
-
-		local spawner_group = node.spawner_group
 
 		for i = 1, breed_amount do
 			Managers.state.pacing:try_inject_special(breed_name, nil, nil, spawner_group)

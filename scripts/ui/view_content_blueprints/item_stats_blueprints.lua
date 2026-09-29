@@ -2191,7 +2191,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				{
 					pass_type = "texture",
 					style_id = "icon",
-					value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+					value = "content/ui/materials/icons/weapons/hud/debug_primary",
 					value_id = "icon",
 					style = {
 						horizontal_alignment = "right",
@@ -2279,7 +2279,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 				content.sub_display_name = sub_display_name
 				content.rarity_name = rarity_name
-				content.icon = item.hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+				content.icon = item.hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 				local rarity_name_style = style.rarity_name
 				local height_margin = -2
@@ -5223,6 +5223,7 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				local display_name = type_data.display_name or ""
 				local display_type = type_data.display_type or "default"
 				local signed = type_data.signed
+				local inverted = type_data.inverted
 				local display_units = type_data.display_units or ""
 				local stat_value = stat.value
 
@@ -5235,10 +5236,12 @@ local function _generate_blueprints_function(grid_size, optional_item)
 				elseif display_type == "percentage" then
 					stat_value = stat_value * 100
 				elseif display_type == "angle" then
-					value = math.radians_to_degrees(value)
+					stat_value = math.radians_to_degrees(stat_value)
 				end
 
 				local value = signed and stat_value or stat_value * math.sign(stat_value)
+
+				value = inverted and -value or value
 
 				if value >= math.huge then
 					value = Localize("loc_weapon_stats_display_unlimited")
@@ -6238,6 +6241,8 @@ local function _generate_blueprints_function(grid_size, optional_item)
 
 							style[spacing_pass_id].offset[1] = pass_style.offset[1] + (icon_width * 2 + spacing) * 0.5 - spacing_icon_width * 0.5
 						end
+					else
+						content["hotspot_icon_" .. i].disabled = true
 					end
 				end
 			end,

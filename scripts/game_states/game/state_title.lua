@@ -619,7 +619,6 @@ StateTitle._signin = function (self)
 		end
 
 		Managers.event:trigger("event_player_authenticated")
-		Managers.input:load_settings()
 
 		local local_player = _create_player(account_id, selected_profile)
 

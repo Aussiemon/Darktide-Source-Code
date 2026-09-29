@@ -92,7 +92,9 @@ local ogryn_weapon_unlock_settings = {
 	},
 	{
 		level = 18,
-		items = {},
+		items = {
+			"content/items/weapons/player/melee/ogryn_hammer_2h_p1_m1",
+		},
 	},
 	{
 		level = 19,
@@ -100,7 +102,9 @@ local ogryn_weapon_unlock_settings = {
 	},
 	{
 		level = 20,
-		items = {},
+		items = {
+			"content/items/weapons/player/ranged/ogryn_thumper_p1_m3",
+		},
 	},
 	{
 		level = 21,

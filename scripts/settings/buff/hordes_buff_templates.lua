@@ -39,10 +39,10 @@ local SFX_NAMES = {
 	friendly_rock_charge_stop = "wwise/events/player/stop_horde_mode_buff_rock_charge_loop",
 	gravity_pull = "wwise/events/player/play_horde_mode_buff_gravitation",
 	grenade_refil = "wwise/events/player/play_horde_mode_buff_grenade_refill",
-	healing = "wwise/events/weapon/play_horde_mode_heal_self_confirmation",
+	healing = "wwise/events/player/play_horde_mode_heal_self_confirmation",
 	inferno = "wwise/events/player/play_horde_mode_buff_fire_inferno",
 	reduced_damage_hit = "wwise/events/player/play_horde_mode_buff_shield_hit",
-	shield = "wwise/events/weapon/play_horde_mode_buff_shield",
+	shield = "wwise/events/player/play_horde_mode_buff_shield",
 	shock_aoe_big = "wwise/events/player/play_horde_mode_buff_electric_shock",
 	shock_crit = "wwise/events/player/play_horde_mode_buff_electric_crit",
 	shock_proc = "wwise/events/player/play_horde_mode_buff_electric_damage",
@@ -488,7 +488,7 @@ templates.hordes_buff_combat_ability_cooldown_reduction_on_elite_kills = {
 	proc_func = function (params, template_data, template_context)
 		local cooldown_reduction = 10
 
-		template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_reduction)
+		template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_reduction)
 	end,
 }
 templates.hordes_ailment_minion_burning = {

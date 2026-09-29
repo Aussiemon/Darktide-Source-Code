@@ -37,6 +37,25 @@ local MainMenuViewTestify = {
 	select_character_widget = function (main_menu_view, index)
 		main_menu_view:on_character_widget_selected(index)
 	end,
+	select_character_by_archetype = function (main_menu_view, archetype_name)
+		local widgets = main_menu_view._character_list_widgets or {}
+
+		for i = 1, #widgets do
+			local profile = widgets[i].content.profile
+
+			if profile and profile.archetype.name == archetype_name then
+				main_menu_view:on_character_widget_selected(i)
+
+				return
+			end
+		end
+
+		if #widgets > 0 then
+			ferror("No character with archetype %q among the %d character widgets", archetype_name, #widgets)
+		end
+
+		return Testify.RETRY
+	end,
 	is_any_character_created = function (main_menu_view)
 		local character_profiles = main_menu_view:character_profiles()
 		local number_profiles = #character_profiles
@@ -56,9 +75,6 @@ local MainMenuViewTestify = {
 		else
 			return Testify.RETRY
 		end
-	end,
-	wait_for_main_menu_displayed = function ()
-		return
 	end,
 }
 

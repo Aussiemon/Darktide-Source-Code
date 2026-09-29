@@ -180,6 +180,22 @@ templates.cultist_berzerker[zone_ids.void] = {
 	void_2,
 }
 
+local depths_1 = table.clone(default_1)
+
+depths_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_01",
+}
+
+local depths_2 = table.clone(default_2)
+
+depths_2.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_01",
+}
+templates.cultist_berzerker[zone_ids.depths] = {
+	depths_1,
+	depths_2,
+}
+
 local horde_1 = table.clone(default_1)
 
 horde_1.slots.environmental_override.items = {

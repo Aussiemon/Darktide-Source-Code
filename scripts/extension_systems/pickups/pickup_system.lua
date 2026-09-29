@@ -7,6 +7,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local Health = require("scripts/utilities/health")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
+local PickupPools = require("scripts/settings/pickup/pickup_pools")
 local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local MasterItems = require("scripts/backend/master_items")
@@ -29,7 +30,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	local is_server = context.is_server
 
 	self._soft_cap_out_of_bounds_units = context.soft_cap_out_of_bounds_units
-	self._mission_pool = PickupSettings[system_init_data.mission.pickup_pool]
+	self._mission_pool = PickupPools[system_init_data.mission.pickup_pool]
 	self._mission_pool_adjustments = system_init_data.mission.pickup_settings
 	self._backend_pool_adjustments = context.pickup_pool_adjustments
 	self._min_chest_spawner_ratios = system_init_data.mission.min_chest_spawner_ratios or PickupSettings.min_chest_spawner_ratios
@@ -72,7 +73,7 @@ end
 
 PickupSystem._fetch_settings = function (self)
 	local difficulty = Managers.state.difficulty:get_initial_challenge()
-	local distribution_pool = self._mission_pool or PickupSettings.default_distribution_pool
+	local distribution_pool = self._mission_pool or PickupPools.default_distribution_pool
 	local selected_pools = {}
 	local mission_pickup_settings = self._mission_pool_adjustments
 
@@ -706,143 +707,149 @@ local SECTION_SPAWNERS = {}
 local USED_SPAWNERS = {}
 
 PickupSystem._spawn_linear_pickups = function (self, distribution_type, pickup_pool, usable_spawners, pickups_to_spawn, seed)
-	for pickup_type, value in pairs(pickup_pool) do
-		table.clear(pickups_to_spawn)
+	for pickup_type, pickups in pairs(pickup_pool) do
+		seed = self:_spawn_linear_pickup_category(pickup_type, pickups, distribution_type, usable_spawners, pickups_to_spawn, seed)
+	end
 
-		for pickup_name, amount in pairs(value) do
-			for i = 1, amount do
-				local selected_pickup_name = pickup_name
-				local selector_func = PICKUP_SELECTOR[pickup_name]
+	return seed
+end
 
-				if selector_func then
-					selected_pickup_name, seed = selector_func(seed)
-				end
+PickupSystem._spawn_linear_pickup_category = function (self, pickup_type, pickups, distribution_type, usable_spawners, pickups_to_spawn, seed)
+	table.clear(pickups_to_spawn)
 
-				pickups_to_spawn[#pickups_to_spawn + 1] = selected_pickup_name
+	for pickup_name, amount in pairs(pickups) do
+		for i = 1, amount do
+			local selected_pickup_name = pickup_name
+			local selector_func = PICKUP_SELECTOR[pickup_name]
+
+			if selector_func then
+				selected_pickup_name, seed = selector_func(seed)
+			end
+
+			pickups_to_spawn[#pickups_to_spawn + 1] = selected_pickup_name
+		end
+	end
+
+	seed = self:_shuffle(pickups_to_spawn, seed)
+
+	local num_sections = #pickups_to_spawn
+	local section_size = 1 / num_sections
+	local section_start_point = 0
+	local section_end_point
+	local spawn_debt = 0
+
+	if #usable_spawners >= 2 then
+		local first_spawner_percentage_through_level = usable_spawners[1].extension:percentage_through_level()
+		local last_spawner_percentage_through_level = usable_spawners[#usable_spawners].extension:percentage_through_level()
+		local section_scale = 1 - first_spawner_percentage_through_level - (1 - last_spawner_percentage_through_level)
+		local section_start_point_offset = first_spawner_percentage_through_level
+
+		section_size = section_scale / num_sections
+		section_start_point = section_start_point_offset
+	end
+
+	for i = 1, num_sections do
+		table.clear(SECTION_SPAWNERS)
+		table.clear(USED_SPAWNERS)
+
+		section_end_point = section_start_point + section_size
+
+		local num_pickup_spawners = #usable_spawners
+
+		for j = 1, num_pickup_spawners do
+			local spawner = usable_spawners[j]
+			local spawner_extension = spawner.extension
+			local percentage_through_level = spawner_extension:percentage_through_level()
+
+			if section_start_point <= percentage_through_level and percentage_through_level < section_end_point or num_sections == i and percentage_through_level == 1 then
+				SECTION_SPAWNERS[#SECTION_SPAWNERS + 1] = spawner
 			end
 		end
 
-		seed = self:_shuffle(pickups_to_spawn, seed)
+		section_start_point = section_end_point
 
-		local num_sections = #pickups_to_spawn
-		local section_size = 1 / num_sections
-		local section_start_point = 0
-		local section_end_point
-		local spawn_debt = 0
+		local num_section_spawners = #SECTION_SPAWNERS
 
-		if #usable_spawners >= 2 then
-			local first_spawner_percentage_through_level = usable_spawners[1].extension:percentage_through_level()
-			local last_spawner_percentage_through_level = usable_spawners[#usable_spawners].extension:percentage_through_level()
-			local section_scale = 1 - first_spawner_percentage_through_level - (1 - last_spawner_percentage_through_level)
-			local section_start_point_offset = first_spawner_percentage_through_level
+		if num_section_spawners > 0 and spawn_debt >= 0 then
+			local remaining_sections = num_sections - i + 1
+			local pickups_in_section = math.min(1 + math.ceil(spawn_debt / remaining_sections), num_section_spawners)
 
-			section_size = section_scale / num_sections
-			section_start_point = section_start_point_offset
-		end
+			seed = self:_shuffle(SECTION_SPAWNERS, seed)
 
-		for i = 1, num_sections do
-			table.clear(SECTION_SPAWNERS)
-			table.clear(USED_SPAWNERS)
+			local num_spawned_pickups_in_section = 0
+			local previously_selected_spawner
 
-			section_end_point = section_start_point + section_size
+			for j = 1, pickups_in_section do
+				local num_available_section_spawners = #SECTION_SPAWNERS
 
-			local num_pickup_spawners = #usable_spawners
+				if previously_selected_spawner then
+					local percentage_through_level = previously_selected_spawner.extension:percentage_through_level()
 
-			for j = 1, num_pickup_spawners do
-				local spawner = usable_spawners[j]
-				local spawner_extension = spawner.extension
-				local percentage_through_level = spawner_extension:percentage_through_level()
+					local function _compare_relative_spawner_position(a, b)
+						local percentage_a = a.extension:percentage_through_level()
+						local percentage_b = b.extension:percentage_through_level()
 
-				if section_start_point <= percentage_through_level and percentage_through_level < section_end_point or num_sections == i and percentage_through_level == 1 then
-					SECTION_SPAWNERS[#SECTION_SPAWNERS + 1] = spawner
-				end
-			end
-
-			section_start_point = section_end_point
-
-			local num_section_spawners = #SECTION_SPAWNERS
-
-			if num_section_spawners > 0 and spawn_debt >= 0 then
-				local remaining_sections = num_sections - i + 1
-				local pickups_in_section = math.min(1 + math.ceil(spawn_debt / remaining_sections), num_section_spawners)
-
-				seed = self:_shuffle(SECTION_SPAWNERS, seed)
-
-				local num_spawned_pickups_in_section = 0
-				local previously_selected_spawner
-
-				for j = 1, pickups_in_section do
-					local num_available_section_spawners = #SECTION_SPAWNERS
-
-					if previously_selected_spawner then
-						local percentage_through_level = previously_selected_spawner.extension:percentage_through_level()
-
-						local function _compare_relative_spawner_position(a, b)
-							local percentage_a = a.extension:percentage_through_level()
-							local percentage_b = b.extension:percentage_through_level()
-
-							return math.abs(percentage_through_level - percentage_a) < math.abs(percentage_through_level - percentage_b)
-						end
-
-						table.sort(SECTION_SPAWNERS, _compare_relative_spawner_position)
+						return math.abs(percentage_through_level - percentage_a) < math.abs(percentage_through_level - percentage_b)
 					end
 
-					for k = 1, num_available_section_spawners do
-						local selected_spawner = SECTION_SPAWNERS[k]
-						local success, pickup_index = self:_check_spawn(selected_spawner, pickups_to_spawn, pickup_type)
-
-						if success then
-							USED_SPAWNERS[#USED_SPAWNERS + 1] = selected_spawner
-
-							local index = table.find(SECTION_SPAWNERS, selected_spawner)
-
-							table.remove(SECTION_SPAWNERS, index)
-							table.remove(pickups_to_spawn, pickup_index)
-
-							previously_selected_spawner = selected_spawner
-							num_spawned_pickups_in_section = num_spawned_pickups_in_section + 1
-
-							break
-						end
-					end
+					table.sort(SECTION_SPAWNERS, _compare_relative_spawner_position)
 				end
 
-				spawn_debt = spawn_debt - (num_spawned_pickups_in_section - 1)
-			else
-				spawn_debt = spawn_debt + 1
+				for k = 1, num_available_section_spawners do
+					local selected_spawner = SECTION_SPAWNERS[k]
+					local success, pickup_index = self:_check_spawn(selected_spawner, pickups_to_spawn, pickup_type)
+
+					if success then
+						USED_SPAWNERS[#USED_SPAWNERS + 1] = selected_spawner
+
+						local index = table.find(SECTION_SPAWNERS, selected_spawner)
+
+						table.remove(SECTION_SPAWNERS, index)
+						table.remove(pickups_to_spawn, pickup_index)
+
+						previously_selected_spawner = selected_spawner
+						num_spawned_pickups_in_section = num_spawned_pickups_in_section + 1
+
+						break
+					end
+				end
 			end
 
-			local num_used_spawners = #USED_SPAWNERS
-
-			for j = 1, num_used_spawners do
-				local spawner_unit = USED_SPAWNERS[j]
-				local index = table.find(usable_spawners, spawner_unit)
-
-				table.remove(usable_spawners, index)
-			end
+			spawn_debt = spawn_debt - (num_spawned_pickups_in_section - 1)
+		else
+			spawn_debt = spawn_debt + 1
 		end
 
-		if spawn_debt > 0 then
-			local num_pickups_to_spawn = #pickups_to_spawn
+		local num_used_spawners = #USED_SPAWNERS
 
-			if #usable_spawners > 0 then
-				seed = self:_shuffle(usable_spawners, seed)
+		for j = 1, num_used_spawners do
+			local spawner_unit = USED_SPAWNERS[j]
+			local index = table.find(usable_spawners, spawner_unit)
 
-				for i = 1, num_pickups_to_spawn do
-					local num_pickup_spawners = #usable_spawners
+			table.remove(usable_spawners, index)
+		end
+	end
 
-					for j = 1, num_pickup_spawners do
-						local spawner = usable_spawners[j]
-						local sucess, pickup_index = self:_check_spawn(spawner, pickups_to_spawn, pickup_type)
+	if spawn_debt > 0 then
+		local num_pickups_to_spawn = #pickups_to_spawn
 
-						if sucess then
-							table.remove(usable_spawners, j)
-							table.remove(pickups_to_spawn, pickup_index)
+		if #usable_spawners > 0 then
+			seed = self:_shuffle(usable_spawners, seed)
 
-							num_pickups_to_spawn = num_pickups_to_spawn - 1
+			for i = 1, num_pickups_to_spawn do
+				local num_pickup_spawners = #usable_spawners
 
-							break
-						end
+				for j = 1, num_pickup_spawners do
+					local spawner = usable_spawners[j]
+					local sucess, pickup_index = self:_check_spawn(spawner, pickups_to_spawn, pickup_type)
+
+					if sucess then
+						table.remove(usable_spawners, j)
+						table.remove(pickups_to_spawn, pickup_index)
+
+						num_pickups_to_spawn = num_pickups_to_spawn - 1
+
+						break
 					end
 				end
 			end

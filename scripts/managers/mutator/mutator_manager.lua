@@ -15,6 +15,8 @@ MutatorManager.init = function (self, is_server, world, nav_world, network_event
 	self:_load_mutators(circumstance_name)
 
 	if is_server then
+		self._deferred_callbacks = {}
+
 		local event_manager = Managers.event
 
 		event_manager:register(self, "player_unit_spawned", "_on_player_unit_spawned")
@@ -54,10 +56,11 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 		for _, mutator_name in ipairs(mutators_to_load) do
 			local mutator_template = MutatorTemplates[mutator_name]
 			local mutator_class = require(mutator_template.class)
+			local mutator_instance = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._world, self._level_seed)
 
-			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._world, self._level_seed)
+			mutators[mutator_name] = mutator_instance
 
-			if mutator_template.activate_on_load then
+			if mutator_instance:is_loading_done() and mutator_template.activate_on_load then
 				self:activate_mutator(mutator_name)
 			end
 		end
@@ -113,6 +116,10 @@ MutatorManager.on_spawn_points_generated = function (self, level, themes)
 end
 
 MutatorManager.update = function (self, dt, t)
+	if self._is_server then
+		self:_flush_deferred_callbacks()
+	end
+
 	local mutators = self._mutators
 
 	for _, mutator in pairs(mutators) do
@@ -189,12 +196,47 @@ MutatorManager.all_activated_mutators = function (self)
 	return self._mutators
 end
 
-MutatorManager._on_player_unit_spawned = function (self, player)
+MutatorManager._defer_callback = function (self, player, unit, callback)
+	local deferred_callbacks = self._deferred_callbacks
+
+	deferred_callbacks[#deferred_callbacks + 1] = {
+		player = player,
+		unit = unit,
+		callback = callback,
+	}
+end
+
+MutatorManager._flush_deferred_callbacks = function (self)
+	local deferred_callbacks = self._deferred_callbacks
+
+	if #deferred_callbacks == 0 then
+		return
+	end
+
+	self._deferred_callbacks = {}
+
 	local mutators = self._mutators
 
-	for _, mutator in pairs(mutators) do
-		mutator:_on_player_unit_spawned(player)
+	for i = 1, #deferred_callbacks do
+		local deferred = deferred_callbacks[i]
+		local player, unit, callback = deferred.player, deferred.unit, deferred.callback
+
+		if ALIVE[unit] then
+			for _, mutator in pairs(mutators) do
+				if mutator:is_active() then
+					mutator[callback](mutator, player or unit)
+				end
+			end
+		end
 	end
+end
+
+MutatorManager._on_player_unit_spawned = function (self, player)
+	self:_defer_callback(player, player.player_unit, "_on_player_unit_spawned")
+end
+
+MutatorManager._on_minion_unit_spawned = function (self, unit)
+	self:_defer_callback(nil, unit, "_on_minion_unit_spawned")
 end
 
 MutatorManager._on_player_unit_despawned = function (self, player)
@@ -202,14 +244,6 @@ MutatorManager._on_player_unit_despawned = function (self, player)
 
 	for _, mutator in pairs(mutators) do
 		mutator:_on_player_unit_despawned(player)
-	end
-end
-
-MutatorManager._on_minion_unit_spawned = function (self, unit)
-	local mutators = self._mutators
-
-	for _, mutator in pairs(mutators) do
-		mutator:_on_minion_unit_spawned(unit)
 	end
 end
 

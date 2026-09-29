@@ -436,11 +436,15 @@ HumanGameplay.update = function (self, main_dt, main_t)
 	end
 
 	if IS_WINDOWS then
-		if ui_manager and ui_manager:using_input() then
-			Application.set_in_menu(true)
-		else
-			Application.set_in_menu(false)
+		local in_menu = false
+
+		if ui_manager then
+			local ignore_hud = ui_manager:gameplay_hud_overlay_active()
+
+			in_menu = ui_manager:using_input(ignore_hud)
 		end
+
+		Application.set_in_menu(in_menu)
 	end
 end
 

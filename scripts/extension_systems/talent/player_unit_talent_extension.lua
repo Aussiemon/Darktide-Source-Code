@@ -240,27 +240,33 @@ PlayerUnitTalentExtension._remove_gameplay_features = function (self, fixed_t)
 end
 
 local temp_talent_id_array = {}
+local temp_talent_slot_array = {}
 local temp_talent_tier_array = {}
+local temp_talent_node_name_array = {}
 
 PlayerUnitTalentExtension._send_rpc_update_to_client = function (self, player, talents)
 	if not player.remote then
 		return
 	end
 
-	table.clear(temp_talent_id_array)
-
 	local index = 0
 
-	for talent_name, tier in pairs(talents) do
+	for talent_name, talent_data in pairs(talents) do
 		index = index + 1
 		temp_talent_id_array[index] = NetworkLookup.archetype_talent_names[talent_name]
-		temp_talent_tier_array[index] = tier
+		temp_talent_slot_array[index] = NetworkLookup.player_inventory_slot_names[talent_data.target_slot or "none"]
+		temp_talent_tier_array[index] = talent_data.tier
+		temp_talent_node_name_array[index] = NetworkLookup.talent_node_names[talent_data.node_name or "none"]
 	end
 
 	local channel_id = player:channel_id()
 	local unit_id = Managers.state.unit_spawner:game_object_id(self._unit)
 
-	RPC.rpc_update_talents(channel_id, unit_id, temp_talent_id_array, temp_talent_tier_array)
+	RPC.rpc_update_talents(channel_id, unit_id, temp_talent_id_array, temp_talent_slot_array, temp_talent_tier_array, temp_talent_node_name_array)
+	table.clear(temp_talent_id_array)
+	table.clear(temp_talent_slot_array)
+	table.clear(temp_talent_tier_array)
+	table.clear(temp_talent_node_name_array)
 end
 
 return PlayerUnitTalentExtension

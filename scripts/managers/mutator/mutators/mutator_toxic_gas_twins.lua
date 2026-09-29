@@ -528,7 +528,12 @@ MutatorToxicGasTwins._event_players_teleported = function (self)
 	Managers.state.pacing:set_specials_force_move_timer(false)
 	Managers.state.pacing:set_travel_distance_spawning_override(false)
 	Managers.state.pacing:pause_spawn_type("roamers", true, "teleported")
-	table.clear(self._gas_clouds_to_activate)
+
+	local gas_clouds_to_activate = self._gas_clouds_to_activate
+
+	if gas_clouds_to_activate then
+		table.clear(gas_clouds_to_activate)
+	end
 end
 
 MutatorToxicGasTwins._random = function (self, ...)

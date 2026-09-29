@@ -365,6 +365,8 @@ local function _is_valid_target(unit, side_extension)
 			if is_untargetable then
 				return false
 			end
+		else
+			return false
 		end
 	end
 

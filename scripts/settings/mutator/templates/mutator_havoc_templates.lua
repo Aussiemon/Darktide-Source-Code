@@ -40,6 +40,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_rotten_armor = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "rotten_armor",
 		ui = {
@@ -59,6 +60,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_headshot_parasite_enemies = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_visual_override",
 		template_name = "head_parasite",
 		random_spawn_buff_templates = {

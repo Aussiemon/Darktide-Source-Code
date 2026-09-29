@@ -29,7 +29,6 @@ ActionVeteranCombatAbility.init = function (self, action_context, action_params,
 	self._inventory_slot_secondary_component = unit_data_extension:write_component("slot_secondary")
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._combat_ability_component = unit_data_extension:write_component("combat_ability")
-	self._ability_type = action_settings.ability_type or "none"
 	self._talent_extension = ScriptUnit.extension(self._player_unit, "talent_system")
 end
 
@@ -193,7 +192,7 @@ ActionVeteranCombatAbility.start = function (self, action_settings, t, time_scal
 
 		if param_table then
 			param_table.unit = player_unit
-			param_table.ability_charges_used = self._ability_charges_used_at_start
+			param_table.ability_cost = self._ability_cost_at_start
 			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)

@@ -28,14 +28,14 @@ MissionObjectiveZoneSynchronizerExtension.setup_from_component = function (self,
 	self._auto_start = auto_start
 
 	if register_on_spawn then
-		self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+		self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, unit)
 	end
 end
 
 MissionObjectiveZoneSynchronizerExtension.register = function (self)
 	local unit = self._unit
 
-	self._group_id = self._mission_objective_system:register_objective_synchronizer(self._objective_name, nil, unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(self._objective_name, unit)
 end
 
 MissionObjectiveZoneSynchronizerExtension.destroy = function (self)

@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/tests/test_cases/ui_test_cases.lua
 
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 
 UITestCases = {}
 

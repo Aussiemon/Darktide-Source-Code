@@ -579,14 +579,13 @@ end
 
 TelemetryEvents.player_revived_ally = function (self, reviver_player, revivee_player, reviver_position, revivee_position, state_name, revived_by_servo_skull)
 	local event = TelemetryEvent:new(SOURCE, reviver_player:telemetry_subject(), "player_revived_ally", self:_session_from_player(reviver_player))
-	local is_revived_by_servo_skull = revived_by_servo_skull or false
 
 	event:set_data({
 		revivee = revivee_player:telemetry_subject(),
 		reviver_position = reviver_position,
 		revivee_position = revivee_position,
 		type = state_name,
-		revived_by_servo_skull = is_revived_by_servo_skull,
+		revived_by_servo_skull = not not revived_by_servo_skull,
 	})
 	self._manager:register_event(event)
 end
@@ -923,6 +922,15 @@ TelemetryEvents.close_view = function (self, view_name)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.end_of_round_match_rated = function (self, player, rating)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "end_of_round_match_rated", self:_session_from_player(player))
+
+	event:set_data({
+		rating = rating,
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.end_cutscene = function (self, cinematics_name, cinematic_scene_name, percent_viewed, character_level)
 	local event = self:_create_event("cutscene_ended")
 
@@ -1217,6 +1225,25 @@ TelemetryEvents.player_interacted_with_companion_in_hub = function (self, player
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.player_entered_fork_path = function (self, player, fork_id, path_id, is_correct_path)
+	local event
+
+	if player then
+		event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "player_entered_fork_path", self:_session_from_player(player))
+	else
+		event = self:_create_event("player_entered_fork_path")
+	end
+
+	local data = {
+		fork_id = fork_id,
+		path_id = path_id,
+		is_correct_path = is_correct_path,
+	}
+
+	event:set_data(data)
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.fixed_update_missed_inputs_report = function (self, reports)
 	for player, report in pairs(reports) do
 		local entries = report.entries
@@ -1396,6 +1423,15 @@ TelemetryEvents.view_load_stats = function (self, view_name, load_time, preloade
 		preloaded_package = preloaded_package,
 		memory_increase = string.format("%d", memory_increase),
 		mission_name = mission_name,
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.eor_session_stats_toggled = function (self, player, opened)
+	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "eor_session_stats_toggled", self:_session_from_player(player))
+
+	event:set_data({
+		opened = opened,
 	})
 	self._manager:register_event(event)
 end

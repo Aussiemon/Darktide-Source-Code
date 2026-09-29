@@ -15,25 +15,6 @@ NodeLayout.node_by_name = function (node_layout, name)
 	end
 end
 
-NodeLayout.unique_node_by_talent_name = function (node_layout, talent_name)
-	local found_node, is_unique
-	local nodes = node_layout.nodes
-
-	for i = 1, #nodes do
-		local node = nodes[i]
-		local talent = node.talent
-
-		if talent == talent_name then
-			is_unique = not found_node
-			found_node = node
-
-			break
-		end
-	end
-
-	return found_node, is_unique
-end
-
 local temp_ignore_list = {}
 
 NodeLayout._num_steps_to_start_recursive_internal = function (node_layout, node, ignore_list, step_count)
@@ -72,20 +53,20 @@ NodeLayout._num_steps_to_start_recursive_internal = function (node_layout, node,
 	return false, -1
 end
 
-NodeLayout.num_steps_to_start_recursive = function (node_layout, talent_name, ignore_list, step_count)
-	local node, is_unique = NodeLayout.unique_node_by_talent_name(node_layout, talent_name)
+NodeLayout.num_steps_to_start_recursive = function (node_layout, node_name)
+	local node = NodeLayout.node_by_name(node_layout, node_name)
 
 	if node then
-		local found, steps = NodeLayout._num_steps_to_start_recursive_internal(node_layout, node, ignore_list, step_count)
+		local found, steps = NodeLayout._num_steps_to_start_recursive_internal(node_layout, node)
 
-		return found, steps, is_unique
+		return found, steps
 	end
 
-	return false, -1, is_unique
+	return false, -1
 end
 
 NodeLayout.fallback_icon = function ()
-	return "content/ui/textures/icons/talents/psyker/psyker_ability_discharge"
+	return "content/ui/textures/icons/talents/placeholder/placeholder_talent_icon"
 end
 
 return NodeLayout

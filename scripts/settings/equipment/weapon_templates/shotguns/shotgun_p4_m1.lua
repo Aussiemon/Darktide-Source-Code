@@ -160,14 +160,6 @@ weapon_template.action_input_hierarchy = {
 				transition = "base",
 			},
 			{
-				input = "combat_ability",
-				transition = "base",
-			},
-			{
-				input = "grenade_ability",
-				transition = "base",
-			},
-			{
 				input = "special_action",
 				transition = "base",
 			},
@@ -190,14 +182,6 @@ weapon_template.action_input_hierarchy = {
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		kind = "ranged_wield",
@@ -212,13 +196,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_start_reload",
 				chain_time = 0.25,
@@ -325,14 +303,7 @@ weapon_template.actions = {
 			weapon_extension.last_shoot_action_t = start_t
 		end,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0,
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_start_reload",
 				chain_time = 0.45,
@@ -411,13 +382,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_start_reload",
 				chain_time = 0.75,
@@ -543,13 +508,7 @@ weapon_template.actions = {
 			weapon_extension.last_shoot_action_t = start_t
 		end,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.85,
@@ -567,6 +526,10 @@ weapon_template.actions = {
 				chain_time = 0.45,
 			},
 		},
+		action_keywords = {
+			"braced",
+			"braced_shooting",
+		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed,
@@ -580,13 +543,7 @@ weapon_template.actions = {
 			crosshair_type = "shotgun_wide",
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.45,
@@ -594,6 +551,9 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_start_reload",
 			},
+		},
+		action_keywords = {
+			"braced",
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault,
 	},
@@ -606,13 +566,7 @@ weapon_template.actions = {
 			crosshair_type = "shotgun_wide",
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.3,
@@ -631,13 +585,7 @@ weapon_template.actions = {
 			crosshair_type = "shotgun_wide",
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_start_reload",
 			},
@@ -660,13 +608,7 @@ weapon_template.actions = {
 			crosshair_type = "shotgun_wide",
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			reload = {
 				action_name = "action_start_reload",
 			},
@@ -737,13 +679,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_pressed = {
 				action_name = "action_shoot_hip_from_reload",
 				chain_time = 0.75,
@@ -814,13 +750,7 @@ weapon_template.actions = {
 			start_modifier = 1,
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_pressed = {
 				action_name = "action_shoot_hip_from_reload",
 				chain_time = 0.9,
@@ -886,13 +816,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			shoot_pressed = {
 				action_name = "action_shoot_hip_from_reload",
 				chain_time = 0.44,
@@ -914,57 +838,8 @@ weapon_template.actions = {
 			buff_stat_buffs.reload_speed,
 		},
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-		haptic_trigger_template = HapticTriggerTemplates.ranged.none,
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action(),
 }
 
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)

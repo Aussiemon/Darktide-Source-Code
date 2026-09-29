@@ -24,7 +24,7 @@ SideMissionPickupSynchronizerExtension.setup_from_component = function (self, au
 	if side_mission and mission_manager:side_mission_is_pickup() then
 		local objective_name = side_mission.name
 
-		self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, self._unit)
+		self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, self._unit)
 		self._objective_name = objective_name
 		self._participate_in_game = true
 	end

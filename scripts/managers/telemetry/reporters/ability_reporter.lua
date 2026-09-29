@@ -12,10 +12,6 @@ AbilityReporter.destroy = function (self)
 	return
 end
 
-AbilityReporter.update = function (self, dt, t)
-	return
-end
-
 AbilityReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

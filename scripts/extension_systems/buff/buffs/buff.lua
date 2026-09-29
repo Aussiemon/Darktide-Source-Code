@@ -895,15 +895,15 @@ Buff.get_hud_data = function (self)
 end
 
 Buff._show_in_hud = function (self)
-	local visual_stack_count = self:visual_stack_count()
-
-	if visual_stack_count == 0 then
-		return false
-	end
-
 	local template = self._template
 	local template_context = self._template_context
 	local template_data = self._template_data
+	local visual_stack_count = self:visual_stack_count()
+
+	if visual_stack_count == 0 and not template.show_at_zero_stacks then
+		return false
+	end
+
 	local show_in_hud_if_slot_is_wielded = template.show_in_hud_if_slot_is_wielded
 
 	if show_in_hud_if_slot_is_wielded and not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
@@ -925,7 +925,7 @@ Buff._is_hud_active = function (self)
 	local template = self._template
 	local visual_stack_count = self:visual_stack_count()
 
-	if visual_stack_count == 0 then
+	if visual_stack_count == 0 and not template.show_at_zero_stacks then
 		return false
 	end
 
@@ -954,8 +954,8 @@ Buff._hud_show_stack_count = function (self)
 	local template = self._template
 	local max_stacks = self:max_stacks()
 	local hud_always_show_stacks = template.hud_always_show_stacks
-	local hud_always_never_stacks = template.hud_always_never_stacks
-	local show_stack_count = not hud_always_never_stacks and max_stacks and max_stacks > 1 or hud_always_show_stacks
+	local hud_never_show_stacks = template.hud_never_show_stacks
+	local show_stack_count = not hud_never_show_stacks and max_stacks and max_stacks > 1 or hud_always_show_stacks
 
 	return show_stack_count
 end

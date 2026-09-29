@@ -345,8 +345,20 @@ social_roster_view_blueprints.player_plaque_offline = {
 		},
 		{
 			pass_type = "texture",
+			style_id = "portrait",
+			value = "content/ui/materials/base/ui_portrait_frame_base",
+			value_id = "portrait",
+			visibility_function = function (content, style)
+				return content.has_avatar
+			end,
+		},
+		{
+			pass_type = "texture",
 			style_id = "icon_background",
 			value = "content/ui/materials/frames/line_medium_inner_shadow",
+			visibility_function = function (content, style)
+				return not content.has_avatar
+			end,
 		},
 		{
 			pass_type = "text",

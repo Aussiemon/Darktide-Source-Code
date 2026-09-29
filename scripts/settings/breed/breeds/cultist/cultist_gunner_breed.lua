@@ -19,6 +19,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
@@ -66,9 +67,9 @@ local breed_data = {
 		ranged = "renegade_gunner_shot",
 	},
 	tags = {
-		elite = true,
-		far = true,
-		minion = true,
+		[breed_tags.elite] = true,
+		[breed_tags.far] = true,
+		[breed_tags.minion] = true,
 	},
 	vortex_settings = {
 		die_on_vortex_land = false,
@@ -126,7 +127,7 @@ local breed_data = {
 		suppressed_search_radius = 50,
 		cover_combat_ranges = {
 			close = false,
-			far = true,
+			[breed_tags.far] = true,
 		},
 		search_source = CoverSettings.user_search_sources.from_self,
 		suppressed_search_sticky_time = {

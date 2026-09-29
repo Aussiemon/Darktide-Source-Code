@@ -187,7 +187,7 @@ BtChaosHoundLeapAction._update_starting_state = function (self, unit, scratchpad
 
 	if perception_component.has_line_of_sight then
 		local target_position = Unit.world_position(target_unit, scratchpad.target_node) + Vector3(0, 0, ChaosHoundSettings.leap_target_z_offset)
-		local is_dodging, _ = Dodge.is_dodging(target_unit)
+		local is_dodging, _ = Dodge.is_dodging(target_unit, attack_types.incapacitating_pounce)
 		local target_velocity = is_dodging and Vector3.zero() or scratchpad.target_locomotion_component.velocity_current
 
 		current_leap_velocity = self:_calculate_wanted_velocity(scratchpad.physics_world, leap_start_position, target_position, target_velocity, leap_speed, leap_relax_distance, debug)

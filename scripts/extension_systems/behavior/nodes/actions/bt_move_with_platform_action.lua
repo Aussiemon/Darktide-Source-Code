@@ -51,6 +51,7 @@ BtMoveWithPlatformAction.enter = function (self, unit, breed, blackboard, scratc
 	local platform_position = Unit.world_position(scratchpad.platform_unit, scratchpad.platform_node)
 
 	scratchpad._last_platform_position = Vector3Box(platform_position)
+	scratchpad._last_platform_delta = Vector3Box()
 
 	local movable_platform_component = Blackboard.write_component(blackboard, "movable_platform")
 
@@ -103,14 +104,17 @@ BtMoveWithPlatformAction.run = function (self, unit, breed, blackboard, scratchp
 		end
 	end
 
-	self:_move_towards_platform(unit, breed, blackboard, scratchpad)
+	self:_move_towards_platform(unit, breed, blackboard, scratchpad, dt)
 
 	return "running"
 end
 
 BtMoveWithPlatformAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	if not scratchpad.fall then
-		self:_move_towards_platform(unit, breed, blackboard, scratchpad)
+		local platform_position = Unit.world_position(scratchpad.platform_unit, scratchpad.platform_node)
+
+		scratchpad.locomotion_extension:set_wanted_velocity(Vector3.zero())
+		Unit.set_local_position(unit, 1, platform_position)
 	end
 
 	MinionMovement.set_anim_driven(scratchpad, false)
@@ -127,13 +131,19 @@ BtMoveWithPlatformAction.init_values = function (self, blackboard)
 	movable_platform_component.leave_teleport_position:store(Vector3.zero())
 end
 
-BtMoveWithPlatformAction._move_towards_platform = function (self, unit, breed, blackboard, scratchpad)
+BtMoveWithPlatformAction._move_towards_platform = function (self, unit, breed, blackboard, scratchpad, dt)
 	local platform_position = Unit.world_position(scratchpad.platform_unit, scratchpad.platform_node)
-	local platform_offset = platform_position - scratchpad._last_platform_position:unbox()
+	local platform_delta = platform_position - scratchpad._last_platform_position:unbox()
+	local predicted_platform_delta = platform_delta + (platform_delta - scratchpad._last_platform_delta:unbox())
 
-	Unit.set_local_position(unit, 1, platform_position + platform_offset)
+	if Vector3.dot(predicted_platform_delta, platform_delta) > 0 then
+		scratchpad.locomotion_extension:set_wanted_velocity(predicted_platform_delta / dt)
+	else
+		scratchpad.locomotion_extension:set_wanted_velocity(platform_delta / dt)
+	end
 
-	scratchpad._last_platform_position = Vector3Box(platform_position)
+	scratchpad._last_platform_position:store(platform_position)
+	scratchpad._last_platform_delta:store(platform_delta)
 end
 
 return BtMoveWithPlatformAction

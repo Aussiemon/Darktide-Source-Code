@@ -18,62 +18,6 @@ local scenegraph_definition = {
 			0,
 		},
 	},
-	corner_top_left = {
-		horizontal_alignment = "left",
-		parent = "screen",
-		vertical_alignment = "top",
-		size = {
-			180,
-			310,
-		},
-		position = {
-			0,
-			0,
-			62,
-		},
-	},
-	corner_top_right = {
-		horizontal_alignment = "right",
-		parent = "screen",
-		vertical_alignment = "top",
-		size = {
-			180,
-			310,
-		},
-		position = {
-			0,
-			0,
-			62,
-		},
-	},
-	corner_bottom_left = {
-		horizontal_alignment = "left",
-		parent = "screen",
-		vertical_alignment = "bottom",
-		size = {
-			180,
-			120,
-		},
-		position = {
-			0,
-			0,
-			62,
-		},
-	},
-	corner_bottom_right = {
-		horizontal_alignment = "right",
-		parent = "screen",
-		vertical_alignment = "bottom",
-		size = {
-			180,
-			120,
-		},
-		position = {
-			0,
-			0,
-			62,
-		},
-	},
 	weapon_info_pivot = {
 		horizontal_alignment = "left",
 		parent = "canvas",
@@ -146,54 +90,6 @@ local scenegraph_definition = {
 	},
 }
 local widget_definitions = {
-	corner_top_left = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_upper",
-		},
-	}, "corner_top_left"),
-	corner_top_right = UIWidget.create_definition({
-		{
-			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/metal_01_upper",
-			style = {
-				uvs = {
-					{
-						1,
-						0,
-					},
-					{
-						0,
-						1,
-					},
-				},
-			},
-		},
-	}, "corner_top_right"),
-	corner_bottom_left = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/screen/metal_01_lower",
-		},
-	}, "corner_bottom_left"),
-	corner_bottom_right = UIWidget.create_definition({
-		{
-			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/metal_01_lower",
-			style = {
-				uvs = {
-					{
-						1,
-						0,
-					},
-					{
-						0,
-						1,
-					},
-				},
-			},
-		},
-	}, "corner_bottom_right"),
 	background = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -234,7 +130,7 @@ local legend_inputs = {
 		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "_toggle_view",
 		visibility_function = function (parent, id)
-			return parent._visibility_toggled_on
+			return parent._attack_patterns and parent._visibility_toggled_on
 		end,
 	},
 	{
@@ -242,6 +138,9 @@ local legend_inputs = {
 		display_name = "loc_menu_toggle_ui_visibility_off",
 		input_action = "hotkey_menu_special_2",
 		on_pressed_callback = "_cb_on_ui_visibility_toggled",
+		visibility_function = function (parent, id)
+			return parent._previewed_item
+		end,
 	},
 }
 local always_visible_widget_names = {

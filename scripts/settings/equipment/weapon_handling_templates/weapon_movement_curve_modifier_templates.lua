@@ -80,6 +80,12 @@ weapon_movement_curve_modifier_templates.shotgun_p2 = {
 		lerp_perfect = 1.2,
 	},
 }
+weapon_movement_curve_modifier_templates.shotgun_p3 = {
+	modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 1.2,
+	},
+}
 weapon_movement_curve_modifier_templates.shotgun_p4 = {
 	modifier = {
 		lerp_basic = 0.6,

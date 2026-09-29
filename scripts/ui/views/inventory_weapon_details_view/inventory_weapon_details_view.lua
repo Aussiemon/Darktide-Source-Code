@@ -34,14 +34,10 @@ end
 
 InventoryWeaponDetailsView.on_enter = function (self)
 	InventoryWeaponDetailsView.super.on_enter(self)
-	self:_setup_weapon_preview()
 	self:_setup_default_gui()
 	self:_setup_input_legend()
 	self:_setup_offscreen_gui()
-	self:_setup_weapon_info()
-	self:_setup_weapon_actions_extended()
-	self:_setup_attack_patterns()
-	self:_toggle_view(nil, true)
+	self:_setup_weapon_preview()
 
 	local item = self._context.preview_item
 
@@ -112,6 +108,25 @@ InventoryWeaponDetailsView._toggle_view = function (self, id, force_update)
 	self._togglable_views_index = new_view_index
 end
 
+InventoryWeaponDetailsView._set_element_pivot_from_scenegraph = function (self, element, scenegraph_id)
+	if not element then
+		return
+	end
+
+	local position = self:_scenegraph_world_position(scenegraph_id)
+
+	element:set_pivot_offset(position[1], position[2])
+	element:_force_update_scenegraph()
+end
+
+InventoryWeaponDetailsView._update_all_element_positions = function (self)
+	self:_force_update_scenegraph()
+	self:_update_weapon_preview_viewport()
+	self:_update_weapon_info_position()
+	self:_update_weapon_actions_extended_position()
+	self:_update_attack_patterns_position()
+end
+
 InventoryWeaponDetailsView._setup_weapon_info = function (self)
 	if not self._weapon_info then
 		local reference_name = "weapon_info"
@@ -143,8 +158,6 @@ InventoryWeaponDetailsView._setup_weapon_info = function (self)
 		}
 
 		self._weapon_info = self:_add_element(ViewElementWeaponInfo, reference_name, layer, context)
-
-		self:_update_weapon_info_position()
 	end
 end
 
@@ -153,9 +166,7 @@ InventoryWeaponDetailsView._update_weapon_info_position = function (self)
 		return
 	end
 
-	local position = self:_scenegraph_world_position("weapon_info_pivot")
-
-	self._weapon_info:set_pivot_offset(position[1], position[2])
+	self:_set_element_pivot_from_scenegraph(self._weapon_info, "weapon_info_pivot")
 end
 
 InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
@@ -189,9 +200,6 @@ InventoryWeaponDetailsView._setup_weapon_actions_extended = function (self)
 		}
 
 		self._weapon_actions_extended = self:_add_element(ViewElementWeaponActionsExtended, reference_name, layer, context)
-
-		self:_update_weapon_actions_extended_position()
-
 		self._togglable_views[#self._togglable_views + 1] = {
 			allow_weapon_preview_rotation = true,
 			legend = "loc_menu_show_weapon_actions_extended",
@@ -206,9 +214,7 @@ InventoryWeaponDetailsView._update_weapon_actions_extended_position = function (
 		return
 	end
 
-	local position = self:_scenegraph_world_position("weapon_actions_extended_pivot")
-
-	self._weapon_actions_extended:set_pivot_offset(position[1], position[2])
+	self:_set_element_pivot_from_scenegraph(self._weapon_actions_extended, "weapon_actions_extended_pivot")
 end
 
 InventoryWeaponDetailsView._setup_attack_patterns = function (self)
@@ -242,9 +248,6 @@ InventoryWeaponDetailsView._setup_attack_patterns = function (self)
 		}
 
 		self._attack_patterns = self:_add_element(ViewElementWeaponPatterns, reference_name, layer, context)
-
-		self:_update_weapon_actions_extended_position()
-
 		self._togglable_views[#self._togglable_views + 1] = {
 			legend = "loc_menu_show_attack_patterns",
 			class = self._attack_patterns,
@@ -258,9 +261,7 @@ InventoryWeaponDetailsView._update_attack_patterns_position = function (self)
 		return
 	end
 
-	local position = self:_scenegraph_world_position("attack_patterns_pivot")
-
-	self._attack_patterns:set_pivot_offset(position[1], position[2])
+	self:_set_element_pivot_from_scenegraph(self._attack_patterns, "attack_patterns_pivot")
 end
 
 InventoryWeaponDetailsView.cb_activate_weapon_info = function (self, activate)
@@ -303,21 +304,26 @@ InventoryWeaponDetailsView._preview_item = function (self, item)
 	local slots = item.slots
 
 	if slots and (table.find(slots, "slot_primary") or table.find(slots, "slot_secondary")) then
-		if self._weapon_actions_extended then
-			self._weapon_actions_extended:present_item(item)
-			self:_update_weapon_actions_extended_position()
+		if not self._weapon_actions_extended then
+			self:_setup_weapon_actions_extended()
 		end
 
-		if self._weapon_info then
-			self._weapon_info:present_item(item)
-			self:_update_weapon_info_position()
+		self._weapon_actions_extended:present_item(item)
+
+		if not self._weapon_info then
+			self:_setup_weapon_info()
 		end
 
-		if self._attack_patterns then
-			self._attack_patterns:present_item(item)
-			self:_update_attack_patterns_position()
+		self._weapon_info:present_item(item)
+
+		if not self._attack_patterns then
+			self:_setup_attack_patterns()
 		end
+
+		self._attack_patterns:present_item(item)
 	end
+
+	self._pending_element_position_update = true
 end
 
 InventoryWeaponDetailsView._destroy_weapon_preview = function (self)
@@ -341,8 +347,6 @@ InventoryWeaponDetailsView._setup_weapon_preview = function (self)
 
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
 		self._weapon_zoom_fraction = 0.95
-
-		self:_update_weapon_preview_viewport()
 	end
 end
 
@@ -468,7 +472,19 @@ InventoryWeaponDetailsView._handle_input = function (self, input_service, dt, t)
 end
 
 InventoryWeaponDetailsView.update = function (self, dt, t, input_service)
-	return InventoryWeaponDetailsView.super.update(self, dt, t, input_service)
+	local pass_input, pass_draw = InventoryWeaponDetailsView.super.update(self, dt, t, input_service)
+
+	if self._pending_element_position_update then
+		self._pending_element_position_update = nil
+
+		self:_update_all_element_positions()
+
+		if #self._togglable_views > 0 then
+			self:_toggle_view(nil, true)
+		end
+	end
+
+	return pass_input, pass_draw
 end
 
 InventoryWeaponDetailsView.draw = function (self, dt, t, input_service, layer)
@@ -589,10 +605,7 @@ end
 
 InventoryWeaponDetailsView.on_resolution_modified = function (self, scale)
 	InventoryWeaponDetailsView.super.on_resolution_modified(self, scale)
-	self:_update_weapon_preview_viewport()
-	self:_update_weapon_actions_extended_position()
-	self:_update_weapon_info_position()
-	self:_update_attack_patterns_position()
+	self:_update_all_element_positions()
 end
 
 local EMPTY_TABLE = {}
@@ -611,7 +624,9 @@ local function _scale_value_by_type(value, display_type)
 	return value
 end
 
-local function _value_to_text(value, is_signed)
+local function _value_to_text(value, is_signed, is_inverted)
+	value = is_inverted and -value or value
+
 	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
 	end
@@ -624,14 +639,15 @@ local function _get_stats_text(stat)
 	local type_data = stat.type_data
 	local display_type = override_data.display_type or type_data.display_type
 	local is_signed = type_data.signed
+	local is_inverted = type_data.inverted
 	local value = _scale_value_by_type(stat.value, display_type)
-	local value_text = _value_to_text(value, is_signed)
+	local value_text = _value_to_text(value, is_signed, is_inverted)
 	local min, max = stat.min, stat.max
 
 	if min and max then
 		min = _scale_value_by_type(min, display_type)
 		max = _scale_value_by_type(max, display_type)
-		value_text = string.format("%s [%s ; %s]", value_text, _value_to_text(min, is_signed), _value_to_text(max, is_signed))
+		value_text = string.format("%s [%s ; %s]", value_text, _value_to_text(min, is_signed, is_inverted), _value_to_text(max, is_signed, is_inverted))
 	end
 
 	local name = override_data.display_name or type_data.display_name

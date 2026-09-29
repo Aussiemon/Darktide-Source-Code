@@ -12,7 +12,7 @@ local RoamerSlotPlacementFunctions = require("scripts/settings/roamer/roamer_slo
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RoamerPacing = class("RoamerPacing")
 
-RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types)
+RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types, optional_forced_sub_faction)
 	self._nav_world = nav_world
 	self._original_seed = seed
 	self._seed = seed
@@ -64,6 +64,10 @@ RoamerPacing.init = function (self, nav_world, template, seed, sub_faction_types
 		if havoc_override_faction and havoc_override_faction ~= "mixed" then
 			self._override_faction = havoc_override_faction
 		end
+	end
+
+	if not self._override_faction and optional_forced_sub_faction then
+		self._override_faction = optional_forced_sub_faction
 	end
 
 	if not self._override_faction then

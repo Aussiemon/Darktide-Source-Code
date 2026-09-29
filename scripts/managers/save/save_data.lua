@@ -2,6 +2,7 @@
 
 local SaveData = class("SaveData")
 local default_hold = IS_WINDOWS
+local _check_apply_version_to_keybinds
 
 SaveData.default_account_data = {
 	crossplay_accepted = false,
@@ -26,6 +27,21 @@ SaveData.default_account_data = {
 		controller_look_scale_vertical = 1,
 		controller_look_scale_vertical_ranged = 1,
 		controller_look_scale_vertical_ranged_alternate_fire = 1,
+		controller_motion_acceleration_fast_multiplier = 1,
+		controller_motion_acceleration_start_threshold = 75,
+		controller_motion_acceleration_zone_size = 150,
+		controller_motion_disabled_quick_turn_tilt = true,
+		controller_motion_enabled = false,
+		controller_motion_flick_stick = false,
+		controller_motion_invert_look_y = false,
+		controller_motion_look_ranged_alternate_fire_multiplier = 0.5,
+		controller_motion_look_ranged_multiplier = 1,
+		controller_motion_look_scale = 2,
+		controller_motion_look_vertical_multiplier = 0.7,
+		controller_motion_smoothing_threshold = 30,
+		controller_motion_steadying_threshold = 5,
+		controller_motion_template = "all",
+		controller_motion_touchbar_disable_motion = true,
 		controller_response_curve = "linear",
 		controller_response_curve_ranged = "linear",
 		controller_response_curve_strength = 50,
@@ -108,7 +124,10 @@ SaveData.default_account_data = {
 	},
 	completed_profile_prologues = {},
 	viewed_news_slides = {},
-	key_bindings = {},
+	key_bindings = {
+		__key_bindings_version = 1,
+		by_service = {},
+	},
 	character_data = {},
 	new_account_items_by_archetype = {},
 	favorite_achievements = {},
@@ -153,6 +172,8 @@ SaveData.populate = function (self, save_data)
 
 			if self.account_data_version == save_data.account_data_version then
 				for account_id, account_data in pairs(data.account_data) do
+					_check_apply_version_to_keybinds(account_data)
+
 					local new_data = table.clone(SaveData.default_account_data)
 
 					data.account_data[account_id] = table.merge_recursive(new_data, account_data)
@@ -173,18 +194,26 @@ SaveData.populate = function (self, save_data)
 							end
 
 							local profile_presets = character_id_data.profile_presets
-							local incorrect_profile_presets_version = not profile_presets or profile_presets.profile_presets_version ~= default_character_data.profile_presets.profile_presets_version
 
-							Log.info("SaveData", "Current saved profile preset version for character (%s) is: %s. Our default is: %s", tostring(character_id), tostring(profile_presets and profile_presets.profile_presets_version), tostring(default_character_data.profile_presets.profile_presets_version))
+							if profile_presets.profile_presets_version > default_character_data.profile_presets.profile_presets_version then
+								Log.info("SaveData", "Revert presets for character (%s) as we went to an earlier profile preset version. (%s > %s)", character_id, profile_presets.profile_presets_version, default_character_data.profile_presets.profile_presets_version)
 
-							if incorrect_profile_presets_version then
-								Log.info("SaveData", "Clearing out profile presets for for character (%s)", tostring(character_id))
+								if profile_presets.profile_presets_version == 2 then
+									for _, preset in ipairs(profile_presets) do
+										local talents = preset.talents
 
-								character_id_data.active_profile_preset_id = nil
-								character_id_data.profile_presets = table.clone_instance(default_character_data.profile_presets)
+										if talents then
+											for node_name, selection_data in pairs(talents) do
+												if type(selection_data) == "table" then
+													talents[node_name] = selection_data.tier
+												end
+											end
+										end
+									end
+								end
 							end
 
-							profile_presets = character_id_data.profile_presets
+							profile_presets.profile_presets_version = default_character_data.profile_presets.profile_presets_version
 
 							local found_active_profile_preset_id = false
 
@@ -267,6 +296,45 @@ SaveData.character_data = function (self, account_id, character_id)
 		character_data[character_id] = table.clone(SaveData.default_character_data)
 
 		return character_data[character_id]
+	end
+end
+
+function _check_apply_version_to_keybinds(account_data)
+	local key_bindings = account_data.key_bindings
+
+	if key_bindings then
+		local InputUtils = require("scripts/managers/input/input_utils")
+
+		if key_bindings.__key_bindings_version == nil then
+			local previous_key_bindings = key_bindings
+
+			account_data.key_bindings = table.clone(SaveData.default_account_data.key_bindings)
+			account_data.key_bindings.by_service = previous_key_bindings
+
+			for service_name, service_overrides in pairs(account_data.key_bindings.by_service) do
+				for alias, alias_table in pairs(service_overrides) do
+					for index, value in pairs(alias_table) do
+						local valid = false
+
+						for device_type in pairs(InputUtils.input_device_list) do
+							if string.find(value, device_type .. "_") then
+								valid = true
+
+								break
+							end
+						end
+
+						if valid == false then
+							alias_table[index] = nil
+						end
+					end
+
+					if table.is_empty(alias_table) then
+						service_overrides[alias] = nil
+					end
+				end
+			end
+		end
 	end
 end
 

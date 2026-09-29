@@ -7,15 +7,13 @@ local PerceptionSettings = require("scripts/settings/perception/perception_setti
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local hit_zone_names = HitZone.hit_zone_names
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local BREED_NAME = "companion_servo_skull"
 local breed_data = {
 	base_height = 1,
 	base_unit = "content/characters/player/companion_servo_skull/third_person/base",
-	can_tag_order = true,
 	challenge_rating = 0,
-	companion_allow_hack_double_tag = true,
-	companion_double_tag_template_name = "servo_skull_enemy_companion_target",
 	display_name = "loc_breed_display_name_undefined",
 	exponential_smoothing_rotation_sync_husk = true,
 	faction_name = "imperium",
@@ -40,8 +38,8 @@ local breed_data = {
 		},
 	},
 	tags = {
-		companion = true,
-		minion = true,
+		[breed_tags.minion] = true,
+		[breed_tags.companion] = true,
 	},
 	inventory = MinionVisualLoadoutTemplates.companion_servo_skull,
 	sounds = require("scripts/settings/breed/breeds/companion/companion_servo_skull_sounds"),

@@ -318,7 +318,7 @@ VotingHost.update = function (self, dt, t)
 		end
 	end
 
-	local result = template.evaluate(self._votes, duration_ended)
+	local result = template.evaluate(self._votes, duration_ended, self._params)
 
 	if result then
 		self._state = STATES.completed

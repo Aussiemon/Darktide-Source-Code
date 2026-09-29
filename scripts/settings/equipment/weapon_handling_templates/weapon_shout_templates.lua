@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_handling_templates/weapon_shout_templates.lua
 
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local weapon_shout_templates = {}
 
 weapon_shout_templates.powermaul_shield_p1_block_special = {

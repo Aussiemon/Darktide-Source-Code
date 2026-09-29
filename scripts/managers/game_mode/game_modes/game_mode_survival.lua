@@ -4,8 +4,8 @@ local Ammo = require("scripts/utilities/ammo")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
-local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local HordeMissionBuffsManager = require("scripts/managers/mission_buffs/horde_mission_buffs_manager")
+local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -998,9 +998,10 @@ GameModeSurvival._store_persistent_player_data = function (self, player)
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent
+	local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
+	local grenades_percent = 0
 
-	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 
@@ -1089,8 +1090,9 @@ GameModeSurvival._apply_persistent_player_data = function (self, player)
 				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
+				local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
 
-				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 

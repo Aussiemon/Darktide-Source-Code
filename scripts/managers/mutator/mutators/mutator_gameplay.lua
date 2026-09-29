@@ -31,7 +31,14 @@ MutatorGameplay.activate = function (self)
 	MutatorGameplay.super.activate(self)
 	self._network_event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
 
+	local start_module_on_activate = self._template.gameplay_template.start_module_on_activate
+	local run_on_client = self._template.gameplay_template.run_on_client
+
 	if not self._is_server then
+		if start_module_on_activate and run_on_client then
+			self:_on_event_mutator_gameplay_start_module(self._world)
+		end
+
 		return
 	end
 
@@ -39,7 +46,7 @@ MutatorGameplay.activate = function (self)
 	Managers.event:register(self, "mutator_gameplay_stop_module", "_on_event_mutator_gameplay_stop_module")
 	Managers.event:register(self, "mutator_pickup_collected", "_on_event_mutator_pickup_collected")
 
-	if self._template.gameplay_template.start_module_on_activate then
+	if start_module_on_activate then
 		self:_on_event_mutator_gameplay_start_module(self._world)
 	end
 end
@@ -52,13 +59,11 @@ MutatorGameplay.deactivate = function (self)
 	MutatorGameplay.super.deactivate(self)
 	self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 
-	if not self._is_server then
-		return
+	if self._is_server then
+		Managers.event:unregister(self, "mutator_gameplay_start_module")
+		Managers.event:unregister(self, "mutator_gameplay_stop_module")
+		Managers.event:unregister(self, "mutator_pickup_collected")
 	end
-
-	Managers.event:unregister(self, "mutator_gameplay_start_module")
-	Managers.event:unregister(self, "mutator_gameplay_stop_module")
-	Managers.event:unregister(self, "mutator_pickup_collected")
 
 	for i = 1, #self._gameplay_instance_keys do
 		local instance, is_valid = self:gameplay_instance(self._gameplay_instance_keys[i])
@@ -181,6 +186,7 @@ MutatorGameplay.rpc_show_objective_popup_notification = function (self, channel_
 	end
 
 	Managers.event:trigger("event_show_objective_popup", notification_data.title, notification_data.subtitle, notification_data.sound_event, notification_data.style)
+	Managers.event:trigger("mutator_objective_popup_shown", key)
 end
 
 MutatorGameplay.rpc_client_hordes_tag_remaining_enemies = function (self, channel_id)

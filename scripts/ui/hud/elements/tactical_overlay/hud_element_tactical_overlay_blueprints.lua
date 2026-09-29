@@ -64,6 +64,14 @@ local right_content_progression_style = table.add_missing({
 	font_size = 21,
 	text_color = Color.terminal_text_body(255, true),
 }, base_text_style)
+local right_content_locked_style = table.add_missing({
+	visible = false,
+	text_color = Color.terminal_text_body_sub_header(255, true),
+	size = {
+		content_width,
+		100,
+	},
+}, right_content_progression_style)
 local right_content_reward_style = table.add_missing({
 	font_size = 22,
 	text_horizontal_alignment = "right",
@@ -476,6 +484,19 @@ Blueprints.contract = {
 		end
 	end,
 }
+
+local function _set_locked(widget, locked)
+	local content, style = widget.content, widget.style
+
+	widget.locked = locked
+	content.locked = locked and "" or ""
+	style.locked.visible = locked
+	style.progress.visible = not locked
+	style.progress_border.visible = not locked
+	style.progress_background.visible = not locked
+	style.progress_bar.visible = not locked
+end
+
 Blueprints.event_tier = {
 	size = {
 		ElementSettings.right_grid_width,
@@ -538,6 +559,13 @@ Blueprints.event_tier = {
 				},
 			}, right_content_progression_style),
 		},
+		{
+			pass_type = "text",
+			style_id = "locked",
+			value = "",
+			value_id = "locked",
+			style = right_content_locked_style,
+		},
 	},
 	complete = function (widget)
 		widget.is_complete = true
@@ -558,21 +586,29 @@ Blueprints.event_tier = {
 		local at = math.min(progress, target)
 		local content, style = widget.content, widget.style
 		local size = widget.content.size[2]
-		local title = Localize(template.condition, true, {
-			target = target,
-		})
 
-		content.title = title
-		style.title.offset[2] = size
-		size = size + Text.text_height(ui_renderer, content.title, style.title, style.title.size, true) + internal_buffer
+		content.title = ""
+		style.title.visible = false
+		widget.prev_ceiling = config.prev_ceiling
 
-		local percent_done = at / target
+		_set_locked(widget, config.prev_ceiling ~= nil and progress < config.prev_ceiling)
 
-		style.progress_border.offset[2] = size
-		style.progress_background.offset[2] = size + 1
-		style.progress_bar.offset[2] = size
-		style.progress_bar.size[1] = content_width * percent_done
-		size = size + style.progress_bar.size[2] + internal_buffer
+		widget.segment_offset = config.prev_ceiling or 0
+		target = math.max(target - widget.segment_offset, 1)
+		at = math.min(math.max(progress - widget.segment_offset, 0), target)
+
+		local show_progress = true
+		local show_progress = not widget.locked
+
+		if show_progress then
+			local percent_done = at / target
+
+			style.progress_border.offset[2] = size
+			style.progress_background.offset[2] = size + 1
+			style.progress_bar.offset[2] = size
+			style.progress_bar.size[1] = content_width * percent_done
+			size = size + style.progress_bar.size[2] + internal_buffer
+		end
 
 		local rewards = config.rewards
 		local reward_strings = {}
@@ -581,6 +617,10 @@ Blueprints.event_tier = {
 			local reward = rewards[i]
 			local reward_type = reward.type
 			local reward_id = reward.id
+
+			if i > 1 then
+				reward_strings[#reward_strings + 1] = "+"
+			end
 
 			if reward_type == "currency" and WalletSettings[reward.currency] then
 				reward_strings[#reward_strings + 1] = string.format("%s %s", Text.format_currency(reward.amount or 0), WalletSettings[reward.currency].string_symbol)
@@ -596,13 +636,21 @@ Blueprints.event_tier = {
 		end
 
 		content.reward = table.concat(reward_strings, " ")
-		content.progress = _format_progress(at, target, true)
 		style.reward.offset[2] = size
 		style.reward_icon.offset[2] = size
-		style.progress.offset[2] = size
-		size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
+
+		if widget.locked then
+			style.locked.offset[2] = size
+			size = size + Text.text_height(ui_renderer, content.locked, style.locked, style.locked.size, true) + internal_buffer
+		else
+			content.progress = _format_progress(at, target, true)
+			style.progress.offset[2] = size
+			size = size + Text.text_height(ui_renderer, content.progress, style.progress, style.progress.size, true) + internal_buffer
+		end
+
 		widget.target = target
 		content.size[2] = size
+		content.size[2] = content.size[2] + 10
 		widget.event_id = event_id
 
 		local is_complete = at == target
@@ -614,7 +662,19 @@ Blueprints.event_tier = {
 	update = function (parent, widget, ui_renderer)
 		local content, style = widget.content, widget.style
 		local target = widget.target
-		local at = math.min(Managers.live_event:event_progress(nil, widget.event_id), target)
+		local progress = Managers.live_event:event_progress(nil, widget.event_id)
+		local at = math.min(math.max(progress - (widget.segment_offset or 0), 0), target)
+		local is_locked = widget.prev_ceiling ~= nil and progress < widget.prev_ceiling
+
+		if is_locked ~= widget.locked then
+			_set_locked(widget, is_locked)
+			parent:_on_live_event_activated(widget.event_id)
+		end
+
+		if widget.locked then
+			return
+		end
+
 		local percent_done = math.min(at / target, 1)
 
 		content.progress = _format_progress(at, target, true)

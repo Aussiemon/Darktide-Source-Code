@@ -323,12 +323,6 @@ local legend_inputs = {
 		input_action = "hotkey_item_inspect",
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
-			local previewed_element = parent._previewed_element
-
-			if previewed_element and previewed_element.premium_offer then
-				return false
-			end
-
 			local previewed_item = parent._previewed_item
 
 			if previewed_item and UISettings.inspectable_item_types[previewed_item.item_type] then

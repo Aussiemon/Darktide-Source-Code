@@ -12,6 +12,9 @@ ConstantElementBase.init = function (self, parent, draw_layer, start_scale, defi
 	self._parent = parent
 	self._is_visible = true
 	self._event_list = {}
+	self._elements = {}
+	self._elements_array = {}
+	self._element_to_pivot = {}
 	self._ui_scenegraph = self:_create_scenegraph(definitions, start_scale)
 	self._widgets, self._widgets_by_name = {}, {}
 
@@ -223,6 +226,8 @@ ConstantElementBase.update = function (self, dt, t, ui_renderer, render_settings
 
 		self._update_scenegraph = nil
 	end
+
+	self:_update_elements(dt, t, input_service)
 end
 
 ConstantElementBase.draw = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -233,6 +238,7 @@ ConstantElementBase.draw = function (self, dt, t, ui_renderer, render_settings, 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 	self:_draw_widgets(dt, t, input_service, ui_renderer, render_settings)
 	UIRenderer.end_pass(ui_renderer)
+	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
 end
 
 ConstantElementBase._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -256,8 +262,138 @@ ConstantElementBase._localize = function (self, text, no_cache, context)
 	return Managers.localization:localize(text, no_cache, context)
 end
 
-ConstantElementBase.destroy = function (self)
+ConstantElementBase.destroy = function (self, ui_renderer)
 	self:_unregister_events()
+
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for _, element in ipairs(elements_array) do
+			element:destroy(ui_renderer)
+		end
+	end
+
+	self._elements = nil
+	self._elements_array = nil
+end
+
+ConstantElementBase._add_element = function (self, class, reference_name, layer, context, pivot, ui_renderer)
+	local elements = self._elements
+	local elements_array = self._elements_array
+
+	if not self._elements or not self._elements_array then
+		return
+	end
+
+	context = context or {}
+
+	if not context.reference_name then
+		context.reference_name = reference_name
+	end
+
+	local draw_layer = layer or 0
+	local scale = ui_renderer.scale or RESOLUTION_LOOKUP.scale
+	local element = class:new(self, draw_layer, scale, context)
+
+	element:set_render_scale(self._render_scale)
+
+	elements[reference_name] = element
+
+	local id = #elements_array + 1
+
+	elements_array[id] = element
+
+	if pivot then
+		self._element_to_pivot[element] = pivot
+	end
+
+	return element
+end
+
+ConstantElementBase._remove_element = function (self, reference_name, ui_renderer)
+	local elements = self._elements or {}
+	local element = elements[reference_name]
+	local elements_array = self._elements_array
+
+	if elements_array and element then
+		for i = 1, #elements_array do
+			if elements_array[i] == element then
+				table.remove(elements_array, i)
+
+				break
+			end
+		end
+
+		element:destroy(ui_renderer)
+
+		elements[reference_name] = nil
+	end
+end
+
+ConstantElementBase._element_reference_name = function (self, element)
+	local elements = self._elements or {}
+	local reference_name = table.find(elements, element)
+
+	return reference_name
+end
+
+ConstantElementBase._element = function (self, reference_name)
+	local elements = self._elements or {}
+	local element = elements[reference_name]
+
+	return element
+end
+
+ConstantElementBase._on_resolution_modified_elements = function (self, scale)
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+			local element_name = element.__class_name
+
+			if element.on_resolution_modified then
+				element:set_render_scale(scale)
+				element:on_resolution_modified(scale)
+			end
+		end
+	end
+
+	for element, scenegraph_id in pairs(self._element_to_pivot) do
+		self:_update_element_position(scenegraph_id, element)
+	end
+end
+
+ConstantElementBase._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local element_name = element.__class_name
+
+				element:draw(dt, t, ui_renderer, render_settings, input_service)
+			end
+		end
+	end
+end
+
+ConstantElementBase._update_elements = function (self, dt, t, input_service)
+	local elements_array = self._elements_array
+
+	if elements_array then
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local element_name = element.__class_name
+
+				element:update(dt, t, input_service)
+			end
+		end
+	end
 end
 
 return ConstantElementBase

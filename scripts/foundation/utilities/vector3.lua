@@ -57,6 +57,13 @@ Vector3.from_array = function (array)
 	return Vector3(array[1], array[2], array[3])
 end
 
+Vector3.from_array_with_pose = function (array, pose)
+	local pos = Vector3(array[1], array[2], array[3])
+	local world_pos = Matrix4x4.transform(pose, pos)
+
+	return world_pos
+end
+
 Vector3.from_array_flat = function (array)
 	return Vector3(array[1], array[2], 0)
 end
@@ -86,6 +93,12 @@ Vector3.slerp = function (start, stop, d)
 	local result = start * math.cos(theta) + relative_vec * math.sin(theta)
 
 	return result
+end
+
+Vector3.integer_vector = function (v)
+	local x, y, z = Vector3.to_elements(v)
+
+	return Vector3(math.floor(x + 0.5), math.floor(y + 0.5), math.floor(z + 0.5))
 end
 
 local EPSILON = 1e-05

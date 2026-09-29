@@ -63,7 +63,7 @@ PsykerForceFieldUnitExtension.init = function (self, extension_init_context, uni
 		self.enemy_side_names = self.side:relation_side_names("enemy")
 	end
 
-	local width = 11
+	local width = 13
 	local forward = Quaternion.forward(rotation)
 	local rotation_left = Quaternion.from_euler_angles_xyz(0, 0, 90)
 	local left = Quaternion.rotate(rotation_left, forward) * width / 2

@@ -271,9 +271,9 @@ PlayerCharacterStateKnockedDown._exit_third_person_mode = function (self, t)
 
 	Unit.set_local_rotation(unit, 1, look_rotation)
 
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 end
 
 PlayerCharacterStateKnockedDown._handle_on_enter_buffs = function (self, t)

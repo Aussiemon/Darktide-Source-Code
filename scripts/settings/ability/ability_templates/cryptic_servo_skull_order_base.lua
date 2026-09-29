@@ -26,15 +26,14 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_companion_start_ability = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "companion_start_ability",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		total_time = 0.1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		ability_function = CompanionServoSkullAbility.start_order_ability_base,
 	},
 }

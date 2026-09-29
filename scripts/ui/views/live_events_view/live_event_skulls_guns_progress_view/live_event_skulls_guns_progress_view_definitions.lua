@@ -3,6 +3,7 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
@@ -33,10 +34,11 @@ entry_title_style.text_vertical_alignment = "top"
 
 local entry_subtitle_style = table.clone(UIFontSettings.body_medium)
 
-entry_subtitle_style.text_color = Color.white(255, true)
+entry_subtitle_style.text_color = Color.terminal_text_body(255, true)
 entry_subtitle_style.text_horizontal_alignment = "left"
 entry_subtitle_style.text_vertical_alignment = "top"
-entry_subtitle_style.font_size = 26
+entry_subtitle_style.font_size = 24
+entry_subtitle_style.drop_shadow = true
 
 local entry_body_style = table.clone(UIFontSettings.body_medium)
 
@@ -201,6 +203,34 @@ scenegraph_definition.right_column_second_row = {
 	size = {
 		scenegraph_definition.right_column.size[1] * 0.95,
 		scenegraph_definition.right_column.size[2] * 0.6,
+	},
+}
+scenegraph_definition.entry_text_area = {
+	horizontal_alignment = "center",
+	parent = "right_column_second_row",
+	vertical_alignment = "top",
+	size = {
+		scenegraph_definition.right_column_second_row.size[1],
+		scenegraph_definition.right_column_second_row.size[2] - 75,
+	},
+	offset = {
+		0,
+		0,
+		1,
+	},
+}
+scenegraph_definition.entry_text_scrollbar = {
+	horizontal_alignment = "right",
+	parent = "entry_text_area",
+	vertical_alignment = "bottom",
+	size = {
+		8,
+		scenegraph_definition.entry_text_area.size[2] - 20,
+	},
+	offset = {
+		-12,
+		10,
+		20,
 	},
 }
 
@@ -761,6 +791,9 @@ local widget_definitions = {
 					-25,
 				},
 			}, entry_subtitle_style),
+			visibility_function = function (_content, _style)
+				return false
+			end,
 		},
 	}, "right_column_second_row"),
 	entry_body_text = UIWidget.create_definition({
@@ -786,6 +819,42 @@ local widget_definitions = {
 			value = Localize("loc_skulls_guns_progress_view_entry_locked"),
 		},
 	}, "right_column_second_row"),
+	entry_text_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "entry_text_scrollbar", {
+		axis = 2,
+		enable_gamepad_scrolling = true,
+		focused = true,
+		gamepad_axis_name = "navigate_controller_right",
+		hotspot = {
+			is_focused = true,
+		},
+	}, nil, {
+		mouse_scroll = {
+			scenegraph_id = "entry_text_area",
+		},
+	}),
+	entry_text_mask = UIWidget.create_definition({
+		{
+			pass_type = "texture",
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_2",
+			style = {
+				color = {
+					255,
+					255,
+					255,
+					255,
+				},
+				offset = {
+					-15,
+					0,
+					1,
+				},
+				size_addition = {
+					15,
+					0,
+				},
+			},
+		},
+	}, "entry_text_area"),
 }
 local legend_inputs = {
 	{

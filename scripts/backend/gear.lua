@@ -97,7 +97,7 @@ Gear.create = function (self, master_id, slot, character_id, overrides, allow_du
 			method = "POST",
 			body = {
 				characterId = character_id,
-				slots = {
+				slots = type(slot) == "table" and slot or {
 					slot,
 				},
 				masterDataInstance = {

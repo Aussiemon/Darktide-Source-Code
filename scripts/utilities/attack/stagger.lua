@@ -14,7 +14,7 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local buff_keywords = BuffSettings.keywords
 local stagger_types = StaggerSettings.stagger_types
 local Stagger = {}
-local _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides
+local _always_stagger_on_melee_push, _arm_melee_push_fuse, _apply_action_controlled_stagger, _get_breed, _get_action_data_overrides, _apply_stagger, _get_stagger_duration_modifier, _get_stagger_count, _should_trigger_stagger, _get_system_overrides
 local EMPTY_STAT_BUFFS = {}
 local DEFAULT_ACCUMULATIVE_MULTIPLIER = 0.5
 
@@ -22,8 +22,13 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local breed = _get_breed(unit)
 	local blackboard = BLACKBOARDS[unit]
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+	local controlled_stagger_blocks = stagger_component.controlled_stagger
 
-	if stagger_component.controlled_stagger then
+	if controlled_stagger_blocks and _always_stagger_on_melee_push(breed, damage_profile) then
+		controlled_stagger_blocks = false
+	end
+
+	if controlled_stagger_blocks then
 		return false
 	end
 
@@ -82,6 +87,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 
 	if always_stagger_on_melee_push then
 		action_controlled_stagger = false
+		stagger_component.controlled_stagger = false
 
 		if not stagger_type then
 			stagger_type = stagger_types.light
@@ -142,12 +148,34 @@ Stagger.can_stagger = function (unit)
 	return true
 end
 
-Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit, ignore_no_stagger)
+Stagger.process_stagger_ignore_overrides = function (unit, ignore_no_stagger)
+	local can_stagger = true
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+	local breed_tags = breed.tags
 	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 	local no_stagger = buff_extension and buff_extension:has_keyword(buff_keywords.no_stagger)
 
-	if no_stagger and not ignore_no_stagger then
+	if breed_tags.lord and no_stagger then
+		can_stagger = false
+	elseif no_stagger and not ignore_no_stagger then
+		can_stagger = false
+	end
+
+	return can_stagger
+end
+
+Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration, length_scale, immune_time, attacker_unit, ignore_no_stagger)
+	local can_stagger = Stagger.process_stagger_ignore_overrides(unit, ignore_no_stagger)
+
+	if not can_stagger then
 		return
+	end
+
+	local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
+
+	if shield_extension then
+		stagger_type = shield_extension:remap_forced_stagger_type(stagger_type)
 	end
 
 	local t = Managers.time:time("gameplay")
@@ -165,6 +193,36 @@ Stagger.force_stagger = function (unit, stagger_type, attack_direction, duration
 		stagger_component.length = length_scale or 1
 		stagger_component.num_triggered_staggers = stagger_component.num_triggered_staggers + 1
 		stagger_component.attacker_unit = attacker_unit
+	end
+end
+
+function _always_stagger_on_melee_push(breed, damage_profile)
+	return breed.always_stagger_on_melee_push and damage_profile.is_push and damage_profile.stagger_category == "melee"
+end
+
+function _arm_melee_push_fuse(unit, blackboard, breed, t)
+	local breed_actions = BreedActions[breed.name]
+	local approach_action_data = breed_actions and breed_actions.approach
+	local fuse_timer = approach_action_data and approach_action_data.fuse_timer
+
+	if not fuse_timer then
+		return
+	end
+
+	local death_component = Blackboard.write_component(blackboard, "death")
+
+	if death_component.fuse_timer > 0 then
+		return
+	end
+
+	death_component.fuse_timer = t + fuse_timer
+	death_component.staggered_during_lunge = true
+
+	local lunge_anim_event = approach_action_data.lunge_anim_event
+	local animation_extension = lunge_anim_event and ScriptUnit.has_extension(unit, "animation_system")
+
+	if animation_extension then
+		animation_extension:anim_event(lunge_anim_event)
 	end
 end
 
@@ -364,6 +422,13 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 			staggered_by_melee_push = is_player_unit and damage_profile.stagger_category == "melee"
 		end
 
+		local was_already_staggered = stagger_component.num_triggered_staggers > 0
+		local push_needs_manual_fuse = staggered_by_melee_push and was_already_staggered and breed.always_stagger_on_melee_push
+
+		if push_needs_manual_fuse then
+			_arm_melee_push_fuse(unit, blackboard, breed, t)
+		end
+
 		stagger_component.immune_time = t + (immune_time or 0)
 		stagger_component.type = stagger_type
 
@@ -377,6 +442,10 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 	end
 
 	stagger_component.count = stagger_component.count + 1
+
+	local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+	behavior_extension:prioritize_staggered_update()
 end
 
 function _apply_action_controlled_stagger(unit, stagger_type, attack_direction)

@@ -30,6 +30,12 @@ CrypticPersonalForceFieldUnitHealthExtension.init = function (self, extension_in
 
 		self._create_arcs_on_expire = owner_talent_extension and owner_talent_extension:has_special_rule("cryptic_force_field_generates_arcs_based_on_hits_blocked")
 		self._num_ranged_attacks_received = 0
+		self._restore_capacitance_on_hits = owner_talent_extension and owner_talent_extension:has_special_rule("cryptic_force_field_generates_capacitance_based_on_hits_blocked")
+
+		if self._restore_capacitance_on_hits then
+			self._owner_ability_extension = ScriptUnit.extension(self._owner_unit, "ability_system")
+			self._capacitance_restored = 0
+		end
 	end
 end
 
@@ -61,26 +67,37 @@ end
 
 CrypticPersonalForceFieldUnitHealthExtension.add_damage = function (self, damage_amount, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit)
 	if self._is_server then
-		local is_ranged_attack = attack_type == "ranged" or damage_profile and damage_profile.count_as_ranged_attack
-
-		if is_ranged_attack then
-			self._num_ranged_attacks_received = self._num_ranged_attacks_received + 1
-		end
-
-		self:send_stat_data(damage_amount, damage_profile, attack_type)
+		self:_on_attack_absorbed(damage_amount, damage_profile, attack_type)
 	end
 end
 
 CrypticPersonalForceFieldUnitHealthExtension.tried_adding_damage = function (self, damage_amount, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit)
 	if self._is_server then
-		local is_ranged_attack = attack_type == "ranged" or damage_profile and damage_profile.count_as_ranged_attack
-
-		if is_ranged_attack then
-			self._num_ranged_attacks_received = self._num_ranged_attacks_received + 1
-		end
-
-		self:send_stat_data(damage_amount, damage_profile, attack_type)
+		self:_on_attack_absorbed(damage_amount, damage_profile, attack_type)
 	end
+end
+
+CrypticPersonalForceFieldUnitHealthExtension._on_attack_absorbed = function (self, damage_amount, damage_profile, attack_type)
+	local is_ranged_attack = attack_type == "ranged" or damage_profile and damage_profile.count_as_ranged_attack
+
+	if is_ranged_attack then
+		self._num_ranged_attacks_received = self._num_ranged_attacks_received + 1
+
+		if self._restore_capacitance_on_hits then
+			local capacitance_settings = force_field_ability_talent_settings.force_field_capacitance_restore
+			local remaining_capacitance = capacitance_settings.max_capacitance - self._capacitance_restored
+
+			if remaining_capacitance > 0 then
+				local capacitance_to_restore = math.min(capacitance_settings.capacitance_per_attack, remaining_capacitance)
+
+				self._capacitance_restored = self._capacitance_restored + capacitance_to_restore
+
+				self._owner_ability_extension:restore_ability_charge_percentage("combat_ability", capacitance_to_restore)
+			end
+		end
+	end
+
+	self:send_stat_data(damage_amount, damage_profile, attack_type)
 end
 
 CrypticPersonalForceFieldUnitHealthExtension._add_damage = function (self, damage)

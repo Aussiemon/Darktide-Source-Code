@@ -49,6 +49,12 @@ DLCPurchaseView.on_enter = function (self)
 
 	self:_register_button_callbacks()
 	self:_on_input_direction(0)
+
+	if IS_PLAYSTATION and not self._ps_store_icon_showing then
+		NpCommerceDialog.show_ps_store_icon(2)
+
+		self._ps_store_icon_showing = true
+	end
 end
 
 DLCPurchaseView.destroy = function (self)
@@ -189,6 +195,12 @@ DLCPurchaseView.can_exit = function (self)
 end
 
 DLCPurchaseView.on_exit = function (self)
+	if IS_PLAYSTATION and self._ps_store_icon_showing then
+		NpCommerceDialog.hide_ps_store_icon()
+
+		self._ps_store_icon_showing = false
+	end
+
 	DLCPurchaseView.super.on_exit(self)
 end
 

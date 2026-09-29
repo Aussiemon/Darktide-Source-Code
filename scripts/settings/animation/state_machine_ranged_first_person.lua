@@ -30,6 +30,9 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/shotgun_assault"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/human/first_person/animations/shotgun_pump"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 state_machine_settings["content/characters/player/human/first_person/animations/plasma_rifle"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }

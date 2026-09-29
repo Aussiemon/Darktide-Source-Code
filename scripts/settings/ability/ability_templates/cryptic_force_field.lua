@@ -24,15 +24,14 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_activate = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "activate_force_shield",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		trigger_time = 0.3,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "cryptic_blitz_03_a",
 		total_time = talent_settings.duration,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)
@@ -40,15 +39,14 @@ ability_template.actions = {
 		end,
 	},
 	action_activate_increased_duration = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "activate_force_shield",
 		sprint_ready_up_time = 0,
 		start_input = "aim_pressed",
 		trigger_time = 0.3,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "cryptic_blitz_03_a",
 		total_time = talent_settings.increased_duration,
 		action_condition_func = function (action_settings, condition_func_params, used_input, t, time_in_action)

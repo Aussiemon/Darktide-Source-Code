@@ -14,6 +14,12 @@ local base_visual_loadout_template = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_03",
 			},
 		},
+		slot_hair = {
+			use_outline = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 		slot_upperbody = {
 			use_outline = true,
 			items = {
@@ -96,6 +102,15 @@ void_1.slots.environmental_override.items = {
 }
 templates.renegade_grenadier[zone_ids.void] = {
 	void_1,
+}
+
+local depths_1 = table.clone(base_visual_loadout_template)
+
+depths_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_01",
+}
+templates.renegade_grenadier[zone_ids.depths] = {
+	depths_1,
 }
 
 local horde_1 = table.clone(base_visual_loadout_template)

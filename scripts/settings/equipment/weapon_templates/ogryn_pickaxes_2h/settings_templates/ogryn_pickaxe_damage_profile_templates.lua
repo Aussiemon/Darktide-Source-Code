@@ -306,6 +306,7 @@ overrides.ogryn_pickaxe_light_smiter_m1 = {
 damage_templates.ogryn_pickaxe_heavy_smiter = {
 	ragdoll_only = true,
 	ragdoll_push_force = 1500,
+	shield_breaker = true,
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
 	gibbing_power = gibbing_power.medium,
@@ -447,15 +448,16 @@ overrides.ogryn_pickaxe_heavy_smiter_m1 = {
 damage_templates.ogryn_pickaxe_heavy_linesman = {
 	ragdoll_only = true,
 	ragdoll_push_force = 1000,
+	shield_breaker = true,
 	stagger_category = "melee",
 	cleave_distribution = {
 		attack = {
 			5,
-			25,
+			18,
 		},
 		impact = {
 			5,
-			25,
+			18,
 		},
 	},
 	gibbing_power = gibbing_power.medium,

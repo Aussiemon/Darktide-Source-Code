@@ -17,6 +17,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -64,10 +65,10 @@ local breed_data = {
 		ranged = "renegade_plasma_gunner",
 	},
 	tags = {
-		elite = true,
-		exclude_for_havoc_speed_buff = true,
-		far = true,
-		minion = true,
+		[breed_tags.elite] = true,
+		[breed_tags.far] = true,
+		[breed_tags.minion] = true,
+		[breed_tags.exclude_for_havoc_speed_buff] = true,
 	},
 	vortex_settings = {
 		die_on_vortex_land = false,
@@ -116,9 +117,6 @@ local breed_data = {
 		standing = "offset_shotgun_standing_shoot_01",
 	},
 	combat_range_data = BreedCombatRanges.renegade_plasma_gunner,
-	spawn_buffs = {
-		"renegade_plasma_gunner_set_material_scalar",
-	},
 	combat_vector_config = {
 		can_flank = true,
 		choose_furthest_away = true,

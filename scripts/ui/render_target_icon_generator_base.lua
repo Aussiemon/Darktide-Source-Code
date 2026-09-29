@@ -373,13 +373,13 @@ RenderTargetIconGeneratorBase._handle_request_queue = function (self)
 end
 
 RenderTargetIconGeneratorBase._handle_next_request_in_queue = function (self)
+	local request_id = self._requests_queue_order[1]
+	local request = self:_request_by_id(request_id)
+
 	if not self._world_spawner then
 		self:_initialize_world()
 		self:_setup_viewport()
 	end
-
-	local request_id = self._requests_queue_order[1]
-	local request = self:_request_by_id(request_id)
 
 	self:_handle_request(request)
 end

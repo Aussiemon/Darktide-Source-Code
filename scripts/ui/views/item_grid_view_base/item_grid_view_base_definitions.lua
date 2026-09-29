@@ -163,62 +163,6 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	display_name = {
-		horizontal_alignment = "left",
-		parent = "weapon_stats_pivot",
-		vertical_alignment = "top",
-		size = {
-			1700,
-			50,
-		},
-		position = {
-			0,
-			-497,
-			3,
-		},
-	},
-	sub_display_name = {
-		horizontal_alignment = "center",
-		parent = "display_name",
-		vertical_alignment = "top",
-		size = {
-			1700,
-			50,
-		},
-		position = {
-			0,
-			35,
-			4,
-		},
-	},
-	display_name_divider = {
-		horizontal_alignment = "left",
-		parent = "sub_display_name",
-		vertical_alignment = "bottom",
-		size = {
-			344,
-			18,
-		},
-		position = {
-			0,
-			15,
-			-1,
-		},
-	},
-	display_name_divider_glow = {
-		horizontal_alignment = "left",
-		parent = "display_name_divider",
-		vertical_alignment = "bottom",
-		size = {
-			300,
-			80,
-		},
-		position = {
-			20,
-			-16,
-			-1,
-		},
-	},
 }
 local display_name_style = table.clone(UIFontSettings.header_2)
 
@@ -230,43 +174,7 @@ local sub_display_name_style = table.clone(UIFontSettings.body)
 sub_display_name_style.text_horizontal_alignment = "left"
 sub_display_name_style.text_vertical_alignment = "center"
 
-local widget_definitions = {
-	display_name_divider = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/dividers/skull_rendered_left_01",
-			visibility_function = function (content)
-				return content.texture ~= nil
-			end,
-		},
-	}, "display_name_divider"),
-	display_name_divider_glow = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			style_id = "texture",
-			value = "content/ui/materials/effects/wide_upward_glow",
-			visibility_function = function (content)
-				return content.texture ~= nil
-			end,
-		},
-	}, "display_name_divider_glow"),
-	display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = display_name_style,
-		},
-	}, "display_name"),
-	sub_display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = sub_display_name_style,
-		},
-	}, "sub_display_name"),
-}
+local widget_definitions = {}
 local tab_menu_settings = {
 	button_spacing = 20,
 	fixed_button_size = true,

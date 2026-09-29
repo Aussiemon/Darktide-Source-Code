@@ -2,12 +2,12 @@
 
 local ExpeditionPickupDistribution = {}
 local REWARD_DISTRIBUTION = "reward"
-local BONUS_REWARD_DISTRIBUTION = "bonus_reward"
-local REWARD_POOL = {}
 
 ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_template, location, pickup_spawners)
 	local seed = 1
+	local location_index = location.index
 	local loot_settings = expedition_template.loot_settings
+	local extra_reward_spawn = expedition_template.extra_reward_spawn_per_location
 	local pickup_system = Managers.state.extension:system("pickup_system")
 
 	local function _random(...)
@@ -18,19 +18,25 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 		return value
 	end
 
-	local levels_bonus_spawner_group = {}
-	local levels_spawn_spots = {}
+	local levels_reward_spawn_spots = {}
+	local levels_reward_chest_spots = {}
+	local levels_reward_spawner_group = {}
 	local levels_spawner_group = {}
-	local levels_chest_spots = {}
 
 	for i = 1, #pickup_spawners do
 		local spawner_extension = pickup_spawners[i]
 		local spawner_unit = spawner_extension:unit()
 		local level = Unit.level(spawner_unit)
-		local bonus_spawn_spots = spawner_extension:free_spawner_count(BONUS_REWARD_DISTRIBUTION)
+		local reward_spots = spawner_extension:free_spawner_count(REWARD_DISTRIBUTION)
 
-		if bonus_spawn_spots > 0 then
-			local node_list = levels_bonus_spawner_group[level]
+		if reward_spots > 0 then
+			levels_reward_spawn_spots[level] = (levels_reward_spawn_spots[level] or 0) + reward_spots
+
+			if spawner_extension:is_chest() then
+				levels_reward_chest_spots[level] = (levels_reward_chest_spots[level] or 0) + reward_spots
+			end
+
+			local node_list = levels_reward_spawner_group[level]
 
 			if node_list then
 				node_list[#node_list + 1] = spawner_extension
@@ -38,19 +44,13 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 				node_list = {
 					spawner_extension,
 				}
-				levels_bonus_spawner_group[level] = node_list
+				levels_reward_spawner_group[level] = node_list
 			end
 		end
 
-		local spawn_spots = spawner_extension:free_spawner_count(REWARD_DISTRIBUTION)
+		local all_spawn_spots = spawner_extension:free_spawner_count()
 
-		if spawn_spots > 0 then
-			levels_spawn_spots[level] = (levels_spawn_spots[level] or 0) + spawn_spots
-
-			if spawner_extension:is_chest() then
-				levels_chest_spots[level] = (levels_chest_spots[level] or 0) + spawn_spots
-			end
-
+		if all_spawn_spots > 0 then
 			local node_list = levels_spawner_group[level]
 
 			if node_list then
@@ -68,13 +68,13 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 	local total_reward_amount = 0
 	local levels_reward_amount = {}
 	local levels_pool = {}
-	local location_multiplier = loot_settings.reward_location_multipliers[math.min(location.index, #loot_settings.reward_location_multipliers)]
+	local location_multiplier = loot_settings.reward_location_multipliers[math.min(location_index, #loot_settings.reward_location_multipliers)]
 	local difficulty_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(loot_settings.reward_difficulty_multipliers)
 
 	for i = 1, #levels_data do
 		local level_data = levels_data[i]
 		local level = level_data.level
-		local spawn_spots = levels_spawn_spots[level]
+		local spawn_spots = levels_reward_spawn_spots[level]
 
 		if spawn_spots and spawn_spots > 0 then
 			local loot_value = loot_settings.reward_base_budget
@@ -103,39 +103,44 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 			local level_reward = loot_value * (tag_multiplier + location_multiplier) * difficulty_multiplier
 
 			levels_reward_amount[level] = level_reward
-			levels_pool[level] = {}
+			levels_pool[level] = {
+				reward = {
+					reward = {},
+				},
+			}
 			total_reward_amount = total_reward_amount + level_reward
 		end
 	end
 
-	local location_index = location.index
+	if extra_reward_spawn and total_reward_amount > 0 then
+		for pickup_name, setting in pairs(extra_reward_spawn) do
+			local tier = math.min(location_index, setting.tiers or 1)
+			local amount = _random(setting.min, setting.max)
+			local distribution_type = setting.distribution_type or REWARD_DISTRIBUTION
 
-	if total_reward_amount > 0 then
-		local type_settings = loot_settings.settings_by_type
+			for i = 1, amount do
+				local ticket = _random(1, total_reward_amount)
+				local tickets_passed = 0
 
-		for type, setting in pairs(type_settings) do
-			local bonus_spawn = setting.bonus_spawn_per_location
+				for level, reward in pairs(levels_reward_amount) do
+					tickets_passed = tickets_passed + reward
 
-			if bonus_spawn then
-				local tiers = #type_settings[type].values_per_tier
-				local tier = math.min(location_index, tiers)
-				local amount = _random(bonus_spawn.min, bonus_spawn.max)
+					if ticket <= tickets_passed then
+						pickup_name = string.format(pickup_name, tier)
 
-				for i = 1, amount do
-					local ticket = _random(1, total_reward_amount)
-					local tickets_passed = 0
+						local level_pools = levels_pool[level]
 
-					for level, reward in pairs(levels_reward_amount) do
-						tickets_passed = tickets_passed + reward
-
-						if ticket <= tickets_passed then
-							local pickup_name = string.format(loot_settings.pickup_name_format, type, tier)
-							local pool = levels_pool[level]
-
-							pool[pickup_name] = (pool[pickup_name] or 0) + 1
-
-							break
+						if not level_pools[distribution_type] then
+							level_pools[distribution_type] = {
+								reward = {},
+							}
 						end
+
+						local category = level_pools[distribution_type].reward
+
+						category[pickup_name] = (category[pickup_name] or 0) + 1
+
+						break
 					end
 				end
 			end
@@ -146,25 +151,19 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 	local higest_small_tier = #small_value_by_tier
 	local force_low_treshhold = (small_value_by_tier[1] + small_value_by_tier[2]) / 2
 	local force_high_treshhold = (small_value_by_tier[higest_small_tier - 1] + small_value_by_tier[higest_small_tier]) / 2
+	local pickups_per_tier = {}
 
 	for level, reward in pairs(levels_reward_amount) do
-		local pool = levels_pool[level]
+		local level_pools = levels_pool[level]
+		local reward_pool = levels_pool[level].reward.reward
+		local pickups_to_spawn = levels_reward_chest_spots[level] or 0
+		local free_spots = levels_reward_spawn_spots[level]
 
-		REWARD_POOL.pool = pool
-
-		local bonus_spawners = levels_bonus_spawner_group[level]
-
-		if not bonus_spawners then
-			Log.error("ExpeditionPickupDistribution", "Trying to spawn bonus on %s, but there are no bonus spawners", level)
-		elseif not table.is_empty(bonus_spawners) then
-			seed = pickup_system:spawn_spread_pickups(bonus_spawners, BONUS_REWARD_DISTRIBUTION, REWARD_POOL, seed)
+		for _, number in pairs(reward_pool) do
+			free_spots = free_spots - number
 		end
 
-		table.clear(pool)
-
-		local pickups_to_spawn = levels_chest_spots[level] or 0
-		local free_spots = levels_spawn_spots[level]
-		local pickups_per_tier = {}
+		table.clear(pickups_per_tier)
 
 		for j = 1, higest_small_tier do
 			pickups_per_tier[j] = 0
@@ -221,18 +220,18 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 		end
 
 		for j = 1, #pickups_per_tier do
-			pool[string.format(loot_settings.pickup_name_format, "small", j)] = pickups_per_tier[j]
+			reward_pool[string.format(loot_settings.pickup_name_format, "small", j)] = pickups_per_tier[j]
 		end
 
-		local spawners = levels_spawner_group[level]
+		local reward_spawners = levels_reward_spawner_group[level]
 
-		seed = table.shuffle(spawners, seed)
+		seed = table.shuffle(reward_spawners, seed)
 
-		local i = #spawners
+		local i = #reward_spawners
 
 		while free_spots > 0 and i > 0 do
-			if not spawners[i]:is_chest() then
-				table.remove(spawners, i)
+			if not reward_spawners[i]:is_chest() then
+				table.remove(reward_spawners, i)
 
 				free_spots = free_spots - 1
 			end
@@ -240,7 +239,15 @@ ExpeditionPickupDistribution.pre_populate_pickups_setup = function (expedition_t
 			i = i - 1
 		end
 
-		seed = pickup_system:spawn_spread_pickups(spawners, REWARD_DISTRIBUTION, REWARD_POOL, seed)
+		for distribution_type, pool in pairs(level_pools) do
+			local spawners = distribution_type == REWARD_DISTRIBUTION and reward_spawners or levels_spawner_group[level]
+
+			if not spawners then
+				Log.error("ExpeditionPickupDistribution", "Trying to spawn pickups for distribution type %s on level, but there are no spawners", distribution_type, level)
+			else
+				seed = pickup_system:spawn_spread_pickups(spawners, distribution_type, pool, seed)
+			end
+		end
 	end
 end
 
@@ -266,16 +273,20 @@ local function add_ambient_from_settings(return_pool, settings, location_index)
 	local remaining_pool_value = total_value
 	local loot_per_pool = {}
 
-	local function add_pickup(type, tier, pool)
+	local function add_pickup(type, tier, pool_type)
 		local loot_name = string.format(settings.pickup_name_format, type, tier)
+		local pool = return_pool[pool_type]
 
-		if not return_pool[pool] then
-			return_pool[pool] = {
+		if not pool then
+			pool = {
 				expedition_loot = {},
 			}
+			return_pool[pool_type] = pool
+		elseif not pool.expedition_loot then
+			pool.expedition_loot = {}
 		end
 
-		local expedition_loot = return_pool[pool].expedition_loot
+		local expedition_loot = pool.expedition_loot
 		local count_table = expedition_loot[loot_name]
 
 		if not count_table then
@@ -459,7 +470,14 @@ local function add_ambient_from_settings(return_pool, settings, location_index)
 end
 
 ExpeditionPickupDistribution.get_additional_pickups = function (expedition_template, location_index)
-	local return_pool = {}
+	local return_pool
+	local pickup_settings = expedition_template.pickup_settings
+
+	if pickup_settings and pickup_settings[location_index] then
+		return_pool = table.clone(pickup_settings[location_index])
+	else
+		return_pool = {}
+	end
 
 	add_ambient_from_settings(return_pool, expedition_template.loot_settings, location_index)
 	add_ambient_from_settings(return_pool, expedition_template.scrap_settings, location_index)

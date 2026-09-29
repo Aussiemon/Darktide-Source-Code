@@ -454,7 +454,7 @@ ItemPreviewer._select_root_unit_resource = function (self, item_data)
 		end
 
 		if table.array_contains(slots, "slot_body_hair_color") or table.array_contains(slots, "slot_body_face_hair_color") then
-			root_unit = "content/characters/player/ogryn/attachments_base/hair/hair_medium_mullet_a/hair_medium_mullet_a"
+			root_unit = "content/characters/player/human/attachments_base/hair/female/hair_long_modular_c_01/hair_long_modular_c_01"
 		end
 
 		if table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup") then
@@ -495,7 +495,7 @@ ItemPreviewer._select_hardcoded_bounding_box = function (self, item_data)
 	local is_ogryn_sized = breeds and table.array_contains(breeds, "ogryn")
 	local is_lowerbody = slots and table.array_contains(slots, "slot_gear_lowerbody")
 	local is_upperbody = slots and table.array_contains(slots, "slot_gear_upperbody")
-	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
+	local is_face = slots and (table.array_contains(slots, "slot_body_face") or table.array_contains(slots, "slot_body_face_tattoo") or table.array_contains(slots, "slot_body_eye_color") or table.array_contains(slots, "slot_body_eye_color_secondary") or table.array_contains(slots, "slot_body_skin_color") or table.array_contains(slots, "slot_body_skin_color_secondary") or table.array_contains(slots, "slot_body_skin_discoloration") or table.array_contains(slots, "slot_body_face_scar") or table.array_contains(slots, "slot_body_hair") or table.array_contains(slots, "slot_body_hair_color") or table.array_contains(slots, "slot_body_face_hair_color") or table.array_contains(slots, "slot_body_face_hair") or table.array_contains(slots, "slot_body_face_makeup"))
 
 	if item_type == "SET" then
 		if is_human_sized then

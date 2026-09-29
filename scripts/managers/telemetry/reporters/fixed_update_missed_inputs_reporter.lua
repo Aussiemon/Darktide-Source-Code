@@ -7,10 +7,6 @@ FixedUpdateMissedInputsReporter.init = function (self)
 	self._reports = {}
 end
 
-FixedUpdateMissedInputsReporter.update = function (self, dt, t)
-	return
-end
-
 FixedUpdateMissedInputsReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

@@ -8,10 +8,6 @@ VoiceOverBankReshuffledReporter.init = function (self)
 	self._vo_name_to_index = {}
 end
 
-VoiceOverBankReshuffledReporter.update = function (self, dt, t)
-	return
-end
-
 VoiceOverBankReshuffledReporter.report = function (self)
 	if table.is_empty(self._report) then
 		return

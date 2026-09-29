@@ -7,10 +7,6 @@ ComWheelReporter.init = function (self)
 	self._report = {}
 end
 
-ComWheelReporter.update = function (self, dt, t)
-	return
-end
-
 ComWheelReporter.report = function (self)
 	if table.is_empty(self._report) then
 		return

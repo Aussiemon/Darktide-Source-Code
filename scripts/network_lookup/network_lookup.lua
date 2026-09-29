@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/network_lookup/network_lookup.lua
 
+local Archetypes = require("scripts/settings/archetype/archetypes")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AreaOfEffectUnitSpawnerTemplates = require("scripts/extension_systems/area_of_effect/area_of_effect_unit_spawner_templates")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -48,7 +49,7 @@ local MissionsObjectiveUiStrings = require("scripts/settings/mission_objective/m
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local MotionTriggeredExplosivesSettings = require("scripts/settings/motion_triggered_explosives/motion_triggered_explosives_settings")
-local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_minion_visual_overrides_settings")
 local OutlineSettings = require("scripts/settings/outline/outline_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
@@ -70,6 +71,7 @@ local SoundEvents = require("scripts/settings/sound/sound_events")
 local SoundEvents2d = require("scripts/settings/sound/2d_sound_events")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TimedExplosivesSettings = require("scripts/settings/timed_explosives/timed_explosives_settings")
 local VfxNames = require("scripts/settings/fx/vfx_names")
 local VisualLoadoutExtractData = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_extract_data")
@@ -116,6 +118,24 @@ end
 NetworkLookup.archetype_talent_names = _create_lookup({
 	"n/a",
 }, archetype_talent_names)
+
+local talent_node_names = {}
+
+for archetype_name, archetype in pairs(Archetypes) do
+	local layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+	for i = 1, #layouts do
+		local layout = layouts[i]
+
+		for _, node in ipairs(layout.nodes) do
+			talent_node_names[node.widget_name] = true
+		end
+	end
+end
+
+NetworkLookup.talent_node_names = _create_lookup({
+	"none",
+}, talent_node_names)
 NetworkLookup.attack_results = _create_lookup({}, AttackSettings.attack_results)
 NetworkLookup.attack_types = _create_lookup({}, AttackSettings.attack_types)
 NetworkLookup.bot_orders = {
@@ -129,6 +149,7 @@ NetworkLookup.heat_stages = {
 	"detected",
 	"max",
 	"safe_room",
+	"off",
 }
 
 local no_item_definitions = {}
@@ -356,8 +377,10 @@ local player_character_sounds = {
 	["wwise/events/player/play_horde_mode_buff_rock_charge_finish"] = true,
 	["wwise/events/player/play_horde_mode_buff_rock_charge_loop"] = true,
 	["wwise/events/player/play_horde_mode_buff_self_damage_negated"] = true,
+	["wwise/events/player/play_horde_mode_buff_shield"] = true,
 	["wwise/events/player/play_horde_mode_buff_shield_hit"] = true,
 	["wwise/events/player/play_horde_mode_buff_super_crit"] = true,
+	["wwise/events/player/play_horde_mode_heal_self_confirmation"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
 	["wwise/events/player/play_player_dodge_ranged_success"] = true,
@@ -391,8 +414,6 @@ local player_character_sounds = {
 	["wwise/events/weapon/play_explosion_flamer_tank"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
 	["wwise/events/weapon/play_horde_mode_buff_fire_burst"] = true,
-	["wwise/events/weapon/play_horde_mode_buff_shield"] = true,
-	["wwise/events/weapon/play_horde_mode_heal_self_confirmation"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
@@ -409,10 +430,13 @@ NetworkLookup.player_character_sounds = _create_lookup({
 NetworkLookup.player_abilities = _create_lookup({
 	"not_equipped",
 }, PlayerAbilities)
-NetworkLookup.player_inventory_slot_names = _create_lookup({}, PlayerCharacterConstants.slot_configuration)
+NetworkLookup.player_inventory_slot_names = _create_lookup({
+	"none",
+}, PlayerCharacterConstants.slot_configuration)
 NetworkLookup.presence_names = _create_lookup({}, PresenceSettings.settings)
 NetworkLookup.projectile_locomotion_states = _create_lookup({}, ProjectileLocomotionSettings.states)
 NetworkLookup.projectile_template_names = _create_lookup({}, ProjectileTemplates)
+NetworkLookup.action_handler_component_names = _create_lookup({}, PlayerCharacterConstants.action_handler_component_names)
 
 local projectile_template_effects = {}
 

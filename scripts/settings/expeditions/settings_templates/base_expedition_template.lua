@@ -13,21 +13,21 @@ local expedition_settings = {
 			numerator = 1,
 		},
 		minimum_roamer_groups = {
-			24,
-			23,
-			22,
-			21,
+			14,
+			17,
 			20,
+			22,
+			25,
+		},
+		roamer_multiplier_per_heat_stage = {
+			alert = 1.5,
+			detected = 1.25,
+			max = 1,
+			none = 1,
+			undetected = 1.25,
 		},
 	},
-	timer_settings = {
-		bonus_from_safe_zone = 300,
-		corruption_base_damage = 40,
-		corruption_tick_time = 0.5,
-		corruption_time_power = 1.02,
-		max_time = 900,
-		total_time = 900,
-	},
+	timer_settings = {},
 	exit_event_settings = {
 		duration = 30,
 	},
@@ -111,15 +111,15 @@ local expedition_settings = {
 		{
 			complete_conditions = {
 				max = 4,
-				min = 3,
+				min = 4,
 			},
 			phases = {
 				{
 					{
-						consume_level_on_spawn_per_expedition = false,
+						consume_level_on_spawn_per_expedition = true,
 						consume_level_on_spawn_per_location = true,
 						max = 2,
-						min = 1,
+						min = 2,
 						order_score = 1,
 						tags = {
 							"level_size_32",
@@ -127,9 +127,9 @@ local expedition_settings = {
 						},
 					},
 					{
-						consume_level_on_spawn_per_expedition = false,
+						consume_level_on_spawn_per_expedition = true,
 						consume_level_on_spawn_per_location = true,
-						max = 2,
+						max = 1,
 						min = 1,
 						order_score = 1,
 						tags = {
@@ -138,9 +138,9 @@ local expedition_settings = {
 						},
 					},
 					{
-						consume_level_on_spawn_per_expedition = false,
+						consume_level_on_spawn_per_expedition = true,
 						consume_level_on_spawn_per_location = true,
-						max = 2,
+						max = 1,
 						min = 1,
 						order_score = 1,
 						tags = {
@@ -239,14 +239,13 @@ local expedition_settings = {
 	loot_deduction_settings = {
 		player_death_penalty_drop_amount_multiplier = 0.25,
 		player_death_penalty_multiplier = 0.25,
-		player_extraction_penalty_multiplier = 0.25,
 		player_hogtied_safe_zone_relocation_penalty_multiplier = 1,
 		player_penalty_increment = 5,
 		team_loot_player_death_penalty_threshold = 100,
 	},
 	loot_settings = {
 		pickup_name_format = "expedition_loot_%s_tier_%d",
-		reward_base_budget = 100,
+		reward_base_budget = 30,
 		types = {
 			"small",
 			"crate",
@@ -272,10 +271,6 @@ local expedition_settings = {
 					max = 0,
 					min = 0,
 				},
-				bonus_spawn_per_location = {
-					max = 0,
-					min = 0,
-				},
 			},
 			heavy = {
 				automatically_stashed = false,
@@ -287,10 +282,6 @@ local expedition_settings = {
 				limit_per_location = {
 					max = 0,
 					min = 0,
-				},
-				bonus_spawn_per_location = {
-					max = 2,
-					min = 1,
 				},
 			},
 		},
@@ -450,17 +441,25 @@ local expedition_settings = {
 			},
 		},
 	},
+	extra_reward_spawn_per_location = {
+		["expedition_loot_heavy_tier_%d"] = {
+			distribution_type = "bonus_reward",
+			max = 2,
+			min = 1,
+			tiers = 3,
+		},
+	},
 	store_info = {
 		pickups = {
 			health_station = {
-				player_purchases_per_store = 1,
-				price = 10,
+				player_purchase_limit_per_store = 1,
+				price = 25,
 			},
 			large_ammunition_crate = {
 				price = 10,
 			},
 			small_grenade = {
-				price = 75,
+				price = 50,
 			},
 			expedition_explosive_luggable_01 = {
 				charges = 1,
@@ -514,7 +513,7 @@ local expedition_settings = {
 			},
 			expedition_grenade_valkyrie_hover_pocketable = {
 				charges = 1,
-				player_purchases_per_store = 1,
+				player_purchase_limit_per_store = 1,
 				price = 150,
 				random_spawn = true,
 			},

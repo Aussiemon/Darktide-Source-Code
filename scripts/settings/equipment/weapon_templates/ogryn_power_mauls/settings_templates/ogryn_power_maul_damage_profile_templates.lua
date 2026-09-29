@@ -223,6 +223,45 @@ overrides.ogryn_powermaul_shield_light_smiter = {
 		},
 	},
 }
+overrides.ogryn_powermaul_shield_light_smiter_plus = {
+	parent_template_name = "ogryn_powermaul_light_smiter",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				100,
+				200,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				55,
+				110,
+			},
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"impact",
+			{
+				9,
+				16,
+			},
+		},
+		{
+			"cleave_distribution",
+			double_cleave,
+		},
+	},
+}
 overrides.ogryn_powermaul_light_smiter_active = {
 	parent_template_name = "ogryn_powermaul_light_smiter",
 	overrides = {
@@ -1018,8 +1057,8 @@ damage_templates.ogryn_powermaul_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					25,
-					50,
+					40,
+					80,
 				},
 				impact = {
 					13,
@@ -1031,8 +1070,8 @@ damage_templates.ogryn_powermaul_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					20,
-					40,
+					25,
+					50,
 				},
 				impact = {
 					13,
@@ -1385,6 +1424,76 @@ overrides.powermaul_2h_light_tank_active = {
 		},
 	},
 }
+overrides.powermaul_2h_light_tank_active_m2 = {
+	parent_template_name = "powermaul_2h_light_tank",
+	overrides = {
+		{
+			"stagger_duration_modifier",
+			{
+				0.1,
+				0.2,
+			},
+		},
+		{
+			"armor_damage_modifier",
+			light_active_am,
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				300,
+				500,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				40,
+				80,
+			},
+		},
+		{
+			"gibbing_power",
+			gibbing_power.always,
+		},
+		{
+			"gibbing_type",
+			gibbing_types.crushing,
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.shock_blunt,
+		},
+		{
+			"cleave_distribution",
+			"attack",
+			math.huge,
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			math.huge,
+		},
+		{
+			"shield_override_stagger_strength",
+			200,
+		},
+		{
+			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
+	},
+}
 damage_templates.powermaul_2h_heavy_tank = {
 	ragdoll_only = true,
 	ragdoll_push_force = 800,
@@ -1493,6 +1602,82 @@ overrides.powermaul_2h_heavy_tank_active = {
 			{
 				200,
 				400,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				40,
+				80,
+			},
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			human_tank_heavy_default_am,
+		},
+		{
+			"gibbing_power",
+			gibbing_power.always,
+		},
+		{
+			"gibbing_type",
+			gibbing_types.crushing,
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.shock_blunt,
+		},
+		{
+			"cleave_distribution",
+			"attack",
+			math.huge,
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			math.huge,
+		},
+		{
+			"shield_override_stagger_strength",
+			200,
+		},
+		{
+			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
+	},
+}
+overrides.powermaul_2h_heavy_tank_active_m2 = {
+	parent_template_name = "powermaul_2h_heavy_tank",
+	overrides = {
+		{
+			"stagger_duration_modifier",
+			{
+				0.1,
+				0.2,
+			},
+		},
+		{
+			"armor_damage_modifier",
+			human_tank_heavy_default_am,
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				400,
+				700,
 			},
 		},
 		{
@@ -1673,6 +1858,78 @@ overrides.powermaul_2h_light_smiter_active = {
 		},
 	},
 }
+overrides.powermaul_2h_light_smiter_active_m2 = {
+	parent_template_name = "powermaul_2h_light_smiter",
+	overrides = {
+		{
+			"cleave_distribution",
+			"attack",
+			math.huge,
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			math.huge,
+		},
+		{
+			"stagger_duration_modifier",
+			{
+				0.2,
+				0.5,
+			},
+		},
+		{
+			"armor_damage_modifier",
+			light_active_am,
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				300,
+				580,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				20,
+				40,
+			},
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			light_active_am,
+		},
+		{
+			"gibbing_power",
+			gibbing_power.always,
+		},
+		{
+			"gibbing_type",
+			gibbing_types.crushing,
+		},
+		{
+			"shield_override_stagger_strength",
+			200,
+		},
+		{
+			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
+	},
+}
 overrides.powermaul_2h_heavy_smiter = {
 	parent_template_name = "powermaul_2h_light_smiter",
 	overrides = {
@@ -1761,6 +2018,94 @@ overrides.powermaul_2h_heavy_smiter_active = {
 			"attack",
 			armor_types.resistant,
 			damage_lerp_values.lerp_1_5,
+		},
+		{
+			"gibbing_power",
+			gibbing_power.always,
+		},
+		{
+			"gibbing_type",
+			gibbing_types.crushing,
+		},
+		{
+			"wounds_template",
+			WoundsTemplates.shock_blunt,
+		},
+		{
+			"shield_override_stagger_strength",
+			200,
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			1.4,
+		},
+		{
+			"weapon_special",
+			true,
+		},
+		{
+			"shield_breaker",
+			true,
+		},
+	},
+}
+overrides.powermaul_2h_heavy_smiter_active_m2 = {
+	parent_template_name = "powermaul_2h_light_smiter",
+	overrides = {
+		{
+			"cleave_distribution",
+			"attack",
+			math.huge,
+		},
+		{
+			"cleave_distribution",
+			"impact",
+			math.huge,
+		},
+		{
+			"stagger_duration_modifier",
+			{
+				0.2,
+				0.5,
+			},
+		},
+		{
+			"armor_damage_modifier",
+			light_active_am,
+		},
+		{
+			"melee_attack_strength",
+			melee_attack_strengths.heavy,
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				500,
+				900,
+			},
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				40,
+				80,
+			},
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			armor_types.resistant,
+			damage_lerp_values.lerp_1_25,
 		},
 		{
 			"gibbing_power",
@@ -1952,6 +2297,114 @@ damage_templates.ogryn_powermaul_explosion_outer = {
 	suppression_type = "ability",
 	power_distribution = {
 		attack = 125,
+		impact = 20,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 0.2,
+			},
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	gibbing_power = gibbing_power.always,
+	damage_type = damage_types.plasma,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.powermaul_explosion_m2 = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_only = true,
+	ragdoll_push_force = 1200,
+	stagger_category = "explosion",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 380,
+		impact = 65,
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+		},
+	},
+	stagger_duration_modifier = {
+		0.1,
+		0.5,
+	},
+	damage_type = damage_types.kinetic,
+	targets = {
+		default_target = {},
+	},
+}
+damage_templates.powermaul_explosion_outer_m2 = {
+	ignore_shield = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_type = "ability",
+	power_distribution = {
+		attack = 110,
 		impact = 20,
 	},
 	armor_damage_modifier_ranged = {

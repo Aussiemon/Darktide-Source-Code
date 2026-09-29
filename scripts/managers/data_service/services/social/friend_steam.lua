@@ -2,6 +2,7 @@
 
 local FriendInterface = require("scripts/managers/data_service/services/social/friend_interface")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
+local Friends = Friends
 local FriendSteam = class("FriendsSteam")
 
 FriendSteam.init = function (self, id, app_id)

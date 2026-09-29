@@ -221,13 +221,13 @@ templates.syringe_ability_boost_buff = {
 	update_func = function (template_data, template_context, dt, t)
 		local ability_extension = template_data.ability_extension
 		local ability_type = "combat_ability"
-		local missing_ability_charges = ability_extension:missing_ability_charges(ability_type)
+		local missing_ability_resource = ability_extension:missing_ability_resource(ability_type)
 
-		if missing_ability_charges > 0 then
+		if missing_ability_resource > 0 then
 			local effect = template_data.effect
 			local reduce_time = dt * effect
 
-			ability_extension:reduce_ability_cooldown_time(ability_type, reduce_time)
+			ability_extension:restore_ability_resource(ability_type, reduce_time)
 
 			template_data.total_time_reduced = template_data.total_time_reduced + reduce_time
 		end

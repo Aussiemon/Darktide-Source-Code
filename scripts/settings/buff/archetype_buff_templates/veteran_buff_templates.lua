@@ -361,7 +361,7 @@ templates.veteran_combat_ability_extra_charge = {
 	predicted = false,
 	stat_buffs = {
 		[stat_buffs.ability_extra_charges] = 1,
-		[stat_buffs.combat_ability_cooldown_modifier] = 0.33,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = 0.33,
 	},
 }
 
@@ -886,7 +886,7 @@ templates.veteran_movement_speed_coherency = {
 	predicted = false,
 	buff_category = buff_categories.aura,
 	stat_buffs = {
-		[stat_buffs.movement_speed] = 0.05,
+		[stat_buffs.movement_speed] = 0.075,
 	},
 	start_func = _penance_start_func("veteran_movement_speed_coherency_tracking_buff"),
 	related_talents = {
@@ -1293,25 +1293,6 @@ templates.veteran_extra_grenade = {
 	stat_buffs = {
 		[stat_buffs.extra_max_amount_of_grenades] = 1,
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local buff_stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = buff_stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
 }
 templates.veteran_improved_grenades = {
 	class_name = "buff",
@@ -1955,6 +1936,9 @@ templates.veteran_stamina_on_ranged_dodges = {
 	class_name = "proc_buff",
 	cooldown_duration = 3,
 	predicted = false,
+	stat_buffs = {
+		[stat_buffs.movement_speed] = talent_settings_2.defensive_2.movement_speed,
+	},
 	proc_events = {
 		[proc_events.on_ranged_dodge] = 1,
 	},
@@ -2135,6 +2119,16 @@ templates.veteran_increased_weakspot_damage = {
 		[stat_buffs.weakspot_damage] = talent_settings_2.passive_1.weakspot_damage,
 	},
 }
+templates.veteran_base_ranged_damage = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.ranged_damage] = talent_settings.veteran_base_ranged_damage.ranged_damage,
+	},
+	related_talents = {
+		"veteran_base_ranged_damage",
+	},
+}
 templates.veteran_combat_ability_cooldown_reduction_on_elite_kills = {
 	class_name = "server_only_proc_buff",
 	predicted = false,
@@ -2184,7 +2178,7 @@ templates.veteran_combat_ability_cooldown_reduction_on_elite_kills_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.cdr)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.veteran_combat_ability_cooldown_reduction_on_elite_kills.cdr)
 		end
 	end,
 	related_talents = {
@@ -2322,7 +2316,7 @@ templates.veteran_combat_ability_increase_toughness_to_coherency = {
 	predicted = false,
 	buff_category = buff_categories.talents_secondary,
 	stat_buffs = {
-		[stat_buffs.toughness_bonus_flat] = 50,
+		[stat_buffs.toughness_bonus_flat] = 75,
 	},
 	start_func = function (template_data, template_context)
 		if not template_context.is_server then
@@ -2517,7 +2511,7 @@ templates.veteran_combat_ability_revive_nearby_allies = {
 	max_stacks = 1,
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_modifier] = 0.5,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = 0.5,
 		[stat_buffs.shout_radius_modifier] = -0.33,
 	},
 }
@@ -3530,6 +3524,34 @@ templates.veteran_increased_ranged_cleave = {
 	prediced = false,
 	stat_buffs = {
 		[stat_buffs.ranged_max_hit_mass_attack_modifier] = talent_settings.veteran_increased_ranged_cleave.cleave,
+	},
+}
+templates.veteran_survivalist_passive = {
+	class_name = "proc_buff",
+	max_stacks = 1,
+	predicted = false,
+	proc_events = {
+		[proc_events.on_kill] = 1,
+	},
+	cooldown_duration = talent_settings.veteran_survivalist_passive.cooldown,
+	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
+	check_proc_func = function (params, template_data, template_context, t)
+		local is_elite_or_special_minion_death = CheckProcFunctions.on_elite_or_special_minion_death(params, template_data, template_context, t)
+
+		return is_elite_or_special_minion_death
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local ammo_percent = talent_settings.veteran_survivalist_passive.ammo
+		local unit = template_context.unit
+
+		Ammo.add_to_all_slots(unit, ammo_percent)
+	end,
+	related_talents = {
+		"veteran_survivalist_passive",
 	},
 }
 

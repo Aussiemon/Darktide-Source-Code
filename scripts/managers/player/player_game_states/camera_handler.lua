@@ -168,10 +168,13 @@ CameraHandler._update_camera_manager = function (self, dt, t)
 end
 
 CameraHandler._camera_root_orientation = function (self, player_orientation)
+	local player = self._player
 	local camera_follow_unit = self._camera_follow_unit
 	local yaw, pitch, roll
+	local is_observing = self:is_observing() and ALIVE[camera_follow_unit]
+	local is_self_observing = camera_follow_unit == player.player_unit
 
-	if self._mode == CameraModes.observer and self._first_person_spectating_mode and ALIVE[camera_follow_unit] then
+	if is_observing and not is_self_observing then
 		local first_person_extension = ScriptUnit.has_extension(camera_follow_unit, "first_person_system")
 
 		if first_person_extension then
@@ -429,7 +432,9 @@ CameraHandler._update_follow_camera = function (self, unit, follow_unit_switch)
 	end
 
 	if wanted_camera_node ~= current_camera_node then
-		camera_manager:set_camera_node(viewport_name, wanted_tree, wanted_camera_node)
+		local force_instant_transition = mode == CameraModes.observer and follow_unit_switch
+
+		camera_manager:set_camera_node(viewport_name, wanted_tree, wanted_camera_node, force_instant_transition)
 	end
 
 	self._current_camera_tree = wanted_tree

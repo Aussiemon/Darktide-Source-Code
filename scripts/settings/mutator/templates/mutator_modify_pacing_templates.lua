@@ -586,6 +586,16 @@ local mutator_templates = {
 		},
 	},
 	mutator_live_event_only_beast = {
+		class = "scripts/managers/mutator/mutators/mutator_replace_breed",
+		init_replacement_breed = {
+			breed_replacement = {
+				chaos_ogryn_houndmaster = "chaos_beast_of_nurgle",
+				chaos_plague_ogryn = "chaos_beast_of_nurgle",
+				chaos_spawn = "chaos_beast_of_nurgle",
+			},
+		},
+	},
+	mutator_live_event_extra_beast = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			specials_monster_spawn_config = {

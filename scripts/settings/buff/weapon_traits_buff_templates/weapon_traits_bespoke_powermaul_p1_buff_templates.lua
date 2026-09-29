@@ -7,7 +7,6 @@ local ConditionalFunctions = require("scripts/settings/buff/helper_functions/con
 local MinionState = require("scripts/utilities/minion_state")
 local stagger_results = AttackSettings.stagger_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
-local buff_keywords = BuffSettings.keywords
 local group_keywords = BuffSettings.group_keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
@@ -36,9 +35,10 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("block_has_chance_to_stun_child")
@@ -53,14 +53,16 @@ templates.weapon_trait_bespoke_powermaul_p1_block_has_chance_to_stun = {
 	check_proc_func = function (params, template_data, template_context)
 		return params.attack_type == "melee"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacking_unit = params.attacking_unit
-		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	specific_proc_func = {
+		on_perfect_block = function (params, template_data, template_context, t)
+			local attacking_unit = params.attacking_unit
+			local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 
-		if attacking_unit_buff_extension then
-			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
-		end
-	end,
+			if attacking_unit_buff_extension then
+				attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+			end
+		end,
+	},
 }
 templates.block_has_chance_to_stun_child = {
 	class_name = "buff",

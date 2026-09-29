@@ -99,19 +99,19 @@ SocialXboxLive.fetch_friends_list = function (self)
 		return friends_promise
 	end
 
-	local profiles = {}
-
 	self._friends_promise = Promise:new()
 
 	local friends_list = Managers.account:get_friends()
+	local num_friends = #friends_list
+	local profiles = Script.new_array(num_friends)
 
-	for i = 1, #friends_list do
+	for i = 1, num_friends do
 		local friend_data = friends_list[i]
 
-		profiles[#profiles + 1] = FriendXboxLive:new(friend_data)
+		profiles[i] = FriendXboxLive:new(friend_data)
 	end
 
-	self._num_friends = #profiles
+	self._num_friends = num_friends
 
 	self._friends_promise:resolve(profiles)
 

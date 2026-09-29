@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/buff/minion_buff_templates.lua
 
 local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -15,10 +16,12 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
+local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local PLAYER_BREED_TYPE = BreedSettings.types.player
 local proc_events = BuffSettings.proc_events
+local minion_effects_priorities = BuffSettings.minion_effects_priorities
 local templates = {}
 
 table.make_unique(templates)
@@ -42,6 +45,23 @@ local function _multiplier_step(value)
 	return scaled_multiplier_step
 end
 
+templates.in_tether = {
+	class_name = "buff",
+	predicted = false,
+	keywords = {
+		buff_keywords.in_tether,
+	},
+}
+templates.minion_in_tether = {
+	class_name = "buff",
+	duration = 1,
+	max_stacks = 1,
+	predicted = false,
+	refresh_duration_on_stack = true,
+	keywords = {
+		buff_keywords.in_tether,
+	},
+}
 templates.cultist_flamer_hit_by_flame = {
 	class_name = "interval_buff",
 	duration = 1,
@@ -314,6 +334,119 @@ templates.houndmaster_electrocution = {
 		},
 	},
 }
+
+local TOUGHNED_SKIN_COLOR = {
+	0.8274509803921568,
+	0.9882352941176471,
+	0.011764705882352941,
+}
+
+templates.spillway_psyker_armor = {
+	class_name = "buff",
+	max_stacks = 1,
+	predicted = false,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0.3,
+		[buff_stat_buffs.toughness_replenish_multiplier] = 0.3,
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local color = Vector3(TOUGHNED_SKIN_COLOR[1], TOUGHNED_SKIN_COLOR[2], TOUGHNED_SKIN_COLOR[3])
+
+		Unit.set_vector3_for_materials(unit, "stimmed_color", color, true)
+
+		if not template_context.is_server then
+			return
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
+
+		if not template_context.is_server then
+			return
+		end
+	end,
+	minion_effects = {
+		node_effects_priority = minion_effects_priorities.mutators,
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					material_emission = true,
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_pus_slime",
+					stop_type = "stop",
+				},
+			},
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_pus_slow",
+					stop_type = "stop",
+				},
+			},
+			{
+				node_name = "j_spine1",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/flies_1m",
+					stop_type = "stop",
+				},
+			},
+		},
+	},
+}
+
+local TOUGHNESS_REDUCTION_BUFF = "spillway_wizard_toughness_reduction_stacking"
+local TOUGHNESS_REDUCTION_MAX_STACKS = 3
+
+templates.spillway_wizard_toughness_reduction_stacking = {
+	class_name = "buff",
+	duration = 10,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_plasma_reduced_toughness",
+	hud_priority = 1,
+	is_negative = true,
+	predicted = false,
+	refresh_duration_on_remove_stack = true,
+	refresh_duration_on_stack = true,
+	max_stacks = TOUGHNESS_REDUCTION_MAX_STACKS,
+	stat_buffs = {
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0.9,
+		[buff_stat_buffs.toughness_replenish_multiplier] = 0.9,
+	},
+	update_func = function (template_data, template_context, dt, t)
+		local buff_name = template_context.template.name
+		local unit = template_context.unit
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local current_stacks = buff_extension:current_stacks(buff_name)
+		local is_at_max_stacks = current_stacks >= template_context.template.max_stacks
+
+		if is_at_max_stacks and not template_data.added_full_stop then
+			buff_extension:add_externally_controlled_buff("spillway_wizard_toughness_reduction_full_stop", t)
+
+			template_data.added_full_stop = true
+		elseif not is_at_max_stacks then
+			template_data.added_full_stop = false
+		end
+	end,
+}
+templates.spillway_wizard_toughness_reduction_full_stop = {
+	class_name = "buff",
+	is_negative = true,
+	predicted = false,
+	keywords = {
+		buff_keywords.prevent_toughness_replenish,
+	},
+	conditional_exit_func = function (template_data, template_context)
+		local buff_extension = template_context.buff_extension
+		local num_stacks = buff_extension:current_stacks(TOUGHNESS_REDUCTION_BUFF)
+
+		return num_stacks < TOUGHNESS_REDUCTION_MAX_STACKS
+	end,
+}
 templates.renegade_plasma_gunner_toughness_reduction = {
 	class_name = "buff",
 	duration = 5,
@@ -326,31 +459,6 @@ templates.renegade_plasma_gunner_toughness_reduction = {
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = _multiplier_step(0.5),
 		[buff_stat_buffs.toughness_replenish_multiplier] = _multiplier_step(0.5),
 	},
-}
-templates.renegade_plasma_gunner_set_material_scalar = {
-	class_name = "buff",
-	duration = 10,
-	max_stacks = 1,
-	predicted = false,
-	update_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local has_visual_loadout_extension = ScriptUnit.has_extension(unit, "visual_loadout_system")
-
-		if has_visual_loadout_extension then
-			local scalar_val = 6
-			local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-			local inventory_unit = visual_loadout_extension:slot_unit("slot_ranged_weapon")
-
-			Unit.set_scalar_for_materials(inventory_unit, "emissive_multiplier", scalar_val, true)
-
-			template_data.done = true
-		end
-	end,
-	conditional_exit_func = function (template_data, template_context)
-		if template_data.done then
-			return true
-		end
-	end,
 }
 templates.cultist_flamer_liquid_immunity = {
 	class_name = "buff",
@@ -828,6 +936,104 @@ templates.hit_by_sand_vortex = {
 		end
 	end,
 	minion_effects = minion_burning_buff_effects.chemfire,
+}
+
+local FLIES_BASE_DURATION = 5
+local FLIES_SFX = "wwise/events/player/play_player_get_hit_warp"
+local FLIES_SFX_NODE = "j_head"
+
+templates.spillway_wizard_warp_lightning = {
+	class_name = "buff",
+	duration = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_grace_time_hud",
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = true,
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = -0.25,
+	},
+	keywords = {
+		buff_keywords.nurgle_flies,
+	},
+	player_effects = {
+		on_screen_effect = "content/fx/particles/screenspace/screen_player_electrified",
+		stop_type = "destroy",
+		wwise_state = {
+			group = "swamped",
+			off_state = "none",
+			on_state = "on",
+		},
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if template_context.is_server then
+			local buff_ext = ScriptUnit.has_extension(unit, "buff_system")
+			local t = FixedFrame.get_latest_fixed_time()
+
+			buff_ext:add_internally_controlled_buff("spillway_wizard_toughness_reduction_stacking", t)
+
+			local _, buff_index = buff_ext:add_externally_controlled_buff("spillway_wizard_warp_lightning_dot", t)
+
+			template_data.start_t = t
+			template_data.duration = FLIES_BASE_DURATION
+			template_data.buff_index = buff_index
+			template_data.buff_ext = buff_ext
+		end
+
+		if not DEDICATED_SERVER then
+			local wwise_world = template_context.wwise_world
+			local node = Unit.node(unit, FLIES_SFX_NODE)
+			local source_id = WwiseWorld.make_auto_source(wwise_world, unit, node)
+
+			template_data.wwise_source_id = source_id
+
+			WwiseWorld.trigger_resource_event(wwise_world, FLIES_SFX, source_id)
+		end
+	end,
+	conditional_exit_func = function (template_data, template_context)
+		local t = FixedFrame.get_latest_fixed_time()
+
+		if template_context.is_server and t > template_data.start_t + template_data.duration then
+			return true
+		end
+
+		return false
+	end,
+	stop_func = function (template_data, template_context, extension_destroyed)
+		if template_data.buff_ext and template_context.is_server then
+			template_data.buff_ext:mark_buff_finished(template_data.buff_index)
+		end
+	end,
+}
+templates.spillway_wizard_warp_lightning_dot = {
+	class_name = "interval_buff",
+	interval = 0.35,
+	max_stacks = 1,
+	max_stacks_cap = 1,
+	predicted = false,
+	ragdoll_push_force = {
+		50,
+		150,
+	},
+	start_func = function (template_data, template_context)
+		local t = FixedFrame.get_latest_fixed_time()
+
+		template_data.start_t = t
+		template_data.duration = FLIES_BASE_DURATION
+	end,
+	interval_func = function (template_data, template_context, template)
+		local unit = template_context.unit
+
+		if HEALTH_ALIVE[unit] then
+			local damage_template = DamageProfileTemplates.toxin_variant_3
+			local power_level = 10
+			local owner_unit = template_context.is_server and template_context.owner_unit
+
+			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.toxin, "attacking_unit", owner_unit, "attack_type", attack_types.buff)
+		end
+	end,
 }
 templates.cultist_flamer_backpack_damaged = table.clone(templates.renegade_flamer_backpack_damaged)
 templates.cultist_flamer_backpack_damaged.minion_effects.stack_node_effects = {

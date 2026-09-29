@@ -1,14 +1,14 @@
 ﻿-- chunkname: @scripts/settings/item/crafting_settings.lua
 
-local ItemUtils = require("scripts/utilities/items")
+local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local RankSettings = require("scripts/settings/item/rank_settings")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local CraftingSettings = {}
+local crafting_settings = {}
 
-CraftingSettings.MAX_UPGRADE_RARITY_TIER = 5
+crafting_settings.MAX_UPGRADE_RARITY_TIER = 5
 
 local function is_valid_crafting_item(item)
 	return item and not item.no_crafting and RaritySettings[item.rarity]
@@ -62,8 +62,8 @@ local function calculate_costs(start_costs, item, item_crafting_costs, cost_mult
 	return final_costs
 end
 
-CraftingSettings.recipes = {}
-CraftingSettings.recipes.upgrade_item = {
+crafting_settings.recipes = {}
+crafting_settings.recipes.upgrade_item = {
 	button_text = "loc_crafting_upgrade_button",
 	description_text = "loc_crafting_upgrade_description",
 	display_name = "loc_crafting_upgrade_option",
@@ -101,18 +101,18 @@ CraftingSettings.recipes.upgrade_item = {
 	can_craft = function (ingredients)
 		local item = ingredients.item
 
-		if not CraftingSettings.recipes.upgrade_item.is_valid_item(item) then
+		if not crafting_settings.recipes.upgrade_item.is_valid_item(item) then
 			return false, "loc_crafting_failure"
 		end
 
-		if item.rarity >= CraftingSettings.MAX_UPGRADE_RARITY_TIER then
+		if item.rarity >= crafting_settings.MAX_UPGRADE_RARITY_TIER then
 			return false, "loc_crafting_upgrade_max"
 		end
 
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.upgrade_item.get_costs(ingredients)
+		local costs = crafting_settings.recipes.upgrade_item.get_costs(ingredients)
 		local item = ingredients.item
 		local gear_id = item.gear_id
 		local is_gadget = item.item_type == "GADGET"
@@ -152,7 +152,7 @@ CraftingSettings.recipes.upgrade_item = {
 				}
 			end
 
-			local min_new_item_level = ItemUtils.item_trait_rating(item)
+			local min_new_item_level = Items.item_trait_rating(item)
 
 			if (not item.traits[#item.traits].rarity or item.traits[#item.traits].rarity == 0) and RankSettings[0].trait_rating[rank_item_type_name] == 0 then
 				min_new_item_level = min_new_item_level + RankSettings[1].trait_rating[rank_item_type_name]
@@ -177,7 +177,7 @@ CraftingSettings.recipes.upgrade_item = {
 				}
 			end
 
-			local min_new_item_level = ItemUtils.item_perk_rating(item)
+			local min_new_item_level = Items.item_perk_rating(item)
 
 			if (not item.perks[#item.perks].rarity or item.perks[#item.perks].rarity == 0) and RankSettings[0].perk_rating[rank_item_type_name] == 0 then
 				min_new_item_level = min_new_item_level + RankSettings[1].perk_rating[rank_item_type_name]
@@ -196,7 +196,7 @@ CraftingSettings.recipes.upgrade_item = {
 		return item
 	end,
 }
-CraftingSettings.recipes.extract_trait = {
+crafting_settings.recipes.extract_trait = {
 	button_text = "loc_crafting_extract_button",
 	description_text = "loc_crafting_extract_description",
 	display_name = "loc_crafting_extract_option",
@@ -237,7 +237,7 @@ CraftingSettings.recipes.extract_trait = {
 	can_craft = function (ingredients, seen_traits)
 		local item = ingredients.item
 
-		if not CraftingSettings.recipes.extract_trait.is_valid_item(item) then
+		if not crafting_settings.recipes.extract_trait.is_valid_item(item) then
 			return false, nil
 		end
 
@@ -284,14 +284,14 @@ CraftingSettings.recipes.extract_trait = {
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.extract_trait.get_costs(ingredients)
+		local costs = crafting_settings.recipes.extract_trait.get_costs(ingredients)
 		local item = ingredients.item
 		local promise = Managers.data_service.crafting:extract_trait_from_weapon(item.gear_id, ingredients.existing_trait_index, costs)
 
 		return promise
 	end,
 }
-CraftingSettings.recipes.replace_trait = {
+crafting_settings.recipes.replace_trait = {
 	button_text = "loc_crafting_replace_option",
 	description_text = "loc_crafting_replace_description",
 	display_name = "loc_crafting_replace_option",
@@ -327,11 +327,11 @@ CraftingSettings.recipes.replace_trait = {
 	can_craft = function (ingredients, additional_context)
 		local item = ingredients.item
 		local item_traits = item.traits
-		local has_perk_modification, has_trait_modification = ItemUtils.has_crafting_modification(item)
-		local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+		local has_perk_modification, has_trait_modification = Items.has_crafting_modification(item)
+		local num_modifications, max_modifications = Items.modifications_by_rarity(item)
 		local item_locked = num_modifications == max_modifications
 
-		if not CraftingSettings.recipes.replace_trait.is_valid_item(item) then
+		if not crafting_settings.recipes.replace_trait.is_valid_item(item) then
 			return false, "loc_crafting_failure"
 		end
 
@@ -369,7 +369,7 @@ CraftingSettings.recipes.replace_trait = {
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.replace_trait.get_costs(ingredients)
+		local costs = crafting_settings.recipes.replace_trait.get_costs(ingredients)
 		local item = ingredients.item
 		local promise = Managers.data_service.crafting:replace_trait_in_weapon(item.gear_id, ingredients.existing_trait_index, ingredients.trait_master_ids[1], ingredients.tiers[1], costs)
 
@@ -395,7 +395,7 @@ local dummy_fuse_costs = {
 	},
 }
 
-CraftingSettings.recipes.replace_perk = {
+crafting_settings.recipes.replace_perk = {
 	button_text = "loc_crafting_reroll_perk_button",
 	description_text = "loc_crafting_replace_perk_description",
 	display_name = "loc_crafting_reroll_perk_option",
@@ -430,11 +430,11 @@ CraftingSettings.recipes.replace_perk = {
 	end,
 	can_craft = function (ingredients, additional_context)
 		local item = ingredients.item
-		local has_perk_modification, has_trait_modification = ItemUtils.has_crafting_modification(item)
-		local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+		local has_perk_modification, has_trait_modification = Items.has_crafting_modification(item)
+		local num_modifications, max_modifications = Items.modifications_by_rarity(item)
 		local item_locked = num_modifications == max_modifications
 
-		if not CraftingSettings.recipes.replace_perk.is_valid_item(item) then
+		if not crafting_settings.recipes.replace_perk.is_valid_item(item) then
 			return false, "loc_crafting_failure"
 		end
 
@@ -469,21 +469,21 @@ CraftingSettings.recipes.replace_perk = {
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.replace_perk.get_costs(ingredients)
+		local costs = crafting_settings.recipes.replace_perk.get_costs(ingredients)
 		local item = ingredients.item
 		local promise = Managers.data_service.crafting:replace_perk_in_weapon(item.gear_id, ingredients.existing_perk_index, ingredients.perk_master_ids[1], costs, ingredients.tiers[1])
 
 		return promise
 	end,
 }
-CraftingSettings.recipes_ui_order = {
-	CraftingSettings.recipes.upgrade_item,
-	CraftingSettings.recipes.replace_perk,
-	CraftingSettings.recipes.replace_trait,
-	CraftingSettings.recipes.extract_trait,
-	CraftingSettings.recipes.fuse_traits,
+crafting_settings.recipes_ui_order = {
+	crafting_settings.recipes.upgrade_item,
+	crafting_settings.recipes.replace_perk,
+	crafting_settings.recipes.replace_trait,
+	crafting_settings.recipes.extract_trait,
+	crafting_settings.recipes.fuse_traits,
 }
-CraftingSettings.trait_sticker_book_enum = table.enum("invalid", "unseen", "seen")
+crafting_settings.trait_sticker_book_enum = table.enum("invalid", "unseen", "seen")
 
 do
 	local title_height = 70
@@ -503,7 +503,7 @@ do
 		grid_height,
 	}
 
-	CraftingSettings.weapon_stats_context = {
+	crafting_settings.weapon_stats_context = {
 		scrollbar_width = 7,
 		grid_spacing = grid_spacing,
 		grid_size = grid_size,
@@ -518,7 +518,7 @@ do
 	local grid_width = 430
 	local grid_height = 900
 
-	CraftingSettings.crafting_recipe_context = {
+	crafting_settings.crafting_recipe_context = {
 		refresh_on_grid_pressed = true,
 		reset_selection_on_navigation_change = false,
 		scrollbar_width = 7,
@@ -540,4 +540,4 @@ do
 	}
 end
 
-return settings("CraftingSettings", CraftingSettings)
+return settings("CraftingSettings", crafting_settings)

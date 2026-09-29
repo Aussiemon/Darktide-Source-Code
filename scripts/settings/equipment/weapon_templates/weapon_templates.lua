@@ -12,8 +12,21 @@ local function _require_template(path_prefix, template_name)
 		template_data.sprint_ready_up_time = 0
 	end
 
+	local action_names = {}
+
 	for action_name, action_settings in pairs(template_data.actions) do
 		action_settings.name = action_name
+		action_names[#action_names + 1] = action_name
+	end
+
+	table.sort(action_names)
+
+	template_data.sorted_actions = {}
+
+	for i = 1, #action_names do
+		local action_name = action_names[i]
+
+		template_data.sorted_actions[i] = template_data.actions[action_name]
 	end
 
 	template_data.name = template_name
@@ -124,6 +137,11 @@ local template_groups = {
 	{
 		"ogryn_powermaul_slabshield",
 		"ogryn_powermaul_slabshield_p1_m1",
+		"ogryn_powermaul_slabshield_p1_m2",
+	},
+	{
+		"ogryn_hammers_2h",
+		"ogryn_hammer_2h_p1_m1",
 	},
 	{
 		"ogryn_pickaxes_2h",
@@ -134,6 +152,7 @@ local template_groups = {
 	{
 		"power_mauls_2h",
 		"powermaul_2h_p1_m1",
+		"powermaul_2h_p1_m2",
 	},
 	{
 		"power_mauls",
@@ -171,10 +190,6 @@ local template_groups = {
 	},
 	{
 		"timed",
-	},
-	{
-		"transonic_claw",
-		"transonic_claw_p1_m1",
 	},
 	{
 		"transonic_knife",
@@ -299,6 +314,7 @@ local template_groups = {
 		"thumpers",
 		"ogryn_thumper_p1_m1",
 		"ogryn_thumper_p1_m2",
+		"ogryn_thumper_p1_m3",
 	},
 	{
 		"shotguns",
@@ -306,6 +322,8 @@ local template_groups = {
 		"shotgun_p1_m2",
 		"shotgun_p1_m3",
 		"shotgun_p2_m1",
+		"shotgun_p2_m3",
+		"shotgun_p3_m1",
 		"shotgun_p4_m1",
 		"shotgun_p4_m2",
 	},
@@ -338,11 +356,12 @@ local template_groups = {
 	},
 	{
 		"combat_abilities",
-		"psyker_force_field",
-		"psyker_force_field_dome",
-		"zealot_relic",
-		"area_buff_drone",
+		"adamant_area_buff_drone",
 		"broker_stimm_field",
+		"cryptic_transonic_claw",
+		"psyker_force_field_dome",
+		"psyker_force_field",
+		"zealot_relic",
 	},
 	{
 		"devices",
@@ -358,7 +377,6 @@ local template_groups = {
 		"grenades",
 		"adamant_grenade",
 		"shock_mine",
-		"quick_flash_grenade",
 		"tox_grenade",
 		"cryptic_servo_skull_order_point",
 		"arc_grenade",
@@ -374,13 +392,11 @@ local template_groups = {
 		"smoke_grenade",
 		"shock_grenade",
 		"fire_grenade",
-		"zealot_throwing_knives",
 		"expeditions_big_grenade",
 	},
 	{
 		"luggables",
 		"luggable_light",
-		"luggable_mission",
 		"luggable",
 	},
 	{

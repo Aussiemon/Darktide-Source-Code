@@ -55,6 +55,7 @@ action_handler_settings.combo_increase = {
 action_handler_settings.combo_hold = {
 	"windup",
 }
+action_handler_settings.transition_types = table.enum("start", "chain", "forced", "on_slot_wielded")
 action_handler_settings.gameplay_time_scale_limits = {
 	ranged_load_special = 2,
 	reload_special = 2,

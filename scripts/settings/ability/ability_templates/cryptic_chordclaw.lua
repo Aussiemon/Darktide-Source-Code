@@ -9,7 +9,7 @@ ability_template.action_inputs = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -18,7 +18,7 @@ ability_template.action_inputs = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				input = "combat_ability_hold",
+				input_alias = "wielded_input_hold",
 				value = false,
 				time_window = math.huge,
 			},
@@ -28,7 +28,7 @@ ability_template.action_inputs = {
 		buffer_time = 0,
 		input_sequence = {
 			{
-				hold_input = "combat_ability_hold",
+				hold_input_alias = "wielded_input_hold",
 				input = "action_two_pressed",
 				value = true,
 			},
@@ -52,7 +52,6 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_charge = {
-		ability_type = "combat_ability",
 		aim_ready_up_time = 0,
 		allowed_during_lunge = false,
 		allowed_during_sprint = true,
@@ -65,6 +64,18 @@ ability_template.actions = {
 		stop_input = "block_cancel",
 		uninterruptible = true,
 		total_time = math.huge,
+		reset_charge_action_kinds = {
+			catapulted = true,
+			cryptic_chordclaw = true,
+			dead = true,
+			hold_input_released = true,
+			interacting = true,
+			knocked_down = true,
+			ledge_hanging = true,
+			pounced = true,
+			stunned = true,
+			unwield = true,
+		},
 		allowed_chain_actions = {
 			aim_released = {
 				action_name = "action_activate",
@@ -72,7 +83,6 @@ ability_template.actions = {
 		},
 	},
 	action_activate = {
-		ability_type = "combat_ability",
 		allowed_during_sprint = true,
 		anim = "ability_shout",
 		block_weapon_actions = false,

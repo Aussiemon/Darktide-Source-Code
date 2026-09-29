@@ -262,14 +262,14 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 			local grab_target_node = Unit.node(target_unit, grab_target_node_name)
 			local grab_target_position = Unit.world_position(target_unit, grab_target_node)
 			local distance = Vector3.distance(grab_position, grab_target_position)
-			local is_dodging = scratchpad.successful_dodge or Dodge.is_dodging(target_unit, attack_types.melee)
+			local is_dodging = scratchpad.successful_dodge or Dodge.is_dodging(target_unit, attack_types.incapacitating_grab)
 			local check_radius = is_dodging and action_data.dodge_grab_check_radius or action_data.grab_check_radius
 
 			if check_radius < distance then
 				if is_dodging and not scratchpad.successful_dodge then
 					local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
 
-					Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, nil, breed)
+					Dodge.sucessful_dodge(target_unit, unit, attack_types.incapacitating_grab, nil, breed)
 
 					scratchpad.successful_dodge = true
 				end

@@ -11,7 +11,114 @@ local BLUR_TIME = 0.3
 local reserved_keys = {}
 local cancel_keys = {
 	"keyboard_esc",
+	"xbox_controller_start",
+	"ps4_controller_options",
 }
+
+local function _watch_devices(devices, keyboard_cancel)
+	local watch = {}
+	local has_gamepad = false
+
+	if devices then
+		for i = 1, #devices do
+			watch[#watch + 1] = devices[i]
+
+			if InputUtils.is_gamepad(devices[i]) then
+				has_gamepad = true
+			end
+		end
+	end
+
+	if IS_WINDOWS and has_gamepad then
+		local seen = {}
+
+		for i = 1, #watch do
+			seen[watch[i]] = true
+		end
+
+		if not seen.xbox_controller then
+			watch[#watch + 1] = "xbox_controller"
+		end
+
+		if not seen.ps4_controller then
+			watch[#watch + 1] = "ps4_controller"
+		end
+	end
+
+	if keyboard_cancel then
+		watch[#watch + 1] = "keyboard"
+		watch[#watch + 1] = "mouse"
+	end
+
+	if #watch == 0 then
+		return devices
+	end
+
+	return watch
+end
+
+local function _cancel_key(devices, keyboard_cancel)
+	if keyboard_cancel and Managers.ui:using_cursor_navigation() then
+		return "keyboard_esc"
+	end
+
+	if devices then
+		for i = 1, #devices do
+			if InputUtils.is_gamepad(devices[i]) then
+				if InputUtils.last_gamepad_device_type() == "ps4_controller" then
+					return "ps4_controller_options"
+				end
+
+				return "xbox_controller_start"
+			end
+		end
+	end
+
+	return cancel_keys[1]
+end
+
+local function _conflict_key(key_info)
+	if not key_info or not key_info.main then
+		return nil
+	end
+
+	local cleaned_enablers
+	local enablers = key_info.enablers
+
+	if enablers then
+		cleaned_enablers = {}
+
+		for i = 1, #enablers do
+			local enabler = enablers[i]
+
+			if enabler ~= key_info.main then
+				cleaned_enablers[#cleaned_enablers + 1] = enabler
+			end
+		end
+
+		table.sort(cleaned_enablers)
+	end
+
+	return InputUtils.make_string({
+		main = key_info.main,
+		enablers = cleaned_enablers,
+	})
+end
+
+local function _key_display_text(key)
+	if key and key.display_text then
+		return key.display_text
+	end
+
+	local display_name = key and key.display_name
+
+	if display_name then
+		return Localize(display_name)
+	end
+
+	return Localize("loc_settings_option_unavailable")
+end
+
 local ViewElementKeybindPopup = class("ViewElementKeybindPopup", "ViewElementBase")
 
 ViewElementKeybindPopup.init = function (self, parent, draw_layer, start_scale)
@@ -82,7 +189,7 @@ end
 ViewElementKeybindPopup.setup_popup = function (self, keys_list, key_index, complete_callback)
 	local keys_in_use = {}
 	local active_key = keys_list[key_index]
-	local header = active_key.display_name
+	local header = _key_display_text(active_key)
 	local active_devices = active_key.devices
 	local active_alias = active_key.alias
 	local active_alias_name = active_key.alias_name
@@ -94,26 +201,35 @@ ViewElementKeybindPopup.setup_popup = function (self, keys_list, key_index, comp
 		local alias_name = key.alias_name
 		local devices = key.devices
 		local key_info = alias:get_keys_for_alias(alias_name, devices)
+		local conflict_key = _conflict_key(key_info)
 
-		if key_info and key_info.main then
-			keys_in_use[key_info.main] = keys_in_use[key_info.main] or {}
-			keys_in_use[key_info.main][#keys_in_use[key_info.main] + 1] = key
+		if conflict_key then
+			keys_in_use[conflict_key] = keys_in_use[conflict_key] or {}
+			keys_in_use[conflict_key][#keys_in_use[conflict_key] + 1] = key
 		end
 	end
 
-	self:_generate_grid(header, active_value)
+	local keyboard_cancel = IS_WINDOWS
 
+	self._unsupported_input_timer = nil
+	self._cancel_hint_using_cursor = Managers.ui:using_cursor_navigation()
 	self._active_popup_data = {
+		display_conflicts = nil,
 		devices = active_devices,
+		keyboard_cancel = keyboard_cancel,
+		watch_devices = _watch_devices(active_devices, keyboard_cancel),
 		complete_callback = complete_callback,
 		keys_in_use = keys_in_use,
 		cancel_keys = cancel_keys,
 		reserved_keys = reserved_keys,
 		current_key = active_key,
 		keys_list = keys_list,
+		display_header = header,
+		display_value = active_value,
 	}
 
-	Managers.input:start_key_watch(active_devices)
+	self:_generate_grid(header, active_value)
+	Managers.input:start_key_watch(self._active_popup_data.watch_devices)
 end
 
 ViewElementKeybindPopup._update_popup = function (self, new_key)
@@ -122,10 +238,24 @@ ViewElementKeybindPopup._update_popup = function (self, new_key)
 	local new_alias = new_key.alias
 	local devices = self._active_popup_data.devices
 	local new_value = new_alias:get_keys_for_alias(new_active_alias_name, devices)
-	local alias_used_by_key = new_value and new_value.main and keys_in_use[new_value.main]
-	local current_header = self._active_popup_data.current_key.display_name
+	local alias_used_by_key = new_value and keys_in_use[_conflict_key(new_value)]
+	local current_header = _key_display_text(self._active_popup_data.current_key)
+
+	self._active_popup_data.display_header = current_header
+	self._active_popup_data.display_value = new_value
+	self._active_popup_data.display_conflicts = alias_used_by_key
 
 	self:_generate_grid(current_header, new_value, alias_used_by_key)
+end
+
+ViewElementKeybindPopup._refresh_popup_grid = function (self)
+	local popup_data = self._active_popup_data
+
+	if not popup_data then
+		return
+	end
+
+	self:_generate_grid(popup_data.display_header, popup_data.display_value, popup_data.display_conflicts)
 end
 
 ViewElementKeybindPopup._generate_grid = function (self, header, value, alias_used_by_key)
@@ -138,7 +268,7 @@ ViewElementKeybindPopup._generate_grid = function (self, header, value, alias_us
 
 	layout[#layout + 1] = {
 		widget_type = "header",
-		text = self:_localize(header or "loc_settings_option_unavailable"),
+		text = header or Localize("loc_settings_option_unavailable"),
 	}
 	layout[#layout + 1] = {
 		widget_type = "dynamic_spacing",
@@ -149,7 +279,8 @@ ViewElementKeybindPopup._generate_grid = function (self, header, value, alias_us
 	}
 
 	if cancel_keys then
-		local cancel_key = cancel_keys[1]
+		local popup_data = self._active_popup_data
+		local cancel_key = _cancel_key(popup_data and popup_data.devices, popup_data and popup_data.keyboard_cancel)
 		local string_id = alias_used_by_key and "loc_setting_keybinding_press_new_button_conflict" or "loc_setting_keybinding_press_new_button"
 		local description_text = Localize(string_id, true, {
 			cancel_input = InputUtils.key_axis_locale(cancel_key),
@@ -206,11 +337,9 @@ ViewElementKeybindPopup._generate_grid = function (self, header, value, alias_us
 				}
 			end
 
-			local localized_alias = key_alias.display_name
-
 			layout[#layout + 1] = {
 				widget_type = "description",
-				text = Localize(localized_alias),
+				text = _key_display_text(key_alias),
 			}
 		end
 	end
@@ -361,15 +490,20 @@ ViewElementKeybindPopup._set_background_blur = function (self, fraction)
 	WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, max_value * fraction)
 end
 
-ViewElementKeybindPopup._is_change_valid = function (self, new_value_key, current_value_key, previous_keybind_key, keys_in_use)
-	if new_value_key == current_value_key and not previous_keybind_key then
+ViewElementKeybindPopup._is_change_valid = function (self, new_key_info, current_key_info, previous_key_info, keys_in_use)
+	local new_main = new_key_info and new_key_info.main
+	local new_combo = _conflict_key(new_key_info)
+	local current_combo = _conflict_key(current_key_info)
+	local previous_combo = _conflict_key(previous_key_info)
+
+	if new_combo == current_combo and not previous_combo then
 		return true
 	end
 
 	for i = 1, #reserved_keys do
 		local reserved_key = reserved_keys[i]
 
-		if reserved_key == new_value_key then
+		if reserved_key == new_main then
 			return false, "reserved"
 		end
 	end
@@ -377,15 +511,15 @@ ViewElementKeybindPopup._is_change_valid = function (self, new_value_key, curren
 	for i = 1, #cancel_keys do
 		local cancel_key = cancel_keys[i]
 
-		if cancel_key == new_value_key then
+		if cancel_key == new_main then
 			return false, "cancel"
 		end
 	end
 
-	if keys_in_use[new_value_key] or previous_keybind_key then
-		if not previous_keybind_key then
+	if keys_in_use[new_combo] or previous_combo then
+		if not previous_combo then
 			return false, "duplicate"
-		elseif previous_keybind_key and previous_keybind_key ~= new_value_key then
+		elseif previous_combo ~= new_combo then
 			return false
 		end
 	end
@@ -408,13 +542,17 @@ ViewElementKeybindPopup.update = function (self, dt, t, input_service)
 		end
 	end
 
-	local grid = self._text_grid
-
-	if grid then
-		grid:update(dt, t, input_service)
-	end
-
 	if self._active_popup_data then
+		if self._active_popup_data.keyboard_cancel then
+			local using_cursor = Managers.ui:using_cursor_navigation()
+
+			if self._cancel_hint_using_cursor ~= using_cursor then
+				self._cancel_hint_using_cursor = using_cursor
+
+				self:_refresh_popup_grid()
+			end
+		end
+
 		local input_manager = Managers.input
 		local new_key = input_manager:key_watch_result()
 
@@ -424,7 +562,7 @@ ViewElementKeybindPopup.update = function (self, dt, t, input_service)
 			local stored_key = self._active_popup_data.stored_key
 			local stored_value_key = stored_key and stored_key.alias:get_keys_for_alias(stored_key.alias_name, stored_key.devices)
 			local keys_in_use = self._active_popup_data.keys_in_use
-			local is_valid, reason = self:_is_change_valid(new_key.main, current_value_key and current_value_key.main, stored_value_key and stored_value_key.main, keys_in_use)
+			local is_valid, reason = self:_is_change_valid(new_key, current_value_key, stored_value_key, keys_in_use)
 
 			if is_valid or not is_valid and reason == "cancel" then
 				local complete_callback = self._active_popup_data.complete_callback
@@ -444,7 +582,7 @@ ViewElementKeybindPopup.update = function (self, dt, t, input_service)
 				Managers.input:start_key_watch(devices)
 
 				if reason == "duplicate" then
-					local new_key_data = keys_in_use[new_key.main][1]
+					local new_key_data = keys_in_use[_conflict_key(new_key)][1]
 
 					self._active_popup_data.stored_key = new_key_data
 
@@ -452,6 +590,12 @@ ViewElementKeybindPopup.update = function (self, dt, t, input_service)
 				end
 			end
 		end
+	end
+
+	local grid = self._text_grid
+
+	if grid then
+		grid:update(dt, t, input_service)
 	end
 
 	return ViewElementKeybindPopup.super.update(self, dt, t, input_service)

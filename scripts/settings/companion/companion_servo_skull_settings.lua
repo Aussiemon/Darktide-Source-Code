@@ -8,50 +8,6 @@ local companion_servo_skull_settings = {}
 companion_servo_skull_settings.STATES = table.index_lookup_table("following", "following_shooting", "following_shooting_ability", "hacking", "inject_ally", "flamethrower", "flamethrower_shooting")
 companion_servo_skull_settings.MOVEMENT_STATE = table.enum("in_combat", "out_of_combat", "rest")
 companion_servo_skull_settings.FLAMETHROWER_TYPES = table.index_lookup_table("circle", "cone")
-companion_servo_skull_settings.z_randomize_movement_cone_flamethrower_xy = {
-	base_amp = {
-		0.04,
-		0.03,
-	},
-	base_freq = {
-		0.15,
-		0.15,
-	},
-	noise_amp = {
-		0.015,
-		0.02,
-	},
-	noise_freq = {
-		0.05,
-		0.05,
-	},
-	phase = {
-		0,
-		TWO_PI,
-	},
-}
-companion_servo_skull_settings.z_randomize_movement_cone_flamethrower_z = {
-	base_amp = {
-		0.04,
-		0.06,
-	},
-	base_freq = {
-		0.15,
-		0.3,
-	},
-	noise_amp = {
-		0.015,
-		0.04,
-	},
-	noise_freq = {
-		0.05,
-		0.1,
-	},
-	phase = {
-		0,
-		TWO_PI,
-	},
-}
 companion_servo_skull_settings.collision_radius = {
 	cast_radius = 0.35,
 	near_radius = 0.25,

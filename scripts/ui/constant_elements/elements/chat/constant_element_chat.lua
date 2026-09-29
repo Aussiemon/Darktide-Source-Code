@@ -617,11 +617,12 @@ ConstantElementChat._setup_input_labels = function (self)
 			input = open_chat_input,
 		})
 	elseif has_virtual_keyboard and is_writing and has_session and not present_tab_to_cycle then
-		local confirm_input = self:_get_localized_input_text("confirm")
+		local continue_action = IS_PLAYSTATION and "send_chat_message" or "confirm"
+		local continue_input = self:_get_localized_input_text(continue_action)
 		local back_input = self:_get_localized_input_text("back")
 
 		active_placeholder_text = self:_localize("loc_chat_instruction_placeholder_text", true, {
-			continue_input = confirm_input,
+			continue_input = continue_input,
 			cancel_input = back_input,
 		})
 	elseif has_virtual_keyboard and not has_session or not has_virtual_keyboard and InputDevice.gamepad_active and is_writing then

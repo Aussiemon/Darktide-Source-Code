@@ -887,6 +887,36 @@ MutatorMonsterSpawnerSettings.default_locations = {
 			position = Vector3Box(44, 228, -38),
 		},
 	},
+	spillway = {
+		{
+			section = 1,
+			position = Vector3Box(350.77, -66.21, -4),
+		},
+		{
+			section = 1,
+			position = Vector3Box(276.56, -20.7, 1.71),
+		},
+		{
+			section = 1,
+			position = Vector3Box(218.7, -62.47, -5),
+		},
+		{
+			section = 2,
+			position = Vector3Box(137.06, -24.55, 2.16),
+		},
+		{
+			section = 2,
+			position = Vector3Box(55.31, -20.3, 15.5),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-127.55, -117.52, 32.44),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-141.69, -117.48, 31.48),
+		},
+	},
 }
 MutatorMonsterSpawnerSettings.skulls_locations = {
 	lm_rails = {
@@ -1759,6 +1789,36 @@ MutatorMonsterSpawnerSettings.skulls_locations = {
 		{
 			section = 3,
 			position = Vector3Box(44, 228, -38),
+		},
+	},
+	spillway = {
+		{
+			section = 1,
+			position = Vector3Box(350.77, -66.21, -4),
+		},
+		{
+			section = 1,
+			position = Vector3Box(276.56, -20.7, 1.71),
+		},
+		{
+			section = 1,
+			position = Vector3Box(218.7, -62.47, -5),
+		},
+		{
+			section = 2,
+			position = Vector3Box(137.06, -24.55, 2.16),
+		},
+		{
+			section = 2,
+			position = Vector3Box(55.31, -20.3, 15.5),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-127.55, -117.52, 32.44),
+		},
+		{
+			section = 3,
+			position = Vector3Box(-141.69, -117.48, 31.48),
 		},
 	},
 }

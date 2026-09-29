@@ -6,10 +6,10 @@ local Definitions = require("scripts/ui/views/credits_goods_vendor_view/credits_
 local InputUtils = require("scripts/managers/input/input_utils")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
-local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
-local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local Text = require("scripts/utilities/ui/text")
+local ViewElementItemResultOverlay = require("scripts/ui/view_elements/view_element_item_result_overlay/view_element_item_result_overlay")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
 local CreditsGoodsVendorView = class("CreditsGoodsVendorView", "VendorViewBase")
 
 CreditsGoodsVendorView.init = function (self, settings, context)
@@ -207,7 +207,7 @@ CreditsGoodsVendorView._convert_offers_to_layout_entries = function (self, item_
 			if master_item then
 				local hud_icon = master_item.hud_icon
 
-				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+				hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 				local display_name = Items.weapon_card_display_name(master_item) or "n/a"
 				local sub_display_name = Items.weapon_card_sub_display_name(master_item) or "n/a"

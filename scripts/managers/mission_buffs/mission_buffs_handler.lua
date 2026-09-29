@@ -51,8 +51,8 @@ MissionBuffsHandler.save_buff_family_choice_for_player = function (self, player,
 	self._persistent_data:add_choice_for_player(player, family_name_choices, true)
 end
 
-MissionBuffsHandler.save_buff_choice_for_player = function (self, player, buff_name_choices)
-	self._persistent_data:add_choice_for_player(player, buff_name_choices, false)
+MissionBuffsHandler.save_buff_choice_for_player = function (self, player, buff_name_choices, optional_choice_settings)
+	self._persistent_data:add_choice_for_player(player, buff_name_choices, false, optional_choice_settings)
 end
 
 MissionBuffsHandler.restore_unselected_legendary_buffs_to_player_pool = function (self, player, buff_options, chosen_option_index)
@@ -215,6 +215,13 @@ MissionBuffsHandler.get_family_buffs_available_for_player = function (self, play
 	if not (#priority_buffs_available > 0) and not (#family_buffs_available > 0) then
 		Log.error("MissionBuffsHandler", string.format("[MissionBuffsHandler] Player (PeerID: %s | AccountID: %s) does not have family buffs left.", player:peer_id(), player:account_id()))
 	end
+
+	return priority_buffs_available, family_buffs_available
+end
+
+MissionBuffsHandler.get_family_buff_pools_for_player = function (self, player)
+	local priority_buffs_available = self._persistent_data:get_player_priority_family_buffs_available(player)
+	local family_buffs_available = self._persistent_data:get_player_family_buffs_available(player)
 
 	return priority_buffs_available, family_buffs_available
 end

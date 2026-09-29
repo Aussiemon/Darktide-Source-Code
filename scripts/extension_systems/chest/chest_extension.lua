@@ -61,7 +61,7 @@ ChestExtension.update = function (self, unit, dt, t)
 	end
 
 	if finished then
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 
@@ -156,7 +156,7 @@ ChestExtension.open = function (self, opening_unit)
 	end
 
 	self:set_current_state(STATES.opened)
-	self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
+	self._owner_system:enable_update_function(self._unit, "update")
 	table.clear(containing_pickups)
 end
 

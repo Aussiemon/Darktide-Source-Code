@@ -70,7 +70,7 @@ end
 
 local function _get_target_distance_from_player_based_on_height(player, base_distance)
 	local profile = player:profile()
-	local profile_size = profile.personal and profile.personal.character_height or 1
+	local profile_size = profile.character_height or 1
 
 	return base_distance * profile_size
 end

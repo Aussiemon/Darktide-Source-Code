@@ -1,15 +1,16 @@
 ﻿-- chunkname: @scripts/ui/pass_templates/stepper_pass_templates.lua
 
-local ColorUtilities = require("scripts/utilities/ui/colors")
+local Colors = require("scripts/utilities/ui/colors")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local color_terminal_icon = Color.terminal_text_header(255, true)
-local color_terminal_text_header = Color.terminal_text_header(255, true)
+local COLOR_TERMINAL_ICON = Color.terminal_text_header(255, true)
+local COLOR_TERMINAL_TEXT_HEADER = Color.terminal_text_header(255, true)
+local DANGER_LEVELS = DangerSettings.danger_levels
 local StepperPassTemplates = {}
-local color_copy = ColorUtilities.color_copy
+local color_copy = Colors.color_copy
 
 local function _get_input_text(action)
 	local service_type = "View"
@@ -80,9 +81,9 @@ local function _make_difficulty_picker_rect_change_function(index)
 		local min_danger = content.min_danger or MIN_DANGER
 		local max_danger = content.max_danger or MAX_DANGER
 		local current_danger = content.hover_danger or content.danger
-		local danger_color = DangerSettings[current_danger] and DangerSettings[current_danger].color or DangerSettings[1].color
+		local danger_color = DANGER_LEVELS[current_danger] and DANGER_LEVELS[current_danger].color or DANGER_LEVELS[1].color
 
-		ColorUtilities.color_copy(danger_color, style.color, true)
+		Colors.color_copy(danger_color, style.color, true)
 
 		if min_danger > index or max_danger < index then
 			style.color[1] = 127
@@ -141,7 +142,7 @@ StepperPassTemplates.difficulty_stepper = {
 				end
 
 				if content.last_danger ~= danger then
-					local danger_settings = DangerSettings[danger]
+					local danger_settings = DANGER_LEVELS[danger]
 
 					content.difficulty_text = Localize(danger_settings.display_name)
 					content.last_danger = danger
@@ -179,7 +180,7 @@ StepperPassTemplates.difficulty_stepper = {
 				32,
 				32,
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				-120,
 				15,
@@ -211,7 +212,7 @@ StepperPassTemplates.difficulty_stepper = {
 				32,
 				32,
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				115,
 				15,
@@ -232,7 +233,7 @@ StepperPassTemplates.difficulty_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -257,7 +258,7 @@ StepperPassTemplates.difficulty_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -315,7 +316,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				46,
 				46,
@@ -419,7 +420,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
 				36,
@@ -438,7 +439,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
 				36,
@@ -457,7 +458,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
 				36,
@@ -476,7 +477,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
 				36,
@@ -495,7 +496,7 @@ StepperPassTemplates.difficulty_stepper = {
 		style = {
 			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			color = color_terminal_icon,
+			color = COLOR_TERMINAL_ICON,
 			size = {
 				18,
 				36,
@@ -516,7 +517,7 @@ StepperPassTemplates.difficulty_stepper = {
 			font_type = "proxima_nova_bold",
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				0,
 				-25,
@@ -589,7 +590,7 @@ StepperPassTemplates.havoc_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -612,7 +613,7 @@ StepperPassTemplates.havoc_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -669,7 +670,7 @@ StepperPassTemplates.havoc_stepper = {
 			font_type = "proxima_nova_bold",
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				0,
 				20,
@@ -760,7 +761,7 @@ StepperPassTemplates.terminal_stepper = {
 				16,
 				16,
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				17,
 				0,
@@ -792,7 +793,7 @@ StepperPassTemplates.terminal_stepper = {
 				16,
 				16,
 			},
-			color = color_terminal_text_header,
+			color = COLOR_TERMINAL_TEXT_HEADER,
 			offset = {
 				-17,
 				0,
@@ -815,7 +816,7 @@ StepperPassTemplates.terminal_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -840,7 +841,7 @@ StepperPassTemplates.terminal_stepper = {
 			text_horizontal_alignment = "center",
 			text_vertical_alignment = "center",
 			vertical_alignment = "center",
-			text_color = color_terminal_text_header,
+			text_color = COLOR_TERMINAL_TEXT_HEADER,
 			size = {
 				75,
 				75,
@@ -1506,7 +1507,7 @@ local function _stepper_static_elements_update(content, style, animations, dt)
 	local to_color = content.target_color
 
 	if to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+		Colors.color_lerp(from_color, to_color, 0.1, color, false)
 	end
 end
 
@@ -1516,7 +1517,7 @@ local function _left_stepper_button_change_function(hotspot_data, content, style
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+		Colors.color_lerp(from_color, to_color, 0.1, color, true)
 	end
 
 	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
@@ -1529,7 +1530,7 @@ local function _right_stepper_button_change_function(hotspot_data, content, styl
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, true)
+		Colors.color_lerp(from_color, to_color, 0.1, color, true)
 	end
 
 	style.size[1] = 90 + 14 * hotspot_data.anim_hover_progress
@@ -1550,7 +1551,7 @@ local function _progress_bar_change_function(content, style, animations, dt)
 	local to_color = content.target_color
 
 	if from_color and to_color then
-		ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+		Colors.color_lerp(from_color, to_color, 0.1, color, false)
 	end
 end
 
@@ -1835,7 +1836,7 @@ local function _stepper_indicator_change_function(content, style, dt, ignore_col
 		local to_color = content.target_color
 
 		if from_color then
-			ColorUtilities.color_lerp(from_color, to_color, 0.1, color, false)
+			Colors.color_lerp(from_color, to_color, 0.1, color, false)
 		else
 			style.color = style.inactive_color
 		end

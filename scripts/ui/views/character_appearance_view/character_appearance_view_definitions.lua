@@ -401,16 +401,30 @@ local scenegraph_definition = {
 		},
 	},
 	error_input = {
-		horizontal_alignment = "left",
+		horizontal_alignment = "right",
 		parent = "continue_pivot",
 		vertical_alignment = "bottom",
 		size = {
-			374,
+			660,
 			0,
 		},
 		position = {
 			0,
-			-120,
+			-130,
+			0,
+		},
+	},
+	error_input_content = {
+		horizontal_alignment = "right",
+		parent = "error_input",
+		vertical_alignment = "bottom",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			0,
 			0,
 		},
 	},
@@ -432,13 +446,25 @@ local widget_definitions = {
 	}, "screen"),
 	error_continue = UIWidget.create_definition({
 		{
+			pass_type = "rect",
+			style_id = "background",
+			value_id = "background",
+			style = {
+				horizontal_alignment = "right",
+				color = Color.black(178.5, true),
+			},
+			visibility_function = function (content, style)
+				return content.text and content.text ~= ""
+			end,
+		},
+		{
 			pass_type = "text",
 			style_id = "text",
 			value = "",
 			value_id = "text",
 			style = CharacterAppearanceViewFontStyle.error_style,
 		},
-	}, "error_input"),
+	}, "error_input_content"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_character_creator_continue")),
@@ -449,7 +475,7 @@ local widget_definitions = {
 	corners = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_left",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
 			value_id = "left_lower",
 			style = {
 				vertical_alignment = "bottom",
@@ -467,7 +493,7 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_lower_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
 			value_id = "right_lower",
 			style = {
 				horizontal_alignment = "right",
@@ -486,7 +512,7 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_left",
 			value_id = "left_upper",
 			style = {
 				vertical_alignment = "top",
@@ -500,21 +526,11 @@ local widget_definitions = {
 					62,
 				},
 				color = Color.white(255, true),
-				uvs = {
-					{
-						1,
-						0,
-					},
-					{
-						0,
-						1,
-					},
-				},
 			},
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_zealot_01_upper_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
 			value_id = "right_upper",
 			style = {
 				horizontal_alignment = "right",

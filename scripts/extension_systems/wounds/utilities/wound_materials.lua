@@ -225,8 +225,10 @@ WoundMaterials.apply = function (unit, wounds_data, optional_index, optional_slo
 		_engine_optimized_set_wound_position_for_item(unit, material_key_id, hit_shader_vector)
 
 		for slot_name, slot_data in pairs(slot_items) do
-			if slot_data.state ~= "unequipped" then
-				_engine_optimized_set_wound_position_for_item(slot_data.unit, material_key_id, hit_shader_vector)
+			local slot_unit = slot_data.unit
+
+			if slot_unit and slot_data.state ~= "unequipped" then
+				_engine_optimized_set_wound_position_for_item(slot_unit, material_key_id, hit_shader_vector)
 
 				local attachments = slot_data.attachments
 

@@ -102,14 +102,14 @@ end
 
 Block.attack_is_blockable = function (damage_profile, optional_target_unit, optional_weapon_template, optional_buff_extension)
 	if not damage_profile.unblockable then
-		return true
+		return true, nil
 	end
 
 	if optional_buff_extension then
 		local block_unblockable = optional_buff_extension:has_keyword(buff_keywords.block_unblockable)
 
 		if block_unblockable then
-			return true
+			return true, nil
 		end
 	end
 
@@ -117,15 +117,14 @@ Block.attack_is_blockable = function (damage_profile, optional_target_unit, opti
 		local unit_data_extension = ScriptUnit.extension(optional_target_unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		local _, action_setting = Action.current_action(weapon_action_component, optional_weapon_template)
+		local action_can_block_unblockable = action_setting and (action_setting.block_unblockable or action_setting.block_goes_brrr or action_setting.parry_block)
 
-		if not action_setting then
-			return false
+		if action_can_block_unblockable then
+			return true, nil
 		end
-
-		return action_setting.block_unblockable or action_setting.block_goes_brrr or action_setting.parry_block
 	end
 
-	return false
+	return false, nil
 end
 
 Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_position, attack_type, attack_direction, weapon_template, damage_profile)

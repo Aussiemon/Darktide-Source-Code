@@ -73,7 +73,7 @@ local talent_settings = {
 			max_stacks = 1,
 		},
 		zealot_damage_vs_nonthreat = {
-			damage_vs_nonthreat = 0.15,
+			damage_vs_nonthreat = 0.2,
 		},
 		zealot_dodge_improvements = {
 			dodge_distance_modifier = 0.25,
@@ -190,7 +190,7 @@ local talent_settings = {
 			on_perfect_blocking_cooldown = 8,
 		},
 		zealot_momentum_toughness_replenish = {
-			toughness_to_restore = 0.004,
+			toughness_to_restore = 0.005,
 		},
 		zealot_reload_from_backstab = {
 			ammo_percentage_for_stack = 0.05,
@@ -226,6 +226,52 @@ local talent_settings = {
 		zealot_more_damage_when_low_on_stamina = {
 			melee_damage = 0.2,
 			power_level_modifier = 0.2,
+		},
+		zealot_toughness_while_shooting = {
+			toughness = 0.1,
+		},
+		zealot_reload_from_melee = {
+			ammo = 0.1,
+		},
+		zealot_dmg_vs_burning_electrocuted = {
+			damage = 0.15,
+		},
+		zealot_reduced_damage_from_ranged = {
+			damage_taken = 0.8,
+		},
+		zealot_melee_kills_restore_toughness_to_target = {
+			self_toughness = 0.05,
+			toughness = 0.075,
+		},
+		zealot_weapon_special_damage = {
+			damage = 0.2,
+			duration = 5,
+		},
+		zealot_resist_death_subnodes = {
+			attack_speed = 0.1,
+			burn_stacks = 1,
+			burn_stacks_melee = 3,
+			cooldown_decreased = 75,
+			damage = 0.1,
+			heal_percent = 0.025,
+			heal_percent_kill = 0.05,
+			leech = 0.007,
+			max_burn_stacks = 12,
+			max_health = 0.25,
+			max_toughness_bonus = 40,
+			max_toughness_stacks = 8,
+			melee_multiplier = 3,
+			recuperate_duration = 3,
+			recuperate_percentage = 0.5,
+			temp_duration = 4,
+			toughness = 0.1,
+			toughness_bonus = 5,
+			toughness_bonus_duration = 5,
+		},
+		zealot_bolstering_prayer = {
+			damage = 0.06,
+			max_stacks = 5,
+			toughness = 0.08,
 		},
 	},
 	zealot_1 = {
@@ -287,15 +333,16 @@ local talent_settings = {
 			toughness_reduction_per_stack = -0.075,
 		},
 		passive_2 = {
-			active_duration = 5,
+			active_duration = 8,
 			cooldown_duration = 120,
 			on_damage_taken_proc_chance = 1,
 		},
 		passive_3 = {
 			melee_attack_speed = 0.1,
+			movement_speed = 0.05,
 		},
 		toughness_1 = {
-			toughness_melee_replenish = 1,
+			toughness_melee_replenish = 0.75,
 		},
 		toughness_2 = {
 			duration = 4,

@@ -258,13 +258,9 @@ MissionBoardViewSettings.on_screen_effect_settings = {
 	on_screen_effect = "content/fx/particles/screenspace/screen_mission_board_hologram_effect",
 	default_materials = {
 		hologram = "content/environment/artsets/imperial/hub/mission_board_table_hologram/hologram_02",
-		hologram_bottom = "content/environment/artsets/imperial/hub/mission_board_table_hologram/hologram_bottom",
-		hologram_grid = "content/environment/artsets/imperial/hub/mission_board_table_hologram/hologram_grid",
 	},
 	effect_materials = {
 		hologram = "content/parent_materials/black_shadow_caster",
-		hologram_bottom = "content/parent_materials/black_shadow_caster",
-		hologram_grid = "content/parent_materials/black_shadow_caster",
 	},
 }
 MissionBoardViewSettings.sidebar_tabs = {
@@ -516,8 +512,11 @@ MissionBoardViewSettings.view_elements = {
 					input_action = "mission_board_play_debrief",
 					visibility_function = function (parent, id)
 						local mission_list = parent:_element("mission_list")
+						local selected_cell = mission_list and mission_list:get_selected_cell()
+						local debrief_widget = selected_cell and selected_cell.debrief_widget
+						local is_debrief_locked = debrief_widget and debrief_widget.content and debrief_widget.content.is_locked
 
-						return mission_list and mission_list:visible() and InputDevice.gamepad_active and not parent._mission_board_options
+						return mission_list and mission_list:visible() and InputDevice.gamepad_active and not parent._mission_board_options and not is_debrief_locked
 					end,
 				},
 			},

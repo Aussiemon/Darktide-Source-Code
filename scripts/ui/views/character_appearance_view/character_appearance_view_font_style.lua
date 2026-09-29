@@ -287,10 +287,14 @@ reward_description_no_icon_style.font_size = 20
 
 local error_style = table.clone(UIFontSettings.body)
 
-error_style.text_horizontal_alignment = "left"
-error_style.text_vertical_alignment = "bottom"
+error_style.text_horizontal_alignment = "right"
+error_style.text_vertical_alignment = "center"
 error_style.font_size = 18
 error_style.text_color = Color.ui_red_medium(255, true)
+error_style.offset = {
+	-10,
+	0,
+}
 
 local companion_input_text_style = table.clone(header_final_text_style)
 

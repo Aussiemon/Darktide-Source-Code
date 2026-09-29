@@ -18,6 +18,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -61,9 +62,10 @@ local breed_data = {
 	name = breed_name,
 	breed_type = breed_types.minion,
 	tags = {
-		melee = true,
-		minion = true,
-		roamer = true,
+		[breed_tags.roamer] = true,
+		[breed_tags.melee] = true,
+		[breed_tags.vanguard] = true,
+		[breed_tags.minion] = true,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
@@ -80,6 +82,7 @@ local breed_data = {
 		[stagger_types.shield_block] = 1,
 		[stagger_types.shield_heavy_block] = 2,
 		[stagger_types.shield_broken] = 2.5,
+		[stagger_types.shield_explosion] = 8.133333333333333,
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 1,
@@ -99,6 +102,7 @@ local breed_data = {
 		[stagger_types.shield_block] = 1.5,
 		[stagger_types.shield_heavy_block] = 1,
 		[stagger_types.shield_broken] = 4,
+		[stagger_types.shield_explosion] = 3.5,
 		[stagger_types.sticky] = 0.25,
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_vanguard,

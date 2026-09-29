@@ -26,10 +26,11 @@ local assist_notification_type = "stimmed"
 local vo_event
 local consume_on_use = false
 local givable = false
-local use_ability_charge = true
+local consume_ability_usage_cost = true
+local pause_ability_resource_regen = true
 local undroppable = true
 local auto_use = true
-local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, use_ability_charge, undroppable, auto_use)
+local weapon_template = syringe_pocketable_weapon_template_generator(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, consume_ability_usage_cost, pause_ability_resource_regen, undroppable, auto_use)
 
 table.insert(weapon_template.keywords, "pocketable_broker_syringe")
 

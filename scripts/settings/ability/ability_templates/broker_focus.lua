@@ -10,7 +10,7 @@ ability_template.action_inputs = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -24,12 +24,13 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_stance_change = {
-		ability_type = "combat_ability",
 		abort_sprint = false,
 		allowed_during_sprint = true,
 		anim_3p = "ability_buff",
 		auto_wield_slot = "slot_secondary",
 		block_weapon_actions = false,
+		consume_ability_usage_cost = true,
+		consume_usage_cost_at_start = true,
 		kind = "stance_change",
 		prevent_sprint = false,
 		refill_toughness = true,
@@ -38,8 +39,6 @@ ability_template.actions = {
 		stop_current_action = true,
 		total_time = 1,
 		uninterruptible = true,
-		use_ability_charge = true,
-		use_charge_at_start = true,
 		vo_tag = "ability_focus",
 		anim = function (player_unit)
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")

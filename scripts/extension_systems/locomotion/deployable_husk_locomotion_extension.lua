@@ -21,8 +21,6 @@ DeployableHuskLocomotionExtension.init = function (self, extension_init_context,
 			self._placed_on_unit = self:_attach_to_unit(unit_id)
 		else
 			self._attach_later_on_id = unit_id
-
-			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
 		end
 	end
 
@@ -33,6 +31,12 @@ DeployableHuskLocomotionExtension.init = function (self, extension_init_context,
 	network_event_delegate:register_session_unit_events(self, game_object_id, unpack(RPCS))
 
 	self._network_event_delegate = network_event_delegate
+end
+
+DeployableHuskLocomotionExtension.extensions_ready = function (self, world, unit)
+	if self._attach_later_on_id then
+		self._owner_system:enable_update_function(self._unit, "update")
+	end
 end
 
 DeployableHuskLocomotionExtension._attach_to_unit = function (self, unit_id)
@@ -82,7 +86,7 @@ DeployableHuskLocomotionExtension.update = function (self, unit, dt, t)
 
 	if self._attach_later_on_id and Managers.state.unit_spawner:unit_exists(unit_attach_id, true) then
 		self:_attach_to_unit(unit_attach_id)
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 

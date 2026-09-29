@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	dm_stockpile = {
-		coordinates = "loc_mission_coordinates_dm_stockpile",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_dm_stockpile",
@@ -56,9 +55,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	hm_cartel = {
-		coordinates = "loc_mission_coordinates_hm_cartel",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_hm_cartel",
@@ -113,9 +114,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	km_enforcer = {
-		coordinates = "loc_mission_coordinates_km_enforcer",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown/missions/mission_km_enforcer",
@@ -169,9 +172,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	km_enforcer_twins = {
-		coordinates = "loc_mission_coordinates_km_enforcer",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/watertown_twins/missions/mission_km_enforcer_twins",
@@ -294,6 +299,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

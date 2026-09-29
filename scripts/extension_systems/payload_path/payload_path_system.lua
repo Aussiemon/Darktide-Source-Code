@@ -30,7 +30,15 @@ local function _nodes_id_ascending(a, b)
 	return a:node_id() < b:node_id()
 end
 
+PayloadPathSystem.on_location_setup = function (self)
+	self:setup_paths()
+end
+
 PayloadPathSystem.on_gameplay_post_init = function (self, level)
+	self:setup_paths()
+end
+
+PayloadPathSystem.setup_paths = function (self)
 	local paths = self._paths
 	local unit_to_extension_map = self._unit_to_extension_map
 

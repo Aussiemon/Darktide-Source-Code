@@ -156,16 +156,6 @@ weapon_template.action_inputs = {
 			},
 		},
 	},
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
 }
 
 table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -193,18 +183,10 @@ weapon_template.action_input_hierarchy = {
 						input = "wield",
 						transition = "base",
 					},
-					{
-						input = "combat_ability",
-						transition = "base",
-					},
 				},
 			},
 			{
 				input = "wield",
-				transition = "base",
-			},
-			{
-				input = "combat_ability",
 				transition = "base",
 			},
 		},
@@ -224,10 +206,6 @@ weapon_template.action_input_hierarchy = {
 				input = "wield",
 				transition = "base",
 			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
 		},
 	},
 	{
@@ -241,18 +219,10 @@ weapon_template.action_input_hierarchy = {
 				input = "wield",
 				transition = "base",
 			},
-			{
-				input = "combat_ability",
-				transition = "base",
-			},
 		},
 	},
 	{
 		input = "wield",
-		transition = "stay",
-	},
-	{
-		input = "combat_ability",
 		transition = "stay",
 	},
 	{
@@ -282,14 +252,6 @@ weapon_template.action_input_hierarchy = {
 ActionInputHierarchy.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "equip",
@@ -297,12 +259,7 @@ weapon_template.actions = {
 		total_time = 0,
 		uninterruptible = true,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			combat_ability = {
-				action_name = "combat_ability",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			vent = {
 				action_name = "action_vent",
 			},
@@ -349,17 +306,12 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
 				chain_time = 0.15,
-			},
+			}),
 		},
 	},
 	action_charge_target_sticky = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
 		anim_end_event = "attack_charge_cancel",
 		anim_event = "attack_charge",
@@ -420,12 +372,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			use_power = {
 				action_name = "action_use_power",
 			},
@@ -442,7 +389,6 @@ weapon_template.actions = {
 		end,
 	},
 	action_charge_target = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
 		always_charge = true,
 		anim_end_event = "attack_charge_cancel",
@@ -494,12 +440,7 @@ weapon_template.actions = {
 		},
 		smart_targeting_template = SmartTargetingTemplates.smite,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			charge_power_lock_on = {
 				action_name = "action_charge_target_lock_on",
 			},
@@ -516,7 +457,6 @@ weapon_template.actions = {
 		end,
 	},
 	action_charge_target_lock_on = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
 		anim_end_event = "attack_charge_cancel",
 		attack_target = true,
@@ -576,12 +516,7 @@ weapon_template.actions = {
 			},
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			use_power = {
 				action_name = "action_use_power",
 			},
@@ -632,77 +567,20 @@ weapon_template.actions = {
 			suppression_value = 1,
 		},
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-			wield = {
-				action_name = "action_unwield",
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
 				chain_time = 0.3,
-			},
+			}),
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.smite_attack_speed,
 		},
 	},
-	action_inspect_3p = {
-		action_prevents_jump = true,
-		block_first_person_rotation = true,
-		can_crouch = false,
-		can_jump = false,
-		force_look = true,
-		kind = "inspect_3p",
-		lock_view = false,
-		skip_3p_anims = false,
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_stop = {
-				action_name = "action_inspect",
-				chain_time = 1.1,
-			},
-		},
-		action_movement_curve = {
-			{
-				modifier = 0,
-				t = 0,
-			},
-			start_modifier = 0,
-		},
-	},
-	action_inspect = {
-		anim_end_event = "inspect_end",
-		anim_event = "inspect_start",
-		kind = "inspect",
-		lock_view = true,
-		skip_3p_anims = true,
-		start_input = "inspect_start",
-		stop_input = "inspect_stop",
-		total_time = math.huge,
-		crosshair = {
-			crosshair_type = "inspect",
-		},
-		allowed_chain_actions = {
-			inspect_3p_start = {
-				action_name = "action_inspect_3p",
-				chain_time = 0.75,
-			},
-		},
-	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
+	action_inspect = BaseTemplateSettings.generate_inspect_action(),
+	action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action(),
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.keywords = {
 	"psyker",
 }

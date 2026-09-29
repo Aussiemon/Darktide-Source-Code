@@ -21,7 +21,7 @@ buff_settings.buff_category_order = {
 	buff_settings.buff_categories.hordes_sub_buff,
 	buff_settings.buff_categories.live_event,
 }
-buff_settings.keywords = table.enum("adamant_dog_bloodlust", "adamant_drone_shocks_enemies_in_range", "adamant_hunt_stance", "adamant_mine_explode_on_finish", "adamant_terminus_warrant", "allow_backstabbing", "allow_extra_ability_charges", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "blessed_by_nurgle_parasite", "block_gives_warp_charge", "block_unblockable", "bolstered", "bolter_proficiency", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "broker_punk_rage_exhaustion", "broker_stimm_field_shocks_enemies_in_range", "burning", "can_attack_during_invisibility", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "concealed", "corrupted", "count_as_blocking_vs_ranged", "count_as_blocking", "count_as_dodge_vs_all", "count_as_dodge_vs_chaos_hound_pounce", "count_as_dodge_vs_melee", "count_as_dodge_vs_netgunner", "count_as_dodge_vs_ranged", "count_as_staggered", "critical_hit_infinite_cleave", "critical_melee_hit_infinite_cleave", "critical_strike_second_projectile", "cryptic_bionic_senses", "cryptic_chordclaw", "cryptic_chordclaw_kill_restores_charge", "cryptic_force_field_liquid_area_when_expired", "cryptic_grenade_ability_force_field", "cryptic_power_generation", "cryptic_precision_stance", "cryptic_precision_stance_duration_extension_on_elite_hit", "cryptic_servo_skull_flamethrower_uses_no_charge", "cryptic_discharge_ability_always_full_charges_bonus", "cultist_flamer_liquid_immunity", "damage_immune", "damage_volume_burning", "damage_volume_electrical", "damage_volume_instakill", "damage_volume_radioactive", "despawn_on_death", "deterministic_recoil", "disable_elite_minions_collision_during_dodge", "disable_elite_minions_collision_during_sprint", "disable_horde_minions_collision_during_dodge", "disable_horde_minions_collision_during_sprint", "disable_minions_collision_during_dodge", "disable_minions_collision_during_sprint", "double_ammo_consumption", "electrocuted", "electrocuted_chain_lightning", "electrocuted_arc", "electrocuted_arc_grenade", "electrocuted_arc_ability", "electrocuted_shock_mine", "empowered", "enable_auto_aim", "expeditions_death_imminent", "fire_trail_on_lunge", "training_ground_force_companion_in_combat_state", "free_dodges", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_leadbelcher", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "guaranteed_weakspot_on_hit", "guaranteed_wind_slash_critical_strike", "has_nurgle_parasite", "havoc_gardens_embrace", "health_segment_breaking_reduce_damage_taken", "hit_mass_reduction_on_weakspot_hit", "hud_nameplates_disabled", "ignore_armor_aborts_attack_critical_strike", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "in_toxic_gas", "infested_head_armor_override", "invisible", "invulnerable", "knock_down_on_slide", "limit_health_damage_taken", "limit_health_damage_taken_from_ogryns", "limit_health_damage_taken_from_captains", "limit_health_damage_taken_from_monsters", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave_critical_strike", "melee_infinite_cleave_on_headshot", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption_on_crits", "no_ammo_consumption", "no_coherency_stickiness_limit", "no_parry_block_cost", "no_sprint", "no_stagger", "nurgle_flies", "ogryn_basic_box_spawns_cluster", "ogryn_box_of_surprise", "ogryn_combat_ability_stance", "ogryn_improved_lunge", "plasma_proficiency", "pocketable_broker_syringe", "power_weapon_proficiency", "prevent_all_healing", "prevent_coherency_buffs_from_other_players", "prevent_coherency_toughness_buff", "prevent_critical_strike", "prevent_healing_corruption", "prevent_healing_health", "prevent_toughness_regen_when_depleted", "prevent_toughness_replenish_except_abilities", "prevent_toughness_replenish_except_all_combat_abilities", "prevent_toughness_replenish", "psychic_fortress", "psyker_chain_lightning_full_charge", "psyker_empowered_grenade", "psyker_overcharge", "puked_on", "random_damage_immune", "ranged_alternate_fire_interrupt_immune", "ranged_attack_infinite_cleave", "ranged_push_immune", "reduced_ammo_consumption", "reduced_toughness_generation", "renegade_flamer_liquid_immunity", "renegade_grenadier_liquid_immunity", "resist_death", "rotten_armor", "shock_grenade_shock", "shout_forces_strong_stagger", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "sticky_projectiles", "stimmed", "stun_immune_block_broken", "stun_immune_toughness_broken", "stun_immune", "super_armor_override", "suppression_immune", "syringe_ability", "syringe_broker", "syringe_power", "syringe_speed", "syringe", "taunted", "toxin", "uninterruptible", "unperceivable", "use_overheat_soft_lockout", "use_reduced_hit_mass", "uses_nearby_broadphase", "veteran_combat_ability_stance", "veteran_tag", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "weapon_malfunction", "weapon_special_extra_explosion_on_hit_armor", "zealot_channel_heals_corruption", "zealot_maniac_empowered_martyrdom", "zealot_toughness", "zero_slide_friction")
+buff_settings.keywords = table.enum("adamant_dog_bloodlust", "adamant_drone_shocks_enemies_in_range", "adamant_hunt_stance", "adamant_mine_explode_on_finish", "adamant_terminus_warrant", "allow_backstabbing", "allow_extra_ability_charges", "allow_flanking", "allow_hipfire_during_sprint", "armor_penetrating", "beast_of_nurgle_liquid_immunity", "beast_of_nurgle_vomit", "bleeding", "blessed_by_nurgle_parasite", "block_gives_warp_charge", "block_unblockable", "bolstered", "bolter_proficiency", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "broker_punk_rage_exhaustion", "broker_stimm_field_shocks_enemies_in_range", "burning", "can_attack_during_invisibility", "can_block_ranged", "cluster_explode_on_super_armored", "coherency_with_all_no_chain", "concealed", "corrupted", "count_as_blocking_vs_ranged", "count_as_blocking", "count_as_dodge_vs_all", "count_as_dodge_vs_chaos_hound_pounce", "count_as_dodge_vs_melee", "count_as_dodge_vs_netgunner", "count_as_dodge_vs_ranged", "count_as_staggered", "critical_hit_infinite_cleave", "critical_melee_hit_infinite_cleave", "critical_strike_second_projectile", "cryptic_bionic_senses", "cryptic_chordclaw", "cryptic_chordclaw_kill_restores_charge", "cryptic_force_field_liquid_area_when_expired", "cryptic_grenade_ability_force_field", "cryptic_power_generation", "cryptic_precision_stance", "cryptic_precision_stance_duration_extension_on_elite_hit", "cryptic_servo_skull_flamethrower_uses_no_charge", "cryptic_discharge_ability_always_full_charges_bonus", "cultist_flamer_liquid_immunity", "damage_immune", "damage_volume_burning", "damage_volume_electrical", "damage_volume_instakill", "damage_volume_radioactive", "despawn_on_death", "deterministic_recoil", "disable_elite_minions_collision_during_dodge", "disable_elite_minions_collision_during_sprint", "disable_horde_minions_collision_during_dodge", "disable_horde_minions_collision_during_sprint", "disable_minions_collision_during_dodge", "disable_minions_collision_during_sprint", "double_ammo_consumption", "electrocuted_arc_ability", "electrocuted_arc_grenade", "electrocuted_arc", "electrocuted_chain_lightning", "electrocuted_shock_mine", "electrocuted", "empowered", "enable_auto_aim", "expeditions_death_imminent", "fire_trail_on_lunge", "training_ground_force_companion_in_combat_state", "free_dodges", "free_ability_use", "fully_charged_attacks_infinite_cleave", "guaranteed_critical_strike", "guaranteed_leadbelcher", "guaranteed_melee_critical_strike", "guaranteed_ranged_critical_strike", "guaranteed_smite_critical_strike", "guaranteed_weakspot_on_hit", "guaranteed_wind_slash_critical_strike", "has_nurgle_parasite", "havoc_gardens_embrace", "health_segment_breaking_reduce_damage_taken", "hit_mass_reduction_on_weakspot_hit", "hud_nameplates_disabled", "ignore_armor_aborts_attack_critical_strike", "ignore_armor_aborts_attack", "improved_ammo_pickups", "improved_medical_crate", "in_toxic_gas", "infested_head_armor_override", "invisible", "in_tether", "invulnerable", "knock_down_on_slide", "limit_health_damage_taken", "limit_health_damage_taken_from_ogryns", "limit_health_damage_taken_from_captains", "limit_health_damage_taken_from_monsters", "melee_alternate_fire_interrupt_immune", "melee_infinite_cleave_critical_strike", "melee_infinite_cleave_on_headshot", "melee_infinite_cleave", "melee_push_immune", "no_ammo_consumption_on_crits", "no_ammo_consumption", "no_coherency_stickiness_limit", "no_parry_block_cost", "no_sprint", "no_stagger", "nurgle_flies", "ogryn_basic_box_spawns_cluster", "ogryn_box_of_surprise", "ogryn_combat_ability_stance", "ogryn_improved_lunge", "plasma_proficiency", "pocketable_broker_syringe", "power_weapon_proficiency", "prevent_all_healing", "prevent_coherency_buffs_from_other_players", "prevent_coherency_toughness_buff", "prevent_critical_strike", "prevent_healing_corruption", "prevent_healing_health", "prevent_toughness_regen_when_depleted", "prevent_toughness_replenish_except_abilities", "prevent_toughness_replenish_except_all_combat_abilities", "prevent_toughness_replenish", "psychic_fortress", "psyker_chain_lightning_full_charge", "psyker_empowered_grenade", "psyker_overcharge", "puked_on", "random_damage_immune", "ranged_alternate_fire_interrupt_immune", "ranged_attack_infinite_cleave", "ranged_push_immune", "reduced_ammo_consumption", "reduced_toughness_generation", "renegade_flamer_liquid_immunity", "renegade_grenadier_liquid_immunity", "resist_death", "rotten_armor", "shock_grenade_shock", "shout_forces_strong_stagger", "slowdown_immune", "special_ammo", "sprint_dodge_in_overtime", "sticky_projectiles", "stimmed", "stun_immune_block_broken", "stun_immune_toughness_broken", "stun_immune", "super_armor_override", "suppression_immune", "syringe_ability", "syringe_broker", "syringe_power", "syringe_speed", "syringe", "taunted", "toxin", "uninterruptible", "unkillable", "unperceivable", "use_overheat_soft_lockout", "use_reduced_hit_mass", "uses_nearby_broadphase", "veteran_combat_ability_stance", "veteran_tag", "warpfire_burning", "weakspot_hit_gains_armor_penetration", "weapon_malfunction", "weapon_special_extra_explosion_on_hit_armor", "zealot_channel_heals_corruption", "zealot_maniac_empowered_martyrdom", "zealot_toughness", "zero_slide_friction")
 buff_settings.network_synced_keywords = {
 	[buff_settings.keywords.improved_ammo_pickups] = true,
 	[buff_settings.keywords.invisible] = true,
@@ -29,34 +29,34 @@ buff_settings.network_synced_keywords = {
 	[buff_settings.keywords.nurgle_flies] = true,
 }
 
-local group_keywords = table.enum("electrocuted", "chain_lightning_targeting", "arc_lightning_targeting", "allow_action_during_sprint")
+local group_keywords = table.enum("allow_action_during_sprint", "arc_lightning_targeting", "chain_lightning_targeting", "electrocuted")
 local group_to_keywords = {
 	[group_keywords.allow_action_during_sprint] = {
 		[buff_settings.keywords.allow_hipfire_during_sprint] = true,
 	},
 	[group_keywords.electrocuted] = {
-		[buff_settings.keywords.electrocuted] = true,
-		[buff_settings.keywords.electrocuted_chain_lightning] = true,
-		[buff_settings.keywords.electrocuted_arc] = true,
 		[buff_settings.keywords.electrocuted_arc_ability] = true,
 		[buff_settings.keywords.electrocuted_arc_grenade] = true,
+		[buff_settings.keywords.electrocuted_arc] = true,
+		[buff_settings.keywords.electrocuted_chain_lightning] = true,
 		[buff_settings.keywords.electrocuted_shock_mine] = true,
+		[buff_settings.keywords.electrocuted] = true,
 	},
 	[group_keywords.chain_lightning_targeting] = {
-		[buff_settings.keywords.electrocuted] = true,
-		[buff_settings.keywords.electrocuted_chain_lightning] = true,
-		[buff_settings.keywords.electrocuted_arc] = true,
 		[buff_settings.keywords.electrocuted_arc_ability] = true,
 		[buff_settings.keywords.electrocuted_arc_grenade] = true,
+		[buff_settings.keywords.electrocuted_arc] = true,
+		[buff_settings.keywords.electrocuted_chain_lightning] = true,
 		[buff_settings.keywords.electrocuted_shock_mine] = true,
+		[buff_settings.keywords.electrocuted] = true,
 	},
 	[group_keywords.arc_lightning_targeting] = {
-		[buff_settings.keywords.electrocuted] = true,
-		[buff_settings.keywords.electrocuted_chain_lightning] = true,
-		[buff_settings.keywords.electrocuted_arc] = true,
 		[buff_settings.keywords.electrocuted_arc_ability] = true,
 		[buff_settings.keywords.electrocuted_arc_grenade] = true,
+		[buff_settings.keywords.electrocuted_arc] = true,
+		[buff_settings.keywords.electrocuted_chain_lightning] = true,
 		[buff_settings.keywords.electrocuted_shock_mine] = true,
+		[buff_settings.keywords.electrocuted] = true,
 	},
 }
 
@@ -68,6 +68,10 @@ buff_settings.max_proc_events = 300
 buff_settings.proc_events_stride = 2
 buff_settings.max_stack_count = 31
 buff_settings.proc_event_validation = {
+	on_ability_used = {
+		ability_type = "string",
+		unit = "unit",
+	},
 	on_action_start = {
 		action_name = "string",
 		action_settings = "table",
@@ -110,6 +114,7 @@ buff_settings.proc_event_validation = {
 		number_of_unit_in_coherency = "unit",
 	},
 	on_combat_ability = {
+		ogryn_free_reload_consumed = "bool",
 		unit = "unit",
 		warp_charge_percent = "number",
 	},
@@ -119,6 +124,16 @@ buff_settings.proc_event_validation = {
 	},
 	on_combat_ability_charge_consumed = {
 		num_charges_consumed = "number",
+		unit = "unit",
+	},
+	on_combat_ability_resource_restored = {
+		actual_resource_restored = "number",
+		target_resource_to_restore = "number",
+		unit = "unit",
+	},
+	on_combat_ability_resource_consumed = {
+		actual_resource_consumed = "number",
+		target_resource_consumption = "number",
 		unit = "unit",
 	},
 	on_player_assist_done = {
@@ -161,6 +176,26 @@ buff_settings.proc_event_validation = {
 	},
 	on_grenade_ability_charge_consumed = {
 		num_charges_consumed = "number",
+		unit = "unit",
+	},
+	on_grenade_ability_resource_restored = {
+		actual_resource_restored = "number",
+		target_resource_to_restore = "number",
+		unit = "unit",
+	},
+	on_grenade_ability_resource_consumed = {
+		actual_resource_consumed = "number",
+		target_resource_consumption = "number",
+		unit = "unit",
+	},
+	on_pocketable_ability_resource_restored = {
+		actual_resource_restored = "number",
+		target_resource_to_restore = "number",
+		unit = "unit",
+	},
+	on_pocketable_ability_resource_consumed = {
+		actual_resource_consumed = "number",
+		target_resource_consumption = "number",
 		unit = "unit",
 	},
 	on_player_projectile_finished = {
@@ -332,6 +367,7 @@ buff_settings.proc_event_validation = {
 		attack_type = "string",
 		attacked_unit = "unit",
 		attacked_unit_position = "Vector3",
+		attacked_unit_target_unit = "unit",
 		attacking_unit = "unit",
 		attacking_unit_breed_name = "string",
 		breed_name = "string",
@@ -513,6 +549,7 @@ buff_settings.proc_event_validation = {
 	on_weapon_special_activate = {
 		num_special_charges = "number",
 		t = "number",
+		wielded_slot = "string",
 	},
 	on_weapon_special_deactivate = {
 		t = "number",
@@ -544,7 +581,9 @@ buff_settings.proc_event_validation = {
 	on_windup_start = {
 		combo_count = "number",
 	},
-	on_windup_trigger = {},
+	on_windup_trigger = {
+		action_settings = "table",
+	},
 	on_side_mission_objective_complete = {
 		unit = "unit",
 	},
@@ -640,14 +679,16 @@ buff_settings.proc_event_validation = {
 		template_name = "string",
 		unit = "unit",
 	},
+	on_stackable_buff_refresh_duration = {
+		template_name = "string",
+		unit = "unit",
+	},
 }
 
 local proc_event_names = table.keys(buff_settings.proc_event_validation)
 
 buff_settings.proc_events = table.enum(unpack(proc_event_names))
 buff_settings.stat_buff_types = {
-	ability_cooldown_flat_reduction = "value",
-	ability_cooldown_modifier = "additive_multiplier",
 	ability_extra_charges = "value",
 	alternate_fire_movement_speed_reduction_modifier = "multiplicative_multiplier",
 	ammo_reserve_capacity = "additive_multiplier",
@@ -687,9 +728,19 @@ buff_settings.stat_buff_types = {
 	coherency_radius_modifier = "additive_multiplier",
 	coherency_radius_multiplier = "multiplicative_multiplier",
 	coherency_stickiness_time_value = "value",
-	combat_ability_cooldown_modifier = "additive_multiplier",
-	combat_ability_cooldown_regen_modifier = "additive_multiplier",
-	combat_ability_cooldown_replenish_modifier = "additive_multiplier",
+	combat_ability_max_resource = "value",
+	combat_ability_max_resource_modifier = "additive_multiplier",
+	combat_ability_resource_consumed_modifier = "additive_multiplier",
+	combat_ability_resource_cost_per_use_modifier = "additive_multiplier",
+	combat_ability_resource_cost_while_active_modifier = "additive_multiplier",
+	combat_ability_resource_flat_consumed = "value",
+	combat_ability_resource_flat_cost_per_second = "value",
+	combat_ability_resource_flat_cost_per_use = "value",
+	combat_ability_resource_flat_cost_while_active = "value",
+	combat_ability_resource_flat_regen = "value",
+	combat_ability_resource_flat_restored = "value",
+	combat_ability_resource_regen_modifier = "additive_multiplier",
+	combat_ability_resource_restored_modifier = "additive_multiplier",
 	companion_damage_modifier = "additive_multiplier",
 	companion_damage_multiplier = "multiplicative_multiplier",
 	companion_damage_vs_elites = "additive_multiplier",
@@ -722,6 +773,9 @@ buff_settings.stat_buff_types = {
 	damage_taken_from_toxin = "additive_multiplier",
 	damage_taken_modifier = "additive_multiplier",
 	damage_taken_multiplier = "multiplicative_multiplier",
+	damage_taken_percentage_absorbed_by_combat_ability_resource = "additive_multiplier",
+	damage_taken_percentage_absorbed_by_grenade_ability_resource = "additive_multiplier",
+	damage_taken_percentage_absorbed_by_pocketable_ability_resource = "additive_multiplier",
 	damage_taken_vs_taunted = "additive_multiplier",
 	damage_vs_bleeding = "additive_multiplier",
 	damage_vs_burning = "additive_multiplier",
@@ -771,7 +825,19 @@ buff_settings.stat_buff_types = {
 	fov_multiplier = "multiplicative_multiplier",
 	frag_damage = "additive_multiplier",
 	fully_charged_damage = "additive_multiplier",
-	grenade_ability_cooldown_modifier = "additive_multiplier",
+	grenade_ability_max_resource = "value",
+	grenade_ability_max_resource_modifier = "additive_multiplier",
+	grenade_ability_resource_consumed_modifier = "additive_multiplier",
+	grenade_ability_resource_cost_per_use_modifier = "additive_multiplier",
+	grenade_ability_resource_cost_while_active_modifier = "additive_multiplier",
+	grenade_ability_resource_flat_consumed = "value",
+	grenade_ability_resource_flat_cost_per_second = "value",
+	grenade_ability_resource_flat_cost_per_use = "value",
+	grenade_ability_resource_flat_cost_while_active = "value",
+	grenade_ability_resource_flat_regen = "value",
+	grenade_ability_resource_flat_restored = "value",
+	grenade_ability_resource_regen_modifier = "additive_multiplier",
+	grenade_ability_resource_restored_modifier = "additive_multiplier",
 	healing_recieved_modifier = "additive_multiplier",
 	health_segment_damage_taken_multiplier = "multiplicative_multiplier",
 	hit_mass_multiplier = "multiplicative_multiplier",
@@ -794,7 +860,6 @@ buff_settings.stat_buff_types = {
 	max_hit_mass_attack_modifier = "additive_multiplier",
 	max_hit_mass_impact_modifier = "additive_multiplier",
 	max_melee_hit_mass_attack_modifier = "additive_multiplier",
-	medical_crate_healing_modifier = "additive_multiplier",
 	melee_attack_speed = "additive_multiplier",
 	melee_critical_strike_chance = "value",
 	melee_critical_strike_damage = "additive_multiplier",
@@ -844,7 +909,19 @@ buff_settings.stat_buff_types = {
 	permanent_damage_converter = "value",
 	permanent_damage_converter_resistance = "value",
 	permanent_damage_ratio = "value",
-	pocketable_ability_cooldown_modifier = "additive_multiplier",
+	pocketable_ability_max_resource = "value",
+	pocketable_ability_max_resource_modifier = "additive_multiplier",
+	pocketable_ability_resource_consumed_modifier = "additive_multiplier",
+	pocketable_ability_resource_cost_per_use_modifier = "additive_multiplier",
+	pocketable_ability_resource_cost_while_active_modifier = "additive_multiplier",
+	pocketable_ability_resource_flat_consumed = "value",
+	pocketable_ability_resource_flat_cost_per_second = "value",
+	pocketable_ability_resource_flat_cost_per_use = "value",
+	pocketable_ability_resource_flat_cost_while_active = "value",
+	pocketable_ability_resource_flat_regen = "value",
+	pocketable_ability_resource_flat_restored = "value",
+	pocketable_ability_resource_regen_modifier = "additive_multiplier",
+	pocketable_ability_resource_restored_modifier = "additive_multiplier",
 	power_level = "value",
 	power_level_modifier = "additive_multiplier",
 	power_level_modifier_vs_aggroed_elites = "additive_multiplier",
@@ -954,6 +1031,7 @@ buff_settings.stat_buff_types = {
 	weakspot_damage_taken = "additive_multiplier",
 	weakspot_power_level_modifier = "additive_multiplier",
 	weapon_action_movespeed_reduction_multiplier = "multiplicative_multiplier",
+	weapon_special_damage = "additive_multiplier",
 	weapon_special_max_activations = "value",
 	wield_speed = "additive_multiplier",
 	windup_action_movespeed_reduction_multiplier = "multiplicative_multiplier",

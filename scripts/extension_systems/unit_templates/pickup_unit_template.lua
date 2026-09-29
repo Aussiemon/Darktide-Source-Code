@@ -27,6 +27,11 @@ local pickup_unit_template = {
 		local pickup_name = NetworkLookup.pickup_names[pickup_id]
 		local pickup_settings = Pickups.by_name[pickup_name]
 		local unit_name = pickup_settings.unit_name
+
+		if pickup_settings.unit_names then
+			unit_name = math.random_array_entry(pickup_settings.unit_names)
+		end
+
 		local position, rotation = UnitTemplate.position_rotation_from_game_object(session, object_id)
 
 		return unit_name, position, rotation

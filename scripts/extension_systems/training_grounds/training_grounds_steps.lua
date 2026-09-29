@@ -414,12 +414,13 @@ end
 
 local function _ensure_has_combat_ability(player, step_data, t, delay)
 	local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+	local should_restore_ability = ability_extension:missing_ability_resource("combat_ability") > 0
 
-	if ability_extension:remaining_ability_cooldown("combat_ability") > 0 then
+	if should_restore_ability then
 		step_data._reset_ability_t = step_data._reset_ability_t or t + (delay or 0)
 
 		if t >= step_data._reset_ability_t then
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 
 			step_data._reset_ability_t = nil
 		end
@@ -694,7 +695,7 @@ steps.dynamic.set_ability_enabled = function (ability_type, enabled, reset_coold
 			ability_extension:set_ability_enabled(ability_type, enabled)
 
 			if reset_cooldown then
-				ability_extension:reduce_ability_cooldown_percentage(ability_type, 1)
+				ability_extension:restore_ability_charge_percentage(ability_type, 1)
 			end
 		end,
 	}
@@ -705,10 +706,9 @@ steps.dynamic.set_grenade_count = function (new_count)
 		name = "set_grenade_count",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
 			local unit = player.player_unit
-			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-			local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
+			local ability_extension = ScriptUnit.extension(unit, "ability_system")
 
-			grenade_ability_component.num_charges = new_count
+			ability_extension:set_ability_charges("grenade_ability", new_count)
 		end,
 	}
 end
@@ -3748,7 +3748,7 @@ steps.combat_ability_use_loop_cryptic = {
 		if remaining_ability_charges <= 0 and not step_data.objective_done then
 			step_data.ready_for_ability_use = true
 
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		return step_data.objective_done
@@ -3895,7 +3895,7 @@ steps.combat_ability_loop_cryptic = {
 		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
 
 		if ability_extension:remaining_ability_charges("combat_ability") < step_data.current_ability_charges_step_index then
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", step_data.current_ability_charges_step_index)
+			ability_extension:restore_ability_charge_percentage("combat_ability", step_data.current_ability_charges_step_index)
 		end
 
 		local enemies = step_data.enemies
@@ -4218,11 +4218,10 @@ steps.combat_ability_loop_ogryn_bonebreaker = {
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
-		local max_cooldown = ability_extension:max_ability_cooldown("combat_ability")
-		local remaining_cooldown = ability_extension:remaining_ability_cooldown("combat_ability")
+		local ability_resource_regen_progress = ability_extension:get_ability_resource_regen_progress("combat_ability")
 
-		if remaining_cooldown ~= 0 and remaining_cooldown / max_cooldown < 0.8 then
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+		if ability_resource_regen_progress < 0.8 then
+			ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		return step_data.small_stagger_count >= step_data.target_stagger_count and step_data.big_stagger

@@ -12,7 +12,7 @@ local function _random_seeded_size_scale(seed, size_variation_range)
 end
 
 PlayerHeight.player_character_third_person_scale = function (breed, profile, random_seed)
-	local profile_character_height = profile.personal and profile.personal.character_height
+	local profile_character_height = profile.character_height
 	local size_variation_range = breed.size_variation_range
 	local average_size = breed.average_size
 	local scale = 1

@@ -678,6 +678,10 @@ overrides.heavy_crowbar_special = {
 			true,
 		},
 		{
+			"ignore_stagger_reduction",
+			true,
+		},
+		{
 			"targets",
 			1,
 			"power_distribution",
@@ -709,6 +713,10 @@ overrides.heavy_crowbar_special = {
 			"power_distribution",
 			"impact",
 			25,
+		},
+		{
+			"shield_breaker",
+			true,
 		},
 	},
 }
@@ -763,6 +771,10 @@ overrides.heavy_crowbar_sticky = {
 			"power_distribution",
 			"impact",
 			30,
+		},
+		{
+			"shield_breaker",
+			true,
 		},
 	},
 }

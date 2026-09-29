@@ -59,6 +59,7 @@ AutoEvent.start_auto_event = function (self, unit)
 	local auto_event_context = {
 		worldposition = position,
 		intial_cooldown_multiplier_value = self:get_data(unit, "inital_cooldown_type"),
+		spawner_groups = self:get_data(unit, "spawner_groups"),
 		size = self:get_data(unit, "size"),
 		composition = self:get_data(unit, "composition"),
 		node_id = self._node_id,
@@ -254,6 +255,12 @@ AutoEvent.component_data = {
 			"extraction",
 			"safe_room",
 		},
+	},
+	spawner_groups = {
+		category = "Spawner Groups",
+		size = 0,
+		ui_name = "Spawner Groups",
+		ui_type = "text_box_array",
 	},
 	inputs = {
 		start_auto_event = {

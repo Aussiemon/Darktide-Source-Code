@@ -2,7 +2,7 @@
 
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "cryptic_grenade_ability_force_field", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "expeditions_death_imminent", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "adamant_combat_ability_charge", "broker_combat_ability_focus", "broker_combat_ability_punk_rage", "cryptic_grenade_ability_force_field", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "veteran_stealth", "zealot_combat_ability_dash", "generic_stealth", "story_echo", "spillway_nurgle_transition", "syringe_ability", "syringe_power", "syringe_speed", "syringe_broker")
 local status = table.enum("active", "inactive", "removing")
 local PULSING = {
 	pulsing_animation_duration = 3,
@@ -17,6 +17,7 @@ local SHIELD_SCREENSPACE_PARTICLE = "content/fx/particles/screenspace/screen_cry
 mood_settings.mood_types = types
 mood_settings.status = status
 mood_settings.priority = {
+	types.spillway_nurgle_transition,
 	types.stealth,
 	types.veteran_stealth,
 	types.veteran_stealth_and_stance,
@@ -628,6 +629,22 @@ mood_settings.moods = {
 		blend_out_time = 1.5,
 		shading_environment = "content/shading_environments/moods/horde_story_echo_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+	},
+	[types.spillway_nurgle_transition] = {
+		active_time = 3.5,
+		blend_in_time = 1.5,
+		blend_out_time = 2.5,
+		shading_environment = "content/shading_environments/moods/spillway_nurgle_transition",
+		looping_sound_start_events = {
+			"wwise/events/world/play_spillway_event_nurgle_curse_loop",
+		},
+		looping_sound_stop_events = {
+			"wwise/events/world/stop_spillway_event_nurgle_curse_loop",
+		},
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_spillway_nurgle_transition",
+		},
 	},
 }
 

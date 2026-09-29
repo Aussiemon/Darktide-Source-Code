@@ -138,6 +138,8 @@ Settings.global_stats_settings = {
 		},
 	},
 }
+Settings.objective_complete_glyph = ""
+Settings.objective_lock_glyph = ""
 Settings.default_entry_width = 1420
 Settings.default_progress_bar_size = {
 	1200,
@@ -145,6 +147,9 @@ Settings.default_progress_bar_size = {
 }
 Settings.live_events_history_limit = 5
 Settings.live_events_history_entries = {
+	"endless_hordes",
+	"barren",
+	"leftover",
 	"skulls_guns",
 	"elite_army",
 	"play_expeditions",

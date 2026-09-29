@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	op_train = {
-		coordinates = "loc_mission_coordinates_op_train",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/operations/train/missions/mission_op_train",
@@ -84,9 +83,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	op_no_mans_land = {
-		coordinates = "loc_mission_coordinates_op_no_mans_land",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/operations/no_mans_land/missions/mission_op_no_mans_land",
@@ -180,6 +181,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

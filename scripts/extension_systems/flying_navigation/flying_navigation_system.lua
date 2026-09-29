@@ -368,4 +368,10 @@ FlyingNavigationSystem.ray_can_go = function (self, from_position, to_position, 
 	return not self._shared_svo:overlap_capsule(from_position, to_position, radius)
 end
 
+FlyingNavigationSystem.destroy = function (self)
+	if NavSVO.destroy then
+		NavSVO.destroy(self._shared_svo)
+	end
+end
+
 return FlyingNavigationSystem

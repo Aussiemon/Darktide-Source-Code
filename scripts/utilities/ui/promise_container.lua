@@ -4,9 +4,14 @@ local PromiseContainer = class("PromiseContainer")
 
 PromiseContainer.init = function (self)
 	self._promises = {}
+	self._alive_handle = {
+		is_alive = true,
+	}
 end
 
 PromiseContainer.destroy = function (self)
+	self._alive_handle.is_alive = false
+
 	for promise, _ in pairs(self._promises) do
 		promise:cancel()
 	end
@@ -28,6 +33,10 @@ PromiseContainer.cancel_on_destroy = function (self, promise)
 	end
 
 	return promise
+end
+
+PromiseContainer.alive_handle = function (self)
+	return self._alive_handle
 end
 
 return PromiseContainer

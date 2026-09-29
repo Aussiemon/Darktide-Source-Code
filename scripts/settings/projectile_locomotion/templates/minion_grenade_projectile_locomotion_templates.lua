@@ -49,6 +49,57 @@ local minion_projectile_locomotion_templates = {
 			use_actor_mass_radius = false,
 		},
 	},
+	renegade_wizard_ball = {
+		trajectory_parameters = {
+			spawn = {
+				locomotion_state = locomotion_states.true_flight,
+			},
+		},
+		spawn_projectile_parameters = {
+			initial_speed = 20,
+			spawn_offset = Vector3Box(0.1, 0.4, 0.12),
+			rotation = Vector3Box(-90, 0, 0),
+			has_target_yaw_offset = {
+				max = 1,
+				min = 0.5,
+			},
+			has_target_pitch_offset = {
+				max = 0.8,
+				min = 0.25,
+			},
+			pitch_offset = {
+				max = 0,
+				min = 0,
+			},
+		},
+		integrator_parameters = {
+			coefficient_of_restitution = 1,
+			collision_filter = "filter_minion_melee_friendly_fire",
+			collision_types = "both",
+			mass = 0.8,
+			radius = 0.25,
+			statics_raycast = true,
+			use_actor_mass_radius = false,
+			true_flight_template = TrueFlightTemplates.magic_missile,
+		},
+	},
+	minion_wizard_wave = {
+		trajectory_parameters = {
+			throw = {
+				locomotion_state = locomotion_states.true_flight,
+			},
+		},
+		integrator_parameters = {
+			coefficient_of_restitution = 1,
+			collision_filter = "filter_minion_melee_friendly_fire",
+			collision_types = "both",
+			mass = 0.8,
+			radius = 0.1,
+			statics_raycast = true,
+			use_actor_mass_radius = false,
+			true_flight_template = TrueFlightTemplates.drone,
+		},
+	},
 	minion_grenade_cultist_grenadier = {
 		trajectory_parameters = {
 			throw = {

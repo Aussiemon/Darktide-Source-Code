@@ -144,8 +144,6 @@ ProcBuff._active_percentage = function (self, t)
 end
 
 ProcBuff.is_cooling_down = function (self, t)
-	local t = FixedFrame.get_latest_fixed_time()
-
 	return self:_is_cooling_down(t)
 end
 
@@ -519,7 +517,7 @@ ProcBuff._show_in_hud = function (self)
 	local template_context = self._template_context
 	local visual_stack_count = self:visual_stack_count()
 
-	if visual_stack_count == 0 then
+	if visual_stack_count == 0 and not template.show_at_zero_stacks then
 		return false
 	end
 

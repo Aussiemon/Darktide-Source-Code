@@ -234,6 +234,25 @@ local _gamepad_devices = {
 	},
 }
 
+InputUtils.last_gamepad_device_type = function ()
+	if IS_PLAYSTATION then
+		return "ps4_controller"
+	end
+
+	if IS_XBS then
+		return "xbox_controller"
+	end
+
+	local input_manager = Managers.input
+	local device = input_manager and input_manager:last_pressed_device()
+
+	if device and InputUtils.is_gamepad(device:type()) then
+		return device:type()
+	end
+
+	return "xbox_controller"
+end
+
 InputUtils.get_gamepad_device_type = function ()
 	if IS_XBS then
 		return _gamepad_devices.xbox_controller

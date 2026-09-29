@@ -4,7 +4,9 @@ local TalentSettings = require("scripts/settings/talent/talent_settings")
 local broker_talent_settings = TalentSettings.broker
 local broker_stimm_field_crate = {
 	unit_template = "broker_stimm_field_crate_deployable",
-	proximity_radius = broker_talent_settings.combat_ability.stimm_field.proximity_radius,
+	proximity_check_params = {
+		proximity_radius = broker_talent_settings.combat_ability.stimm_field.proximity_radius,
+	},
 	stickiness_limit = broker_talent_settings.combat_ability.stimm_field.stickiness_limit,
 	stickiness_time = broker_talent_settings.combat_ability.stimm_field.stickiness_time,
 	proximity_init_data = {

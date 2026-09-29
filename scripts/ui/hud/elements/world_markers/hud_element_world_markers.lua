@@ -517,6 +517,15 @@ HudElementWorldMarkers._draw_markers = function (self, dt, t, input_service, ui_
 						self:_apply_scale(widget, new_scale)
 					end
 
+					local marker_size_multiplier = marker.marker_size_multiplier
+					local applied_scale = marker.ignore_scale and 1 or marker.scale
+
+					if marker_size_multiplier then
+						applied_scale = marker.scale * marker_size_multiplier
+
+						self:_apply_scale(widget, applied_scale)
+					end
+
 					local alpha_multiplier = 1
 
 					if fade_settings and not marker.block_fade_settings then

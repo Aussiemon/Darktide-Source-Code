@@ -14,6 +14,12 @@ local base_visual_loadout_template = {
 				"content/items/characters/minions/chaos_cultists/attachments_base/lowerbody_b",
 			},
 		},
+		slot_head = {
+			use_outline = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 		slot_variation_gear = {
 			use_outline = true,
 			items = {
@@ -74,6 +80,15 @@ void_1.slots.environmental_override.items = {
 }
 templates.cultist_grenadier[zone_ids.void] = {
 	void_1,
+}
+
+local depths_1 = table.clone(default_1)
+
+depths_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_01",
+}
+templates.cultist_grenadier[zone_ids.depths] = {
+	depths_1,
 }
 
 local horde_1 = table.clone(base_visual_loadout_template)

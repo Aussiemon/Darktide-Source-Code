@@ -24,6 +24,7 @@ ActionWindup.start = function (self, action_settings, t, time_scale, params)
 		self._weapon_action_component.special_active_at_start = true
 	end
 
+	self._used_input = params.used_input
 	self._proc_trigger_time = self:_latest_chain_time(action_settings)
 
 	local buff_extension = self._buff_extension
@@ -56,6 +57,8 @@ ActionWindup.fixed_update = function (self, dt, t, time_in_action)
 		local param_table = buff_extension:request_proc_event_param_table()
 
 		if param_table then
+			param_table.action_settings = action_settings
+
 			buff_extension:add_proc_event(proc_events.on_windup_trigger, param_table)
 		end
 	end
@@ -71,7 +74,7 @@ ActionWindup._latest_chain_time = function (self, action_settings)
 	local latest_chain_time = 0
 
 	for action_input, chain_action in pairs(allowed_chain_actions) do
-		local action_chain_time = chain_action.chain_time
+		local action_chain_time = type(chain_action.chain_time) == "table" and (chain_action.chain_time[self._used_input] or chain_action.chain_time.default) or chain_action.chain_time or nil
 
 		if action_chain_time and latest_chain_time < action_chain_time then
 			latest_chain_time = action_chain_time
@@ -81,7 +84,9 @@ ActionWindup._latest_chain_time = function (self, action_settings)
 	return latest_chain_time > 0 and latest_chain_time or math.huge
 end
 
-ActionWindup.server_correction_occurred = function (self)
+ActionWindup.server_correction_occurred = function (self, ...)
+	ActionWindup.super.server_correction_occurred(self, ...)
+
 	self._proc_trigger_time = self:_latest_chain_time(self._action_settings)
 end
 

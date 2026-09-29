@@ -13,8 +13,9 @@ local ProjectileTemplates = require("scripts/settings/projectile/projectile_temp
 local SingleLevelLoader = require("scripts/loading/loaders/single_level_loader")
 local Vo = require("scripts/utilities/vo")
 local PlayerDeath = require("scripts/utilities/player_death")
+local Expedition = require("scripts/utilities/expedition")
 local locomotion_states = ProjectileLocomotionSettings.states
-local SERVER_LEVEL_STATES = table.enum("blocked", "idle", "load_next_location", "wait_on_clients_level_despawn", "wait_on_server_level_despawn", "wait_on_clients_level_loading_and_spawn", "wait_on_server_levels_spawned", "registering_levels", "wait_on_server_sparse_graph_connected", "server_spawn_loaded_levels", "teleport_players_to_safe_zone", "teleport_players_from_safe_zone")
+local SERVER_LEVEL_STATES = table.enum("blocked", "idle", "load_next_location", "wait_on_clients_level_despawn", "wait_on_server_level_despawn", "wait_on_clients_level_loading_and_spawn", "wait_on_clients_before_registration", "wait_on_server_levels_spawned", "registering_levels", "start_procgen_location", "generating_procgen_location", "finalizing_procgen_location", "wait_on_server_sparse_graph_connected", "server_spawn_loaded_levels", "teleport_players_to_safe_zone", "teleport_players_from_safe_zone")
 
 local function _log(...)
 	Log.info("ExpeditionLogicServer", ...)
@@ -38,10 +39,19 @@ ExpeditionLogicServer.init = function (self, network_event_delegate)
 	self._blocked_start_time = nil
 	self._players_spawned_next_location = {}
 	self._players_started_despawning = {}
+	self._unit_untargetable_id = Script.new_map(4)
 
 	local server_rpcs = ExpeditionLogicSettings.server_rpcs
 
 	network_event_delegate:register_session_events(self, unpack(server_rpcs))
+
+	local pacing_settings = self._expedition_template.pacing_settings
+
+	self._pacing_rates = {
+		base_rate = pacing_settings.progress_base_rate.numerator / pacing_settings.progress_base_rate.denominator,
+		per_second = pacing_settings.progress_rate_per_second.numerator / pacing_settings.progress_rate_per_second.denominator,
+		per_location = pacing_settings.progress_rate_per_location,
+	}
 
 	local event_manager = Managers.event
 
@@ -52,8 +62,10 @@ ExpeditionLogicServer.init = function (self, network_event_delegate)
 	event_manager:register(self, "expedition_register_transition_activator", "expedition_register_transition_activator")
 	event_manager:register(self, "expedition_unregister_transition_activator", "expedition_unregister_transition_activator")
 	event_manager:register(self, "expedition_transition_activator_started", "expedition_transition_activator_started")
+	event_manager:register(self, "event_expedition_grant_buff", "event_expedition_grant_buff")
 	event_manager:register(self, "event_mission_objective_start", "event_mission_objective_start")
 	event_manager:register(self, "expedition_mark_level_complete", "event_mark_level_complete")
+	event_manager:register(self, "expedition_enable_exit_and_extraction", "expedition_enable_active_transition_activators")
 
 	self._dynamic_unit_spawning = {}
 	self._airstrike_bomb_spawning = {}
@@ -111,24 +123,23 @@ ExpeditionLogicServer.event_end_location_safe_zone_door_defence_sequence = funct
 	end
 
 	local expedition = self._expedition
+	local section_index = self._current_section_index
+	local section = expedition[section_index]
+	local levels_data = section.levels_data
 
-	for _, section in ipairs(expedition) do
-		local levels_data = section.levels_data
+	for _, level_data in ipairs(levels_data) do
+		if level_data.template_type == "connector_exit_level" then
+			local level = level_data.level
 
-		for _, level_data in ipairs(levels_data) do
-			if level_data.template_type == "connector_exit_level" then
-				local level = level_data.level
+			if level then
+				Level.trigger_event(level, "event_allow_players_leave_location")
 
-				if level then
-					Level.trigger_event(level, "event_allow_players_leave_location")
+				local custom_data = level_data.custom_data
+				local level_slot_id = custom_data.level_slot_id
+				local location_level = _get_location_level(levels_data)
+				local level_slot_unit = Level.unit_by_id(location_level, level_slot_id)
 
-					local custom_data = level_data.custom_data
-					local level_slot_id = custom_data.level_slot_id
-					local location_level = _get_location_level(levels_data)
-					local level_slot_unit = Level.unit_by_id(location_level, level_slot_id)
-
-					Unit.flow_event(level_slot_unit, "lua_players_can_enter_airlock")
-				end
+				Unit.flow_event(level_slot_unit, "lua_players_can_enter_airlock")
 			end
 		end
 	end
@@ -300,11 +311,69 @@ end
 
 ExpeditionLogicServer.rpc_server_location_loaded_and_spawned_by_player = function (self, channel_id, current_location_index)
 	if self._server_level_state == SERVER_LEVEL_STATES.wait_on_clients_level_loading_and_spawn then
-		local player = Managers.player:player_from_channel_id(channel_id)
-		local unique_id = player:unique_id()
-
-		self._players_spawned_next_location[unique_id] = true
+		self:_server_mark_player_spawned_next_location(channel_id)
 	end
+end
+
+ExpeditionLogicServer._server_mark_player_spawned_next_location = function (self, channel_id)
+	local player = Managers.player:player_from_channel_id(channel_id)
+	local players_spawned_next_location = self._players_spawned_next_location
+	local unique_id = player:unique_id()
+
+	players_spawned_next_location[unique_id] = true
+end
+
+ExpeditionLogicServer._is_awaited_client = function (self, player)
+	if not player:is_human_controlled() then
+		return false
+	end
+
+	return true
+end
+
+ExpeditionLogicServer._server_request_clients_load_and_spawn_location = function (self)
+	local players_spawned_next_location = self._players_spawned_next_location
+	local current_section_index = self._current_section_index
+	local game_session_manager = Managers.state.game_session
+
+	for _, player in pairs(Managers.player:players()) do
+		if self:_is_awaited_client(player) then
+			local unique_id = player:unique_id()
+
+			if players_spawned_next_location[unique_id] == nil then
+				players_spawned_next_location[unique_id] = false
+
+				local peer_id = player:peer_id()
+
+				game_session_manager:send_rpc_client("rpc_load_and_spawn_location", peer_id, current_section_index)
+			end
+		end
+	end
+end
+
+ExpeditionLogicServer._server_all_clients_spawned_next_location = function (self)
+	local players_spawned_next_location = self._players_spawned_next_location
+
+	for _, player in pairs(Managers.player:players()) do
+		if self:_is_awaited_client(player) and players_spawned_next_location[player:unique_id()] == false then
+			return false
+		end
+	end
+
+	return true
+end
+
+ExpeditionLogicServer._server_start_level_registration = function (self)
+	local levels_spawner = self._levels_spawner
+	local current_level_id = Managers.state.unit_spawner:current_level_id()
+
+	levels_spawner:server_assign_register_spawned_levels(current_level_id)
+	self:_server_sync_registered_levels_with_clients()
+end
+
+ExpeditionLogicServer._server_enter_level_registration = function (self)
+	self:_server_start_level_registration()
+	self:_set_server_level_state(SERVER_LEVEL_STATES.registering_levels)
 end
 
 ExpeditionLogicServer._server_assign_teleporter_unit = function (self, teleporter_unit)
@@ -375,6 +444,7 @@ ExpeditionLogicServer._clear_location_systems = function (self)
 	end
 
 	Managers.state.minion_spawn:despawn_all_minions()
+	Managers.state.minion_death:delete_units()
 	Managers.state.pacing:reset()
 	ExpeditionLogicServer.super._clear_location_systems(self)
 end
@@ -698,7 +768,13 @@ ExpeditionLogicServer.update = function (self, dt, t)
 	self:_server_update_safe_zone()
 
 	local connection = Managers.connection
-	local num_connections = connection:is_host() and connection:num_connections() or 0
+	local social_service = Managers.data_service.social
+	local num_connections = 0
+
+	if not social_service:is_in_singleplay() and connection:is_host() then
+		num_connections = connection:num_connections()
+	end
+
 	local num_clients_in_session = Managers.state.game_session:num_clients_in_session()
 	local wait_for_joining_players = num_connections ~= num_clients_in_session
 	local state = self._server_level_state
@@ -738,39 +814,15 @@ ExpeditionLogicServer.update = function (self, dt, t)
 
 			self:_load_location_by_index(next_section_index)
 			self._levels_spawner:start_level_loading()
-			self:_set_server_level_state(SERVER_LEVEL_STATES.wait_on_clients_level_loading_and_spawn)
 			table.clear(self._players_spawned_next_location)
+			self:_set_server_level_state(SERVER_LEVEL_STATES.wait_on_clients_level_loading_and_spawn)
 		else
 			self:_set_server_level_state(SERVER_LEVEL_STATES.idle)
 		end
 	elseif state == SERVER_LEVEL_STATES.wait_on_clients_level_loading_and_spawn then
-		local player_manager = Managers.player
-		local players = player_manager:players()
-		local all_clients_done = true
-		local players_spawned_next_location = self._players_spawned_next_location
+		self:_server_request_clients_load_and_spawn_location()
 
-		for _, player in pairs(players) do
-			local valid_player = player:is_human_controlled()
-
-			if valid_player then
-				local unique_id = player:unique_id()
-
-				if players_spawned_next_location[unique_id] == nil then
-					players_spawned_next_location[unique_id] = false
-
-					local peer_id = player:peer_id()
-					local current_section_index = self._current_section_index
-
-					Managers.state.game_session:send_rpc_client("rpc_load_and_spawn_location", peer_id, current_section_index)
-
-					all_clients_done = false
-				elseif players_spawned_next_location[unique_id] == false then
-					all_clients_done = false
-				end
-			end
-		end
-
-		if all_clients_done then
+		if self:_server_all_clients_spawned_next_location() then
 			self:_set_server_level_state(SERVER_LEVEL_STATES.server_spawn_loaded_levels)
 		end
 	elseif state == SERVER_LEVEL_STATES.server_spawn_loaded_levels then
@@ -785,17 +837,21 @@ ExpeditionLogicServer.update = function (self, dt, t)
 		if levels_spawner:done() then
 			levels_spawner:clear_done()
 
-			local current_level_id = Managers.state.unit_spawner:current_level_id()
+			local start_procgen = false
 
-			levels_spawner:server_assign_register_spawned_levels(current_level_id)
-			self:_server_sync_registered_levels_with_clients()
-			self:_set_server_level_state(SERVER_LEVEL_STATES.registering_levels)
+			if start_procgen then
+				self:_set_server_level_state(SERVER_LEVEL_STATES.start_procgen_location)
+			else
+				self:_server_enter_level_registration()
+			end
 		end
 	elseif state == SERVER_LEVEL_STATES.registering_levels then
 		local done = self._levels_spawner:register_spawned_levels_sliced()
 
 		if done then
-			self:_set_server_level_state(SERVER_LEVEL_STATES.wait_on_server_sparse_graph_connected)
+			local next_state = SERVER_LEVEL_STATES.wait_on_server_sparse_graph_connected
+
+			self:_set_server_level_state(next_state)
 		end
 	elseif state == SERVER_LEVEL_STATES.wait_on_server_sparse_graph_connected then
 		local nav_mesh_manager = Managers.state.nav_mesh
@@ -985,7 +1041,6 @@ ExpeditionLogicServer._disable_enemies_outside = function (self, unit)
 	local enemy_minions = side:alive_units_by_tag("enemy", "minion")
 	local num_enemy_minions = enemy_minions.size
 	local unit_to_navigation_extension_map = navigation_system:unit_to_extension_map()
-	local unit_to_perception_extension_map = perception_system:unit_to_extension_map()
 	local unit_to_behavior_extension_map = behavior_system:unit_to_extension_map()
 	local minions_to_despawn = self._minion_despawn_queue
 
@@ -997,10 +1052,9 @@ ExpeditionLogicServer._disable_enemies_outside = function (self, unit)
 
 			if not Unit.is_point_inside_volume(unit, "c_volume", enemy_position) then
 				local navigation_extension = unit_to_navigation_extension_map[minion_unit]
-				local perception_extension = unit_to_perception_extension_map[minion_unit]
 
 				unit_to_behavior_extension_map[minion_unit]:set_brain_enabled(false)
-				perception_system:disable_update_function("MinionPerceptionExtension", "update", minion_unit, perception_extension)
+				perception_system:disable_update_function(minion_unit, "update")
 				navigation_extension:stop()
 				navigation_extension:set_enabled(false)
 
@@ -1008,6 +1062,44 @@ ExpeditionLogicServer._disable_enemies_outside = function (self, unit)
 			end
 		end
 	end
+end
+
+ExpeditionLogicServer._make_players_untargetable = function (self)
+	local unit_untargetable_id = self._unit_untargetable_id
+	local perception_system = Managers.state.extension:system("perception_system")
+	local side_system = Managers.state.extension:system("side_system")
+	local side_name = side_system:get_default_player_side_name()
+	local side = side_system:get_side_from_name(side_name)
+	local valid_player_units = side.valid_player_units
+
+	for i = 1, #valid_player_units do
+		local player_unit = valid_player_units[i]
+
+		unit_untargetable_id[player_unit] = perception_system:set_untargetable(self, player_unit)
+	end
+
+	Managers.event:register(self, "player_unit_spawned", "_on_player_unit_spawned")
+end
+
+ExpeditionLogicServer._make_players_targetable = function (self)
+	local perception_system = Managers.state.extension:system("perception_system")
+	local unit_untargetable_id = self._unit_untargetable_id
+
+	for unit, id in pairs(unit_untargetable_id) do
+		if ALIVE[unit] then
+			perception_system:set_targetable(unit, id)
+		end
+
+		unit_untargetable_id[unit] = nil
+	end
+
+	Managers.event:unregister(self, "player_unit_spawned")
+end
+
+ExpeditionLogicServer._on_player_unit_spawned = function (self, player)
+	local player_unit = player.player_unit
+
+	self._unit_untargetable_id[player_unit] = self._perception_system:set_untargetable(self, player_unit)
 end
 
 ExpeditionLogicServer.expedition_block_player_respawn = function (self)
@@ -1046,6 +1138,8 @@ ExpeditionLogicServer.set_use_safe_zone_respawn_beacons = function (self, active
 end
 
 ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_area_unit)
+	ExpeditionLogicServer.super:event_expedition_airlock_sealed()
+
 	local current_section = self._expedition[self._current_section_index]
 	local transition_level = current_section.connector_exit_level
 
@@ -1058,8 +1152,12 @@ ExpeditionLogicServer.event_expedition_airlock_sealed = function (self, hostile_
 	end
 
 	if not self:_is_any_human_controlled_player_in_exit_airlock() then
-		for unit, _ in pairs(self._transition_activator_units) do
-			Unit.flow_event(unit, "lua_reactivate_extract_event")
+		if not current_section.extraction_level then
+			Managers.state.game_mode:fail_game_mode("exit_door_closed")
+		else
+			for unit, _ in pairs(self._transition_activator_units) do
+				Unit.flow_event(unit, "lua_reactivate_extract_event")
+			end
 		end
 
 		return
@@ -1124,8 +1222,7 @@ end
 
 ExpeditionLogicServer.event_expedition_resumed = function (self)
 	ExpeditionLogicServer.super.event_expedition_resumed(self)
-	self:_set_pacing(true)
-	Managers.state.pacing:set_new_heat_stage(self._current_section_index)
+	self:_make_players_targetable()
 
 	local mutator_manager = Managers.state.mutator
 	local currently_active_mutators = mutator_manager:all_activated_mutators()
@@ -1185,9 +1282,12 @@ end
 ExpeditionLogicServer.event_expedition_teleport_players_from_store = function (self, level, exit_safe_zone_location_unit)
 	self._exit_safe_zone_location_unit = exit_safe_zone_location_unit
 
+	local location_index = self._current_section_index
+
+	Managers.event:trigger("event_expedition_reached_location", location_index)
+
 	local loot_handler = self._loot_handler
 	local currency_handler = self._currency_handler
-	local location_index = self._current_section_index
 	local gameplay_time = Managers.time:time("gameplay")
 	local time_remaining = self._timer_handler:get_remaining_duration()
 	local total_loot = loot_handler:collected_team_loot()
@@ -1200,6 +1300,14 @@ ExpeditionLogicServer.event_expedition_teleport_players_from_store = function (s
 
 		Managers.telemetry_events:expedition_reached_location_index(player, location_index, gameplay_time, time_remaining, total_loot, loot_handler:collected_player_loot_telemetry_only(peer_id), currency_handler:collected_player_currency(peer_id), player_health)
 	end
+
+	self:_set_pacing(true)
+
+	if Managers.state.pacing:heat_active() then
+		Managers.state.pacing:set_new_heat_stage(self._current_section_index)
+	end
+
+	self:_make_players_untargetable()
 end
 
 ExpeditionLogicServer._is_any_human_controlled_player_in_exit_airlock = function (self)
@@ -1288,7 +1396,7 @@ ExpeditionLogicServer._server_teleport_players_and_objects_to_target = function 
 
 							destination_position = absolute_position
 						else
-							destination_position = POSITION_LOOKUP[target_unit]
+							destination_position = POSITION_LOOKUP[target_unit] or Unit.world_position(target_unit, 1)
 						end
 
 						local teleport_component = Blackboard.write_component(companion_blackboard, "teleport")
@@ -1335,7 +1443,9 @@ ExpeditionLogicServer._server_teleport_players_and_objects_to_target = function 
 				if player_position and Level.is_point_inside_volume(transition_level, volume_name, player_position) then
 					PlayerMovement.teleport(player, absolute_position, absolute_rotation, keep_velocity)
 				elseif not is_human_controlled or is_dead then
-					PlayerMovement.teleport(player, POSITION_LOOKUP[target_unit], player_rotation, keep_velocity)
+					local position = POSITION_LOOKUP[target_unit] or Unit.world_position(target_unit, 1)
+
+					PlayerMovement.teleport(player, position, player_rotation, keep_velocity)
 				else
 					teleport_companions = false
 
@@ -1431,8 +1541,10 @@ ExpeditionLogicServer.destroy = function (self)
 	event_manager:unregister(self, "event_start_location_safe_zone_door_defence_sequence")
 	event_manager:unregister(self, "event_end_location_safe_zone_door_defence_sequence")
 	event_manager:unregister(self, "event_expedition_validate_game_mode_completion")
+	event_manager:unregister(self, "event_expedition_buff_pickup_collected")
 	event_manager:unregister(self, "event_mission_objective_start")
 	event_manager:unregister(self, "expedition_mark_level_complete")
+	event_manager:unregister(self, "expedition_enable_exit_and_extraction")
 
 	local server_rpcs = ExpeditionLogicSettings.server_rpcs
 
@@ -1473,11 +1585,18 @@ ExpeditionLogicServer._set_pacing_time = function (self)
 end
 
 ExpeditionLogicServer._setup_roamer_groups = function (self)
+	local pacing_settings = self._expedition_template.pacing_settings
+	local current_heat_stage_name = Managers.state.pacing:current_stage_name() or "none"
 	local main_path_manager = Managers.state.main_path
-	local roamer_group_count = #main_path_manager:group_locations()
-	local roamer_groups_to_spawn = Managers.state.pacing:get_minimum_roamer_groups() - roamer_group_count
+	local physical_roamer_group_count = #main_path_manager:group_locations()
+	local stage_multiplier = pacing_settings.roamer_multiplier_per_heat_stage and pacing_settings.roamer_multiplier_per_heat_stage[current_heat_stage_name] or 1
+	local amount_indexed_by_resistance = pacing_settings.minimum_roamer_groups and Managers.state.difficulty:get_table_entry_by_challenge(pacing_settings.minimum_roamer_groups) or 30
+	local wanted_roamer_group_count = math.round(amount_indexed_by_resistance * stage_multiplier)
+	local roamer_groups_to_generate = math.max(wanted_roamer_group_count - physical_roamer_group_count, 0)
 
-	for i = 1, roamer_groups_to_spawn do
+	_log("Roamer %s groups added (%s wanted), %s generated & %s from location", roamer_groups_to_generate + physical_roamer_group_count, wanted_roamer_group_count, roamer_groups_to_generate, physical_roamer_group_count)
+
+	for i = 1, roamer_groups_to_generate do
 		main_path_manager:add_group_location(Vector3(math.random(-92, 92), math.random(-92, 92), 0))
 	end
 end
@@ -1487,28 +1606,18 @@ ExpeditionLogicServer.pacing_update = function (self, dt, t)
 		return 0
 	end
 
-	local rates = self:_get_pacing_rates()
+	local rates = self._pacing_rates
 	local progress = self:_calculate_progress(rates)
 
 	return dt * progress
 end
 
-ExpeditionLogicServer._get_pacing_rates = function (self)
-	local settings = self._expedition_template.pacing_settings
-
-	return {
-		base_rate = settings.progress_base_rate.numerator / settings.progress_base_rate.denominator,
-		per_second = settings.progress_rate_per_second.numerator / settings.progress_rate_per_second.denominator,
-		per_location = settings.progress_rate_per_location,
-	}
-end
-
 ExpeditionLogicServer._calculate_progress = function (self, rates)
 	local time_elapsed = Managers.time:time("gameplay") - self._pacing_start_time
-	local location_progress = self._current_section_index * rates.per_location
+	local location_progress = (self._current_section_index - 1) * rates.per_location
 	local time_progress = time_elapsed * rates.per_second
 
-	return (location_progress + time_progress) * rates.base_rate
+	return (1 + location_progress + time_progress) * rates.base_rate
 end
 
 ExpeditionLogicServer.on_player_unit_despawn = function (self, player)
@@ -1758,6 +1867,18 @@ ExpeditionLogicServer.expedition_transition_activator_started = function (self, 
 	end
 end
 
+ExpeditionLogicServer.expedition_disable_transition_activators = function (self)
+	for unit, _ in pairs(self._transition_activator_units) do
+		Unit.flow_event(unit, "lua_disable_transition_activator")
+	end
+end
+
+ExpeditionLogicServer.expedition_enable_active_transition_activators = function (self)
+	for unit, _ in pairs(self._transition_activator_units) do
+		Unit.flow_event(unit, "expedition_enable_active_transition_activators")
+	end
+end
+
 ExpeditionLogicServer.expedition_register_transition_activator = function (self, unit)
 	self._transition_activator_units[unit] = true
 end
@@ -1887,13 +2008,15 @@ ExpeditionLogicServer._players_in_extraction_zone = function (self, volume_unit)
 	return any_player_in_extraction_zone, players_in_extraction_zone
 end
 
-ExpeditionLogicServer.player_extraction_loot_penalty_values = function (self)
-	local expedition_template = self._expedition_template
-	local loot_deduction_settings = expedition_template and expedition_template.loot_deduction_settings
-	local player_extraction_penalty_multiplier = loot_deduction_settings and loot_deduction_settings.player_extraction_penalty_multiplier or 0.25
-	local player_penalty_increment = loot_deduction_settings and loot_deduction_settings.player_extraction_penalty_multiplier or 0.5
+ExpeditionLogicServer.player_extraction_loot_bonus_multiplier = function (self, num_players)
+	local player_extraction_bonus_multiplier = {
+		1,
+		1.1,
+		1.15,
+		1.2,
+	}
 
-	return player_extraction_penalty_multiplier, player_penalty_increment
+	return player_extraction_bonus_multiplier[num_players]
 end
 
 ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function (self, volume_unit)
@@ -1914,22 +2037,25 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 			player_extracted_count = player_extracted_count + 1
 		end
 
+		player_extracted_count = 4
+
+		local round_to_multiple_of = 5
+		local loot_bonus_multiplier = self:player_extraction_loot_bonus_multiplier(player_extracted_count)
+
+		loot_bonus_multiplier = loot_bonus_multiplier or 1
+
 		local collected_team_loot = loot_handler:collected_team_loot()
-		local player_extraction_loot_penalty_multiplier, player_penalty_increment = self:player_extraction_loot_penalty_values()
-		local loot_deduction_per_player = collected_team_loot * player_extraction_loot_penalty_multiplier
-		local loot_deduction_per_player_rounded = math.round_to_closest_multiple_toward_zero(loot_deduction_per_player, player_penalty_increment)
-		local human_players = Managers.player:human_players()
-		local num_human_players = table.size(human_players)
-		local num_players_not_extracting = num_human_players - player_extracted_count
-		local lost_loot_amount = math.round_down_with_precision(num_players_not_extracting * loot_deduction_per_player_rounded)
-		local team_loot_amount_left = collected_team_loot - lost_loot_amount
+		local team_loot_amount = collected_team_loot * loot_bonus_multiplier
+		local team_loot_rounded = math.round_to_closest_multiple_toward_zero(team_loot_amount, round_to_multiple_of)
 		local loot_in_extraction_zone = self:_loot_in_extraction_zone(volume_unit)
-		local total_extracted_loot = math.round_down_with_precision(team_loot_amount_left + loot_in_extraction_zone)
+		local extraction_zone_loot_amount = loot_in_extraction_zone * loot_bonus_multiplier
+		local extraction_zone_loot_rounded = math.round_to_closest_multiple_toward_zero(extraction_zone_loot_amount, round_to_multiple_of)
+		local total_extracted_loot = math.round_down_with_precision(team_loot_rounded + extraction_zone_loot_rounded)
 
 		self._telemetry_end_game_result = {
+			lost_loot_amount = 0,
 			extracted_players = extracted_players,
 			extracted_loot_amount = total_extracted_loot,
-			lost_loot_amount = lost_loot_amount,
 		}
 
 		Managers.stats:record_team("hook_expedition_loot_collected_by_team", total_extracted_loot)
@@ -1946,6 +2072,10 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 	else
 		Managers.state.game_mode:fail_game_mode("extraction_timeout")
 	end
+end
+
+ExpeditionLogicServer.event_expedition_grant_buff = function (self, identifier, interactor_unit)
+	return
 end
 
 ExpeditionLogicServer.event_mission_objective_start = function (self, objective)

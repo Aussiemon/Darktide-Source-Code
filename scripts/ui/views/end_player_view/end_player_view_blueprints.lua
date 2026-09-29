@@ -1,17 +1,17 @@
 ﻿-- chunkname: @scripts/ui/views/end_player_view/end_player_view_blueprints.lua
 
 local Colors = require("scripts/utilities/ui/colors")
+local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local Text = require("scripts/utilities/ui/text")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local Text = require("scripts/utilities/ui/text")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local ExpeditionService = require("scripts/managers/data_service/services/expedition_service")
 local blueprint_styles = ViewStyles.blueprints
 local ITEM_TYPES = UISettings.ITEM_TYPES
 local folded_card_size = {
@@ -902,7 +902,7 @@ end_player_view_blueprints.weapon = {
 			{
 				pass_type = "texture",
 				style_id = "icon",
-				value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+				value = "content/ui/materials/icons/weapons/hud/debug_primary",
 				value_id = "icon",
 				style = {
 					horizontal_alignment = "center",
@@ -2007,7 +2007,7 @@ end_player_view_blueprints.expedition = {
 
 		local complete_remaining_space = ViewStyles.card_fully_expanded_height - offset_y - 15
 		local remaining_space = complete_remaining_space
-		local remaining_all_progress_count = #all_unlock_progress
+		local remaining_all_progress_count = all_unlock_progress and #all_unlock_progress or 0
 		local used_indexes = {}
 		local affected_nodes = {}
 
@@ -2325,7 +2325,7 @@ end_player_view_blueprints.expedition = {
 		local style = widget.style
 		local node_name_played = config.node_name_played and Localize(config.node_name_played)
 
-		content.label = string.format("%s\n%s %s", Localize("loc_expedition_eor_title"), Localize("loc_grid_point"), node_name_played)
+		content.label = node_name_played and string.format("%s\n%s %s", Localize("loc_expedition_eor_title"), Localize("loc_grid_point"), node_name_played) or ""
 
 		local all_unlock_progress = config.all_unlock_progress
 		local loot_collected = config.loot_collected
@@ -2338,22 +2338,22 @@ end_player_view_blueprints.expedition = {
 		content.dim_out_animation = "expedition_card_dim_out_content"
 
 		local pass_styles = {
-			widget.style.currency_icon_background,
-			widget.style.currency_icon,
-			widget.style.currency_label,
-			widget.style.currency_text,
-			widget.style.expedition_resume_text,
+			style.currency_icon_background,
+			style.currency_icon,
+			style.currency_label,
+			style.currency_text,
+			style.expedition_resume_text,
 		}
 
 		for i = 1, #config.affected_nodes do
 			local affected_node = config.affected_nodes[i]
 
-			pass_styles[#pass_styles + 1] = widget.style["node_name_" .. affected_node]
+			pass_styles[#pass_styles + 1] = style["node_name_" .. affected_node]
 		end
 
 		for i = 1, #config.used_indexes do
-			pass_styles[#pass_styles + 1] = widget.style["progress_text_" .. i]
-			pass_styles[#pass_styles + 1] = widget.style["progress_value_" .. i]
+			pass_styles[#pass_styles + 1] = style["progress_text_" .. i]
+			pass_styles[#pass_styles + 1] = style["progress_value_" .. i]
 		end
 
 		for i = 1, #pass_styles do

@@ -41,14 +41,13 @@ ActionPlaceForceField._place_unit = function (self, action_settings, position, r
 		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
 
-	local use_ability_charge = action_settings.use_ability_charge
+	local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
 
-	if use_ability_charge then
+	if consume_ability_usage_cost then
 		local ability_extension = self._ability_extension
-		local ability_type = action_settings.ability_type
 
-		self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges(ability_type)
-		self._ability_charges_used = self:_use_ability_charge()
+		self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges(self._ability_type)
+		self._ability_charges_used = self:_consume_ability_usage_cost()
 	end
 
 	local owner_unit = self._player_unit
@@ -56,8 +55,7 @@ ActionPlaceForceField._place_unit = function (self, action_settings, position, r
 	local husk_unit_name = action_settings.functional_unit
 	local unit_template = "psyker_force_field"
 	local material, shape_override
-	local ability_type = action_settings.ability_type
-	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, shape_override, ability_type)
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, shape_override, self._ability_type)
 
 	self._force_field_unit = unit
 	self._placed_unit = true

@@ -260,9 +260,13 @@ WarpCharge.start_venting = function (t, player, warp_charge_component)
 	end
 
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
+	local player_unit = player.player_unit
+	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local buff_vent_speed = stat_buffs.vent_warp_charge_speed or 1
 	local base_vent_interval = base_warp_charge_template.vent_interval
 	local vent_interval_modifier = weapon_warp_charge_template.vent_interval_modifier or 1
-	local vent_interval = base_vent_interval * vent_interval_modifier
+	local vent_interval = base_vent_interval * vent_interval_modifier * buff_vent_speed
 
 	warp_charge_component.state = "decreasing"
 	warp_charge_component.remove_at_t = t + vent_interval

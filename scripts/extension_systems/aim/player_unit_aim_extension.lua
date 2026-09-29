@@ -47,6 +47,8 @@ end
 
 PlayerUnitAimExtension.state_machine_changed = function (self, unit)
 	self._aim_constraint_variable = Unit.animation_find_constraint_target(unit, self._aim_constraint_target_name)
+
+	self._idle_fullbody_animation_control:state_machine_changed(unit)
 end
 
 PlayerUnitAimExtension.game_object_initialized = function (self, session, object_id)
@@ -62,11 +64,12 @@ PlayerUnitAimExtension.fixed_update = function (self, unit, dt, t, frame)
 		self._aim_animation_control:update(dt, t)
 	end
 
-	self._idle_fullbody_animation_control:update(dt, t)
 	self._look_delta_animation_control:update(dt, t)
 end
 
 PlayerUnitAimExtension.update = function (self, unit, dt, t)
+	self._idle_fullbody_animation_control:update(dt, t)
+
 	if not self._aim_constraint_variable then
 		return
 	end

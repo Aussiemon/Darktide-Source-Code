@@ -12,5 +12,6 @@ end
 
 _create_breed_summon_entry("scripts/settings/breed/breed_summon_templates/chaos/chaos_ogryn_houndmaster_summon_template")
 _create_breed_summon_entry("scripts/settings/breed/breed_summon_templates/renegade/renegade_radio_operator_summon_template")
+_create_breed_summon_entry("scripts/settings/breed/breed_summon_templates/renegade/renegade_wizard_summon_template")
 
 return settings("BreedSummonTemplates", breed_summon_templates)

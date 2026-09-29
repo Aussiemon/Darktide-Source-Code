@@ -325,7 +325,7 @@ Styles.list_panel.panel_button_highlight = {
 	},
 }
 Styles.list_panel.panel_button_campaign_title = {
-	font_size = 22,
+	font_size = 18,
 	font_type = "mono_tide_medium",
 	horizontal_alignment = "left",
 	text_horizontal_alignment = "center",

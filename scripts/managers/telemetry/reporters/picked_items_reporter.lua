@@ -7,10 +7,6 @@ PickedItemsReporter.init = function (self)
 	self._reports = {}
 end
 
-PickedItemsReporter.update = function (self, dt, t)
-	return
-end
-
 PickedItemsReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

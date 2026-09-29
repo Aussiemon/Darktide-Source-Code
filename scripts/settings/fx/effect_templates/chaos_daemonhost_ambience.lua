@@ -7,6 +7,14 @@ local STAGES = ChaosDaemonhostSettings.stages
 local WWISE_DAEMONHOST_RANGE = "daemonhost_range"
 local WWISE_DAEMONHOST_STAGE = "daemonhost_stage"
 local WWISE_DEFAULT_DAEMONHOST_RANGE = 100
+local BREED_LIGHT_COLOR_OVERRIDES = {}
+
+BREED_LIGHT_COLOR_OVERRIDES.chaos_daemonhost_torment = {
+	247,
+	91,
+	0,
+}
+
 local BODY_EMISSIVE_MATERIAL = "body"
 local BODY_EMISSIVE_MATERIAL_VARIABLE = "emissive_intensity_scalar"
 local SFX_IDLE_START = "wwise/events/minions/play_enemy_daemonhost_ambience_idle"
@@ -160,7 +168,8 @@ function _switch_stage(template_data, template_context, new_stage)
 		Light.set_falloff_start(light, radius_min)
 		Light.set_falloff_end(light, radius_max)
 
-		local light_color = ambience_settings.color
+		local breed = template_data.breed
+		local light_color = breed and BREED_LIGHT_COLOR_OVERRIDES[breed.name] or ambience_settings.color
 		local color_filter = Vector3(light_color[1] / 255, light_color[2] / 255, light_color[3] / 255)
 
 		Light.set_color_filter(light, color_filter)

@@ -5,6 +5,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local Text = require("scripts/utilities/ui/text")
 local CampaignSettings = require("scripts/settings/campaign/campaign_settings")
 local Danger = require("scripts/utilities/danger")
+local MissionBoard = require("scripts/backend/mission_board")
 local MissionBoardService = class("MissionBoardService")
 
 MissionBoardService.init = function (self, backend_interface)
@@ -51,6 +52,7 @@ local function format_missions_data(result)
 		local flags = mission.flags
 
 		flags.happening_mission = flags.event and flags.altered
+		mission.campaign = MissionBoard.campaign_from_flags(flags)
 	end
 
 	return missions_data
@@ -167,6 +169,10 @@ end
 
 MissionBoardService.get_filtered_missions_data = function (self)
 	return self._backend_interface.mission_board:get_filtered_missions_data()
+end
+
+MissionBoardService.get_filtered_campaigns_data = function (self)
+	return self._backend_interface.mission_board:get_filtered_campaigns_data()
 end
 
 MissionBoardService.has_cached_progression_data = function (self)
@@ -314,29 +320,7 @@ MissionBoardService._build_campaign_order = function (self)
 end
 
 MissionBoardService._build_progression_data_tree = function (self, progression_data)
-	local tree = {}
-
-	for _, entry in ipairs(progression_data) do
-		local type = entry.type
-		local key = entry.key
-		local category = entry.category or "default"
-
-		if not tree[type] then
-			tree[type] = {}
-		end
-
-		if not tree[type][category] then
-			tree[type][category] = {}
-		end
-
-		if tree[type][category][key] then
-			Log.warning("MissionBoardService", "Duplicate progression entry found for type: %s, key: %s, category: %s", type, key, category)
-		end
-
-		tree[type][category][key] = entry
-	end
-
-	return tree
+	return MissionBoard.build_tree(progression_data)
 end
 
 MissionBoardService._progression_entry = function (self, type, key, optional_category)
@@ -359,8 +343,8 @@ MissionBoardService.index_in_campaign = function (self, type, key, category, cam
 	end
 end
 
-MissionBoardService.get_block_reason = function (self, type, key, optional_category, force_unknown)
-	if self:is_key_unlocked(type, key, optional_category) then
+MissionBoardService.get_block_reason = function (self, type, key, optional_category, force_unknown, campaign)
+	if self:is_key_unlocked(type, key, optional_category, campaign) then
 		return
 	end
 
@@ -379,6 +363,11 @@ MissionBoardService.get_block_reason = function (self, type, key, optional_categ
 	local required_campaign
 	local missing_prerequisites = {}
 	local prerequisites = progression_entry.prerequisites
+
+	if campaign ~= nil and progression_entry.prerequisites_by_campaign ~= nil then
+		prerequisites = progression_entry.prerequisites_by_campaign[campaign]
+	end
+
 	local prerequisite_count = prerequisites and #prerequisites or 0
 
 	for i = 1, prerequisite_count do
@@ -388,7 +377,7 @@ MissionBoardService.get_block_reason = function (self, type, key, optional_categ
 		local p_category = prerequisite.category
 		local p_campaign = prerequisite.campaign
 
-		if not self:is_key_completed(p_type, p_key, p_category) then
+		if not self:is_key_completed(p_type, p_key, p_category, p_campaign) then
 			local index_in_campaign = self:index_in_campaign(p_type, p_key, p_category, p_campaign)
 
 			if index_in_campaign then
@@ -426,16 +415,32 @@ MissionBoardService.get_block_reason = function (self, type, key, optional_categ
 	}
 end
 
-MissionBoardService.is_key_completed = function (self, type, key, optional_category)
+MissionBoardService.is_key_completed = function (self, type, key, optional_category, campaign)
 	local progression_entry = self:_progression_entry(type, key, optional_category)
 
-	return progression_entry ~= nil and progression_entry.completed
+	if progression_entry == nil then
+		return false
+	end
+
+	if campaign ~= nil and progression_entry.completed_by_campaign ~= nil then
+		return progression_entry.completed_by_campaign[campaign] == true
+	end
+
+	return progression_entry.completed
 end
 
-MissionBoardService.is_key_unlocked = function (self, type, key, optional_category)
+MissionBoardService.is_key_unlocked = function (self, type, key, optional_category, campaign)
 	local progression_entry = self:_progression_entry(type, key, optional_category)
 
-	return progression_entry ~= nil and progression_entry.unlocked
+	if progression_entry == nil then
+		return false
+	end
+
+	if campaign ~= nil and progression_entry.unlocked_by_campaign ~= nil then
+		return progression_entry.unlocked_by_campaign[campaign] == true
+	end
+
+	return progression_entry.unlocked
 end
 
 MissionBoardService.get_ordered_campaign_missions = function (self)

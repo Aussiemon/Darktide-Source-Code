@@ -137,8 +137,8 @@ local create_notification_message = {
 					color = Color.white(255, true),
 					material_values = {},
 				},
-				visibility_function = function (content)
-					return content.icon
+				visibility_function = function (content, style)
+					return content.icon and style.material_values.use_placeholder_texture == 0
 				end,
 			},
 			{
@@ -317,6 +317,7 @@ local create_notification_message = {
 
 		widget.content.icon = element.icon
 		widget.style.icon.material_values = element.icon_material_values or {}
+		widget.style.icon.material_values.use_placeholder_texture = 1
 		element.color = element.color or Color.terminal_background(255 * ConstantElementNotificationFeedSettings.default_alpha_value, true)
 		widget.style.background.material_values.background_color = _convert_to_material_color(element.color)
 		widget.style.background.material_values.line_color = _convert_to_material_color(element.line_color)

@@ -95,7 +95,7 @@ templates.tg_player_short_ability_cooldown = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = -0.6,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.6,
 	},
 }
 templates.tg_player_remove_one_combat_ability_charge = {

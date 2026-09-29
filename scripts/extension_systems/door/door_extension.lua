@@ -70,7 +70,7 @@ DoorExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._current_state, self._is_animating)
 end
 
-DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, control_panels_display_start_event, ignore_broadphase)
 	local unit = self._unit
 
 	self._type = door_type
@@ -90,7 +90,7 @@ DoorExtension.setup_from_component = function (self, door_type, start_state, ope
 	self._always_update = ignore_broadphase
 
 	if self._is_server then
-		self:_spawn_control_panels(control_panel_props, control_panels_active)
+		self:_spawn_control_panels(control_panel_props, control_panels_active, control_panels_display_start_event)
 	end
 
 	if door_type == TYPES.two_states then
@@ -117,7 +117,7 @@ DoorExtension.extensions_ready = function (self)
 	end
 end
 
-DoorExtension._spawn_control_panels = function (self, control_panel_props, control_panels_active)
+DoorExtension._spawn_control_panels = function (self, control_panel_props, control_panels_active, control_panels_display_start_event)
 	if #control_panel_props == 0 then
 		return
 	end
@@ -154,6 +154,12 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 
 		door_control_panel_extension:register_door(unit)
 		door_control_panel_extension:set_active(control_panels_active)
+
+		local door_control_panel_interactee_extension = ScriptUnit.extension(control_panel_unit, "interactee_system")
+
+		if control_panels_display_start_event then
+			door_control_panel_interactee_extension:set_display_start_event_override(true)
+		end
 
 		self._control_panel_units[#self._control_panel_units + 1] = control_panel_unit
 	end

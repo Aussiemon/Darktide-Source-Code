@@ -539,15 +539,61 @@ OptionsView._on_navigation_input_changed = function (self)
 	end
 end
 
+OptionsView._focused_settings_entry_id = function (self)
+	local widget = self._selected_settings_widget
+
+	if not widget then
+		local widgets = self._navigation_widgets and self._navigation_widgets[SETTINGS_GRID]
+		local row = self._selected_navigation_row_index
+
+		widget = widgets and row and widgets[row]
+	end
+
+	local entry = widget and widget.content and widget.content.entry
+
+	if not entry then
+		return nil
+	end
+
+	return entry.id or entry.display_name
+end
+
+OptionsView._restore_settings_navigation = function (self, setting_id)
+	local widgets = self._settings_content_widgets
+
+	if not widgets or not setting_id then
+		return false
+	end
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+		local entry = widget.content.entry
+		local id = entry and (entry.id or entry.display_name)
+
+		if id == setting_id then
+			self:_set_selected_navigation_widget(widget)
+
+			return true
+		end
+	end
+
+	return false
+end
+
 OptionsView._reset_options_view = function (self, reset_all)
+	local restore_setting_id
+
+	if not reset_all and self._selected_navigation_column_index == SETTINGS_GRID then
+		restore_setting_id = self:_focused_settings_entry_id()
+	end
+
 	if reset_all then
 		self._selected_category = nil
 		self._selected_settings_widget = nil
 		self._selected_navigation_row_index = nil
 		self._selected_navigation_column_index = nil
+		restore_setting_id = nil
 	end
-
-	self._selected_category_widget = nil
 
 	self:_setup_settings_config(self._options_templates)
 	self:_setup_category_config(self._options_templates)
@@ -557,13 +603,30 @@ OptionsView._reset_options_view = function (self, reset_all)
 
 		for i = 1, #self._category_content_widgets do
 			local widget = self._category_content_widgets[i]
+			local is_current = widget.content.entry.display_name == self._selected_category
 
-			widget.content.hotspot.is_focused = widget.content.entry.display_name == self._selected_category
-			widget.content.hotspot.is_selected = widget.content.entry.display_name == self._selected_category
+			widget.content.hotspot.is_selected = is_current
+			widget.content.hotspot.is_focused = false
+
+			if is_current then
+				self._selected_category_widget = widget
+			end
 		end
 	end
 
-	self:_update_grid_navigation_selection()
+	if self._selected_category then
+		self:present_category_widgets(self._selected_category, restore_setting_id ~= nil)
+	end
+
+	if restore_setting_id and not self._using_cursor_navigation then
+		local restored = self:_restore_settings_navigation(restore_setting_id)
+
+		if not restored and self._selected_category_widget then
+			self:_set_selected_navigation_widget(self._selected_category_widget)
+		end
+	else
+		self:_update_grid_navigation_selection()
+	end
 end
 
 OptionsView.settings_grid_length = function (self)
@@ -654,7 +717,7 @@ OptionsView._update_grid_navigation_selection = function (self)
 	end
 end
 
-OptionsView.present_category_widgets = function (self, category)
+OptionsView.present_category_widgets = function (self, category, skip_navigation_update)
 	self._selected_category = category
 
 	local settings_category_widgets = self._settings_category_widgets
@@ -687,7 +750,9 @@ OptionsView.present_category_widgets = function (self, category)
 		self._navigation_widgets[SETTINGS_GRID] = widgets
 		self._navigation_grids[SETTINGS_GRID] = self._settings_content_grid
 
-		self:_update_grid_navigation_selection()
+		if not skip_navigation_update then
+			self:_update_grid_navigation_selection()
+		end
 	end
 end
 
@@ -1046,6 +1111,7 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 						alias_name = setting.alias_name,
 						service_type = setting.service_type,
 						display_name = setting.display_name,
+						display_text = setting.display_text,
 						devices = setting.devices,
 					}
 

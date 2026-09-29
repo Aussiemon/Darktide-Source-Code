@@ -11,6 +11,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local CosmeticsVendorViewSettings = require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_settings")
 local Items = require("scripts/utilities/items")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local Text = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
@@ -151,10 +152,7 @@ end
 
 CosmeticsVendorView._get_profiles = function (self, previewed_item)
 	local player_profile = self._preview_profile
-	local archetype_name = player_profile.archetype.name
-	local breed_name = player_profile.breed
-	local gender_name = player_profile.gender
-	local mannequin_profile = Items.create_mannequin_profile_by_item(previewed_item, gender_name, archetype_name, breed_name)
+	local mannequin_profile = ProfileUtils.create_mannequin_profile(previewed_item, player_profile)
 
 	return mannequin_profile, player_profile
 end
@@ -1146,9 +1144,7 @@ CosmeticsVendorView._setup_background_world = function (self)
 				local is_gear = slot.slot_type == "gear"
 				local is_body = slot.slot_type == "body"
 				local is_companion_gear = slot_name == "slot_companion_gear_full"
-				local valid_player_slot = is_gear and not is_companion_gear
-
-				valid_player_slot = valid_player_slot or is_body
+				local valid_player_slot = (is_gear or is_body) and not is_companion_gear
 
 				if valid_player_slot then
 					local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)

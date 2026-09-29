@@ -226,12 +226,18 @@ MinionBehaviorExtension.update_nearby_units_broadphase = function (self, unit, b
 	end
 end
 
-MinionBehaviorExtension.update = function (self, unit, dt, t, ...)
+MinionBehaviorExtension.staggered_update_brain = function (self, cumulative_dt, t)
 	local brain = self._brain
 
-	if brain:active() then
-		brain:update(unit, dt, t)
-	end
+	brain:update(self._unit, cumulative_dt, t)
+end
+
+MinionBehaviorExtension.staggered_update_rate = function (self)
+	return self._brain:update_rate()
+end
+
+MinionBehaviorExtension.prioritize_staggered_update = function (self)
+	self._behavior_system:prioritize_brain(self)
 end
 
 MinionBehaviorExtension.brain = function (self)

@@ -40,7 +40,7 @@ ability_action_data.actions = {
 
 local function _can_use_ability_check(action_settings, condition_func_params, used_input, t, time_in_action)
 	local ability_extension = condition_func_params.ability_extension
-	local ability_type = action_settings.ability_type
+	local ability_type = condition_func_params.ability_type
 
 	return ability_extension:can_use_ability(ability_type)
 end

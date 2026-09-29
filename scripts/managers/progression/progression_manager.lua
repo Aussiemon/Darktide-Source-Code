@@ -619,7 +619,7 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 
 		if not round_won and havoc_session.current.rank == min_rank then
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
-		elseif not round_won and havoc_session.current_rank == max_rank then
+		elseif not round_won and havoc_session.current.rank == max_rank then
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
 		elseif not round_won and not is_owner and rank_played < havoc_session.current.rank then
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
@@ -627,7 +627,7 @@ ProgressionManager._get_havoc_order_rewards = function (self, account_data, havo
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges + 1, min_charges, max_charges)
 		elseif round_won and not is_owner and rank_played < havoc_session.current.rank then
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)
-		elseif round_won and havoc_session.current_rank == max_rank then
+		elseif round_won and havoc_session.current.rank == max_rank then
 			Log.exception("ProgressionManager", "Despite winning a max rank Havoc mission, it appears no new Havoc order was assigned.")
 
 			havoc_session.previous.charges = math.clamp(havoc_session.current.charges, min_charges, max_charges)

@@ -55,7 +55,10 @@ CraftingMechanicusModifyView.on_enter = function (self)
 			return
 		end
 
-		return Managers.data_service.mastery:get_all_masteries():next(function (masteries_data)
+		local player_profile = self:_player():profile()
+		local archetype = player_profile.archetype
+
+		return Managers.data_service.mastery:get_all_masteries_by_archetype(archetype.name):next(function (masteries_data)
 			if self._destroyed or not self._inventory_promise then
 				return
 			end
@@ -371,7 +374,6 @@ CraftingMechanicusModifyView._preview_item = function (self, item)
 	local grid_height = weapon_stats:grid_height()
 
 	self:_set_scenegraph_size("weapon_stats_pivot", nil, grid_height)
-	self:_set_preview_widgets_visibility(false)
 end
 
 CraftingMechanicusModifyView.on_exit = function (self)

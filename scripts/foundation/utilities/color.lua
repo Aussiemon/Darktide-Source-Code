@@ -2619,6 +2619,18 @@ local color_definitions = {
 		255,
 		123,
 	},
+	error_vibrant = {
+		255,
+		255,
+		15,
+		15,
+	},
+	error_soft = {
+		255,
+		211,
+		47,
+		47,
+	},
 }
 local color_list = {}
 local short_color_list = {}
@@ -2660,6 +2672,108 @@ Color.lerp = function (from, to, t)
 	r = math.lerp(r1, r2, t)
 	g = math.lerp(g1, g2, t)
 	b = math.lerp(b1, b2, t)
+
+	return Color(a, r, g, b)
+end
+
+Color.rgb_to_hsv = function (r, g, b)
+	r, g, b = r / 255, g / 255, b / 255
+
+	local max = math.max(r, g, b)
+	local min = math.min(r, g, b)
+	local delta = max - min
+	local h, s, v
+
+	v = max
+
+	if delta < 1e-05 then
+		return 0, 0, v
+	end
+
+	if max > 0 then
+		s = delta / max
+	else
+		return 0, 0, v
+	end
+
+	if max <= r then
+		h = (g - b) / delta
+	elseif max <= g then
+		h = 2 + (b - r) / delta
+	else
+		h = 4 + (r - g) / delta
+	end
+
+	h = h * 60
+
+	if h < 0 then
+		h = h + 360
+	end
+
+	return h, s, v
+end
+
+Color.hsv_to_rgb = function (h, s, v)
+	if s <= 0 then
+		local gray = v * 255
+
+		return gray, gray, gray
+	end
+
+	h = h / 60
+
+	local i = math.floor(h)
+	local f = h - i
+	local p = v * (1 - s)
+	local q = v * (1 - s * f)
+	local t = v * (1 - s * (1 - f))
+
+	i = i % 6
+
+	local r, g, b
+
+	if i == 0 then
+		r, g, b = v, t, p
+	elseif i == 1 then
+		r, g, b = q, v, p
+	elseif i == 2 then
+		r, g, b = p, v, t
+	elseif i == 3 then
+		r, g, b = p, q, v
+	elseif i == 4 then
+		r, g, b = t, p, v
+	else
+		r, g, b = v, p, q
+	end
+
+	return r * 255, g * 255, b * 255
+end
+
+Color.hsv_lerp = function (from, to, t)
+	local a1, r1, g1, b1 = Quaternion.to_elements(from)
+	local a2, r2, g2, b2 = Quaternion.to_elements(to)
+	local h1, s1, v1 = Color.rgb_to_hsv(r1, g1, b1)
+	local h2, s2, v2 = Color.rgb_to_hsv(r2, g2, b2)
+	local delta_h = h2 - h1
+
+	if delta_h > 180 then
+		delta_h = delta_h - 360
+	elseif delta_h < -180 then
+		delta_h = delta_h + 360
+	end
+
+	local h = h1 + delta_h * t
+
+	if h < 0 then
+		h = h + 360
+	elseif h >= 360 then
+		h = h - 360
+	end
+
+	local s = math.lerp(s1, s2, t)
+	local v = math.lerp(v1, v2, t)
+	local a = math.lerp(a1, a2, t)
+	local r, g, b = Color.hsv_to_rgb(h, s, v)
 
 	return Color(a, r, g, b)
 end

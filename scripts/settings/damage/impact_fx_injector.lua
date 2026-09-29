@@ -110,22 +110,22 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 			sfx = {
 				damage = {
 					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						append_husk_to_event_name = false,
+						event = "wwise/events/weapon/play_event_raid_tank_damage",
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
+						event = "wwise/events/weapon/play_melee_hits_axe_light",
 					},
 				},
 				damage_reduced = {
 					{
-						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_light",
+						append_husk_to_event_name = false,
+						event = "wwise/events/weapon/play_event_raid_tank_damage",
 					},
 					{
 						append_husk_to_event_name = true,
-						event = "wwise/events/weapon/play_melee_hits_axe_armor",
+						event = "wwise/events/weapon/play_melee_hits_axe_light",
 					},
 				},
 				damage_negated = {
@@ -381,6 +381,47 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 		}
 	else
 		Log.info("ImpactFxInjector", "Found override for \"void_shield\" impact fx on damage_type: %s", damage_type)
+	end
+
+	local has_warp_shield_overrides = armor_config[hit_effect_armor_type.warp_shield] ~= nil
+
+	if not has_warp_shield_overrides then
+		armor_config[hit_effect_armor_type.warp_shield] = {
+			sfx = {
+				[armor_hit_types.damage] = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
+					},
+				},
+				[armor_hit_types.damage_negated] = {
+					{
+						append_husk_to_event_name = true,
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
+					},
+				},
+			},
+			vfx = {
+				[armor_hit_types.damage] = {
+					{
+						normal_rotation = true,
+						effects = {
+							"content/fx/particles/abilities/psyker_shield_block",
+						},
+					},
+				},
+				[armor_hit_types.damage_negated] = {
+					{
+						normal_rotation = true,
+						effects = {
+							"content/fx/particles/abilities/psyker_shield_block",
+						},
+					},
+				},
+			},
+		}
+	else
+		Log.info("ImpactFxInjector", "Found override for \"warp_shield\" impact fx on damage_type: %s", damage_type)
 	end
 
 	local has_nurgle_totem_overrides = armor_config[hit_effect_armor_type.nurgle_totem] ~= nil

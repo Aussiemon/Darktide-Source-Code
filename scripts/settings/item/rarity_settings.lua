@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/item/rarity_settings.lua
 
-local RaritySettings = {
+local rarity_settings = {
 	[0] = {
 		display_name = "",
 		max_modifications = 0,
@@ -123,4 +123,4 @@ local RaritySettings = {
 	},
 }
 
-return settings("RaritySettings", RaritySettings)
+return settings("RaritySettings", rarity_settings)

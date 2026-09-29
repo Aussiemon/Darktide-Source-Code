@@ -2067,7 +2067,7 @@ templates.windup_increases_power_default_parent = {
 	description = "Windup Desc",
 	display_description = "loc_weapon_keyword_heavy_windup_mouseover",
 	display_title = "loc_weapon_keyword_heavy_windup",
-	hud_icon = "content/ui/textures/icons/traits/weapon_trait_247",
+	hud_icon = "content/ui/textures/icons/buffs/hud/weapons/weapon_wind_up_power_hud",
 	max_stacks = 3,
 	predicted = false,
 	show_in_hud_if_slot_is_wielded = true,
@@ -2112,6 +2112,160 @@ templates.windup_increases_power_default_child = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 }
+templates.windup_increases_power_default_four_steps_parent = {
+	allow_proc_while_active = true,
+	child_buff_template = "windup_increases_power_default_four_steps_child",
+	class_name = "weapon_trait_parent_proc_buff",
+	description = "Windup Desc",
+	display_description = "loc_weapon_keyword_heavy_windup_mouseover",
+	display_title = "loc_weapon_keyword_heavy_windup",
+	hud_icon = "content/ui/textures/icons/buffs/hud/weapons/weapon_wind_up_power_hud",
+	max_stacks = 4,
+	predicted = false,
+	show_in_hud_if_slot_is_wielded = true,
+	stack_offset = -1,
+	stacks_to_remove = 4,
+	title = "Windup",
+	proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+		[buff_proc_events.on_sweep_finish] = 1,
+		[buff_proc_events.on_action_start] = 1,
+		[buff_proc_events.on_wield] = 1,
+	},
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_windup_trigger] = function (params, template_data, template_context)
+			return ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
+		end,
+		[buff_proc_events.on_action_start] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local kind = action_settings.kind
+
+			return not windup_increases_power_valid_actions[kind]
+		end,
+	},
+	add_child_proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+	},
+	clear_child_stacks_proc_events = {
+		[buff_proc_events.on_sweep_finish] = true,
+		[buff_proc_events.on_action_start] = true,
+		[buff_proc_events.on_wield] = true,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_power_default_four_steps_child = {
+	class_name = "buff",
+	hide_icon_in_hud = true,
+	max_stacks = 4,
+	predicted = false,
+	stack_offset = -1,
+	conditional_stat_buffs = {
+		[buff_stat_buffs.melee_power_level_modifier] = 0.1,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_damage_on_sprint_parent = {
+	allow_proc_while_active = true,
+	child_buff_template = "windup_increases_damage_on_sprint_child",
+	class_name = "weapon_trait_parent_proc_buff",
+	max_stacks = 3,
+	predicted = false,
+	show_in_hud_if_slot_is_wielded = false,
+	stack_offset = -1,
+	stacks_to_remove = 3,
+	proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+		[buff_proc_events.on_sweep_finish] = 1,
+		[buff_proc_events.on_action_start] = 1,
+		[buff_proc_events.on_wield] = 1,
+	},
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_windup_trigger] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local is_sprint_windup = action_settings.is_sprint_windup
+
+			return is_sprint_windup and ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and ConditionalFunctions.is_sprinting(template_data, template_context)
+		end,
+		[buff_proc_events.on_action_start] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local kind = action_settings.kind
+
+			return not windup_increases_power_valid_actions[kind]
+		end,
+	},
+	add_child_proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+	},
+	clear_child_stacks_proc_events = {
+		[buff_proc_events.on_sweep_finish] = true,
+		[buff_proc_events.on_action_start] = true,
+		[buff_proc_events.on_wield] = true,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_damage_on_sprint_child = {
+	class_name = "buff",
+	hide_icon_in_hud = true,
+	max_stacks = 3,
+	predicted = false,
+	stack_offset = -1,
+	conditional_stat_buffs = {
+		[buff_stat_buffs.melee_heavy_damage] = 0.08,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_power_default_three_steps_parent = {
+	allow_proc_while_active = true,
+	child_buff_template = "windup_increases_power_default_three_steps_child",
+	class_name = "weapon_trait_parent_proc_buff",
+	description = "Windup Desc",
+	display_description = "loc_weapon_keyword_heavy_windup_mouseover",
+	display_title = "loc_weapon_keyword_heavy_windup",
+	hud_icon = "content/ui/textures/icons/buffs/hud/weapons/weapon_wind_up_power_hud",
+	max_stacks = 3,
+	predicted = false,
+	show_in_hud_if_slot_is_wielded = true,
+	stack_offset = -1,
+	stacks_to_remove = 3,
+	title = "Windup",
+	proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+		[buff_proc_events.on_sweep_finish] = 1,
+		[buff_proc_events.on_action_start] = 1,
+		[buff_proc_events.on_wield] = 1,
+	},
+	specific_check_proc_funcs = {
+		[buff_proc_events.on_windup_trigger] = function (params, template_data, template_context)
+			return ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
+		end,
+		[buff_proc_events.on_action_start] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local kind = action_settings.kind
+
+			return not windup_increases_power_valid_actions[kind]
+		end,
+	},
+	add_child_proc_events = {
+		[buff_proc_events.on_windup_trigger] = 1,
+	},
+	clear_child_stacks_proc_events = {
+		[buff_proc_events.on_sweep_finish] = true,
+		[buff_proc_events.on_action_start] = true,
+		[buff_proc_events.on_wield] = true,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
+templates.windup_increases_power_default_three_steps_child = {
+	class_name = "buff",
+	hide_icon_in_hud = true,
+	max_stacks = 3,
+	predicted = false,
+	stack_offset = -1,
+	conditional_stat_buffs = {
+		[buff_stat_buffs.melee_power_level_modifier] = 0.125,
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+}
 templates.windup_increases_special_power_default_parent = {
 	allow_proc_while_active = true,
 	child_buff_template = "windup_increases_special_power_default_child",
@@ -2119,7 +2273,7 @@ templates.windup_increases_special_power_default_parent = {
 	description = "Windup Desc",
 	display_description = "loc_weapon_keyword_heavy_special_windup_mouseover",
 	display_title = "loc_weapon_keyword_heavy_special_windup",
-	hud_icon = "content/ui/textures/icons/traits/weapon_trait_247",
+	hud_icon = "content/ui/textures/icons/buffs/hud/weapons/weapon_wind_up_power_hud",
 	max_stacks = 4,
 	predicted = false,
 	show_in_hud_if_slot_is_wielded = true,
@@ -2169,7 +2323,7 @@ templates.melee_power_bonus_scaled_on_special_charges = {
 	description = "Gain Melee Power Bonus, scaling on available Special charges.",
 	display_description = "loc_weapon_keyword_melee_power_bonus_scaled_on_special_charges_mouseover",
 	display_title = "loc_weapon_keyword_melee_power_bonus_scaled_on_special_charges",
-	hud_icon = "content/ui/textures/icons/traits/weapon_trait_252",
+	hud_icon = "content/ui/textures/icons/buffs/hud/weapons/weapon_melee_power_bonus_scaled_on_special_charge_hud",
 	melee_power_level_modifier_per_charge = 0.05,
 	predicted = false,
 	show_in_hud_if_slot_is_wielded = true,

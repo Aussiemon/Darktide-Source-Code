@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	core_research = {
-		coordinates = "loc_mission_coordinates_core_research",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/void/missions/mission_core_research",
@@ -63,6 +62,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

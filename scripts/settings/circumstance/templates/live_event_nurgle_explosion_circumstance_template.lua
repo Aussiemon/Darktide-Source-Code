@@ -8,7 +8,7 @@ circumstance_templates.nurgle_explosion_01 = {
 	wwise_state = "None",
 	mutators = {
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 	ui = {
@@ -28,7 +28,7 @@ circumstance_templates.nurgle_explosion_02 = {
 		"mutator_chaos_hounds",
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 	ui = {
@@ -49,7 +49,7 @@ circumstance_templates.nurgle_explosion_03 = {
 	mutators = {
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 }
@@ -69,7 +69,7 @@ circumstance_templates.nurgle_explosion_04 = {
 		"mutator_add_resistance",
 		"mutator_darkness_los",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 }
@@ -81,7 +81,7 @@ circumstance_templates.nurgle_explosion_05 = {
 		"mutator_toxic_gas_volumes",
 		"mutator_add_resistance",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 	ui = {
@@ -101,7 +101,7 @@ circumstance_templates.nurgle_explosion_06 = {
 		"mutator_add_resistance",
 		"mutator_ventilation_purge_los",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 	ui = {
@@ -126,7 +126,7 @@ circumstance_templates.nurgle_explosion_07 = {
 		"mutator_reduced_ramp_duration_low",
 		"mutator_auric_tension_modifier",
 		"mutator_maelstrom_mutated_poxwalker",
-		"mutator_live_event_only_beast",
+		"mutator_live_event_extra_beast",
 		"mutator_headshot_parasite_enemies",
 	},
 }

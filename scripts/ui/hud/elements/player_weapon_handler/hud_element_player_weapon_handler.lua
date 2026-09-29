@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler.lua
 
+local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
 local HudElementPlayerWeapon = require("scripts/ui/hud/elements/player_weapon/hud_element_player_weapon")
 local HudElementPlayerWeaponHandlerSettings = require("scripts/ui/hud/elements/player_weapon_handler/hud_element_player_weapon_handler_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
@@ -93,11 +94,11 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 		end
 
 		if weapon_template and not player_weapons[slot_id] then
+			local ability_type = item_slot_settings.ability_type
+			local ability = ability_type and ability_extension:ability_is_equipped(ability_type)
 			local can_add_weapons = num_weapons < self._max_slots and not weapon_template.hide_slot
 
 			if can_add_weapons then
-				local ability_type = item_slot_settings.ability_type
-				local ability = ability_type and ability_extension:ability_is_equipped(ability_type)
 				local order_index = settings.order_index
 				local data = {
 					synced = true,
@@ -108,7 +109,6 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 					icon = weapon_template.hud_icon,
 					inventory_component = inventory_component,
 					ability_extension = ability_extension,
-					ability = ability,
 					slot_component = slot_component,
 					weapon_template = weapon_template,
 					weapon_name = weapon_name,
@@ -120,21 +120,19 @@ HudElementPlayerWeaponHandler._weapon_scan = function (self, extensions, ui_rend
 				data.hud_element_player_weapon = HudElementPlayerWeapon:new(parent, draw_layer, scale, data)
 				force_update_positions = true
 			end
-		elseif not player_weapons[slot_id] and settings.ability and grenade_ability and grenade_ability and grenade_ability.hud_configuration then
+		elseif not player_weapons[slot_id] and settings.ability and grenade_ability then
 			local can_add_ability = num_weapons < self._max_slots
 
 			if can_add_ability then
-				local ability_type = grenade_ability.ability_type
+				local ability_template = grenade_ability.ability_template and AbilityTemplates[grenade_ability.ability_template]
 				local order_index = settings.order_index
 				local data = {
 					synced = true,
 					player = my_player,
 					slot_id = slot_id,
-					icon = grenade_ability.hud_icon,
+					icon = grenade_ability.hud_icon or ability_template and ability_template.hud_icon,
 					inventory_component = inventory_component,
 					ability_extension = ability_extension,
-					ability = grenade_ability,
-					ability_type = ability_type,
 					slot_component = slot_component,
 					weapon_name = weapon_name,
 					index = order_index,

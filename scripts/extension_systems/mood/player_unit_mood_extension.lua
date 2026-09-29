@@ -433,7 +433,7 @@ PlayerUnitMoodExtension.remove_all_moods = function (self)
 	end
 end
 
-PlayerUnitMoodExtension._add_mood = function (self, t, mood_type, reset_time)
+PlayerUnitMoodExtension._add_mood = function (self, t, mood_type)
 	local moods_data = self._moods_data
 	local mood_data = moods_data[mood_type]
 
@@ -457,7 +457,7 @@ PlayerUnitMoodExtension._remove_mood = function (self, t, mood_type)
 end
 
 PlayerUnitMoodExtension.add_timed_mood = function (self, t, mood_type)
-	self:_add_mood(t, mood_type, true)
+	self:_add_mood(t, mood_type)
 
 	if self._is_server then
 		local mood_type_id = NetworkLookup.moods_types[mood_type]

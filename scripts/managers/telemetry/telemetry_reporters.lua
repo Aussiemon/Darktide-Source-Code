@@ -59,6 +59,7 @@ end
 
 TelemetryReporters.init = function (self)
 	self._reporters = {}
+	self._update_list = {}
 
 	self:start_reporter("heartbeat")
 	self:start_reporter("load_times")
@@ -68,14 +69,26 @@ TelemetryReporters.start_reporter = function (self, name, params)
 	Log.debug("TelemetryReporters", "Starting reporter '%s'", name)
 
 	local reporter_class = REPORTER_CLASS_MAP[name]
+	local instance = reporter_class:new(params, name)
 
-	self._reporters[name] = reporter_class:new(params, name)
+	self._reporters[name] = instance
+
+	if instance.update then
+		table.insert(self._update_list, instance)
+	end
 end
 
 TelemetryReporters.stop_reporter = function (self, name)
 	Log.debug("TelemetryReporters", "Stopping reporter '%s'", name)
-	self._reporters[name]:report()
-	self._reporters[name]:destroy()
+
+	local instance = self._reporters[name]
+
+	if instance.update then
+		table.remove(self._update_list, table.index_of(self._update_list, instance))
+	end
+
+	instance:report()
+	instance:destroy()
 
 	self._reporters[name] = nil
 end
@@ -89,7 +102,11 @@ TelemetryReporters.has_reporter = function (self, name)
 end
 
 TelemetryReporters.update = function (self, dt, t)
-	for _, reporter in pairs(self._reporters) do
+	local update_list = self._update_list
+
+	for i = 1, #update_list do
+		local reporter = update_list[i]
+
 		reporter:update(dt, t)
 	end
 end

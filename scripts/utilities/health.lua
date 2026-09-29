@@ -104,6 +104,16 @@ Health.is_damagable = function (unit)
 	return not not ScriptUnit.has_extension(unit, "health_system")
 end
 
+Health.can_actor_collide_with_attack_type = function (unit, actor, attack_type)
+	local health_ext = ScriptUnit.has_extension(unit, "health_system")
+
+	if not health_ext or not health_ext.can_actor_collide_with_attack_type then
+		return true
+	end
+
+	return health_ext:can_actor_collide_with_attack_type(actor, attack_type)
+end
+
 Health.calculate_num_segments = function (damage_taken, max_health, max_wounds)
 	local health_per_wound = max_wounds > 0 and max_health / max_wounds or 0
 

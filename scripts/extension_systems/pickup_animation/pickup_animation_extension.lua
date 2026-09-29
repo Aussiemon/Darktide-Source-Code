@@ -2,6 +2,7 @@
 
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
+local ANIMATION_SETTINGS = PickupSettings.animation_settings
 local PickupAnimationExtension = class("PickupAnimationExtension")
 
 PickupAnimationExtension.UPDATE_DISABLED_BY_DEFAULT = true
@@ -26,7 +27,7 @@ PickupAnimationExtension.start_pickup_animation = function (self, destination_un
 	self._animation_speed = 1
 	self._arch_height = 0
 
-	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+	self._owner_system:enable_update_function(self._unit, "update")
 
 	self._pickup_animation_started = true
 
@@ -49,11 +50,11 @@ PickupAnimationExtension.start_place_animation = function (self, destination_uni
 	self._start_position = Vector3Box(Unit.world_position(unit, 1))
 	self._swap_unit_offset = self:_get_swap_pickup_spawn_offset(swapped_pickup_unit)
 	self._end_unit = destination_unit
-	self._timer = PickupSettings.animation_time
+	self._timer = ANIMATION_SETTINGS.animation_time
 	self._animation_speed = -1
-	self._arch_height = PickupSettings.placement_arch_height
+	self._arch_height = ANIMATION_SETTINGS.placement_arch_height
 
-	self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+	self._owner_system:enable_update_function(self._unit, "update")
 
 	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
 
@@ -75,7 +76,7 @@ end
 PickupAnimationExtension.update = function (self, unit, dt, t)
 	self._timer = self._timer + dt * self._animation_speed
 
-	local percentage = self._timer / PickupSettings.animation_time
+	local percentage = self._timer / ANIMATION_SETTINGS.animation_time
 	local offset = self._swap_unit_offset and self._swap_unit_offset:unbox() or Vector3.zero()
 
 	if ALIVE[self._end_unit] then
@@ -83,14 +84,14 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 		local unit_data_extension = ScriptUnit.extension(self._end_unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
 		local start_position = Vector3Box.unbox(self._start_position) - offset
-		local end_position = Unit.world_position(self._end_unit, 1) + Vector3(0, 0, first_person_component.height + PickupSettings.target_height_offset)
+		local end_position = Unit.world_position(self._end_unit, 1) + Vector3(0, 0, first_person_component.height + ANIMATION_SETTINGS.target_height_offset)
 		local position = Vector3.lerp(start_position, end_position, animation_position)
 
 		position.z = position.z + self._arch_height * math.sin(percentage * math.pi)
 
 		Unit.set_local_position(unit, 1, position)
 
-		local scale = math.lerp(1, PickupSettings.end_scale, animation_position)
+		local scale = math.lerp(1, ANIMATION_SETTINGS.end_scale, animation_position)
 
 		Unit.set_local_scale(unit, 1, Vector3(scale, scale, scale))
 	end
@@ -102,7 +103,7 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 			pickup_system:despawn_pickup(unit)
 		end
 
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 
 	if percentage < 0 then
@@ -116,7 +117,7 @@ PickupAnimationExtension.update = function (self, unit, dt, t)
 
 		Unit.set_local_position(unit, 1, Vector3Box.unbox(self._start_position) - offset)
 		Unit.set_local_scale(unit, 1, Vector3.one())
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 

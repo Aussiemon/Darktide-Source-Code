@@ -110,7 +110,7 @@ local visibility_groups = {
 			local mechanism_name = mechanism_manager:mechanism_name()
 			local in_cinematic = Managers.state.cinematic and Managers.state.cinematic:active_camera()
 
-			return mechanism_name == "adventure" and not view_open and not in_cinematic
+			return (mechanism_name == "adventure" or mechanism_name == "expedition") and not view_open and not in_cinematic
 		end,
 	},
 	{

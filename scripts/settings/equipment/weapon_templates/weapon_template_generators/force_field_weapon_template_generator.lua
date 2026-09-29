@@ -10,15 +10,11 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 	local base_template = {}
 
 	base_template.action_inputs = {
-		combat_ability = {
-			buffer_time = 0,
-			input_sequence = nil,
-		},
 		aim_force_field = {
 			buffer_time = 0,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = true,
 				},
 			},
@@ -27,7 +23,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			buffer_time = 0.6,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
 					time_window = math.huge,
 				},
@@ -37,7 +33,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			buffer_time = 0.1,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
 					time_window = math.huge,
 				},
@@ -71,16 +67,6 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			buffer_time = 0,
 			input_sequence = nil,
 		},
-		grenade_ability = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					input = "grenade_ability_pressed",
-					value = true,
-				},
-			},
-		},
 	}
 
 	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -101,10 +87,6 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 					input = "cancel",
 					transition = "base",
 				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 		{
@@ -122,10 +104,6 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 					input = "cancel",
 					transition = "base",
 				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 		{
@@ -140,26 +118,13 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			input = "unwield_to_previous",
 			transition = "stay",
 		},
-		{
-			input = "grenade_ability",
-			transition = "stay",
-		},
 	}
 	base_template.actions = {
-		action_unwield = {
-			allowed_during_sprint = true,
-			kind = "unwield",
-			start_input = "wield",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
 		action_unwield_to_previous = {
 			allowed_during_sprint = true,
 			kind = "unwield_to_previous",
 			total_time = 0,
 			uninterruptible = true,
-			unwield_to_weapon = false,
 			allowed_chain_actions = {},
 		},
 		action_wield = {
@@ -201,9 +166,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				sound_position_offset = Vector3Box(Vector3.up() * 1.5),
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				place_force_field = {
 					action_name = "action_place_force_field",
 					chain_time = 0.1,
@@ -211,7 +174,6 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				cancel = {
 					action_name = "action_cancel",
 				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			},
 		},
 		action_instant_aim_force_field = {
@@ -233,9 +195,7 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 				},
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				instant_place_force_field = {
 					action_name = "action_instant_place_force_field",
 				},
@@ -245,17 +205,16 @@ local function generate_base_template(functional_unit, visual_unit, allow_rotati
 			},
 		},
 		action_place_force_field = {
-			ability_type = "combat_ability",
 			abort_sprint = true,
 			allowed_during_sprint = true,
 			anim_event = "attack_shoot",
+			consume_ability_usage_cost = true,
 			kind = "place_force_field",
 			place_time = 0.05,
 			prevent_sprint = true,
 			total_time = 0.6,
 			uninterruptible = true,
 			unwield_slot = true,
-			use_ability_charge = true,
 			use_aim_data = true,
 			vo_tag = "ability_protectorate_start",
 			weapon_handling_template = "time_scale_1_4",

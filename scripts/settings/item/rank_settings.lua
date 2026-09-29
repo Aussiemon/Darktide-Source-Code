@@ -1,6 +1,6 @@
 ﻿-- chunkname: @scripts/settings/item/rank_settings.lua
 
-local RankSettings = {
+local rank_settings = {
 	[0] = {
 		display_name = "n/a",
 		perk_icon = "content/ui/materials/icons/perks/perk_level_01",
@@ -81,7 +81,7 @@ local RankSettings = {
 	},
 }
 
-RankSettings.max_trait_rank = 4
-RankSettings.max_perk_rank = 4
+rank_settings.max_trait_rank = 4
+rank_settings.max_perk_rank = 4
 
-return settings("RankSettings", RankSettings)
+return settings("RankSettings", rank_settings)

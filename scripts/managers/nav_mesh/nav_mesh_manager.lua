@@ -705,6 +705,10 @@ NavMeshManager.set_async_paused = function (self, paused)
 	self._async_update_paused = not not paused
 end
 
+NavMeshManager.async_paused = function (self)
+	return self._async_update_paused
+end
+
 NavMeshManager.on_recover = function (self)
 	if self._async_update_running then
 		GwNavWorld.join_async_update(self._nav_world)

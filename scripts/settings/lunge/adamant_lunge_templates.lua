@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/lunge/adamant_lunge_templates.lua
 
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local damage_types = DamageSettings.damage_types
 local talent_settings = TalentSettings.adamant
 local adamant_lunge_templates = {}
@@ -89,11 +89,11 @@ adamant_lunge_templates.adamant_charge = {
 		},
 	},
 	stop_tags = {
-		captain = true,
-		cultist_captain = true,
-		elite = true,
-		monster = true,
-		special = true,
+		[breed_tags.elite] = true,
+		[breed_tags.monster] = true,
+		[breed_tags.special] = true,
+		[breed_tags.captain] = true,
+		[breed_tags.cultist_captain] = true,
 	},
 	mood = MoodSettings.mood_types.adamant_combat_ability_charge,
 }

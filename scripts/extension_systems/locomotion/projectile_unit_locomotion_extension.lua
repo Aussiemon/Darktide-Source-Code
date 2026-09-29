@@ -9,6 +9,7 @@ local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utili
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local TrueFlightProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/true_flight_projectile_integration")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local buff_proc_events = BuffSettings.proc_events
 local locomotion_states = ProjectileLocomotionSettings.states
 local moving_locomotion_states = ProjectileLocomotionSettings.moving_states
@@ -133,6 +134,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 
 	self._handle_oob_despawning = extension_init_data.handle_oob_despawning
 	self._marked_for_deletion = false
+	self._follow_owner = false
 	game_object_data.snapshot_id = self._snapshot_id
 	game_object_data.position = self._position:unbox()
 	game_object_data.rotation = self._rotation:unbox()
@@ -194,6 +196,8 @@ ProjectileUnitLocomotionExtension.fixed_update = function (self, unit, dt, t)
 		self:_update_sticky(unit, dt, t)
 	elseif state == locomotion_states.socket_lock or state == locomotion_states.sleep or state == locomotion_states.carried then
 		-- Nothing
+	elseif state == locomotion_states.deployed and self._follow_owner then
+		self:_update_follow_owner(unit, dt)
 	else
 		local position = Unit.world_position(unit, 1)
 		local rotation = Unit.world_rotation(unit, 1)
@@ -258,6 +262,12 @@ ProjectileUnitLocomotionExtension.update = function (self, unit, dt, t)
 
 		if rotation_offset_box then
 			simulated_rotation = Quaternion.multiply(simulated_rotation, rotation_offset_box:unbox())
+		end
+
+		local integration_data = self._integration_data
+
+		if integration_data and integration_data.flat_look_rotation then
+			simulated_rotation = Quaternion.flat_no_roll(simulated_rotation)
 		end
 
 		Unit.set_local_position(projectile_unit, 1, simulated_position)
@@ -628,6 +638,44 @@ ProjectileUnitLocomotionExtension.switch_to_deployed = function (self, position,
 	end
 end
 
+ProjectileUnitLocomotionExtension.register_sweep_hit = function (self, hit_unit, attacker_unit, first_person_component, sweep_direction, damage_profile, t)
+	local state = self._current_state
+	local integration_data = self._integration_data
+	local true_flight_template = integration_data and integration_data.true_flight_template
+	local collision_scratchpad = integration_data and integration_data.collision_scratchpad
+	local sweep_hit_already_registered = collision_scratchpad and collision_scratchpad.sweep_hit
+	local should_register_sweep_hit = true_flight_template and not sweep_hit_already_registered and true_flight_template.register_sweep_hits
+	local dot_validation_func = true_flight_template.sweep_hit_dot_validation_func
+	local is_player_facing_projectile = true
+
+	if dot_validation_func then
+		is_player_facing_projectile = dot_validation_func and dot_validation_func(hit_unit, attacker_unit, first_person_component, true_flight_template)
+	end
+
+	if state == locomotion_states.true_flight and should_register_sweep_hit and is_player_facing_projectile then
+		local attacker_position = POSITION_LOOKUP[attacker_unit]
+		local melee_attack_strengths = AttackSettings.melee_attack_strength
+		local is_light_attack = damage_profile.melee_attack_strength == melee_attack_strengths.light
+		local hit_position = POSITION_LOOKUP[hit_unit]
+		local attacker_to_projectile_dir = Vector3.normalize(hit_position - attacker_position)
+
+		integration_data.collision_scratchpad.sweep_hit = {
+			hit_position = Vector3Box(hit_position),
+			attacker_to_projectile_dir = Vector3Box(attacker_to_projectile_dir),
+			sweep_dir = Vector3Box(Vector3.normalize(sweep_direction)),
+			is_light_attack = is_light_attack,
+			hit_t = t,
+			attacker_unit = attacker_unit,
+		}
+
+		local fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
+
+		if fx_extension and fx_extension.on_sweep_hit then
+			fx_extension:on_sweep_hit()
+		end
+	end
+end
+
 ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 	local old_state = self._current_state
 
@@ -699,6 +747,86 @@ end
 
 ProjectileUnitLocomotionExtension.owner_unit = function (self)
 	return self._owner_unit
+end
+
+ProjectileUnitLocomotionExtension.set_follow_owner = function (self, enabled)
+	self._follow_owner = enabled
+end
+
+ProjectileUnitLocomotionExtension.follows_owner = function (self)
+	return self._follow_owner
+end
+
+ProjectileUnitLocomotionExtension._update_follow_owner = function (self, unit, dt)
+	local owner_unit = self._owner_unit
+
+	if not ALIVE[owner_unit] then
+		local position = Unit.world_position(unit, 1)
+		local rotation = Unit.world_rotation(unit, 1)
+
+		self._position:store(position)
+		self._rotation:store(rotation)
+
+		return
+	end
+
+	local follow_settings = self._projectile_template.follow_owner
+	local height_offset = follow_settings.height_offset
+	local stop_distance = follow_settings.stop_distance
+	local responsiveness = follow_settings.responsiveness
+	local near_responsiveness = follow_settings.near_responsiveness
+	local slowdown_distance = follow_settings.slowdown_distance
+	local rotation_responsiveness = follow_settings.rotation_responsiveness
+	local owner_position = POSITION_LOOKUP[owner_unit]
+	local current_position = self._position:unbox()
+	local flat_to_drone = Vector3.flat(current_position - owner_position)
+	local flat_length = Vector3.length(flat_to_drone)
+	local offset_dir
+
+	if flat_length > 0.01 then
+		offset_dir = flat_to_drone / flat_length
+	else
+		local owner_forward = Quaternion.forward(Unit.world_rotation(owner_unit, 1))
+
+		offset_dir = -Vector3.normalize(Vector3.flat(owner_forward))
+	end
+
+	local target_position = owner_position + offset_dir * stop_distance + Vector3.up() * height_offset
+	local to_target = target_position - current_position
+	local distance_to_target = Vector3.length(to_target)
+
+	if distance_to_target < slowdown_distance then
+		local t = distance_to_target / slowdown_distance
+
+		responsiveness = math.lerp(near_responsiveness, responsiveness, t)
+	end
+
+	local alpha = 1 - math.exp(-responsiveness * dt)
+	local follow_delta = to_target * alpha
+	local follow_position = current_position + follow_delta
+	local current_rotation = self._rotation:unbox()
+	local rotation = current_rotation
+	local is_moving = Vector3.length_squared(follow_delta) > 0.0001
+
+	if is_moving then
+		local flat_to_owner = Vector3.flat(owner_position - follow_position)
+
+		if Vector3.length_squared(flat_to_owner) > 0.0001 then
+			local rotation_alpha = 1 - math.exp(-(rotation_responsiveness * responsiveness) * dt)
+			local target_rotation = Quaternion.look(flat_to_owner, Vector3.up())
+
+			rotation = Quaternion.lerp(current_rotation, target_rotation, rotation_alpha)
+		end
+	end
+
+	Unit.set_local_position(unit, 1, follow_position)
+	Unit.set_local_rotation(unit, 1, rotation)
+	self._position:store(follow_position)
+	self._rotation:store(rotation)
+end
+
+ProjectileUnitLocomotionExtension.target_unit = function (self)
+	return self._target_unit
 end
 
 ProjectileUnitLocomotionExtension.radius = function (self)

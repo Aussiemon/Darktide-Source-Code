@@ -7,6 +7,10 @@ local Styles = {}
 local sizes = {
 	entry_height = 880,
 	entry_width = 1420,
+	objective_no_bar_reward_spacing = 20,
+	objective_no_bar_text_margin = 40,
+	objective_no_bar_text_offset = -100,
+	objective_row_spacing = 70,
 	text_max_width = 1040,
 	reward_size = {
 		96.6,
@@ -1041,6 +1045,79 @@ Styles.event_progress_bar.frame = {
 		2,
 	},
 }
+Styles.event_progress_bar.objective_label = {
+	font_size = 18,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "bottom",
+	text_color = Color.terminal_text_header(255, true),
+	offset = {
+		0,
+		52,
+		2,
+	},
+	size = {
+		1200,
+		30,
+	},
+}
+Styles.event_progress_bar.objective_progress_text = {
+	font_size = 22,
+	font_type = "proxima_nova_medium",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "bottom",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		0,
+		53,
+		2,
+	},
+	size = {
+		300,
+		30,
+	},
+}
+Styles.event_progress_bar.objective_complete = {
+	font_size = 24,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "bottom",
+	text_color = Color.golden_rod(255, true),
+	offset = {
+		0,
+		53,
+		5,
+	},
+	size = {
+		300,
+		30,
+	},
+}
+Styles.event_progress_bar.objective_lock = {
+	font_size = 24,
+	font_type = "proxima_nova_bold",
+	horizontal_alignment = "left",
+	text_horizontal_alignment = "left",
+	text_vertical_alignment = "center",
+	vertical_alignment = "bottom",
+	text_color = Color.terminal_text_body_sub_header(255, true),
+	offset = {
+		0,
+		53,
+		5,
+	},
+	size = {
+		300,
+		30,
+	},
+}
+Styles.event_progress_bar.objective_status_spacing = 5
 Styles.tooltip = {}
 Styles.tooltip.background_rect = {
 	horizontal_alignment = "center",

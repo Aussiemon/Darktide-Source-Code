@@ -4,7 +4,7 @@ local MainPathQueries = require("scripts/utilities/main_path_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local PathTypeLinear = class("PathTypeLinear")
 
-PathTypeLinear.init = function (self, world, nav_world, num_sides, is_server, use_nav_point_time_slice)
+PathTypeLinear.init = function (self, world, nav_world, num_sides)
 	self._world = world
 	self._nav_world = nav_world
 

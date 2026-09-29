@@ -56,6 +56,9 @@ CraftingMechanicusUpgradeExpertiseView.on_enter = function (self)
 
 		self:_present_crafting(self._mastery_data)
 		self:_get_wallet()
+	end):catch(function ()
+		Managers.ui:close_view(self.view_name)
+		self._parent:go_to_crafting_view("select_item_mechanicus")
 	end)
 
 	self._enter_animation_id = self:_start_animation("on_enter", self._widgets, self)

@@ -6,6 +6,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local DEFAULT_HEIGHT = BreedSettings.base_player_body_size_heights.human_sized
@@ -42,7 +43,7 @@ local breed_data = {
 		spawn_all_enemies = false,
 	},
 	tags = {
-		human = true,
+		[breed_tags.human] = true,
 	},
 	armor_type = armor_types.player,
 	heights = {

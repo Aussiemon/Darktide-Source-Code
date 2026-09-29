@@ -11,12 +11,6 @@ LocalWaitForMissionBriefingDoneState.destroy = function (self)
 end
 
 LocalWaitForMissionBriefingDoneState.update = function (self, dt)
-	local lobby_view_active = Managers.ui:view_active("lobby_view")
-
-	if lobby_view_active then
-		return
-	end
-
 	local mission_intro_view_active = Managers.ui:view_active("mission_intro_view")
 
 	if not mission_intro_view_active then
@@ -28,7 +22,7 @@ LocalWaitForMissionBriefingDoneState.update = function (self, dt)
 	local mission_intro_view = Managers.ui:view_instance("mission_intro_view")
 
 	if not mission_intro_view then
-		Log.info("LocalWaitForMissionBriefingDoneState", "no mission_intro_view active")
+		Log.info("LocalWaitForMissionBriefingDoneState", "no mission_intro_view instance active")
 
 		return "mission_briefing_done"
 	end

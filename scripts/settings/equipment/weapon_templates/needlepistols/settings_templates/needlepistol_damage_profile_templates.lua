@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/needlepistols/settings_templates/needlepistol_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
@@ -8,6 +9,7 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local damage_types = DamageSettings.damage_types
 local gibbing_power = GibbingSettings.gibbing_power
 local gibbing_types = GibbingSettings.gibbing_types
@@ -152,10 +154,10 @@ damage_templates.needlepistol_explosion_parent = {
 	stagger_category = "flamer",
 	suppression_value = 0.01,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	cleave_distribution = {
 		attack = 0.1,

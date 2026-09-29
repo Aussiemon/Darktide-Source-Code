@@ -321,6 +321,27 @@ local default_ingame_input_settings = {
 			group = "input_group_movement",
 			sort_order = 12,
 		},
+		angular_velocity = {
+			"ps4_controller_angular_velocity",
+			bindable = false,
+			description = "loc_ingame_look_motion",
+			group = "input_group_movement",
+			sort_order = 13,
+		},
+		acceleration = {
+			"ps4_controller_acceleration",
+			bindable = false,
+			description = "loc_ingame_look_motion",
+			group = "input_group_movement",
+			sort_order = 14,
+		},
+		touch_1 = {
+			"ps4_controller_touch_1",
+			bindable = false,
+			description = "loc_ingame_look_motion",
+			group = "input_group_movement",
+			sort_order = 15,
+		},
 	},
 	settings = {
 		action_one_pressed = {
@@ -549,6 +570,18 @@ local default_ingame_input_settings = {
 		},
 		move_controller = {
 			key_alias = "move_controller",
+			type = "axis",
+		},
+		angular_velocity = {
+			key_alias = "angular_velocity",
+			type = "axis",
+		},
+		acceleration = {
+			key_alias = "acceleration",
+			type = "axis",
+		},
+		touch_1 = {
+			key_alias = "touch_1",
 			type = "axis",
 		},
 	},

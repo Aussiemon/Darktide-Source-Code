@@ -224,7 +224,7 @@ local widget_definitions = {
 	corners = UIWidget.create_definition({
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_psyker_01_lower_left",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_left",
 			value_id = "left_lower",
 			style = {
 				vertical_alignment = "bottom",
@@ -247,7 +247,7 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_psyker_01_lower_right",
+			value = "content/ui/materials/frames/screen/class_veteran_01_lower_right",
 			value_id = "right_lower",
 			style = {
 				horizontal_alignment = "right",
@@ -271,8 +271,8 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
-			value_id = "right_upper",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_left",
+			value_id = "left_upper",
 			style = {
 				vertical_alignment = "top",
 				size = {
@@ -290,22 +290,12 @@ local widget_definitions = {
 					255,
 					255,
 				},
-				uvs = {
-					{
-						1,
-						0,
-					},
-					{
-						0,
-						1,
-					},
-				},
 			},
 		},
 		{
 			pass_type = "texture_uv",
-			value = "content/ui/materials/frames/screen/class_psyker_01_upper_right",
-			value_id = "left_upper",
+			value = "content/ui/materials/frames/screen/class_veteran_01_upper_right",
+			value_id = "right_upper",
 			style = {
 				horizontal_alignment = "right",
 				vertical_alignment = "top",

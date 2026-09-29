@@ -127,7 +127,7 @@ UIHud.get_all_player_extensions = function (self, player, output)
 end
 
 UIHud.using_input = function (self)
-	return self._using_cursor or self._element_using_input
+	return not not self._using_cursor or not not self._element_using_input
 end
 
 UIHud.player = function (self)

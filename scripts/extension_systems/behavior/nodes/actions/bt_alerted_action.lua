@@ -17,6 +17,7 @@ local ALERTED_MODES = {
 local LINE_OF_SIGHT_CHECK_SHORT_DISTANCE = 15
 local LINE_OF_SIGHT_CHECK_DELAY_SHORT = 0.15
 local LINE_OF_SIGHT_CHECK_DELAY = 0.75
+local UPDATE_RATE = 0
 
 BtAlertedAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
@@ -244,7 +245,7 @@ BtAlertedAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		end
 	end
 
-	return "running", nil
+	return "running", nil, UPDATE_RATE
 end
 
 BtAlertedAction._start_alerted_direction_anim = function (self, unit, scratchpad, action_data, t)

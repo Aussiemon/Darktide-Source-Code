@@ -362,7 +362,7 @@ templates.hordes_buff_broker_flash_grenade_increase_damage_taken_effect = {
 		[stat_buffs.damage_taken_modifier] = percent_damage_taken_increase_after_flash_grenade,
 	},
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.player_effects,
+		node_effects_priority = minion_effects_priorities.player_effects,
 		node_effects = {
 			{
 				node_name = "j_head",

@@ -146,6 +146,9 @@ DialogueSettings.level_specific_load_files = {
 	psykhanium = {
 		"mission_vo_psykhanium",
 	},
+	spillway = {
+		"mission_vo_spillway",
+	},
 }
 DialogueSettings.player_load_files = {
 	ogryn_a = {

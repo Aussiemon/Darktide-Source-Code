@@ -5,6 +5,7 @@ require("scripts/extension_systems/scripted_scenario/scriptable_scenario_directi
 local TrainingGroundsServitorHandler = require("scripts/extension_systems/training_grounds/training_grounds_servitor_handler")
 local Attack = require("scripts/utilities/attack/attack")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
+local Breeds = require("scripts/settings/breed/breeds")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MinionDissolveUtility = require("scripts/extension_systems/scripted_scenario/minion_dissolve_utility")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
@@ -272,7 +273,13 @@ ScriptedScenarioSystem._handle_spawning_minions = function (self, t)
 				break
 			end
 
-			local is_done = MinionDissolveUtility.update_dissolve(unit, spawn_data, t)
+			local is_done = false
+
+			if not spawn_data.skip_dissolve then
+				is_done = MinionDissolveUtility.update_dissolve(unit, spawn_data, t)
+			else
+				is_done = true
+			end
 
 			if not spawn_data.vfx_destroyed and (is_done or t > spawn_data.destroy_vfx_t) then
 				spawn_data.vfx_destroyed = true
@@ -645,19 +652,30 @@ ScriptedScenarioSystem.dissolve_unit = function (self, unit, t)
 	end
 
 	if ALIVE[unit] then
-		local dissolve_data = MinionDissolveUtility.start_dissolve(unit, t, false)
-
-		Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, Unit.local_position(unit, 1))
-
 		local spawn_data = self._spawning_minions[unit]
 
-		if spawn_data then
-			MinionDissolveUtility.inherit_progress(spawn_data, dissolve_data, t)
+		if ScriptUnit.has_extension(unit, "wounds_system") then
+			local dissolve_data = MinionDissolveUtility.start_dissolve(unit, t, false)
+
+			Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, Unit.local_position(unit, 1))
+
+			if spawn_data then
+				MinionDissolveUtility.inherit_progress(spawn_data, dissolve_data, t)
+			end
+
+			self._minions_being_dissolved[unit] = dissolve_data
+
+			return dissolve_data.done_t
+		else
+			local minion_death_manager = Managers.state.minion_death
+			local minion_ragdoll = minion_death_manager:minion_ragdoll()
+
+			minion_ragdoll:remove_ragdoll_safe(unit)
+
+			if not Managers.state.unit_spawner:is_marked_for_deletion(unit) then
+				Managers.state.minion_spawn:despawn_minion(unit)
+			end
 		end
-
-		self._minions_being_dissolved[unit] = dissolve_data
-
-		return dissolve_data.done_t
 	end
 
 	return t
@@ -671,19 +689,38 @@ ScriptedScenarioSystem.spawn_breed_ramping = function (self, breed_name, positio
 
 	local unit = minion_spawn_manager:spawn_minion(breed_name, position, rotation, side_id, param_table)
 	local delay = optional_delay or 0
+	local breed = Breeds[breed_name]
 	local world = self._world
-	local spawn_data = MinionDissolveUtility.start_dissolve(unit, t, true)
-	local vfx_id = World.create_particles(world, RAMPING_VFX, position, rotation)
+	local dissolve = breed and breed.use_wounds
 
-	spawn_data.start_t = spawn_data.start_t + delay
-	spawn_data.destroy_vfx_t = t + math.min(1.2, spawn_data.duration) + delay
-	spawn_data.vfx_id = vfx_id
-	spawn_data.position = Vector3Box(position)
-	spawn_data.rotation = QuaternionBox(rotation)
+	if dissolve then
+		local spawn_data = MinionDissolveUtility.start_dissolve(unit, t, true)
+		local vfx_id = World.create_particles(world, RAMPING_VFX, position, rotation)
 
-	Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, position)
+		spawn_data.start_t = spawn_data.start_t + delay
+		spawn_data.destroy_vfx_t = t + math.min(1.2, spawn_data.duration) + delay
+		spawn_data.vfx_id = vfx_id
+		spawn_data.position = Vector3Box(position)
+		spawn_data.rotation = QuaternionBox(rotation)
 
-	self._spawning_minions[unit] = spawn_data
+		Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, position)
+
+		self._spawning_minions[unit] = spawn_data
+	else
+		local spawn_data = {}
+		local vfx_id = World.create_particles(world, RAMPING_VFX, position, rotation)
+
+		spawn_data.start_t = t + delay
+		spawn_data.destroy_vfx_t = t + 2 + delay
+		spawn_data.vfx_id = vfx_id
+		spawn_data.position = Vector3Box(position)
+		spawn_data.rotation = QuaternionBox(rotation)
+		spawn_data.skip_dissolve = true
+
+		Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_enemy_dissolve_start, position)
+
+		self._spawning_minions[unit] = spawn_data
+	end
 
 	return unit
 end

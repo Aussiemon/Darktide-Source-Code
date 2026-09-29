@@ -20,6 +20,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -68,8 +69,8 @@ local breed_data = {
 		ranged = "cultist_captain_default_shot",
 	},
 	tags = {
-		cultist_captain = true,
-		minion = true,
+		[breed_tags.minion] = true,
+		[breed_tags.cultist_captain] = true,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,

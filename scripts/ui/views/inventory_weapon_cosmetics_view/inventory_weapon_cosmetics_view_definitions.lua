@@ -188,20 +188,6 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	description_text = {
-		horizontal_alignment = "center",
-		parent = "display_name_divider",
-		vertical_alignment = "bottom",
-		size = {
-			1000,
-			150,
-		},
-		position = {
-			0,
-			120,
-			3,
-		},
-	},
 	info_box = {
 		horizontal_alignment = "right",
 		parent = "canvas",
@@ -210,62 +196,6 @@ local scenegraph_definition = {
 		position = {
 			-100,
 			-125,
-			3,
-		},
-	},
-	display_name_divider = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30),
-			20,
-		},
-		position = {
-			0,
-			0,
-			1,
-		},
-	},
-	display_name_divider_glow = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30),
-			80,
-		},
-		position = {
-			0,
-			-6,
-			1,
-		},
-	},
-	display_name = {
-		horizontal_alignment = "left",
-		parent = "info_box",
-		vertical_alignment = "bottom",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30 + 20),
-			50,
-		},
-		position = {
-			10,
-			-40,
-			3,
-		},
-	},
-	sub_display_name = {
-		horizontal_alignment = "center",
-		parent = "display_name",
-		vertical_alignment = "top",
-		size = {
-			info_box_size[1] - (equip_button_size[1] + 30 + 20),
-			50,
-		},
-		position = {
-			0,
-			45,
 			3,
 		},
 	},
@@ -323,27 +253,6 @@ local scenegraph_definition = {
 		},
 	},
 }
-local display_name_style = table.clone(UIFontSettings.header_2)
-
-display_name_style.text_horizontal_alignment = "left"
-display_name_style.text_vertical_alignment = "bottom"
-
-local title_text_style = table.clone(UIFontSettings.header_2)
-
-title_text_style.text_horizontal_alignment = "center"
-title_text_style.text_vertical_alignment = "bottom"
-
-local sub_display_name_style = table.clone(UIFontSettings.header_3)
-
-sub_display_name_style.text_horizontal_alignment = "left"
-sub_display_name_style.text_vertical_alignment = "top"
-sub_display_name_style.text_color = Color.ui_grey_light(255, true)
-
-local description_text_style = table.clone(UIFontSettings.body_small)
-
-description_text_style.text_horizontal_alignment = "left"
-description_text_style.text_vertical_alignment = "top"
-
 local big_header_text_style = table.clone(UIFontSettings.header_3)
 
 big_header_text_style.text_horizontal_alignment = "left"
@@ -410,43 +319,6 @@ local widget_definitions = {
 			},
 		},
 	}, "corner_bottom_right"),
-	description_text = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = description_text_style,
-		},
-	}, "description_text"),
-	display_name_divider = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/dividers/horizontal_dynamic_lower",
-		},
-	}, "display_name_divider"),
-	display_name_divider_glow = UIWidget.create_definition({
-		{
-			pass_type = "texture",
-			style_id = "texture",
-			value = "content/ui/materials/effects/wide_upward_glow",
-		},
-	}, "display_name_divider_glow"),
-	sub_display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = sub_display_name_style,
-		},
-	}, "sub_display_name"),
-	display_name = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = display_name_style,
-		},
-	}, "display_name"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
 		gamepad_action = "confirm_pressed",
 		original_text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),

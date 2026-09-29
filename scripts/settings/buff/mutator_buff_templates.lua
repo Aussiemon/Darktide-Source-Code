@@ -37,7 +37,7 @@ local function _parasite_head_stop_function(template_data, template_context)
 	local unit = template_context.unit
 	local position = POSITION_LOOKUP[unit]
 	local world, physics_world, impact_normal, charge_level, attack_type = template_context.world, template_context.physics_world, Vector3.up(), 1
-	local explosion_template = ExplosionTemplates.nurgle_head_parasite
+	local explosion_template = template_data.explosion_template or ExplosionTemplates.nurgle_head_parasite
 
 	Explosion.create_explosion(world, physics_world, position, Quaternion.look(impact_normal), unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 
@@ -67,6 +67,75 @@ local function _parasite_head_stop_function(template_data, template_context)
 	end
 end
 
+local function _parasite_head_start_func(template_data, template_context)
+	local unit = template_context.unit
+
+	template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
+
+	if not template_context.is_server then
+		return
+	end
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+	local hit_mass = breed.hit_mass
+
+	if type(hit_mass) == "table" then
+		hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+	end
+
+	template_data.old_hit_mass = hit_mass
+
+	local new_hit_mass = hit_mass * 1.5
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+
+	health_extension:set_hit_mass(new_hit_mass)
+
+	local variable_name = "anim_move_speed"
+
+	if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
+		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+		animation_extension:set_variable(variable_name, 1.25)
+	end
+
+	local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
+
+	if suppression_extension then
+		suppression_extension:add_suppression_immunity_duration(999)
+	end
+
+	local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
+
+	if attack_intensity_extension then
+		attack_intensity_extension:set_allow_all_attacks_duration(999)
+	end
+end
+
+local function _parasite_head_proc_func(params, template_data, template_context)
+	if not template_context.is_server then
+		return
+	end
+
+	local attack_type = params.attack_type
+
+	if attack_type ~= "ranged" then
+		return
+	end
+
+	local hit_zone = params.hit_zone_name_or_nil
+
+	if hit_zone == "head" then
+		local unit = template_context.unit
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local current_health_percent = health_extension:current_health_percent()
+
+		if current_health_percent <= 0.3 then
+			_parasite_head_stop_function(template_data, template_context)
+		end
+	end
+end
+
 templates.headshot_parasite_enemies = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -77,73 +146,25 @@ templates.headshot_parasite_enemies = {
 		buff_keywords.infested_head_armor_override,
 		buff_keywords.has_nurgle_parasite,
 	},
+	start_func = _parasite_head_start_func,
+	proc_func = _parasite_head_proc_func,
+}
+templates.headshot_parasite_enemies_nurgle_explosion_2026 = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[buff_proc_events.on_minion_damage_taken] = 1,
+	},
+	keywords = {
+		buff_keywords.infested_head_armor_override,
+		buff_keywords.has_nurgle_parasite,
+	},
 	start_func = function (template_data, template_context)
-		local unit = template_context.unit
+		template_data.explosion_template = ExplosionTemplates.nurgle_head_parasite_nurgle_explosion_2026
 
-		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
-
-		if not template_context.is_server then
-			return
-		end
-
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local breed = unit_data_extension:breed()
-		local hit_mass = breed.hit_mass
-
-		if type(hit_mass) == "table" then
-			hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
-		end
-
-		template_data.old_hit_mass = hit_mass
-
-		local new_hit_mass = hit_mass * 1.5
-		local health_extension = ScriptUnit.extension(unit, "health_system")
-
-		health_extension:set_hit_mass(new_hit_mass)
-
-		local variable_name = "anim_move_speed"
-
-		if breed.animation_variable_init and breed.animation_variable_init[variable_name] then
-			local animation_extension = ScriptUnit.extension(unit, "animation_system")
-
-			animation_extension:set_variable(variable_name, 1.25)
-		end
-
-		local suppression_extension = ScriptUnit.has_extension(unit, "suppression_system")
-
-		if suppression_extension then
-			suppression_extension:add_suppression_immunity_duration(999)
-		end
-
-		local attack_intensity_extension = ScriptUnit.has_extension(unit, "attack_intensity_system")
-
-		if attack_intensity_extension then
-			attack_intensity_extension:set_allow_all_attacks_duration(999)
-		end
+		_parasite_head_start_func(template_data, template_context)
 	end,
-	proc_func = function (params, template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		local attack_type = params.attack_type
-
-		if attack_type ~= "ranged" then
-			return
-		end
-
-		local hit_zone = params.hit_zone_name_or_nil
-
-		if hit_zone == "head" then
-			local unit = template_context.unit
-			local health_extension = ScriptUnit.extension(unit, "health_system")
-			local current_health_percent = health_extension:current_health_percent()
-
-			if current_health_percent <= 0.3 then
-				_parasite_head_stop_function(template_data, template_context)
-			end
-		end
-	end,
+	proc_func = _parasite_head_proc_func,
 }
 templates.mutator_minion_nurgle_blessing_tougher = {
 	class_name = "buff",
@@ -243,7 +264,7 @@ templates.mutator_player_cooldown_reduction = {
 	predicted = false,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = -0.2,
+		[buff_stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.2,
 	},
 }
 templates.mutator_movement_speed_on_spawn = {
@@ -261,25 +282,6 @@ templates.mutator_player_enhanced_grenade_abilities = {
 	class_name = "buff",
 	predicted = false,
 	target = buff_targets.player_only,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
 		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
@@ -383,7 +385,7 @@ templates.mutator_stimmed_minion_purple = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_lefteye",

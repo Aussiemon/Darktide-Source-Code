@@ -1,8 +1,10 @@
 ﻿-- chunkname: @scripts/extension_systems/unit_data/player_unit_data_component_config.lua
 
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
+local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
+local DefaultInputSettings = require("scripts/settings/input/default_input_settings")
 local DisorientationSettings = require("scripts/settings/damage/disorientation_settings")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
@@ -74,6 +76,31 @@ for slot_names_index = 1, #slot_names do
 end
 
 INVENTORY_SLOTS.network_type = "player_inventory_slot_name"
+
+local TRANSITION_TYPES = {
+	"none",
+}
+
+table.append(TRANSITION_TYPES, table.keys(ActionHandlerSettings.transition_types))
+
+TRANSITION_TYPES.network_type = "transition_type"
+
+table.sort(TRANSITION_TYPES)
+
+local INPUTS = {
+	NO_RAW_INPUT = true,
+}
+
+for _, settings in pairs(DefaultInputSettings) do
+	for input_name in pairs(settings.settings) do
+		INPUTS[input_name] = true
+	end
+end
+
+INPUTS = table.keys(INPUTS)
+INPUTS.network_type = "input_name"
+
+table.sort(INPUTS)
 
 local character_state_names = table.keys(PlayerCharacterStates)
 
@@ -771,6 +798,7 @@ local PlayerComponentConfig = {
 		},
 	},
 	weapon_action = {
+		action_context_id = "action_context_id",
 		combo_count = "action_combo_count",
 		end_t = "fixed_frame_offset",
 		is_infinite_duration = "bool",
@@ -781,8 +809,12 @@ local PlayerComponentConfig = {
 		template_name = WEAPON_TEMPLATES,
 		current_action_name = WEAPON_ACTIONS,
 		previous_action_name = WEAPON_ACTIONS,
+		slot_name = INVENTORY_SLOTS,
+		transition_type = TRANSITION_TYPES,
+		used_input = INPUTS,
 	},
 	combat_ability_action = {
+		action_context_id = "action_context_id",
 		combo_count = "action_combo_count",
 		end_t = "fixed_frame_offset",
 		is_infinite_duration = "bool",
@@ -793,8 +825,12 @@ local PlayerComponentConfig = {
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
 		previous_action_name = ABILITY_ACTIONS,
+		slot_name = INVENTORY_SLOTS,
+		transition_type = TRANSITION_TYPES,
+		used_input = INPUTS,
 	},
 	grenade_ability_action = {
+		action_context_id = "action_context_id",
 		combo_count = "action_combo_count",
 		end_t = "fixed_frame_offset",
 		is_infinite_duration = "bool",
@@ -805,8 +841,12 @@ local PlayerComponentConfig = {
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
 		previous_action_name = ABILITY_ACTIONS,
+		slot_name = INVENTORY_SLOTS,
+		transition_type = TRANSITION_TYPES,
+		used_input = INPUTS,
 	},
 	pocketable_ability_action = {
+		action_context_id = "action_context_id",
 		combo_count = "action_combo_count",
 		end_t = "fixed_frame_offset",
 		is_infinite_duration = "bool",
@@ -817,6 +857,9 @@ local PlayerComponentConfig = {
 		template_name = ABILITY_TEMPLATES,
 		current_action_name = ABILITY_ACTIONS,
 		previous_action_name = ABILITY_ACTIONS,
+		slot_name = INVENTORY_SLOTS,
+		transition_type = TRANSITION_TYPES,
+		used_input = INPUTS,
 	},
 	action_throw_luggable = {
 		thrown = "bool",
@@ -849,6 +892,7 @@ local PlayerComponentConfig = {
 		is_sticky = "bool",
 		reference_position = "Vector3",
 		reference_rotation = "Quaternion",
+		sticky_start_orientation = "Quaternion",
 		sweep_aborted_actor_index = "hit_zone_actor_index",
 		sweep_aborted_bit_array = "lookup_2bit0",
 		sweep_aborted_t = "fixed_frame_offset",
@@ -997,27 +1041,24 @@ local PlayerComponentConfig = {
 	},
 	grenade_ability = {
 		active = "bool",
-		cooldown = "fixed_frame_time",
-		cooldown_paused = "bool",
-		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
+		resource = "ability_resource_value",
+		resource_regen_paused = "bool",
 	},
 	combat_ability = {
 		active = "bool",
-		cooldown = "fixed_frame_time",
-		cooldown_paused = "bool",
-		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
+		resource = "ability_resource_value",
+		resource_regen_paused = "bool",
 	},
 	pocketable_ability = {
 		active = "bool",
-		cooldown = "fixed_frame_time",
-		cooldown_paused = "bool",
-		cooldown_regen_buffer = "ability_cooldown_buffer",
 		enabled = "bool",
 		num_charges = "ability_charges",
+		resource = "ability_resource_value",
+		resource_regen_paused = "bool",
 	},
 	talent_resource = {
 		current_resource = "talent_resource",

@@ -161,7 +161,7 @@ local scenegraph_definition = {
 		parent = "screen",
 		vertical_alignment = "bottom",
 		size = {
-			550,
+			300,
 			55,
 		},
 		position = {
@@ -198,6 +198,48 @@ local scenegraph_definition = {
 			2,
 		},
 	},
+	rate_match = {
+		horizontal_alignment = "center",
+		parent = "screen",
+		vertical_alignment = "bottom",
+		size = {
+			580,
+			96,
+		},
+		position = {
+			500,
+			0,
+			4,
+		},
+	},
+	session_stats_prompt = {
+		horizontal_alignment = "center",
+		parent = "title_text",
+		vertical_alignment = "top",
+		size = {
+			400,
+			32,
+		},
+		position = {
+			0,
+			110,
+			3,
+		},
+	},
+	session_stats_pivot = {
+		horizontal_alignment = "center",
+		parent = "screen",
+		vertical_alignment = "top",
+		size = {
+			0,
+			0,
+		},
+		position = {
+			0,
+			160,
+			1,
+		},
+	},
 	loading = {
 		horizontal_alignment = "center",
 		scale = "fit",
@@ -213,7 +255,94 @@ local scenegraph_definition = {
 		},
 	},
 }
+
+local function _rate_match_color_change_function(content, style, _, dt)
+	local rated = content.rated
+	local progress = style.rated_progress or 0
+
+	if rated then
+		progress = _math_min(progress + dt / style.fade_time, 1)
+	end
+
+	style.rated_progress = progress
+
+	local target_color = rated == style.rating and style.selected_color or style.faded_color
+	local normal_color = style.normal_color
+
+	_color_lerp(style.default_color, target_color, progress, normal_color)
+
+	local hotspot = content[style.rating .. "_hotspot"]
+	local hover_progress = not rated and hotspot.anim_hover_progress or 0
+	local color = style.text_color or style.color
+
+	_color_lerp(normal_color, style.hover_color, hover_progress, color)
+end
+
 local widget_definitions = {
+	session_stats_prompt = UIWidget.create_definition({
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+		},
+		{
+			pass_type = "text",
+			style_id = "text",
+			value = "",
+			value_id = "text",
+			change_function = function (content, style)
+				_color_lerp(style.normal_color, style.hover_color, content.hotspot.anim_hover_progress or 0, style.text_color)
+			end,
+		},
+	}, "session_stats_prompt", nil, nil, ViewStyles.session_stats_prompt),
+	rate_match = UIWidget.create_definition({
+		{
+			content_id = "positive_hotspot",
+			pass_type = "hotspot",
+			style_id = "positive_hotspot",
+		},
+		{
+			content_id = "negative_hotspot",
+			pass_type = "hotspot",
+			style_id = "negative_hotspot",
+		},
+		{
+			pass_type = "text",
+			style_id = "title",
+			value_id = "title",
+			value = Localize("loc_eor_rate_match_title"),
+		},
+		{
+			pass_type = "text",
+			style_id = "positive_keybind",
+			value = "",
+			value_id = "positive_keybind",
+			change_function = _rate_match_color_change_function,
+		},
+		{
+			pass_type = "text",
+			style_id = "negative_keybind",
+			value = "",
+			value_id = "negative_keybind",
+			change_function = _rate_match_color_change_function,
+		},
+		{
+			pass_type = "texture",
+			style_id = "positive_icon",
+			value = "content/ui/materials/base/ui_default_base",
+			value_id = "positive_icon",
+			change_function = _rate_match_color_change_function,
+		},
+		{
+			pass_type = "texture",
+			style_id = "negative_icon",
+			value = "content/ui/materials/base/ui_default_base",
+			value_id = "negative_icon",
+			change_function = _rate_match_color_change_function,
+		},
+	}, "rate_match", {
+		rated = false,
+	}, nil, ViewStyles.rate_match),
 	continue_button = UIWidget.create_definition({
 		{
 			content_id = "hotspot",
@@ -503,8 +632,8 @@ local game_mode_condition_widget_definitions = {
 				{
 					pass_type = "text",
 					style_id = "mission_sub_header",
-					value = "",
 					value_id = "mission_sub_header",
+					value = Localize("loc_victory_sub_title", true),
 				},
 			}, "title_text", nil, nil, ViewStyles.mission_header_victory),
 			player_panel = UIWidget.create_definition(player_panel_pass_template, "panel", nil, nil, ViewStyles.player_panel_victory),

@@ -501,10 +501,45 @@ damage_templates.chordclaw_horizontal = {
 	},
 	crit_mod = crit_armor_mod,
 	targets = {
-		default_target = {
+		{
 			power_distribution = {
 				attack = 500,
 				impact = 100,
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		{
+			power_distribution = {
+				attack = 480,
+				impact = 90,
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		{
+			power_distribution = {
+				attack = 450,
+				impact = 80,
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		{
+			power_distribution = {
+				attack = 410,
+				impact = 70,
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		{
+			power_distribution = {
+				attack = 360,
+				impact = 60,
+			},
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+		default_target = {
+			power_distribution = {
+				attack = 300,
+				impact = 50,
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default,
 		},

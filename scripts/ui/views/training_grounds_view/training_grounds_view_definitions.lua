@@ -1,12 +1,10 @@
 ﻿-- chunkname: @scripts/ui/views/training_grounds_view/training_grounds_view_definitions.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local scenegraph_definition = {
 	corner_bottom_left = {
 		horizontal_alignment = "left",
@@ -885,7 +883,6 @@ local button_options_definitions = {
 									alias = "training_grounds",
 									name = "basic_training",
 								},
-								singleplay_type = SINGLEPLAY_TYPES.training_grounds,
 							},
 						},
 					},
@@ -923,7 +920,6 @@ local button_options_definitions = {
 									alias = "training_grounds",
 									name = "advanced_training",
 								},
-								singleplay_type = SINGLEPLAY_TYPES.training_grounds,
 							},
 						},
 					},
@@ -962,7 +958,6 @@ local button_options_definitions = {
 							training_grounds_settings = "shooting_range",
 							mechanism_context = {
 								mission_name = "tg_shooting_range",
-								singleplay_type = SINGLEPLAY_TYPES.training_grounds,
 							},
 						},
 					},

@@ -20,6 +20,8 @@ local MinionDeath = require("scripts/utilities/minion_death")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
+local Stagger = require("scripts/utilities/attack/stagger")
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local Weakspot = require("scripts/utilities/attack/weakspot")
@@ -31,6 +33,7 @@ local buff_proc_events = BuffSettings.proc_events
 local locomotion_states = ProjectileLocomotionSettings.states
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local projectile_types = ProjectileSettings.projectile_types
+local stagger_types = StaggerSettings.stagger_types
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local ProjectileDamageExtension = class("ProjectileDamageExtension")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
@@ -91,6 +94,22 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._weapon_system = Managers.state.extension:system("weapon_system")
 	self._wait_for_explosion_queue_index = {}
 	self._marked_for_deletion_done = false
+
+	Managers.event:register(self, "unit_died", "_event_unit_died")
+end
+
+ProjectileDamageExtension.destroy = function (self)
+	Managers.event:unregister(self, "unit_died")
+end
+
+ProjectileDamageExtension._event_unit_died = function (self, dead_unit)
+	if self._is_server then
+		local unit = self._projectile_unit
+
+		if dead_unit == unit then
+			self._is_killed = true
+		end
+	end
 end
 
 ProjectileDamageExtension._calculate_hit_mass = function (self)
@@ -229,6 +248,17 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		if min_lifetime < new_life_time then
 			fuse_started = true
 		end
+	elseif self._is_killed then
+		if not self._killed_fx_played then
+			self._fx_extension:on_killed()
+
+			self._killed_fx_played = true
+			self._kill_delay = 0.225 + t
+		end
+
+		if self._killed_fx_played and t > self._kill_delay then
+			mark_for_deletion = true
+		end
 	elseif impact_triggered then
 		if not self._has_impacted then
 			if max_lifetime < new_life_time then
@@ -296,15 +326,15 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		end
 
 		local player = Managers.state.player_unit_spawn:owner(owner_unit)
-		local rewind_ms = 0
+		local lag_compensation = 0
 
 		if player then
 			local is_local_unit = not player.remote
 
-			rewind_ms = LagCompensation.rewind_ms(self._is_server, is_local_unit, player) / 1000
+			lag_compensation = LagCompensation.rewind_seconds(self._is_server, is_local_unit, player)
 		end
 
-		fuse_time = fuse_time + rewind_ms
+		fuse_time = fuse_time + lag_compensation
 
 		if fuse_time < new_life_time then
 			local fuse_explosion_template = fuse_damage_settings.explosion_template
@@ -414,6 +444,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 	local origin_slot_or_nil = self._origin_item_slot
 	local locomotion_extension = self._locomotion_extension
 	local rotation, direction = locomotion_extension:current_rotation_and_direction()
+	local apply_buff_on_player_impact = projectile_template.apply_buff_on_player_impact
+	local apply_stagger_on_enemy_impact = projectile_template.apply_stagger_on_enemy_impact
 	local is_critical_strike = self._is_critical_strike
 	local mark_for_deletion = false
 	local impact_result, explosion_queue_index
@@ -422,9 +454,9 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 		local non_target_overrides = impact_damage_settings.non_target_overrides
 		local impact_damage_profile = impact_damage_settings.damage_profile
 		local impact_damage_type = impact_damage_settings.damage_type
-		local impact_explosion_template = impact_damage_settings.explosion_template
 		local impact_liquid_area_template = impact_damage_settings.liquid_area_template
 		local impact_suppression_settings = impact_damage_settings.suppression_settings
+		local impact_explosion_template = self:_resolve_explosion_template(projectile_template, self._template_state, impact_damage_settings.explosion_template)
 
 		if non_target_overrides and not is_target_unit then
 			impact_damage_profile = non_target_overrides.damage_profile or impact_damage_profile
@@ -505,7 +537,22 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot
 
 				if should_deal_damage then
-					damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "dropoff_scalar", dropoff_scalar, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_type, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+					damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "dropoff_scalar", dropoff_scalar, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_type, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil, "slot_name", origin_slot_or_nil)
+				end
+
+				local breed = unit_data_extension and unit_data_extension:breed()
+
+				if Breed.is_player(breed) and apply_buff_on_player_impact then
+					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+
+					if buff_extension then
+						local buff_name = projectile_template.buff_name
+						local t = Managers.time:time("gameplay")
+
+						buff_extension:add_internally_controlled_buff(buff_name, t)
+					end
+				elseif Breed.is_minion(breed) and apply_stagger_on_enemy_impact then
+					Stagger.force_stagger(hit_unit, stagger_types.blinding, hit_direction, 4, 1, 4, self._owner_unit)
 				end
 
 				self._impact_hit = true
@@ -577,6 +624,10 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 			if hit_hard_target and impact_damage_settings.delete_on_impact or hit_mass_stop then
 				mark_for_deletion = true
 				do_impact_explosion = not not impact_explosion_template
+			end
+
+			if self._projectile_template.health_component_data and not impact_damage_settings.delete_on_impact then
+				self._is_killed = true
 			end
 
 			if fuse_damage_settings then
@@ -890,6 +941,28 @@ ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 
 		Managers.stats:record_private("hook_projectile_hit", player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, projectile_name, hit_count, num_impact_hit_minion)
 	end
+end
+
+ProjectileDamageExtension.set_owner_unit = function (self, owner_unit)
+	self._owner_unit = owner_unit
+end
+
+local DEFAULT_TEMPLATE_STATE = "thrown"
+
+ProjectileDamageExtension._resolve_explosion_template = function (self, projectile_template, template_state, fallback)
+	local states = projectile_template.states
+
+	if not states then
+		return fallback
+	end
+
+	local state = states[template_state] or states[DEFAULT_TEMPLATE_STATE]
+
+	return state and state.explosion_template or fallback
+end
+
+ProjectileDamageExtension.set_template_state = function (self, template_state)
+	self._template_state = template_state
 end
 
 return ProjectileDamageExtension

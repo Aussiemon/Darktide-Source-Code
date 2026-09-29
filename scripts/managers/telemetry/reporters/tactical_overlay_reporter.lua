@@ -9,10 +9,6 @@ TacticalOverlayReporter.init = function (self)
 	}
 end
 
-TacticalOverlayReporter.update = function (self, dt, t)
-	return
-end
-
 TacticalOverlayReporter.report = function (self)
 	if table.is_empty(self._report) then
 		return

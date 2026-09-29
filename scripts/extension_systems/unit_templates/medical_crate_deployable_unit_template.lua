@@ -2,6 +2,17 @@
 
 local UnitTemplate = require("scripts/extension_systems/unit_templates/utilities/unit_template")
 local GAME_OBJECT_TYPE = "medical_crate_deployable"
+
+local function _interactee_init_data()
+	return {
+		interaction_type = "deployable_marker",
+		override_context = {
+			description = "loc_pickup_deployable_medical_crate_01",
+			interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_medkit",
+		},
+	}
+end
+
 local medical_crate_deployable_unit_template = {
 	local_unit = function (unit_name, position, rotation, material, ...)
 		unit_name = "content/pickups/pocketables/medical_crate/deployable_medical_crate"
@@ -39,7 +50,7 @@ local medical_crate_deployable_unit_template = {
 		local broadphase = broadphase_system.broadphase
 		local relation_init_data = {
 			allied = {
-				proximity_radius = deployable.proximity_radius,
+				proximity_check_params = deployable.proximity_check_params,
 				stickiness_limit = deployable.stickiness_limit,
 				stickiness_time = deployable.stickiness_time,
 				logic = {
@@ -57,14 +68,19 @@ local medical_crate_deployable_unit_template = {
 			broadphase = broadphase,
 			relation_init_data = relation_init_data,
 		})
+
+		local origin_player = owner_unit_or_nil and Managers.state.player_unit_spawn:owner(owner_unit_or_nil)
+
+		config:add("InteracteeExtension", _interactee_init_data())
 		config:add("PointOfInterestTargetExtension", {
 			tag = "healthstation",
 			view_distance = nil,
 		})
 		config:add("ComponentExtension")
 		config:add("SmartTagExtension", {
-			auto_tag_on_spawn = false,
+			auto_tag_on_spawn = true,
 			target_type = "medical_crate_deployable",
+			origin_player = origin_player,
 		})
 		config:add("DeployableUnitLocomotionExtension", {
 			placed_on_unit = placed_on_unit,
@@ -89,6 +105,7 @@ local medical_crate_deployable_unit_template = {
 		config:add("SideExtension", {
 			side_id = side_id,
 		})
+		config:add("InteracteeExtension", _interactee_init_data())
 		config:add("ComponentExtension")
 		config:add("HuskCoherencyExtension")
 		config:add("SmartTagExtension", {

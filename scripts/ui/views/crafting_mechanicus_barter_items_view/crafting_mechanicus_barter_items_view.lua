@@ -8,6 +8,7 @@ local Items = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Mastery = require("scripts/utilities/mastery")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local Text = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
@@ -16,7 +17,6 @@ local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local WeaponUnlockSettings = require("scripts/settings/weapon_unlock/weapon_unlock_settings")
-local Text = require("scripts/utilities/ui/text")
 local CraftingMechanicusBarterItemsView = class("CraftingMechanicusBarterItemsView", "BaseView")
 
 CraftingMechanicusBarterItemsView.init = function (self, settings, context)
@@ -142,7 +142,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 	local archetype_name = profile_archetype.name
 	local archetype_weapon_unlocks = WeaponUnlockSettings[archetype_name]
 
-	return Managers.data_service.mastery:get_all_masteries():next(function (masteries_data)
+	return Managers.data_service.mastery:get_all_masteries_by_archetype(archetype_name):next(function (masteries_data)
 		local masteries = {}
 		local weapon_patterns = UISettings.weapon_patterns
 
@@ -153,12 +153,6 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 				local master_item = master_item_name and MasterItems.get_item(master_item_name)
 
 				if master_item then
-					local allowed_archetypes = master_item.archetypes
-
-					if not table.contains(allowed_archetypes, archetype_name) then
-						break
-					end
-
 					local weapon_level_requirement
 
 					for weapon_level, weapon_list in ipairs(archetype_weapon_unlocks) do
@@ -175,7 +169,7 @@ CraftingMechanicusBarterItemsView._setup_masteries = function (self, available_m
 
 					local hud_icon = master_item.hud_icon
 
-					hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/combat_blade_01"
+					hud_icon = hud_icon or "content/ui/materials/icons/weapons/hud/debug_primary"
 
 					local mastery_level = mastery_data.mastery_level or 0
 					local mastery_xp = mastery_data.current_xp or 0

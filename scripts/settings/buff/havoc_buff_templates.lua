@@ -148,6 +148,12 @@ local function _bolstering_stop_function(template_context, template_data)
 		return
 	end
 
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if not havoc_extension then
+		return
+	end
+
 	local unit = template_context.unit
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
@@ -289,7 +295,7 @@ templates.havoc_bolstering = {
 		_bolstering_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		stack_material_vectors = {
 			BOLSTERING_1_MINION_EFFECTS.material_vector,
 			BOLSTERING_2_MINION_EFFECTS.material_vector,
@@ -418,7 +424,7 @@ templates.havoc_corrupted_enemies = {
 		_corruption_stop_function(template_context, template_data)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -485,7 +491,15 @@ templates.common_minion_on_fire = {
 }
 
 local function _get_damage_reduction_value()
-	local rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	local rank
+	local havoc_extension = Managers.state.game_mode:game_mode():extension("havoc")
+
+	if havoc_extension then
+		rank = Managers.state.game_mode:game_mode():extension("havoc"):get_current_rank()
+	else
+		rank = 40
+	end
+
 	local reduction_rate = 0.1 + 0.01 * rank
 
 	return reduction_rate
@@ -527,7 +541,7 @@ templates.havoc_toughened_skin = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -852,7 +866,7 @@ templates.havoc_encroaching_garden = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 1,
+		node_effects_priority = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
@@ -902,7 +916,7 @@ templates.blessed_by_the_garden = {
 		return
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators,
+		node_effects_priority = minion_effects_priorities.mutators,
 		node_effects = {
 			{
 				node_name = "j_lefteye",
@@ -1291,7 +1305,7 @@ templates.havoc_enraged_enemies = {
 		Unit.set_vector3_for_materials(unit, "stimmed_color", Vector3(0, 0, 0), true)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 1,
+		node_effects_priority = minion_effects_priorities.mutators + 1,
 		node_effects = {
 			{
 				node_name = "j_head",
@@ -1458,7 +1472,7 @@ templates.mutator_stimmed_minion_blue = {
 		[buff_stat_buffs.super_armor_damage] = blue_stimm_settings.stat_buff_settings.super_armor_damage,
 	},
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -1588,7 +1602,7 @@ templates.mutator_stimmed_minion_green = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -1682,7 +1696,7 @@ templates.mutator_stimmed_minion_red = {
 		end
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -1802,7 +1816,7 @@ templates.mutator_stimmed_minion_yellow = {
 		health_extension:set_hit_mass(template_data.old_hit_mass)
 	end,
 	minion_effects = {
-		node_effects_priotity = minion_effects_priorities.mutators + 3,
+		node_effects_priority = minion_effects_priorities.mutators + 3,
 		node_effects = {
 			{
 				node_name = "j_spine",
@@ -1867,7 +1881,7 @@ templates.mutator_stimmed_minion_yellow = {
 }
 templates.ogryn_mutator_stimmed_minion_red = table.clone(templates.mutator_stimmed_minion_red)
 templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
@@ -1931,7 +1945,7 @@ templates.ogryn_mutator_stimmed_minion_red.minion_effects = {
 }
 templates.ogryn_mutator_stimmed_minion_green = table.clone(templates.mutator_stimmed_minion_green)
 templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
@@ -1995,7 +2009,7 @@ templates.ogryn_mutator_stimmed_minion_green.minion_effects = {
 }
 templates.ogryn_mutator_stimmed_minion_blue = table.clone(templates.mutator_stimmed_minion_blue)
 templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
@@ -2059,7 +2073,7 @@ templates.ogryn_mutator_stimmed_minion_blue.minion_effects = {
 }
 templates.ogryn_mutator_stimmed_minion_yellow = table.clone(templates.mutator_stimmed_minion_yellow)
 templates.ogryn_mutator_stimmed_minion_yellow.minion_effects = {
-	node_effects_priotity = minion_effects_priorities.mutators + 3,
+	node_effects_priority = minion_effects_priorities.mutators + 3,
 	node_effects = {
 		{
 			node_name = "j_spine",
@@ -2207,7 +2221,7 @@ templates.havoc_increased_cd_1 = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = 5,
+		[buff_stat_buffs.combat_ability_resource_cost_per_use_modifier] = 0.05,
 	},
 }
 templates.havoc_vent_speed_reduction_1 = {
@@ -2388,137 +2402,30 @@ templates.havoc_melee_permanent_damage_05 = {
 templates.havoc_positive_grenade_buff_1 = {
 	class_name = "buff",
 	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
 		[buff_stat_buffs.warp_charge_amount_smite] = 0.2,
 	},
 }
-templates.havoc_positive_grenade_buff_2 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.3,
-	},
+templates.havoc_positive_grenade_buff_2 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_2.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 1,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.3,
 }
-templates.havoc_positive_grenade_buff_3 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.4,
-	},
+templates.havoc_positive_grenade_buff_3 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_3.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.4,
 }
-templates.havoc_positive_grenade_buff_4 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
-	},
+templates.havoc_positive_grenade_buff_4 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_4.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.5,
 }
-templates.havoc_positive_grenade_buff_5 = {
-	class_name = "buff",
-	predicted = false,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
-	end,
-	stat_buffs = {
-		[buff_stat_buffs.extra_max_amount_of_grenades] = 3,
-		[buff_stat_buffs.warp_charge_amount_smite] = 0.6,
-	},
+templates.havoc_positive_grenade_buff_5 = table.clone(templates.havoc_positive_grenade_buff_1)
+templates.havoc_positive_grenade_buff_5.stat_buffs = {
+	[buff_stat_buffs.extra_max_amount_of_grenades] = 3,
+	[buff_stat_buffs.warp_charge_amount_smite] = 0.6,
 }
 templates.havoc_melee_attack_speed_01 = {
 	class_name = "buff",

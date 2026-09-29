@@ -438,4 +438,30 @@ ProjectileHuskLocomotionExtension._hide_pin = function (self)
 	end
 end
 
+ProjectileHuskLocomotionExtension.register_sweep_hit = function (self, hit_unit, attacker_unit, first_person_component, hit_direction, damage_profile, t)
+	local locomotion_template = self._projectile_locomotion_template
+	local true_flight_template = locomotion_template and locomotion_template.true_flight_template
+
+	if not true_flight_template then
+		return
+	end
+
+	local dot_validation_func = true_flight_template.sweep_hit_dot_validation_func
+	local is_player_facing_projectile = true
+
+	if dot_validation_func then
+		is_player_facing_projectile = dot_validation_func and dot_validation_func(hit_unit, attacker_unit, first_person_component, true_flight_template)
+	end
+
+	if not is_player_facing_projectile then
+		return
+	end
+
+	local fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
+
+	if fx_extension.on_sweep_hit then
+		fx_extension:on_sweep_hit()
+	end
+end
+
 return ProjectileHuskLocomotionExtension

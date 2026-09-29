@@ -37,7 +37,6 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_aim = {
-		ability_type = "grenade_ability",
 		allowed_during_lunge = true,
 		allowed_during_sprint = true,
 		kind = "shout_aim",
@@ -51,14 +50,13 @@ ability_template.actions = {
 		},
 	},
 	action_order_companion = {
-		ability_type = "grenade_ability",
 		allowed_during_sprint = true,
+		consume_ability_usage_cost = true,
 		kind = "order_companion",
 		sprint_ready_up_time = 0,
 		total_time = 1,
 		trigger_time = 0.3,
 		uninterruptible = true,
-		use_ability_charge = true,
 	},
 }
 ability_template.fx_sources = {}

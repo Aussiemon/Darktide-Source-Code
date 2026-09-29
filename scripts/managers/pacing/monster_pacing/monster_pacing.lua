@@ -42,6 +42,7 @@ MonsterPacing.destroy = function (self)
 end
 
 MonsterPacing.on_gameplay_post_init = function (self, level, template)
+	self._disabled = false
 	self._template = template
 	self._pacing_type = self._template.pacing_type or pacing_types.default
 
@@ -633,6 +634,10 @@ MonsterPacing._check_alive = function (self)
 end
 
 MonsterPacing._update_allowance = function (self, dt, t, side_id, target_side_id)
+	if not Managers.state.pacing:heat_active() then
+		return false
+	end
+
 	local template = self._template
 	local max_allowed_by_current_heat_level = Managers.state.pacing:get_table_entry_by_heat_stage(template.max_allowed_by_heat)
 
@@ -852,6 +857,10 @@ MonsterPacing.set_num_captains_override = function (self, override)
 end
 
 MonsterPacing._expedition_setup_monster_loot = function (self, pacing_type, spawned_unit)
+	if not Managers.state.pacing:heat_active() then
+		return
+	end
+
 	local unit_data_extension = ScriptUnit.extension(spawned_unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local is_monster_or_captain = breed.tags.monster or breed.tags.captain or breed.tags.cultist_captain

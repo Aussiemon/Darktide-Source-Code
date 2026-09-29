@@ -14,6 +14,7 @@ local Settings = require("scripts/ui/views/expedition_view/expedition_view_setti
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementTutorialPopup = require("scripts/ui/view_elements/view_element_tutorial_popup/view_element_tutorial_popup")
+local DANGER_LEVELS = DangerSettings.danger_levels
 local MATCH_VISIBILITY = ExpeditionViewDefinitions.MATCH_VISIBILITY
 local UNLOCK_STATUS = ExpeditionService.UNLOCK_STATUS
 local UNLOCK_TYPE = ExpeditionService.UNLOCK_TYPE
@@ -23,7 +24,7 @@ ExpeditionView.init = function (self, settings, context)
 	self._expedition_service = Managers.data_service.expedition
 	self.save_data = self._expedition_service:get_character_mission_board_save_data()
 	self._current_match_visibility = self:_get_saved_match_visibility()
-	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DangerSettings - 1) or 1
+	self._page_index = self.save_data.page_index and math.clamp(self.save_data.page_index - 1, 1, #DANGER_LEVELS - 1) or 1
 	self._party_manager = Managers.party_immaterium
 	self._player_level = self:_player():profile().current_level
 	self._enable_input_delay = Settings.enable_input_delay
@@ -1100,7 +1101,7 @@ ExpeditionView._create_page_settings = function (self, difficulty_progress_data)
 	local pages = {}
 	local current_difficulty = difficulty_progress_data.current
 
-	for i, difficulty in ipairs(DangerSettings) do
+	for ii, difficulty in ipairs(DANGER_LEVELS) do
 		local is_uprising = difficulty.name == "uprising"
 
 		if not is_uprising then

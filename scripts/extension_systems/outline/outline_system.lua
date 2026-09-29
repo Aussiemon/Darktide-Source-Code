@@ -132,6 +132,21 @@ local function _update_material_layers_color(unit, extension, wanted_outline_col
 	end
 end
 
+local function _apply_outline_visibility(unit, extension, top_outline, should_show)
+	local visible_material_layers = extension.visible_material_layers
+
+	if visible_material_layers and not should_show then
+		_set_material_layers(unit, visible_material_layers, false)
+
+		extension.visible_material_layers = nil
+	elseif not visible_material_layers and should_show then
+		_set_material_layers(unit, top_outline.material_layers, true)
+		_update_material_layers_color(unit, extension, top_outline.color, top_outline.material_layers)
+
+		extension.visible_material_layers = top_outline.material_layers
+	end
+end
+
 OutlineSystem.on_remove_extension = function (self, unit, extension_name)
 	local extension = self._unit_extension_data[unit]
 	local visible_material_layers = extension.visible_material_layers
@@ -207,6 +222,7 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 		color = setting.color,
 		material_layers = setting.material_layers,
 		visibility_check = setting.visibility_check,
+		override_global_visibility = setting.override_global_visibility,
 	}
 
 	outlines[#outlines + 1] = outline
@@ -293,28 +309,23 @@ OutlineSystem.update = function (self, context, dt, t)
 		return
 	end
 
-	local visible = self._visible
-	local visible_new = self:_check_global_visibility()
-
-	if visible and not visible_new then
-		for unit, extension in pairs(self._unit_extension_data) do
-			self:_hide_outline(unit, extension)
-		end
-
-		self._visible = false
-
-		return
-	elseif not visible and visible_new then
-		for unit, extension in pairs(self._unit_extension_data) do
-			self:_show_outline(unit, extension)
-		end
-
-		self._visible = true
+	if self:_cinematic_active() then
+		self:_hide_all_outlines()
 
 		return
 	end
 
-	if not visible then
+	if self._disabled then
+		for unit, extension in pairs(self._unit_extension_data) do
+			local top_outline = extension.outlines[1]
+
+			if top_outline then
+				local should_show = top_outline.override_global_visibility and (not top_outline.visibility_check or top_outline.visibility_check(unit))
+
+				_apply_outline_visibility(unit, extension, top_outline, should_show)
+			end
+		end
+
 		return
 	end
 
@@ -322,24 +333,13 @@ OutlineSystem.update = function (self, context, dt, t)
 		local top_outline = extension.outlines[1]
 
 		if top_outline then
-			local visible_material_layers = extension.visible_material_layers
-
 			if not top_outline.visibility_check then
 				table.dump(top_outline, "top outline", 2)
 			end
 
 			local should_show = not top_outline.visibility_check or top_outline.visibility_check(unit)
 
-			if visible_material_layers and not should_show then
-				_set_material_layers(unit, visible_material_layers, false)
-
-				extension.visible_material_layers = nil
-			elseif not visible_material_layers and should_show then
-				_set_material_layers(unit, top_outline.material_layers, true)
-				_update_material_layers_color(unit, extension, top_outline.color, top_outline.material_layers)
-
-				extension.visible_material_layers = top_outline.material_layers
-			end
+			_apply_outline_visibility(unit, extension, top_outline, should_show)
 		end
 	end
 end
@@ -356,6 +356,12 @@ OutlineSystem._show_outline = function (self, unit, extension)
 	end
 end
 
+OutlineSystem._hide_all_outlines = function (self)
+	for unit, extension in pairs(self._unit_extension_data) do
+		self:_hide_outline(unit, extension)
+	end
+end
+
 OutlineSystem._hide_outline = function (self, unit, extension)
 	local visible_material_layers = extension.visible_material_layers
 
@@ -364,18 +370,6 @@ OutlineSystem._hide_outline = function (self, unit, extension)
 
 		extension.visible_material_layers = nil
 	end
-end
-
-OutlineSystem._check_global_visibility = function (self)
-	if self._disabled then
-		return false
-	end
-
-	if self:_cinematic_active() then
-		return false
-	end
-
-	return true
 end
 
 OutlineSystem._cinematic_active = function (self)

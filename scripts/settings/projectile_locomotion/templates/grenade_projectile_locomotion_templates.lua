@@ -642,6 +642,7 @@ local grenade_projectile_locomotion_templates = {
 			collision_filter = "filter_player_character_shooting_projectile",
 			collision_types = "both",
 			drag_coefficient = 0.2,
+			flat_look_rotation = true,
 			gravity = 12.5,
 			mass = 0.8,
 			max_hit_count = 10,

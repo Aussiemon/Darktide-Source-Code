@@ -90,6 +90,10 @@ MinionLocomotionExtension.set_check_falling = function (self, state)
 	MinionLocomotion.set_check_falling(self._engine_extension_id, state)
 end
 
+MinionLocomotionExtension.get_movement_type = function (self)
+	return self.movement_type
+end
+
 local movement_types = {
 	constrained_by_mover = 2,
 	script_driven = 0,

@@ -10,15 +10,11 @@ local function generate_base_template()
 	local base_template = {}
 
 	base_template.action_inputs = {
-		combat_ability = {
-			buffer_time = 0,
-			input_sequence = nil,
-		},
 		aim_drone = {
 			buffer_time = 0,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = true,
 				},
 			},
@@ -27,7 +23,7 @@ local function generate_base_template()
 			buffer_time = 0.6,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
 					time_window = math.huge,
 				},
@@ -37,7 +33,7 @@ local function generate_base_template()
 			buffer_time = 0.1,
 			input_sequence = {
 				{
-					input = "combat_ability_hold",
+					input_alias = "wielded_input_hold",
 					value = false,
 					time_window = math.huge,
 				},
@@ -71,16 +67,6 @@ local function generate_base_template()
 			buffer_time = 0,
 			input_sequence = nil,
 		},
-		grenade_ability = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					input = "grenade_ability_pressed",
-					value = true,
-				},
-			},
-		},
 	}
 
 	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -101,10 +87,6 @@ local function generate_base_template()
 					input = "cancel",
 					transition = "base",
 				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 		{
@@ -122,10 +104,6 @@ local function generate_base_template()
 					input = "cancel",
 					transition = "base",
 				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 		{
@@ -140,26 +118,13 @@ local function generate_base_template()
 			input = "unwield_to_previous",
 			transition = "stay",
 		},
-		{
-			input = "grenade_ability",
-			transition = "stay",
-		},
 	}
 	base_template.actions = {
-		action_unwield = {
-			allowed_during_sprint = true,
-			kind = "unwield",
-			start_input = "wield",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
 		action_unwield_to_previous = {
 			allowed_during_sprint = true,
 			kind = "unwield_to_previous",
 			total_time = 0,
 			uninterruptible = true,
-			unwield_to_weapon = true,
 			allowed_chain_actions = {},
 		},
 		action_wield = {
@@ -195,16 +160,13 @@ local function generate_base_template()
 			uninterruptible = true,
 			total_time = math.huge,
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				release_drone = {
 					action_name = "action_release_drone",
 				},
 				cancel = {
 					action_name = "action_cancel",
 				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
@@ -228,27 +190,24 @@ local function generate_base_template()
 				},
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				instant_release_drone = {
 					action_name = "action_instant_release_drone",
 				},
 				cancel = {
 					action_name = "action_cancel",
 				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
 			end,
 		},
 		action_release_drone = {
-			ability_type = "combat_ability",
 			abort_sprint = true,
 			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
+			consume_ability_usage_cost = true,
 			fire_time = 0.4,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
@@ -258,7 +217,6 @@ local function generate_base_template()
 			total_time = 1.3,
 			track_towards_position = true,
 			uninterruptible = true,
-			use_ability_charge = true,
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
@@ -270,9 +228,7 @@ local function generate_base_template()
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			spawn_offset = Vector3Box(0.5, -0.2, -0.2),
 			anim_end_event_condition_func = function (unit, data, end_reason)
@@ -283,11 +239,11 @@ local function generate_base_template()
 			end,
 		},
 		action_instant_release_drone = {
-			ability_type = "combat_ability",
 			abort_sprint = true,
 			allowed_during_sprint = true,
 			anim_end_event = "equip",
 			anim_event = "throw_underhand",
+			consume_ability_usage_cost = true,
 			fire_time = 0.25,
 			kind = "spawn_projectile",
 			position_finder_module_class_name = "drone_position_finder",
@@ -297,7 +253,6 @@ local function generate_base_template()
 			total_time = 1,
 			track_towards_position = true,
 			uninterruptible = true,
-			use_ability_charge = true,
 			vo_tag_release = "blitz_nuncio_a",
 			weapon_handling_template = "grenade_throw",
 			conditional_state_to_action_input = {
@@ -309,9 +264,7 @@ local function generate_base_template()
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				local ability_extension = ScriptUnit.has_extension(unit, "ability_system")

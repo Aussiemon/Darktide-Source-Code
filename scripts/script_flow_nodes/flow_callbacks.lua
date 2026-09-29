@@ -1272,6 +1272,15 @@ FlowCallbacks.sub_levels_spawned = function (params)
 	ScriptWorld.register_sub_levels_spawned_callback(world, level, cb)
 end
 
+FlowCallbacks.wizard_vanish = function (params)
+	local unit = params.unit
+	local direction = params.direction
+	local optional_duration = params.optional_duration
+	local fx_system = Managers.state.extension:system("fx_system")
+
+	fx_system:start_sequence(unit, "wizard_vanish", direction, optional_duration)
+end
+
 FlowCallbacks.show_players = function (params)
 	PlayerVisibility.show_players()
 end
@@ -1673,7 +1682,7 @@ FlowCallbacks.load_mission = function (params)
 	local game_mode_name = mission_settings.game_mode_name
 	local game_mode_settings = GameModeSettings[game_mode_name]
 
-	if game_mode_settings.host_singleplay then
+	if game_mode_settings.host_singleplay or mission_settings.host_singleplay then
 		Managers.multiplayer_session:reset("Hosting singleplay mission from flow")
 		Managers.multiplayer_session:boot_singleplayer_session()
 	end
@@ -1996,8 +2005,8 @@ FlowCallbacks.stop_all_vo = function (params)
 end
 
 FlowCallbacks.is_currently_playing_dialogue = function (params)
-	local unit = params.source
-	local is_playing = Vo.is_currently_playing_dialogue(unit)
+	local optional_unit = params.source
+	local is_playing = Vo.is_currently_playing_dialogue(optional_unit)
 
 	if is_playing then
 		flow_return_table.vo_playing = true
@@ -2131,12 +2140,30 @@ FlowCallbacks.expedition_mark_level_complete = function (params)
 	Managers.event:trigger("expedition_mark_level_complete", Managers.state.unit_spawner:index_by_level(level))
 end
 
+FlowCallbacks.expedition_show_map = function (params)
+	local level = params.level or Application.flow_callback_context_level()
+
+	Managers.event:trigger("expedition_show_level_on_map", Managers.state.unit_spawner:index_by_level(level))
+end
+
+FlowCallbacks.expedition_hide_map = function (params)
+	local level = params.level or Application.flow_callback_context_level()
+
+	Managers.event:trigger("expedition_hide_level_on_map", Managers.state.unit_spawner:index_by_level(level))
+end
+
 FlowCallbacks.expedition_register_interactable_requirement = function (params)
 	local unit = params.unit
 	local collectible_id = params.collectible_id
 	local amount = params.amount
 
 	Managers.event:trigger("event_expedition_register_interactable_requirement", unit, collectible_id, amount)
+end
+
+FlowCallbacks.expedition_enable_exit_and_extraction = function (params)
+	local level = params.level or Application.flow_callback_context_level()
+
+	Managers.event:trigger("expedition_enable_exit_and_extraction", Managers.state.unit_spawner:index_by_level(level))
 end
 
 FlowCallbacks.expedition_get_extraction_wait_time = function (params)
@@ -2537,7 +2564,16 @@ FlowCallbacks.clear_payload_aim_target_position = function (params)
 	end
 end
 
-local function get_objective_group_id()
+local function get_objective_group_id(objective_name)
+	if objective_name then
+		local objective_system = Managers.state.extension:system("mission_objective_system")
+		local override_id = objective_system:get_override_group_id_from_objective(objective_name)
+
+		if override_id then
+			return override_id
+		end
+	end
+
 	local level = Application.flow_callback_context_level()
 	local unit_spawner_manager = Managers.state.unit_spawner
 
@@ -2565,8 +2601,9 @@ FlowCallbacks.start_mission_objective = function (params)
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 		local level = Application.flow_callback_context_level()
 		local cb = callback(Level.trigger_script_node_event, level, params.node_id, "objective_ended", true)
+		local objective_name = params.objective_name
 
-		mission_objective_system:flow_callback_start_mission_objective(params.objective_name, get_objective_group_id(), cb)
+		mission_objective_system:flow_callback_start_mission_objective(objective_name, get_objective_group_id(objective_name), cb)
 	end
 end
 
@@ -2575,8 +2612,9 @@ FlowCallbacks.update_mission_objective = function (params)
 
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local objective_name = params.objective_name
 
-		mission_objective_system:flow_callback_update_mission_objective(params.objective_name, get_objective_group_id())
+		mission_objective_system:flow_callback_update_mission_objective(objective_name, get_objective_group_id(objective_name))
 	end
 end
 
@@ -2585,8 +2623,9 @@ FlowCallbacks.end_mission_objective = function (params)
 
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local objective_name = params.objective_name
 
-		mission_objective_system:flow_callback_end_mission_objective(params.objective_name, get_objective_group_id())
+		mission_objective_system:flow_callback_end_mission_objective(objective_name, get_objective_group_id(objective_name))
 	end
 end
 
@@ -2595,8 +2634,9 @@ FlowCallbacks.reset_mission_objective = function (params)
 
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+		local objective_name = params.objective_name
 
-		mission_objective_system:flow_callback_reset_mission_objective(params.objective_name, get_objective_group_id())
+		mission_objective_system:flow_callback_reset_mission_objective(objective_name, get_objective_group_id(objective_name))
 	end
 end
 
@@ -2610,7 +2650,7 @@ FlowCallbacks.start_side_mission_objective = function (params)
 			local objective_name = side_mission.name
 			local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-			mission_objective_system:flow_callback_start_mission_objective(objective_name, get_objective_group_id())
+			mission_objective_system:flow_callback_start_mission_objective(objective_name, get_objective_group_id(objective_name))
 		else
 			Log.warning("FlowCallbacks", "side_mission(%s) not defined.", tostring(Managers.state.mission:side_mission_name()))
 		end
@@ -2626,7 +2666,7 @@ FlowCallbacks.mission_objective_override_ui_string = function (params)
 		local new_ui_description = params.new_ui_description
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(), new_ui_header, new_ui_description)
+		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(objective_name), new_ui_header, new_ui_description)
 	end
 end
 
@@ -2637,7 +2677,7 @@ FlowCallbacks.mission_objective_reset_override_ui_string = function (params)
 		local objective_name = params.mission_objective_name
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(), "empty_objective_string", "empty_objective_string")
+		mission_objective_system:flow_callback_override_ui_string(objective_name, get_objective_group_id(objective_name), "empty_objective_string", "empty_objective_string")
 	end
 end
 
@@ -2649,7 +2689,7 @@ FlowCallbacks.mission_objective_show_ui = function (params)
 		local show = params.show
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_ui(objective_name, get_objective_group_id(), show)
+		mission_objective_system:flow_callback_set_objective_show_ui(objective_name, get_objective_group_id(objective_name), show)
 	end
 end
 
@@ -2661,7 +2701,7 @@ FlowCallbacks.mission_objective_set_ui_state = function (params)
 		local state = params.state
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_ui_state(objective_name, get_objective_group_id(), state)
+		mission_objective_system:flow_callback_set_objective_ui_state(objective_name, get_objective_group_id(objective_name), state)
 	end
 end
 
@@ -2673,7 +2713,7 @@ FlowCallbacks.mission_objective_increment = function (params)
 		local amount = params.amount
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:external_update_mission_objective(objective_name, get_objective_group_id(), 0, amount)
+		mission_objective_system:external_update_mission_objective(objective_name, get_objective_group_id(objective_name), 0, amount)
 	end
 end
 
@@ -2685,7 +2725,7 @@ FlowCallbacks.mission_objective_show_counter = function (params)
 		local show = params.show_counter
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_counter(objective_name, get_objective_group_id(), show)
+		mission_objective_system:flow_callback_set_objective_show_counter(objective_name, get_objective_group_id(objective_name), show)
 	end
 end
 
@@ -2697,7 +2737,7 @@ FlowCallbacks.mission_objective_show_bar = function (params)
 		local show = params.show_bar
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_bar(objective_name, get_objective_group_id(), show)
+		mission_objective_system:flow_callback_set_objective_show_bar(objective_name, get_objective_group_id(objective_name), show)
 	end
 end
 
@@ -2709,7 +2749,7 @@ FlowCallbacks.mission_objective_show_timer = function (params)
 		local show = params.show_timer
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_set_objective_show_timer(objective_name, get_objective_group_id(), show)
+		mission_objective_system:flow_callback_set_objective_show_timer(objective_name, get_objective_group_id(objective_name), show)
 	end
 end
 
@@ -3216,6 +3256,68 @@ FlowCallbacks.is_dedicated_server = function (params)
 	return flow_return_table
 end
 
+FlowCallbacks.is_server = function (params)
+	flow_return_table.is_server = Managers.state.game_session:is_server()
+
+	return flow_return_table
+end
+
+FlowCallbacks.sync_movement_to_client = function (params)
+	local position = params.position
+	local rotation = params.rotation
+	local unit = params.unit
+	local game_session = Managers.state.game_session:game_session()
+	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+	if game_object_id then
+		GameSession.set_game_object_field(game_session, game_object_id, "position", position)
+		GameSession.set_game_object_field(game_session, game_object_id, "rotation", rotation)
+	end
+end
+
+FlowCallbacks.sync_movement_from_server = function (params)
+	local unit = params.unit
+	local game_session = Managers.state.game_session:game_session()
+	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+	if game_object_id then
+		flow_return_table.position = GameSession.game_object_field(game_session, game_object_id, "position")
+		flow_return_table.rotation = GameSession.game_object_field(game_session, game_object_id, "rotation")
+	end
+
+	return flow_return_table
+end
+
+FlowCallbacks.nav_position_from_position = function (params)
+	local position = params.position
+	local unchanged_z = params.unchanged_z
+	local nav_world = Managers.state.nav_mesh:nav_world()
+	local above = 5
+	local below = 5
+	local lateral = 5
+	local distance_from_navmesh = 0.1
+	local nav_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, above, below, lateral, distance_from_navmesh)
+
+	if nav_position and unchanged_z then
+		nav_position.z = position.z
+	end
+
+	flow_return_table.nav_position = nav_position
+
+	return flow_return_table
+end
+
+FlowCallbacks.ray_can_go = function (params)
+	local start_position = params.start_position
+	local end_position = params.end_position
+	local nav_world = Managers.state.nav_mesh:nav_world()
+	local ray_can_go = NavQueries.ray_can_go(nav_world, start_position, end_position)
+
+	flow_return_table.ray_can_go = ray_can_go
+
+	return flow_return_table
+end
+
 FlowCallbacks.local_player_level = function (params)
 	local local_player_id = 1
 	local local_player = Managers.player:local_player(local_player_id)
@@ -3353,6 +3455,17 @@ FlowCallbacks.complete_narrative_chapter = function (params)
 	local chapter_name = params.chapter_name
 
 	flow_return_table.success = Managers.narrative:complete_current_chapter(story_name, chapter_name)
+
+	return flow_return_table
+end
+
+FlowCallbacks.is_campaign_completed = function (params)
+	local campaign_name = params.campaign_name
+	local campaigns_data = Managers.data_service.mission_board:get_filtered_campaigns_data()
+	local campaign_data = campaigns_data and campaigns_data[campaign_name]
+	local campaign_completed = campaign_data and campaign_data.completed
+
+	flow_return_table.campaign_completed = campaign_completed
 
 	return flow_return_table
 end
@@ -3518,6 +3631,23 @@ FlowCallbacks.hordes_mode_select_random_island = function (params)
 	Managers.event:trigger("hordes_mode_select_random_island")
 end
 
+FlowCallbacks.player_entered_fork_path = function (params)
+	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+	local telemetry_events_manager = Managers.telemetry_events
+
+	if not is_server or not telemetry_events_manager then
+		return
+	end
+
+	local fork_id = params.fork_id or "1"
+	local path_id = params.path_id or "A"
+	local is_correct_path = params.is_correct_path or false
+	local player_unit = params.player_unit or nil
+	local player = player_unit and Managers.player:player_by_unit(player_unit) or nil
+
+	telemetry_events_manager:player_entered_fork_path(player, fork_id, path_id, is_correct_path)
+end
+
 FlowCallbacks.set_unit_material_scalar = function (params)
 	local unit = params.unit
 	local material_name = params.material_name
@@ -3553,6 +3683,14 @@ FlowCallbacks.pj_feature_check = function ()
 	flow_return_table[feature] = true
 
 	return flow_return_table
+end
+
+FlowCallbacks.set_object_set_visible = function (params)
+	local level_object_set_manager = Managers.state.level_object_set
+
+	if level_object_set_manager then
+		level_object_set_manager:set_object_set_visible(params.object_set_name, params.visible)
+	end
 end
 
 FlowCallbacks.is_level_dark = function (params)

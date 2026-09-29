@@ -106,6 +106,10 @@ MinionAnimationExtension.anim_event = function (self, event_name, optional_excep
 	end
 end
 
+MinionAnimationExtension.has_anim_event = function (self, event_name)
+	return Unit.has_animation_event(self._unit, event_name)
+end
+
 MinionAnimationExtension.anim_event_with_variable_float = function (self, event_name, variable_name, variable_value)
 	local unit = self._unit
 	local game_object_id = self._game_object_id

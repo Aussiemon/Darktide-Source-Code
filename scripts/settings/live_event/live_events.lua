@@ -32,5 +32,8 @@ _add_live_event("skulls_guns")
 _add_live_event("leftover")
 _add_live_event("barren")
 _add_live_event("endless_hordes")
+_add_live_event("torment")
+_add_live_event("play_spillway")
+_add_live_event("nurgle_explosion_2026")
 
 return settings("LiveEvents", live_events)

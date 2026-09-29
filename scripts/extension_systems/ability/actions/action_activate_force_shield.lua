@@ -32,20 +32,18 @@ ActionActivateForceShield.init = function (self, action_context, action_params, 
 	self._player_disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
 end
 
-ActionActivateForceShield._use_ability_charge = function (self, optional_num_charges)
-	local action_settings = self._action_settings
-	local ability_type = action_settings.ability_type
+ActionActivateForceShield._consume_ability_usage_cost = function (self, optional_usage_cost_override, optional_usage_cost_multiplier)
 	local ability_extension = self._ability_extension
-	local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+	local remaining_charges = ability_extension:remaining_ability_charges(self._ability_type)
 	local capacitance_cost_when_empty = self._capacitance_cost_when_empty
 
 	if remaining_charges <= 0 and capacitance_cost_when_empty then
-		ability_extension:increase_ability_cooldown_percentage(COMBAT_ABILITY_TYPE, capacitance_cost_when_empty)
+		ability_extension:consume_ability_charge_percentage(COMBAT_ABILITY_TYPE, capacitance_cost_when_empty)
 
-		return 0
+		return 1, 1
 	end
 
-	return ActionActivateForceShield.super._use_ability_charge(self, optional_num_charges)
+	return ActionActivateForceShield.super._consume_ability_usage_cost(self, optional_usage_cost_override, optional_usage_cost_multiplier)
 end
 
 ActionActivateForceShield.start = function (self, action_settings, t, ...)

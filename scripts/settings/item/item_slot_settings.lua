@@ -19,7 +19,15 @@ local item_slot_settings = {
 			"slot_body_face_makeup",
 		},
 	},
-	slot_body_face_tattoo = {
+	slot_body_face_hair = {
+		show_in_character_create = true,
+		slot_type = "body",
+		slot_dependencies = {
+			"slot_body_hair_color",
+			"slot_body_face_hair_color",
+		},
+	},
+	slot_body_face_makeup = {
 		show_in_character_create = true,
 		slot_type = "body",
 	},
@@ -32,15 +40,7 @@ local item_slot_settings = {
 			"slot_body_skin_discoloration",
 		},
 	},
-	slot_body_face_hair = {
-		show_in_character_create = true,
-		slot_type = "body",
-		slot_dependencies = {
-			"slot_body_hair_color",
-			"slot_body_face_hair_color",
-		},
-	},
-	slot_body_face_makeup = {
+	slot_body_face_tattoo = {
 		show_in_character_create = true,
 		slot_type = "body",
 	},
@@ -57,7 +57,7 @@ local item_slot_settings = {
 			"slot_body_eye_color_secondary",
 		},
 	},
-	slot_body_legs = {
+	slot_body_arms = {
 		show_in_character_create = true,
 		slot_type = "body",
 		slot_dependencies = {
@@ -68,7 +68,7 @@ local item_slot_settings = {
 			"slot_body_skin_discoloration",
 		},
 	},
-	slot_body_arms = {
+	slot_body_legs = {
 		show_in_character_create = true,
 		slot_type = "body",
 		slot_dependencies = {
@@ -93,25 +93,15 @@ local item_slot_settings = {
 			"slot_body_face_tattoo",
 		},
 	},
-	slot_companion_body_skin_color = {
+	slot_body_eye_color = {
 		show_in_character_create = true,
 		slot_type = "body",
-		archetype_restrictions = {
-			"adamant",
-		},
 	},
-	slot_companion_body_fur_color = {
+	slot_body_eye_color_secondary = {
 		show_in_character_create = true,
 		slot_type = "body",
 		archetype_restrictions = {
-			"adamant",
-		},
-	},
-	slot_companion_body_coat_pattern = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"adamant",
+			"cryptic",
 		},
 	},
 	slot_body_hair_color = {
@@ -146,27 +136,25 @@ local item_slot_settings = {
 			"cryptic",
 		},
 	},
-	slot_body_eye_color = {
+	slot_companion_body_skin_color = {
 		show_in_character_create = true,
 		slot_type = "body",
-	},
-	slot_body_eye_color_secondary = {
-		show_in_character_create = true,
-		slot_type = "body",
-		archetype_restrictions = {
-			"cryptic",
-		},
-	},
-	slot_companion_gear_full = {
-		display_icon = "content/ui/materials/icons/cosmetics/categories/companion_gear_full",
-		display_name = "loc_inventory_title_slot_companion_gear_full_new",
-		equipped_in_inventory = true,
-		show_in_character_create = true,
-		slot_type = "gear",
-		store_category = "companion_gear_full",
 		archetype_restrictions = {
 			"adamant",
-			"cryptic",
+		},
+	},
+	slot_companion_body_fur_color = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"adamant",
+		},
+	},
+	slot_companion_body_coat_pattern = {
+		show_in_character_create = true,
+		slot_type = "body",
+		archetype_restrictions = {
+			"adamant",
 		},
 	},
 	slot_gear_head = {
@@ -220,6 +208,18 @@ local item_slot_settings = {
 		slot_type = "material",
 		archetype_restrictions = {
 			"adamant",
+		},
+	},
+	slot_companion_gear_full = {
+		display_icon = "content/ui/materials/icons/cosmetics/categories/companion_gear_full",
+		display_name = "loc_inventory_title_slot_companion_gear_full_new",
+		equipped_in_inventory = true,
+		show_in_character_create = true,
+		slot_type = "gear",
+		store_category = "companion_gear_full",
+		archetype_restrictions = {
+			"adamant",
+			"cryptic",
 		},
 	},
 	slot_attachment_1 = {
@@ -409,6 +409,7 @@ local item_slot_settings = {
 		slot_type = "unarmed",
 	},
 	slot_combat_ability = {
+		ability_type = "combat_ability",
 		slot_type = "ability",
 	},
 	slot_grenade_ability = {

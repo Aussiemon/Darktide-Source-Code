@@ -342,6 +342,18 @@ InputService._rework_filter = function (self, action_name)
 		if type(default_value) == "userdata" then
 			default_value = Vector3Box(default_value)
 			default_func = InputFilters.vector3_default
+		elseif type(default_value) == "table" then
+			default_value = {
+				input = nil,
+				active = default_value.active,
+				override = default_value.override,
+			}
+
+			function default_func(default_val)
+				default_val.input = Vector3.zero()
+
+				return default_val
+			end
 		end
 
 		local function filter_eval_func(filter_data_parameter, input_service_parameter)

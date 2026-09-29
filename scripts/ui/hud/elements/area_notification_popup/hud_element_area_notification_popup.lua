@@ -29,13 +29,14 @@ HudElementAreaNotificationPopup.update = function (self, dt, t, ui_renderer, ren
 			local area_data = table.remove(self._area_notificactions_queue, #self._area_notificactions_queue)
 			local full_text = area_data.full_text
 			local short_text = area_data.short_text
+			local text_arguments = area_data.text_arguments
 
-			self:_present_new_area(full_text, short_text)
+			self:_present_new_area(full_text, short_text, text_arguments)
 		end
 	end
 end
 
-HudElementAreaNotificationPopup.event_player_set_new_location = function (self, player, full_text, short_text)
+HudElementAreaNotificationPopup.event_player_set_new_location = function (self, player, full_text, short_text, text_arguments)
 	if not self._player or self._player ~= player then
 		return
 	end
@@ -44,19 +45,20 @@ HudElementAreaNotificationPopup.event_player_set_new_location = function (self, 
 		table.insert(self._area_notificactions_queue, 1, {
 			full_text = full_text,
 			short_text = short_text,
+			text_arguments = text_arguments,
 		})
 	else
-		self:_present_new_area(full_text, short_text)
+		self:_present_new_area(full_text, short_text, text_arguments)
 	end
 end
 
-HudElementAreaNotificationPopup._present_new_area = function (self, full_text_unlocalized, short_text_unlocalized, optional_ui_sound_event)
+HudElementAreaNotificationPopup._present_new_area = function (self, full_text_unlocalized, short_text_unlocalized, text_arguments, optional_ui_sound_event)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.area_popup
 	local content = widget.content
 
-	content.title_text = full_text_unlocalized and self:_localize(full_text_unlocalized) or ""
-	content.description_text = short_text_unlocalized and self:_localize(short_text_unlocalized) or ""
+	content.title_text = full_text_unlocalized and self:_localize(full_text_unlocalized, nil, text_arguments) or ""
+	content.description_text = short_text_unlocalized and self:_localize(short_text_unlocalized, nil, text_arguments) or ""
 
 	local popup_animation_id = self:_start_animation("popup_enter", widgets_by_name)
 

@@ -7,10 +7,6 @@ PlayerTerminateEnemyReporter.init = function (self)
 	self._reports = {}
 end
 
-PlayerTerminateEnemyReporter.update = function (self, dt, t)
-	return
-end
-
 PlayerTerminateEnemyReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

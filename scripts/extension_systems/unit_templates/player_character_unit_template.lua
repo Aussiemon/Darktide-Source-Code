@@ -36,12 +36,9 @@ local player_character_unit_template = {
 		local profile = player:profile()
 		local archetype = profile.archetype
 		local talents = profile.talents
+		local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
 
-		if not profile.is_local_profile then
-			local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
-
-			talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
-		end
+		talents = TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
 
 		local game_mode_manager = Managers.state.game_mode
 		local initial_items = UnitTemplate.player_character_initial_items(game_mode_manager, profile, player)
@@ -402,6 +399,7 @@ local player_character_unit_template = {
 			config:add("PlayerHuskAbilityExtension", {
 				is_local_unit = false,
 				is_server = is_server,
+				player = player,
 			})
 			config:add("PlayerHuskAimExtension", {
 				aim_constraint_target_name = "aim_constraint_target",

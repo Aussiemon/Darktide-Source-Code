@@ -167,6 +167,16 @@ CheckProcFunctions.on_monster_or_captain_hit = function (params, template_data, 
 	return true
 end
 
+CheckProcFunctions.on_elite_or_monster_or_captain_hit = function (params, template_data, template_context, t)
+	local breed_tags = params.tags
+
+	if not breed_tags or not params.tags.elite and not breed_tags.monster and not breed_tags.captain and not breed_tags.cultist_captain then
+		return false
+	end
+
+	return true
+end
+
 CheckProcFunctions.on_ranged_enemy_killed = function (params, template_data, template_context, t)
 	if params.attack_result ~= attack_results.died then
 		return false

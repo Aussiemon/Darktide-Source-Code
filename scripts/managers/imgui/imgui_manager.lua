@@ -39,6 +39,7 @@ ImguiManager.init = function (self)
 	self._has_viewport_dock = false
 	self._using_input = false
 	self._active_view_groups = {}
+	self._suppressed_hotkeys = {}
 	self._state = States.Disabled
 	self._is_imgui_available = _check_is_available()
 
@@ -131,6 +132,14 @@ end
 
 ImguiManager.using_input = function (self)
 	return self:is_active() and self._using_input
+end
+
+ImguiManager.suppress_hotkey = function (self, hotkey_action)
+	self._suppressed_hotkeys[hotkey_action] = true
+end
+
+ImguiManager.release_hotkey = function (self, hotkey_action)
+	self._suppressed_hotkeys[hotkey_action] = nil
 end
 
 ImguiManager.add_gui = function (self, name, hotkey_action, class_type, params, view_definition)
@@ -352,7 +361,7 @@ ImguiManager._handle_input = function (self)
 	for gui_name, gui in pairs(guis) do
 		local hotkey_action = gui.hotkey_action
 
-		if hotkey_action and input:get(hotkey_action) then
+		if hotkey_action and not self._suppressed_hotkeys[hotkey_action] and input:get(hotkey_action) then
 			if state == States.Disabled then
 				state = States.TempView
 

@@ -7,8 +7,11 @@ local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StatConfigParser = require("scripts/managers/stats/utility/stat_config_parser")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local StatNetworkTypes = require("scripts/settings/stats/stat_network_types")
+local SessionStatsDisplay = require("scripts/settings/stats/session_stats_display")
 local StatsManager = class("StatsManager")
-local CLIENT_RPCS = {}
+local CLIENT_RPCS = {
+	"rpc_session_leaderboard_stats",
+}
 
 table.append(CLIENT_RPCS, table.map(table.keys(StatNetworkTypes), function (s)
 	return "rpc_stat_update_" .. s
@@ -45,6 +48,7 @@ StatsManager.init = function (self, is_client, event_delegate, rpc_settings)
 	self._last_t = 0
 	self._next_listener_id = 0
 	self._listeners = {}
+	self._session_leaderboard_stats = {}
 	self._is_client = is_client
 
 	if is_client then
@@ -75,6 +79,7 @@ end
 StatsManager.clear = function (self)
 	self._team = self:_default_team()
 	self._users = {}
+	self._session_leaderboard_stats = {}
 end
 
 StatsManager.destroy = function (self)
@@ -405,6 +410,9 @@ end
 
 StatsManager.clear_session_data = function (self, key)
 	local user = self._users[key]
+
+	self._session_leaderboard_stats[key] = nil
+
 	local data = user.data
 	local definitions = self._definitions
 
@@ -430,6 +438,81 @@ StatsManager.reload = function (self, key)
 	end
 
 	return self:_download_stats(key)
+end
+
+local function _to_rpc_value(value, max_value)
+	return math.clamp(math.round(value), 0, max_value)
+end
+
+StatsManager.send_leaderboard_stats = function (self)
+	local rows = SessionStatsDisplay
+	local num_rows = #rows
+	local max_value = Network.type_info("stat_value_u24bit").max
+	local team_values = {}
+
+	for i = 1, num_rows do
+		local team_stat = rows[i].team
+
+		team_values[i] = team_stat and _to_rpc_value(self:read_team_stat(team_stat), max_value) or 0
+	end
+
+	local player_keys = {}
+	local values_by_player = {}
+
+	for _, player in pairs(Managers.player:human_players()) do
+		local key = player.remote and player.stat_id or player:local_player_id()
+
+		if self._users[key] then
+			local values = {}
+
+			for i = 1, num_rows do
+				local private_stat = rows[i].private
+
+				values[i] = private_stat and _to_rpc_value(self:read_user_stat(key, private_stat), max_value) or 0
+			end
+
+			player_keys[#player_keys + 1] = key
+			values_by_player[key] = values
+		end
+	end
+
+	local row_values = {}
+
+	for i = 1, num_rows do
+		table.clear(row_values)
+
+		for j = 1, #player_keys do
+			local key = player_keys[j]
+
+			row_values[key] = values_by_player[key][i]
+		end
+	end
+
+	for j = 1, #player_keys do
+		local key = player_keys[j]
+		local user = self._users[key]
+
+		if user.rpc_channel then
+			RPC.rpc_session_leaderboard_stats(user.rpc_channel, user.local_player_id, values_by_player[key], team_values)
+		end
+	end
+end
+
+StatsManager.rpc_session_leaderboard_stats = function (self, _, local_player_id, private_values, team_values)
+	local rows = {}
+
+	for i = 1, #SessionStatsDisplay do
+		rows[i] = {
+			private = private_values[i],
+			team = team_values[i],
+		}
+	end
+
+	self._session_leaderboard_stats[local_player_id] = rows
+end
+
+StatsManager.leaderboard_session_stats = function (self, key)
+	return self._session_leaderboard_stats[key]
 end
 
 StatsManager.start_session = function (self, session_config)

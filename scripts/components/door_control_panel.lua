@@ -38,13 +38,13 @@ DoorControlPanel.destroy = function (self, unit)
 end
 
 DoorControlPanel.activate = function (self)
-	if self._door_control_panel_extension then
+	if self.is_server and self._door_control_panel_extension then
 		self._door_control_panel_extension:set_active(true)
 	end
 end
 
 DoorControlPanel.deactivate = function (self)
-	if self._door_control_panel_extension then
+	if self.is_server and self._door_control_panel_extension then
 		self._door_control_panel_extension:set_active(false)
 	end
 end

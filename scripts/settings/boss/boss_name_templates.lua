@@ -246,9 +246,11 @@ boss_name_templates.cultist_captain = {
 }
 boss_name_templates.plague_ogryn = "loc_plague_ogryn_name"
 boss_name_templates.daemonhost = "loc_daemonhost_name"
+boss_name_templates.torment_daemonhost = "loc_torment_daemonhost_name"
 boss_name_templates.mutator_daemonhost = "loc_mutator_daemonhost_name"
 boss_name_templates.beast_of_nurgle = "loc_breed_display_name_chaos_beast_of_nurgle"
 boss_name_templates.chaos_spawn = "loc_breed_display_name_chaos_spawn"
+boss_name_templates.spillway_wizard = "loc_breed_display_name_renegade_wizard_spillway"
 boss_name_templates.renegade_twin_captain = "loc_breed_display_name_renegade_twin_captain"
 boss_name_templates.havoc_renegade_twin_captain = {
 	"loc_havoc_male_twin_name_01",

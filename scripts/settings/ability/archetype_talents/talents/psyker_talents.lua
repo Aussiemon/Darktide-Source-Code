@@ -107,7 +107,6 @@ local archetype_talents = {
 				special_rule_name = "psyker_overcharge_stance_quell_peril",
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_overcharge_stance,
 			},
 		},
@@ -127,7 +126,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_discharge_shout,
 			},
 		},
@@ -151,7 +149,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_force_field,
 			},
 		},
@@ -168,7 +165,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.psyker_throwing_knives,
 			},
 			special_rule = {
@@ -193,8 +189,11 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_brain_burst",
 			name = "G-Ability - Target enemies to charge a Smite attack, dealing a high amount of damage",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.psyker_smite,
+			},
+			special_rule = {
+				identifier = "disable_grenade_pickups",
+				special_rule_name = special_rules.disable_grenade_pickups,
 			},
 		},
 		psyker_grenade_chain_lightning = {
@@ -212,8 +211,11 @@ local archetype_talents = {
 				proc_chance = talent_settings_3.grenade.on_hit_proc_chance * 100,
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.psyker_chain_lightning,
+			},
+			special_rule = {
+				identifier = "disable_grenade_pickups",
+				special_rule_name = special_rules.disable_grenade_pickups,
 			},
 			passive = {
 				identifier = {
@@ -336,7 +338,6 @@ local archetype_talents = {
 				special_rule_name = "shout_warp_charge_vent_improved",
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_discharge_shout_improved,
 			},
 		},
@@ -766,7 +767,7 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.grenade_ability_cooldown_modifier,
+							stat_buffs.grenade_ability_resource_regen_modifier,
 						},
 					},
 					value_manipulation = function (value)
@@ -1411,7 +1412,7 @@ local archetype_talents = {
 			},
 		},
 		psyker_2_tier_3_name_2 = {
-			description = "loc_talent_psyker_cooldown_on_allied_elite_kills_fixed_desc",
+			description = "loc_talent_psyker_cooldown_on_elite_kills_desc",
 			display_name = "loc_talent_psyker_elite_kills_give_combat_ability_cd_coherency",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_5_3",
 			name = "Killing an elite enemy restores combat ability cooldown to allies in coherency",
@@ -1591,11 +1592,17 @@ local archetype_talents = {
 			},
 		},
 		psyker_venting_improvements = {
-			description = "loc_talent_psyker_no_movement_penalty_quell_reload_desc",
+			description = "loc_talent_psyker_improved_venting_desc",
 			display_name = "loc_talent_psyker_venting_doesnt_slow",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_1",
 			name = "Venting no longer slows your movement speed.",
-			format_values = {},
+			format_values = {
+				movement_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_2.defensive_3.movement_speed,
+				},
+			},
 			passive = {
 				buff_template_name = "psyker_venting_improvements",
 				identifier = "psyker_venting_improvements",
@@ -1916,7 +1923,6 @@ local archetype_talents = {
 				identifier = "psyker_combat_ability_extra_charge",
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.psyker_force_field_improved,
 			},
 		},
@@ -1940,7 +1946,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				priority = 1,
 				ability = PlayerAbilities.psyker_force_field_dome,
 			},
@@ -2596,6 +2601,101 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "psyker_damage_to_peril_conversion",
 				identifier = "psyker_damage_to_peril_conversion",
+			},
+		},
+		psyker_peril_passive = {
+			description = "loc_talent_psyker_peril_passive_desc",
+			display_name = "loc_talent_psyker_peril_passive",
+			format_values = {
+				max_peril = {
+					format_type = "percentage",
+					value = 1,
+				},
+				critical_peril = {
+					format_type = "percentage",
+					value = 0.97,
+				},
+				passive_quell_time = {
+					format_type = "number",
+					value = 3,
+				},
+				vent_input = {
+					format_type = "loc_string",
+					value = "loc_input_description_vent",
+				},
+			},
+		},
+		psyker_weapon_attacks_peril_equilibrium = {
+			description = "loc_talent_psyker_weapon_attacks_peril_equilibrium_desc",
+			display_name = "loc_talent_psyker_weapon_attacks_peril_equilibrium",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_damage_to_peril_conversion",
+			name = "Weapon Hits shift Peril toward 50%",
+			format_values = {
+				threshold = {
+					format_type = "percentage",
+					value = talent_settings.psyker_weapon_attacks_peril_equilibrium.threshold,
+				},
+				amount = {
+					format_type = "percentage",
+					value = talent_settings.psyker_weapon_attacks_peril_equilibrium.warp_charge_percent,
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_weapon_attacks_peril_equilibrium",
+				identifier = "psyker_weapon_attacks_peril_equilibrium",
+			},
+		},
+		psyker_increased_warp_damage = {
+			description = "loc_talent_psyker_increased_warp_damage_desc",
+			display_name = "loc_talent_psyker_increased_warp_damage",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_warp_attacks_rending",
+			name = "Increased Warp Damage",
+			format_values = {
+				warp_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					find_value = {
+						buff_template_name = "psyker_increased_warp_damage",
+						find_value_type = "buff_template",
+						path = {
+							"stat_buffs",
+							stat_buffs.warp_damage,
+						},
+					},
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_increased_warp_damage",
+				identifier = "psyker_increased_warp_damage",
+			},
+		},
+		psyker_increased_blitz_damage = {
+			description = "loc_talent_psyker_increased_blitz_damage_desc",
+			display_name = "loc_talent_psyker_increased_blitz_damage",
+			icon = "content/ui/textures/icons/talents/psyker/psyker_blitz_chain_lightning",
+			name = "Increased Blitz Damage",
+			format_values = {
+				blitz_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.psyker_increased_blitz_damage.damage,
+				},
+				blitz_one = {
+					format_type = "loc_string",
+					value = "loc_talent_psyker_brain_burst_improved",
+				},
+				blitz_two = {
+					format_type = "loc_string",
+					value = "loc_ability_psyker_chain_lightning",
+				},
+				blitz_three = {
+					format_type = "loc_string",
+					value = "loc_ability_psyker_blitz_throwing_knives",
+				},
+			},
+			passive = {
+				buff_template_name = "psyker_increased_blitz_damage",
+				identifier = "psyker_increased_blitz_damage",
 			},
 		},
 		psyker_damage_resistance_stun_immunity = {

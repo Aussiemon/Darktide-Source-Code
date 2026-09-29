@@ -128,7 +128,7 @@ local template_visual_definitions = {
 	},
 }
 
-local function setup_marker_by_visual_type(widget, marker, visual_type)
+local function setup_marker_by_visual_type(widget, marker, visual_type, tag_template)
 	local content = widget.content
 	local style = widget.style
 	local visual_definition = template_visual_definitions[visual_type]
@@ -327,8 +327,10 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		end
 	end
 
+	local tag_template = data.tag_template
+
 	if wanted_visual_type ~= data.visual_type then
-		setup_marker_by_visual_type(widget, marker, wanted_visual_type)
+		setup_marker_by_visual_type(widget, marker, wanted_visual_type, tag_template)
 
 		data.visual_type = wanted_visual_type
 	end

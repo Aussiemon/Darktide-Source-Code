@@ -17,7 +17,7 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
-local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+local DEFAULT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE
 local Explosion = {}
 local _play_husk_effects, _disorient_player
 local hit_units = {}
@@ -284,6 +284,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, ro
 	data.attacking_unit_owner_unit = attacking_unit_owner_unit
 	data.is_critical_strike = is_critical_strike
 	data.item_or_nil = item_or_nil
+	data.slot_name_or_nil = origin_slot_or_nil
 	data.sticking_to_unit = sticking_to_unit
 	data.optional_attacking_unit_owner_unit = optional_attacking_unit_owner_unit
 	data.optional_apply_owner_buffs = optional_apply_owner_buffs
@@ -413,7 +414,7 @@ Explosion.lerp_value_from_path = function (lerp_values, ...)
 	end
 
 	local last_id = select(depth, ...)
-	local lerp_value = local_lerp_values[last_id] or default_lerp_value_or_nil or DEFALT_FALLBACK_LERP_VALUE
+	local lerp_value = local_lerp_values[last_id] or default_lerp_value_or_nil or DEFAULT_FALLBACK_LERP_VALUE
 
 	return lerp_value
 end

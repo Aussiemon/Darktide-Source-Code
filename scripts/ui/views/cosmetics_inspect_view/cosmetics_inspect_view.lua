@@ -84,13 +84,9 @@ CosmeticsInspectView.init = function (self, settings, context)
 			self._disable_zoom = not not context.disable_zoom
 
 			local profile = context.profile
-			local gender_name = profile.gender
-			local archetype = profile.archetype
-			local archetype_name = archetype and archetype.name
-			local breed_name = profile.archetype.breed
 			local real_item = item.items and item.items[1] or item
 
-			self._mannequin_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
+			self._mannequin_profile = ProfileUtils.create_mannequin_profile(real_item, profile)
 
 			local slots = self._preview_item and self._preview_item.slots
 			local slot_name = context.slot_name or slots and slots[1]
@@ -1370,9 +1366,7 @@ CosmeticsInspectView._setup_background_world = function (self)
 		local is_gear = slot.slot_type == "gear"
 		local is_body = slot.slot_type == "body"
 		local is_companion_gear = slot_name == "slot_companion_gear_full"
-		local valid_player_slot = is_gear and not is_companion_gear
-
-		valid_player_slot = valid_player_slot or is_body
+		local valid_player_slot = (is_gear or is_body) and not is_companion_gear
 
 		if valid_player_slot then
 			local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)

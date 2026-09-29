@@ -1126,7 +1126,6 @@ local RENDER_TEMPLATES = {
 					},
 					render_settings = {
 						dxr = true,
-						rt_checkerboard_reflections = true,
 						rt_mixed_reflections = true,
 						rt_reflections_enabled = true,
 						ssr_enabled = true,
@@ -1145,7 +1144,6 @@ local RENDER_TEMPLATES = {
 					},
 					render_settings = {
 						dxr = true,
-						rt_checkerboard_reflections = true,
 						rt_mixed_reflections = false,
 						rt_reflections_enabled = true,
 						world_space_motion_vectors = true,
@@ -1174,6 +1172,43 @@ local RENDER_TEMPLATES = {
 				end,
 			},
 		},
+	},
+	{
+		apply_on_startup = true,
+		default_value = "nrd",
+		display_name = "loc_rt_reflections_denoiser",
+		id = "reflection_denoiser",
+		save_location = "master_render_settings",
+		tooltip_text = "loc_rt_reflections_denoiser_mouseover",
+		options = {
+			{
+				display_name = "loc_settings_nrd",
+				id = "nrd",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						fsr_rr_enabled = false,
+						rt_checkerboard_reflections = true,
+					},
+				},
+			},
+			{
+				display_name = "loc_settings_fsr_rr",
+				id = "fsr_rr",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						fsr_rr_enabled = true,
+						rt_checkerboard_reflections = true,
+					},
+				},
+			},
+		},
+		validation_function = function ()
+			return Application.render_caps("ffx_ray_regeneration_supported") and Application.render_config("settings", "rt_reflections_enabled")
+		end,
 	},
 	{
 		apply_on_startup = true,

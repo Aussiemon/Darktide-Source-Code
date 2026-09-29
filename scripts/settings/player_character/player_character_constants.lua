@@ -125,6 +125,14 @@ local weapon_component_config = {
 		default_value = 0,
 		network_type = "fixed_frame_offset_end_t_9bit",
 	},
+	last_wield_t = {
+		default_value = 0,
+		network_type = "fixed_frame_time",
+	},
+	last_unwield_t = {
+		default_value = 0,
+		network_type = "fixed_frame_time",
+	},
 	unequip_slot = {
 		default_value = false,
 		network_type = "bool",
@@ -372,7 +380,37 @@ local constants = {
 			slot_type = "body",
 			wieldable = false,
 		},
+		slot_body_torso = {
+			mispredict_packages = true,
+			priority = 10,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_tattoo",
+				"slot_body_face_tattoo",
+				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
+				"slot_body_eye_color",
+				"slot_body_eye_color_secondary",
+			},
+		},
 		slot_body_arms = {
+			mispredict_packages = true,
+			priority = 10,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_body_tattoo",
+				"slot_body_face_tattoo",
+				"slot_body_skin_color",
+				"slot_body_skin_color_secondary",
+				"slot_body_skin_discoloration",
+			},
+		},
+		slot_body_legs = {
 			mispredict_packages = true,
 			priority = 10,
 			profile_field = true,
@@ -396,20 +434,6 @@ local constants = {
 				"slot_body_hair_color",
 			},
 		},
-		slot_body_legs = {
-			mispredict_packages = true,
-			priority = 10,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_tattoo",
-				"slot_body_face_tattoo",
-				"slot_body_skin_color",
-				"slot_body_skin_color_secondary",
-				"slot_body_skin_discoloration",
-			},
-		},
 		slot_body_tattoo = {
 			mispredict_packages = true,
 			priority = 13,
@@ -418,22 +442,6 @@ local constants = {
 			wieldable = false,
 			slot_dependencies = {
 				"slot_body_face_tattoo",
-			},
-		},
-		slot_body_torso = {
-			mispredict_packages = true,
-			priority = 10,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-			slot_dependencies = {
-				"slot_body_tattoo",
-				"slot_body_face_tattoo",
-				"slot_body_skin_color",
-				"slot_body_skin_color_secondary",
-				"slot_body_skin_discoloration",
-				"slot_body_eye_color",
-				"slot_body_eye_color_secondary",
 			},
 		},
 		slot_body_eye_color = {
@@ -488,15 +496,26 @@ local constants = {
 			slot_type = "body",
 			wieldable = false,
 		},
-		slot_gear_extra_cosmetic = {
+		slot_companion_body_skin_color = {
 			mispredict_packages = true,
-			priority = 30,
+			priority = 50,
 			profile_field = true,
-			slot_type = "gear",
+			slot_type = "body",
 			wieldable = false,
-			slot_dependencies = {
-				"slot_gear_material_override_decal",
-			},
+		},
+		slot_companion_body_fur_color = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
+		},
+		slot_companion_body_coat_pattern = {
+			mispredict_packages = true,
+			priority = 50,
+			profile_field = true,
+			slot_type = "body",
+			wieldable = false,
 		},
 		slot_gear_head = {
 			mispredict_packages = true,
@@ -539,32 +558,21 @@ local constants = {
 				"slot_gear_material_override_decal",
 			},
 		},
+		slot_gear_extra_cosmetic = {
+			mispredict_packages = true,
+			priority = 30,
+			profile_field = true,
+			slot_type = "gear",
+			wieldable = false,
+			slot_dependencies = {
+				"slot_gear_material_override_decal",
+			},
+		},
 		slot_gear_material_override_decal = {
 			mispredict_packages = true,
 			priority = 60,
 			profile_field = true,
 			slot_type = "gear",
-			wieldable = false,
-		},
-		slot_companion_body_skin_color = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-		},
-		slot_companion_body_fur_color = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
-			wieldable = false,
-		},
-		slot_companion_body_coat_pattern = {
-			mispredict_packages = true,
-			priority = 50,
-			profile_field = true,
-			slot_type = "body",
 			wieldable = false,
 		},
 		slot_companion_gear_full = {
@@ -622,7 +630,9 @@ local constants = {
 			slot_type = "weapon",
 			wieldable = true,
 			wield_inputs = {
-				"wield_1",
+				pressed = {
+					"wield_1",
+				},
 			},
 		},
 		slot_secondary = {
@@ -633,7 +643,9 @@ local constants = {
 			slot_type = "weapon",
 			wieldable = true,
 			wield_inputs = {
-				"wield_2",
+				pressed = {
+					"wield_2",
+				},
 			},
 		},
 		slot_timed = {
@@ -648,8 +660,10 @@ local constants = {
 			slot_type = "pocketable",
 			wieldable = true,
 			wield_inputs = {
-				"wield_3",
-				"wield_3_gamepad",
+				pressed = {
+					"wield_3",
+					"wield_3_gamepad",
+				},
 			},
 		},
 		slot_pocketable_small = {
@@ -658,7 +672,9 @@ local constants = {
 			slot_type = "pocketable",
 			wieldable = true,
 			wield_inputs = {
-				"wield_4",
+				pressed = {
+					"wield_4",
+				},
 			},
 		},
 		slot_device = {
@@ -666,7 +682,9 @@ local constants = {
 			slot_type = "device",
 			wieldable = true,
 			wield_inputs = {
-				"wield_5",
+				pressed = {
+					"wield_5",
+				},
 			},
 		},
 		slot_unarmed = {
@@ -680,12 +698,34 @@ local constants = {
 			priority = 1,
 			slot_type = "ability",
 			wieldable = true,
+			wield_inputs = {
+				pressed = {
+					"combat_ability_pressed",
+				},
+				hold = {
+					"combat_ability_hold",
+				},
+				released = {
+					"combat_ability_released",
+				},
+			},
 		},
 		slot_grenade_ability = {
 			mispredict_packages = true,
 			priority = 1,
 			slot_type = "ability",
 			wieldable = true,
+			wield_inputs = {
+				pressed = {
+					"grenade_ability_pressed",
+				},
+				hold = {
+					"grenade_ability_hold",
+				},
+				released = {
+					"grenade_ability_released",
+				},
+			},
 		},
 		slot_net = {
 			priority = 1,
@@ -724,6 +764,12 @@ local constants = {
 		grenade_ability = "slot_grenade_ability",
 		pocketable_ability = "slot_pocketable_small",
 	},
+	action_handler_component_names = table.set({
+		"combat_ability_action",
+		"grenade_ability_action",
+		"pocketable_ability_action",
+		"weapon_action",
+	}),
 	player_interactions = {
 		{
 			interaction_type = "pull_up",
@@ -769,13 +815,38 @@ local constants = {
 	inventory_slot_component_data = {
 		weapon = table.clone(weapon_component_config),
 		luggable = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
 			existing_unit_3p = {
 				default_value = nil,
 				network_type = "Unit",
 			},
 		},
-		unarmed = {},
+		unarmed = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+		},
 		pocketable = table.merge(table.clone(weapon_component_config), {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
 			unequip_slot = {
 				default_value = false,
 				network_type = "bool",
@@ -786,7 +857,16 @@ local constants = {
 			},
 		}),
 		ability = table.clone(weapon_component_config),
-		device = {},
+		device = {
+			last_wield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+			last_unwield_t = {
+				default_value = 0,
+				network_type = "fixed_frame_time",
+			},
+		},
 	},
 	fall_damage = {
 		heavy_damage_height = 13,
@@ -863,11 +943,11 @@ local slot_configuration = constants.slot_configuration
 for slot_name, config in pairs(slot_configuration) do
 	config.name = slot_name
 
-	local config_wield_inputs = config.wield_inputs
+	local config_pressed_inputs = config.wield_inputs and config.wield_inputs.pressed
 
-	if config.wieldable and config_wield_inputs then
-		for ii = 1, #config_wield_inputs do
-			_add_wield_input(config_wield_inputs[ii])
+	if config.wieldable and config_pressed_inputs then
+		for ii = 1, #config_pressed_inputs do
+			_add_wield_input(config_pressed_inputs[ii])
 		end
 	end
 end

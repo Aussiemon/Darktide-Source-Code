@@ -123,8 +123,6 @@ ExpeditionTimerHandler.set_active = function (self, active)
 		return
 	end
 
-	self._pacing_timer_started = true
-
 	local was_running = self._is_running
 
 	self._is_running = active
@@ -152,9 +150,11 @@ ExpeditionTimerHandler.set_active = function (self, active)
 
 			self._play_last_minute = true
 		end
-	elseif not was_running then
+	elseif not was_running and self._pacing_timer_started then
 		self:_play_sound(timer_paused_sound)
 	end
+
+	self._pacing_timer_started = true
 end
 
 ExpeditionTimerHandler.get_remaining_duration = function (self)

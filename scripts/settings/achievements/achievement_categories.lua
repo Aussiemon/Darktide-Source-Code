@@ -6,19 +6,19 @@ local AchievementCategoriesInterface = {
 	"parent_name",
 	"sort_index",
 }
-local AchievementCategories = {}
+local achievement_categories = {}
 local sort_index = 0
 
 local function _add_category(name, loc_key, optional_parent_name)
 	sort_index = sort_index + 1
-	AchievementCategories[name] = {
+	achievement_categories[name] = {
 		name = name,
 		display_name = loc_key,
 		parent_name = optional_parent_name,
 		sort_index = sort_index,
 	}
 
-	table.make_strict_with_interface(AchievementCategories[name], "AchievementCategories[" .. name .. "]", AchievementCategoriesInterface)
+	table.make_strict_with_interface(achievement_categories[name], "AchievementCategories[" .. name .. "]", AchievementCategoriesInterface)
 end
 
 _add_category("account", "loc_achievement_category_account_label")
@@ -70,6 +70,7 @@ _add_category("exploration_dust", "loc_achievement_subcategory_missions_dust_lab
 _add_category("exploration_throneside", "loc_achievement_subcategory_missions_throneside_label", "exploration")
 _add_category("exploration_entertainment", "loc_achievement_subcategory_missions_entertainment_label", "exploration")
 _add_category("exploration_void", "loc_achievement_subcategory_missions_void_label", "exploration")
+_add_category("exploration_depths", "loc_achievement_subcategory_missions_depths_label", "exploration")
 _add_category("exploration_operations", "loc_zone_name_operations_short", "exploration")
 _add_category("exploration_twins_mission", "loc_achievement_subcategory_twins_mission_label", "exploration")
 _add_category("endeavours", "loc_achievement_category_endeavours_label")
@@ -81,8 +82,9 @@ _add_category("endeavours_throneside", "loc_achievement_subcategory_missions_thr
 _add_category("endeavours_entertainment", "loc_achievement_subcategory_missions_entertainment_label", "endeavours")
 _add_category("endeavours_twins_mission", "loc_achievement_subcategory_twins_mission_label", "endeavours")
 _add_category("endeavours_void", "loc_achievement_subcategory_missions_void_label", "endeavours")
+_add_category("endeavours_depths", "loc_achievement_subcategory_missions_depths_label", "endeavours")
 _add_category("endeavours_operations", "loc_zone_name_operations_short", "endeavours")
 _add_category("weapons", "loc_achievement_category_weapons_label")
 _add_category("mastery", "loc_weapon_progression_mastery", "weapons")
 
-return settings("AchievementCategories", AchievementCategories)
+return settings("AchievementCategories", achievement_categories)

@@ -51,7 +51,11 @@ local talent_settings = {
 			stacks = 5,
 		},
 		ogryn_reload_speed_on_empty = {
-			reload_speed = 0.15,
+			reload_speed = 0.2,
+		},
+		ogryn_passive_ammo_replenishment = {
+			interval = 15,
+			percent_ammo_replenish_per_tick = 0.01,
 		},
 		ogryn_stagger_cleave_on_third = {
 			count = 3,
@@ -257,7 +261,7 @@ local talent_settings = {
 			reduced_ranged_damage_per_ally = 0.75,
 		},
 		spec_passive_1 = {
-			duration = 4,
+			duration = 2.5,
 			increased_cooldown_regeneration = 1,
 		},
 		spec_passive_2 = {
@@ -280,7 +284,7 @@ local talent_settings = {
 	ogryn_2 = {
 		combat_ability = {
 			active_duration = 5,
-			cooldown = 30,
+			cooldown = 25,
 			distance = 12,
 			max_charges = 1,
 			melee_attack_speed = 0.25,
@@ -328,7 +332,7 @@ local talent_settings = {
 			stacks = 4,
 		},
 		coop_1 = {
-			coherency_aura_size_increase = 0.75,
+			coherency_aura_size_increase = 0.5,
 		},
 		coop_2 = {
 			duration = 6,
@@ -339,8 +343,8 @@ local talent_settings = {
 		coop_3 = {
 			cooldown = 0.04,
 			damage_taken_multiplier = 0.5,
-			duration = 3,
-			increased_cooldown_regeneration = 1,
+			duration = 4,
+			increased_cooldown_regeneration = 0.5,
 		},
 		defensive_1 = {
 			max = 0.7,
@@ -379,7 +383,7 @@ local talent_settings = {
 			stacks = 5,
 		},
 		combat_ability_2 = {
-			cooldown = 30,
+			cooldown = 25,
 			distance = 24,
 			increase_visualizer = 1,
 			max_charges = 1,

@@ -8,8 +8,42 @@ local STIMM_COLOR = {
 	223,
 	208,
 }
+local ORPHANED_COLOR = Color.error_soft(255, true)
+
+local function ORPHANED_FLASH(dt)
+	return math.remap(-1, 1, 0.5, 1, math.sin(Application.time_since_launch() * math.two_pi * 0.75))
+end
 
 local function node_highligt_change_function(content, style, _, dt)
+	local material_values = style.material_values
+	local orphaned = content.orphaned or false
+
+	if orphaned ~= style.applied_orphaned_color then
+		local fill_color = orphaned and ORPHANED_COLOR or {
+			255,
+			234,
+			255,
+			255,
+		}
+		local blur_color = orphaned and ORPHANED_COLOR or {
+			255,
+			73,
+			161,
+			242,
+		}
+
+		material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+		material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+		style.applied_orphaned_color = orphaned
+	end
+
+	if orphaned then
+		local flash = ORPHANED_FLASH(dt)
+
+		material_values.fill_color[4] = flash
+		material_values.blur_color[4] = flash
+	end
+
 	local alpha_anim_progress = content.alpha_anim_progress or 0
 	local alpha_fraction
 
@@ -117,7 +151,7 @@ local function node_icon_change_function(content, style, _, dt, override_availab
 	end
 end
 
-return {
+local node_definitions = {
 	node_definition = UIWidget.create_definition({
 		{
 			pass_type = "texture",
@@ -221,18 +255,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -370,6 +394,7 @@ return {
 			style = {
 				material_values = {
 					frame = "content/ui/textures/frames/talents/hex_frame",
+					gradient_map = "content/ui/textures/color_ramps/talent_ability",
 					icon_mask = "content/ui/textures/frames/talents/hex_frame_mask",
 					intensity = -0.5,
 					saturation = 1,
@@ -442,18 +467,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -663,18 +678,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -859,18 +864,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -1056,18 +1051,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -1253,18 +1238,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -1450,18 +1425,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -1647,18 +1612,8 @@ return {
 				},
 				color = Color.white(255, true),
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			change_function = node_highligt_change_function,
@@ -1742,6 +1697,14 @@ return {
 		},
 	}, "talent", nil, nil),
 	node_definition_start = UIWidget.create_definition({
+		{
+			content_id = "hotspot",
+			pass_type = "hotspot",
+			style_id = "hotspot",
+			content = {
+				hover_type = "circle",
+			},
+		},
 		{
 			pass_type = "texture",
 			style_id = "icon",
@@ -2064,7 +2027,7 @@ return {
 		{
 			pass_type = "rotated_texture",
 			style_id = "line_empty",
-			value = "content/ui/materials/frames/talents/stimm_path_empty",
+			value = "content/ui/materials/frames/talents/path_empty",
 			style = {
 				horizontal_alignment = "left",
 				vertical_alignment = "center",
@@ -2196,22 +2159,42 @@ return {
 					18,
 				},
 				material_values = {
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						234,
-						255,
-						255,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						73,
-						161,
-						242,
-					}),
+					blur_color = nil,
+					fill_color = nil,
 				},
 			},
 			visibility_function = function (content, style)
 				return content.has_progressed or content.progressing
+			end,
+			change_function = function (content, style, _, dt)
+				local material_values = style.material_values
+				local orphaned = content.orphaned or false
+
+				if orphaned ~= style.applied_orphaned_color then
+					local fill_color = orphaned and ORPHANED_COLOR or {
+						255,
+						234,
+						255,
+						255,
+					}
+					local blur_color = orphaned and ORPHANED_COLOR or {
+						255,
+						73,
+						161,
+						242,
+					}
+
+					material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+					material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+					style.applied_orphaned_color = orphaned
+				end
+
+				if orphaned then
+					local flash = ORPHANED_FLASH(dt)
+
+					material_values.fill_color[4] = flash
+					material_values.blur_color[4] = flash
+				end
 			end,
 		},
 		{
@@ -2237,20 +2220,10 @@ return {
 					12,
 				},
 				material_values = {
+					blur_color = nil,
 					effect_amount = 1,
 					effect_speed = -0.8,
-					fill_color = ColorUtilities.format_color_to_material({
-						255,
-						42,
-						91,
-						137,
-					}),
-					blur_color = ColorUtilities.format_color_to_material({
-						255,
-						33,
-						62,
-						89,
-					}),
+					fill_color = nil,
 				},
 			},
 			visibility_function = function (content)
@@ -2258,8 +2231,36 @@ return {
 			end,
 			change_function = function (content, style, _, dt)
 				local material_values = style.material_values
-				local progress = material_values.progress
+				local orphaned = content.orphaned or false
+
+				if orphaned ~= style.applied_orphaned_color then
+					local fill_color = orphaned and ORPHANED_COLOR or {
+						255,
+						42,
+						91,
+						137,
+					}
+					local blur_color = orphaned and ORPHANED_COLOR or {
+						255,
+						33,
+						62,
+						89,
+					}
+
+					material_values.fill_color = ColorUtilities.format_color_to_material(fill_color)
+					material_values.blur_color = ColorUtilities.format_color_to_material(blur_color)
+					style.applied_orphaned_color = orphaned
+				end
+
+				if orphaned then
+					local flash = ORPHANED_FLASH(dt)
+
+					material_values.fill_color[4] = flash
+					material_values.blur_color[4] = flash
+				end
 			end,
 		},
 	}, "talent"),
 }
+
+return node_definitions

@@ -5,8 +5,10 @@ local WeaponTweakTemplateSettings = {}
 WeaponTweakTemplateSettings.template_types = table.enum("ammo", "burninating", "charge", "damage", "dodge", "explosion", "movement_curve_modifier", "recoil", "size_of_flame", "spread", "sprint", "stamina", "suppression", "sway", "toughness", "warp_charge", "weapon_chain_lightning", "weapon_handling", "weapon_shout")
 WeaponTweakTemplateSettings.ALL_WEAPON_MOVEMENT_STATES = {}
 WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE = {}
-WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE = 0.5
-WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE = 0.5
+WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE = {
+	default = 0.5,
+}
+WeaponTweakTemplateSettings.DEFAULT_FALLBACK_LERP_VALUE = 0.5
 
 local buff_targets = table.enum("on_equip", "on_wield", "on_unwield")
 

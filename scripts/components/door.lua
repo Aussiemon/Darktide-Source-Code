@@ -24,9 +24,10 @@ Door.init = function (self, unit, is_server)
 		local open_type = self:get_data(unit, "open_type")
 		local control_panel_props = self:_get_non_empty_control_panels(unit)
 		local control_panels_active = self:get_data(unit, "control_panels_active")
+		local control_panels_display_start_event = self:get_data(unit, "control_panels_display_start_event")
 		local ignore_broadphase = self:get_data(unit, "ignore_broadphase")
 
-		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, use_advanced_blocking, advanced_blocking_time, advanced_unblocking_time, open_type, control_panel_props, control_panels_active, control_panels_display_start_event, ignore_broadphase)
 
 		self._door_extension = door_extension
 	end
@@ -416,6 +417,12 @@ Door.component_data = {
 		ui_name = "Control Panels Active",
 		ui_type = "check_box",
 		value = true,
+	},
+	control_panels_display_start_event = {
+		category = "Control Panels",
+		ui_name = "Control Panels Show 'Start Event'",
+		ui_type = "check_box",
+		value = false,
 	},
 	ignore_broadphase = {
 		ui_name = "Ignore Broadphase System",

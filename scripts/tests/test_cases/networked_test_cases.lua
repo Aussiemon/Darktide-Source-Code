@@ -146,7 +146,7 @@ NetworkedTestCases.loop_connect_disconnect_to_the_hub = function (case_settings)
 
 		for i = 1, num_iterations do
 			Testify:make_request("exit_to_main_menu")
-			Testify:make_request("wait_for_main_menu_displayed")
+			Testify:make_request("wait_for_state_main_menu")
 			TestifySnippets.wait(stay_in_the_main_menu_time)
 			Testify:make_request("press_play_main_menu")
 			Testify:make_request("wait_for_state_gameplay_reached")

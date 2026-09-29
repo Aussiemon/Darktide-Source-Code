@@ -72,7 +72,7 @@ local power_stab_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = damage_lerp_values.lerp_1_5,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_33,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_9,
@@ -116,7 +116,7 @@ local heavy_stab_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
 		[armor_types.armored] = damage_lerp_values.lerp_1,
-		[armor_types.resistant] = damage_lerp_values.lerp_1_2,
+		[armor_types.resistant] = damage_lerp_values.lerp_1_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_8,
@@ -952,8 +952,8 @@ damage_templates.powersword_2h_heavy_stab = {
 			},
 			power_distribution = {
 				attack = {
-					200,
-					400,
+					160,
+					320,
 				},
 				impact = {
 					15,
@@ -965,8 +965,8 @@ damage_templates.powersword_2h_heavy_stab = {
 			armor_damage_modifier = heavy_stab_am,
 			power_distribution = {
 				attack = {
-					100,
-					200,
+					80,
+					160,
 				},
 				impact = {
 					6,
@@ -978,8 +978,8 @@ damage_templates.powersword_2h_heavy_stab = {
 			armor_damage_modifier = heavy_stab_am,
 			power_distribution = {
 				attack = {
-					20,
-					60,
+					15,
+					50,
 				},
 				impact = {
 					5,
@@ -992,7 +992,7 @@ damage_templates.powersword_2h_heavy_stab = {
 			power_distribution = {
 				attack = {
 					10,
-					50,
+					40,
 				},
 				impact = {
 					4,
@@ -1025,8 +1025,8 @@ damage_templates.powersword_2h_heavy_stab_active = {
 			},
 			power_distribution = {
 				attack = {
-					325,
-					650,
+					260,
+					520,
 				},
 				impact = {
 					15,
@@ -1038,8 +1038,8 @@ damage_templates.powersword_2h_heavy_stab_active = {
 			armor_damage_modifier = power_stab_am,
 			power_distribution = {
 				attack = {
-					150,
-					300,
+					120,
+					240,
 				},
 				impact = {
 					6,
@@ -1051,8 +1051,8 @@ damage_templates.powersword_2h_heavy_stab_active = {
 			armor_damage_modifier = power_stab_am,
 			power_distribution = {
 				attack = {
-					60,
-					120,
+					50,
+					100,
 				},
 				impact = {
 					5,
@@ -1064,8 +1064,8 @@ damage_templates.powersword_2h_heavy_stab_active = {
 			armor_damage_modifier = power_stab_am,
 			power_distribution = {
 				attack = {
-					30,
-					60,
+					25,
+					50,
 				},
 				impact = {
 					4,

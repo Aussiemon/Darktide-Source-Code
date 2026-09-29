@@ -807,7 +807,6 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 	popup_params.title_text_params = {
 		character_name = ProfileUtils.character_name(profile),
 	}
-	popup_params.title_text = "loc_main_menu_delete_character_popup_title"
 	popup_params.description_text = "loc_main_menu_delete_character_popup_description"
 	popup_params.type = "warning"
 	popup_params.options = {
@@ -1236,7 +1235,9 @@ MainMenuView._load_portrait_icon = function (self, profile, widget)
 	local load_cb = callback(self, "_cb_set_player_icon", widget, profile)
 	local unload_cb = callback(self, "_cb_unset_player_icon", widget)
 
-	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
+	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, {
+		package_scope = self.package_scope,
+	}, unload_cb)
 end
 
 MainMenuView._cb_set_player_icon = function (self, widget, profile, grid_index, rows, columns, render_target)

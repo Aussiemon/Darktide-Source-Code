@@ -52,9 +52,10 @@ ActionWeaponShout.start = function (self, action_settings, t, time_scale, action
 	self._suppression_distance_traveled = 0
 
 	local shout_template = self._weapon_extension:weapon_shout_template()
+	local shout_range = shout_template.range or 0
 	local shout_time = action_settings.shout_time or action_settings.total_time
 
-	self._speed = shout_template.range / shout_time * 4
+	self._speed = shout_range / shout_time * 4
 	self._num_hits = 0
 	self._target_index = 0
 
@@ -91,7 +92,7 @@ ActionWeaponShout.fixed_update = function (self, dt, t, time_in_action)
 		self._has_collected_targest = true
 	end
 
-	self:_update_shout(dt)
+	self:_update_shout(dt, t)
 end
 
 ActionWeaponShout.finish = function (self, reason, data, t, time_in_action, action_settings)
@@ -138,9 +139,10 @@ ActionWeaponShout._start_shout = function (self, t)
 
 	local inventory_slot_component = self._inventory_slot_component
 	local weapon_special_tweak_data = self._weapon_special_tweak_data
+	local ignore_activation_charges = action_settings and action_settings.ignore_activation_charges
 	local num_charges_to_consume_on_activation = weapon_special_tweak_data and weapon_special_tweak_data.num_charges_to_consume_on_activation
 
-	if num_charges_to_consume_on_activation then
+	if not ignore_activation_charges and num_charges_to_consume_on_activation then
 		local num_special_charges = inventory_slot_component.num_special_charges
 
 		inventory_slot_component.num_special_charges = math.max(num_special_charges - num_charges_to_consume_on_activation, 0)
@@ -158,7 +160,7 @@ ActionWeaponShout._start_shout = function (self, t)
 	self:_play_fx()
 end
 
-ActionWeaponShout._update_shout = function (self, dt)
+ActionWeaponShout._update_shout = function (self, dt, t)
 	local suppression_distance_traveled = self._suppression_distance_traveled
 	local target_units = self._target_units
 	local damage_profile = self._damage_profile
@@ -282,7 +284,7 @@ ActionWeaponShout._play_fx = function (self)
 		return
 	end
 
-	if not self._effect_name or not self._fx_source_name then
+	if not self._effect_name then
 		return
 	end
 
@@ -290,7 +292,28 @@ ActionWeaponShout._play_fx = function (self)
 	local link = true
 	local orphaned_policy = "stop"
 	local position_offset, rotation_offset, scale, all_clients, create_network_index
-	local particle_id = fx_extension:spawn_unit_particles(self._effect_name, self._fx_source_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index)
+	local fx_source_name = self._fx_source_name
+
+	if fx_source_name then
+		fx_extension:spawn_unit_particles(self._effect_name, fx_source_name, link, orphaned_policy, position_offset, rotation_offset, scale, all_clients, create_network_index)
+	else
+		local player_position = self._player_position
+		local rotation = self._first_person_component.rotation
+
+		fx_extension:spawn_particles(self._effect_name, player_position, rotation, scale, nil, nil, all_clients, create_network_index)
+	end
+end
+
+ActionWeaponShout._spawn_optional_unit = function (self, spawn_unit, player_unit, locomotion_component)
+	local material, placed_on_unit
+	local owner_unit = player_unit
+	local unit_name = spawn_unit.unit_name
+	local unit_template = spawn_unit.unit_template
+	local unit_template_parameters = spawn_unit.unit_template_parameters
+	local position = locomotion_component and locomotion_component.position or owner_unit and POSITION_LOOKUP[owner_unit] or Vector3.zero()
+	local rotation = Quaternion.identity()
+	local husk_unit_name = unit_name
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
 end
 
 return ActionWeaponShout

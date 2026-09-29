@@ -131,6 +131,7 @@ PayloadPathNode.component_data = {
 	node_id = {
 		category = "Path",
 		decimals = 0,
+		max = 510,
 		min = 0,
 		step = 1,
 		ui_name = "Node Id",

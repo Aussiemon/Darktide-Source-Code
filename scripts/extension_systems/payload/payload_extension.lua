@@ -283,7 +283,7 @@ PayloadExtension.hot_join_sync = function (self, unit, sender, channel)
 	local smooth_movement_state = self._smooth_movement
 	local last_ahead_index = smooth_movement_state.last_ahead_target_index or self._target_index
 	local current_node_node_id = self._current_node_extension and self._current_node_extension:node_id() or 0
-	local current_horizontal_direction = self.current_horizontal_direction and smooth_movement_state.current_horizontal_direction:unbox() or Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+	local current_horizontal_direction = smooth_movement_state.current_horizontal_direction and smooth_movement_state.current_horizontal_direction:unbox() or Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 	local previous_node_position = smooth_movement_state.previous_node_position and smooth_movement_state.previous_node_position:unbox() or self._target_positions[self._target_index]
 	local smooth_movement_parameters = self._smooth_movement_parameters
 	local horizontal_movement_speed_multiplier = smooth_movement_parameters.horizontal_movement_speed_multiplier
@@ -293,7 +293,7 @@ PayloadExtension.hot_join_sync = function (self, unit, sender, channel)
 	if self._state == STATES.turning and self._turning_parameters.turn_type == "timed_bezier" then
 		local timed_bezier_turning = self._timed_bezier_turning
 
-		RPC.rpc_payload_set_bezier_turning(timed_bezier_turning.starting_rotation:unbox(), timed_bezier_turning.current_turning_progress, timed_bezier_turning.full_turn_time)
+		RPC.rpc_payload_set_bezier_turning(channel, unit_level_index, timed_bezier_turning.starting_rotation:unbox(), timed_bezier_turning.current_turning_progress, timed_bezier_turning.full_turn_time)
 	end
 
 	local secondary_aim_target = self._secondary_aim_target
@@ -458,12 +458,7 @@ PayloadExtension.fixed_update = function (self, unit, dt, t, fixed_frame, contex
 		self:_update_astar()
 	end
 
-	if self._movement_type == MOVEMENT_TYPES.smooth then
-		self:_update_smooth_movement(unit, dt)
-	else
-		self:_update_movement(unit, dt)
-	end
-
+	self:_update_movement(unit, dt)
 	self:_update_optional_secondary_aim_target(unit, dt)
 	self:_update_proximity(unit, fixed_frame)
 	self:_update_main_path(unit, fixed_frame)
@@ -607,7 +602,7 @@ PayloadExtension._set_turning_parameters = function (self, unit, node_extension,
 
 		timed_bezier_turning.full_turn_time = full_turn_time
 	else
-		Log.error("PayloadExtension", "[_turn_towards] No handle for turn type: %s", turn_type)
+		Log.error("PayloadExtension", "[_set_turning_parameters] No handle for turn type: %s", turn_type)
 	end
 end
 
@@ -810,7 +805,9 @@ local function _vector3_slerp(from, to, t)
 	return from * math.cos(theta) + relative_vector * math.sin(theta)
 end
 
-PayloadExtension._update_smooth_movement = function (self, unit, dt)
+PayloadExtension._update_movement = function (self, unit, dt)
+	local smooth_movement = self._movement_type == MOVEMENT_TYPES.smooth
+	local update_position = not smooth_movement
 	local payload_state = self._state
 
 	if payload_state == STATES.moving then
@@ -825,86 +822,60 @@ PayloadExtension._update_smooth_movement = function (self, unit, dt)
 			return
 		end
 
+		local distance_to_travel, has_reached_target, new_position
 		local current_position = Unit.local_position(unit, 1)
 		local target_position = target_positions[target_index]:unbox()
-		local new_position, target_horizontal_direction, current_segment_progress, distance_to_travel = self:_update_smooth_translation(unit, dt, current_position, target_position)
 
-		self:_update_payload_floor_normal_adjustment(unit, dt, new_position, target_horizontal_direction, target_normals[target_index]:unbox())
+		if smooth_movement then
+			local updated_position, target_horizontal_direction, current_segment_progress, updated_distance_to_travel = self:_update_smooth_translation(unit, dt, current_position, target_position)
 
-		local has_reached_target = current_segment_progress >= 0.98
+			self:_update_payload_floor_normal_adjustment(unit, dt, updated_position, target_horizontal_direction, target_normals[target_index]:unbox())
+
+			distance_to_travel = updated_distance_to_travel
+			has_reached_target = current_segment_progress >= 0.98
+			new_position = updated_position
+		else
+			local direction = Vector3.normalize(target_position - current_position)
+			local distance = Vector3.length(target_position - current_position)
+			local next_normal = target_normals[target_index]:unbox()
+			local target_normal = next_normal
+			local look_direction = direction
+			local wanted_rotation = Quaternion.look(look_direction, target_normal)
+
+			self:_look_towards(unit, dt, self._rotation_type_in_movement, wanted_rotation)
+
+			distance_to_travel = self._speed * dt
+			has_reached_target = distance < distance_to_travel
+			new_position = current_position + direction * distance_to_travel
+		end
 
 		if has_reached_target then
-			self:_reach_target_position(target_position, false)
+			self:_reach_target_position(target_position, update_position)
 		elseif distance_to_travel > 0 then
 			self:_update_position(new_position)
 		end
-	elseif self._state == STATES.turning then
+	elseif payload_state == STATES.turning then
 		local turning_parameters = self._turning_parameters
 		local node_turning_speed_override_or_nil = turning_parameters.node_turning_speed_override_or_nil
-		local wanted_rotation = self._turning_parameters.wanted_rotation:unbox()
-		local new_rotation = self:_turn_towards(unit, dt, self._turning_parameters.turn_type, wanted_rotation, node_turning_speed_override_or_nil)
+		local wanted_rotation = turning_parameters.wanted_rotation:unbox()
+		local new_rotation = self:_turn_towards(unit, dt, turning_parameters.turn_type, wanted_rotation, node_turning_speed_override_or_nil)
 		local completed_turn = self:_is_turn_completed(new_rotation, wanted_rotation)
-		local position = Unit.local_position(unit, 1)
 
-		if completed_turn then
+		if smooth_movement and completed_turn then
 			local smooth_movement_state = self._smooth_movement
 
 			smooth_movement_state.current_horizontal_direction:store(Vector3.normalize(Vector3.flat(Quaternion.forward(new_rotation))))
 
 			smooth_movement_state.horizontal_movement_locked = true
 			smooth_movement_state.last_ahead_target_index = self._target_index
-
-			local update_payload_position = false
-			local finished_turning = true
-
-			self:_reach_target_position(position, update_payload_position, finished_turning)
-		else
-			self:_update_position(position)
-		end
-	end
-end
-
-PayloadExtension._update_movement = function (self, unit, dt)
-	if self._state == STATES.moving then
-		local target_index = self._target_index
-		local target_positions = self._target_positions
-		local target_normals = self._target_normals
-
-		if target_index > #target_positions then
-			Log.error("PayloadExtension", "Trying to move but have no target. index %s out of %s", target_index, #target_positions)
-			self:set_state(STATES.idle)
-
-			return
 		end
 
-		local current_position = Unit.local_position(unit, 1)
-		local target_position = target_positions[target_index]:unbox()
-		local direction = Vector3.normalize(target_position - current_position)
-		local distance = Vector3.length(target_position - current_position)
-		local next_normal = target_normals[target_index]:unbox()
-		local target_normal = next_normal
-		local look_direction = direction
-		local wanted_rotation = Quaternion.look(look_direction, target_normal)
-
-		self:_look_towards(unit, dt, self._rotation_type_in_movement, wanted_rotation)
-
-		local distance_to_travel = self._speed * dt
-
-		if distance < distance_to_travel then
-			self:_reach_target_position(target_position, true)
-		elseif distance_to_travel > 0 then
-			self:_update_position(current_position + direction * distance_to_travel)
-		end
-	elseif self._state == STATES.turning then
-		local turning_parameters = self._turning_parameters
-		local node_turning_speed_override_or_nil = turning_parameters.node_turning_speed_override_or_nil
-		local wanted_rotation = turning_parameters.wanted_rotation:unbox()
-		local new_rotation = self:_turn_towards(unit, dt, self._turning_parameters.turn_type, wanted_rotation, node_turning_speed_override_or_nil)
-		local completed_turn = self:_is_turn_completed(new_rotation, wanted_rotation)
 		local position = Unit.local_position(unit, 1)
 
 		if completed_turn then
-			self:_reach_target_position(position, true)
+			local finished_turning = true
+
+			self:_reach_target_position(position, update_position, finished_turning)
 		else
 			self:_update_position(position)
 		end
@@ -1170,7 +1141,7 @@ PayloadExtension.add_proximity_history = function (self, fixed_frame, value)
 end
 
 PayloadExtension._update_main_path = function (self, unit, fixed_frame)
-	if self._is_server then
+	if self._is_server and Managers.state.main_path:is_main_path_ready() then
 		local payload_position = Unit.local_position(unit, 1)
 		local main_path_local = 0
 		local _, _, payload_percentage, _, _ = MainPathQueries.closest_position(payload_position)
@@ -1297,9 +1268,13 @@ PayloadExtension._update_speed = function (self, unit, dt)
 	if new_speed ~= self._speed then
 		self._speed = math.clamp(new_speed, 0, self._max_speed)
 
-		Unit.set_flow_variable(unit, "lua_payload_percentage_speed", math.clamp01(self._speed / self._max_speed))
-		Unit.flow_event(unit, "lua_payload_on_speed_change")
+		self:_update_speed_in_flow()
 	end
+end
+
+PayloadExtension._update_speed_in_flow = function (self)
+	Unit.set_flow_variable(self._unit, "lua_payload_percentage_speed", math.clamp01(self._speed / self._max_speed))
+	Unit.flow_event(self._unit, "lua_payload_on_speed_change")
 end
 
 local SCRATCHPAD = {
@@ -1332,7 +1307,7 @@ PayloadExtension.set_state = function (self, state)
 		local smooth_movement_state = self._smooth_movement
 		local last_ahead_index = smooth_movement_state.last_ahead_target_index or self._target_index
 		local current_node_node_id = self._current_node_extension and self._current_node_extension:node_id() or 0
-		local current_horizontal_direction = self.current_horizontal_direction and smooth_movement_state.current_horizontal_direction:unbox() or Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+		local current_horizontal_direction = smooth_movement_state.current_horizontal_direction and smooth_movement_state.current_horizontal_direction:unbox() or Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 		local previous_node_position = smooth_movement_state.previous_node_position and smooth_movement_state.previous_node_position:unbox() or self._target_positions[self._target_index]
 		local smooth_movement_parameters = self._smooth_movement_parameters
 		local horizontal_movement_speed_multiplier = smooth_movement_parameters.horizontal_movement_speed_multiplier
@@ -1544,8 +1519,7 @@ PayloadExtension.rpc_payload_update = function (self, state_id, speed_controller
 	self._speed = speed
 	self._target_index = target_index
 
-	Unit.set_flow_variable(unit, "lua_payload_percentage_speed", math.clamp01(self._speed / self._max_speed))
-	Unit.flow_event(unit, "lua_payload_on_speed_change")
+	self:_update_speed_in_flow()
 
 	local last_frame = 0
 
@@ -1561,10 +1535,9 @@ PayloadExtension.rpc_payload_update = function (self, state_id, speed_controller
 	end
 
 	local fixed_frame_time = Managers.state.game_session.fixed_time_step
-	local update_movement_function = self._movement_type == MOVEMENT_TYPES.smooth and self._update_smooth_movement or self._update_movement
 
 	for i = fixed_frame, self._last_fixed_frame - 1 do
-		update_movement_function(self, unit, fixed_frame_time)
+		self._update_movement(self, unit, fixed_frame_time)
 		self:_update_optional_secondary_aim_target(unit, fixed_frame_time)
 		self:_update_proximity(unit, fixed_frame)
 		self:_update_main_path(unit, fixed_frame)

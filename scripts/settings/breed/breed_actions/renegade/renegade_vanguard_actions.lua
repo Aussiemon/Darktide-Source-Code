@@ -1057,6 +1057,24 @@ local action_data = {
 					"stun_down",
 				},
 			},
+			shield_explosion = {
+				fwd = {
+					"stagger_explosion_shield_front",
+					"stagger_explosion_shield_front_2",
+				},
+				bwd = {
+					"stagger_explosion_shield_back",
+				},
+				left = {
+					"stagger_explosion_shield_left",
+				},
+				right = {
+					"stagger_explosion_shield_right",
+				},
+				dwn = {
+					"stun_down",
+				},
+			},
 		},
 	},
 	smash_obstacle = {

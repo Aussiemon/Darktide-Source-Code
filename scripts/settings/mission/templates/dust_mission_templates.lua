@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	lm_scavenge = {
-		coordinates = "loc_mission_coordinates_lm_scavenge",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_lm_scavenge",
@@ -56,9 +55,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	dm_propaganda = {
-		coordinates = "loc_mission_coordinates_dm_propaganda",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_dm_propaganda",
@@ -129,9 +130,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	hm_strain = {
-		coordinates = "loc_mission_coordinates_hm_strain",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/dust/missions/mission_hm_strain",
@@ -203,6 +206,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

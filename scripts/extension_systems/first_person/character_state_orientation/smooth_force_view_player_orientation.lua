@@ -49,6 +49,16 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 	local max_pitch = self._max_pitch
 	local first_person_unit = self._first_person_unit
 	local action_sweep_component = self._action_sweep_component
+	local weapon_action_component = self._weapon_action_component
+	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+	local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local hit_stickyness_settings
+
+	if current_action_settings then
+		local special_active_at_start = weapon_action_component.special_active_at_start
+
+		hit_stickyness_settings = special_active_at_start and current_action_settings.hit_stickyness_settings_special_active or current_action_settings.hit_stickyness_settings
+	end
 
 	self:_fill_look_delta_context(look_delta_context)
 
@@ -57,12 +67,8 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 	local player_position = Unit.world_position(first_person_unit, 1)
 	local stuck_direction = Vector3.normalize(stick_to_position - player_position)
 	local stuck_dir_x, stuck_dir_y, stuck_dir_z = stuck_direction.x, stuck_direction.y, stuck_direction.z
-	local wanted_yaw = math.atan2(stuck_dir_y, stuck_dir_x) - HALF_PI
-	local wanted_pitch = math.asin(stuck_dir_z)
-
-	wanted_yaw = math.mod_two_pi(wanted_yaw)
-	wanted_pitch = math.mod_two_pi(wanted_pitch)
-
+	local wanted_pitch = math.mod_two_pi(math.asin(stuck_dir_z))
+	local wanted_yaw = math.mod_two_pi(math.atan2(stuck_dir_y, stuck_dir_x) - HALF_PI)
 	local look_delta_x, look_delta_y = look_delta.x, look_delta.y
 	local yaw = Orientation.clamp_from_origin(orientation.yaw, look_delta_x, wanted_yaw, CONSTRAINT)
 	local pitch = Orientation.clamp_from_origin(orientation.pitch, -look_delta_y, wanted_pitch, CONSTRAINT)
@@ -81,21 +87,16 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 		delta_pitch = wanted_pitch - new_pitch
 	end
 
+	local yaw_nudge_speed, pitch_nudge_speed = MAX_NUDGE_PER_SEC, MAX_NUDGE_PER_SEC
 	local yaw_p = math.max(math.ilerp_no_clamp(NUDGE_MIN, NUDGE_MAX, math.abs(delta_yaw)), 0)
-	local yaw_nudge = math.sign(delta_yaw) * MAX_NUDGE_PER_SEC * main_dt * math.ease_out_exp(yaw_p)
+	local yaw_nudge = math.sign(delta_yaw) * yaw_nudge_speed * main_dt * math.ease_out_exp(yaw_p)
 	local nudged_yaw = (new_yaw + yaw_nudge) % PI_2
 	local pitch_p = math.max(math.ilerp_no_clamp(NUDGE_MIN, NUDGE_MAX, math.abs(delta_pitch)), 0)
-	local pitch_nudge = math.sign(delta_pitch) * MAX_NUDGE_PER_SEC * main_dt * pitch_p
+	local pitch_nudge = math.sign(delta_pitch) * pitch_nudge_speed * main_dt * pitch_p
 	local nudged_pitch = math.clamp((new_pitch + PI) % PI_2 - PI + pitch_nudge, min_pitch, max_pitch) % PI_2
 	local disable_vertical_force_view = false
-	local weapon_action_component = self._weapon_action_component
-	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-	local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
 
-	if current_action_settings then
-		local special_active_at_start = weapon_action_component.special_active_at_start
-		local hit_stickyness_settings = special_active_at_start and current_action_settings.hit_stickyness_settings_special_active or current_action_settings.hit_stickyness_settings
-
+	if hit_stickyness_settings then
 		disable_vertical_force_view = hit_stickyness_settings and hit_stickyness_settings.disable_vertical_force_view
 
 		local sitck_to_unit = action_sweep_component.sweep_aborted_unit

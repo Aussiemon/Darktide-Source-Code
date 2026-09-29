@@ -143,7 +143,9 @@ PartyImmateriumHubSessionBoot._start_hot_joining_party_hub_server = function (se
 
 	self:_set_state(STATES.hotjoining)
 
-	self._hot_join_promise = Managers.party_immaterium:hot_join_party_hub_server():next(function (response)
+	self._hot_join_promise = Managers.party_immaterium:hot_join_party_hub_server()
+
+	self._hot_join_promise:next(function (response)
 		self._matched_hub_session_id = response
 
 		self:_fetch_server_details()

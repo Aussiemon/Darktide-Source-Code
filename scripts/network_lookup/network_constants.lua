@@ -116,6 +116,7 @@ NetworkConstants.level_unit_id = level_unit_id
 NetworkConstants.health_small = Network.type_info("health_small")
 NetworkConstants.health_medium = Network.type_info("health_medium")
 NetworkConstants.health_large = Network.type_info("health_large")
+NetworkConstants.health_huge = Network.type_info("health_huge")
 
 local toughness = Network.type_info("toughness")
 
@@ -196,6 +197,7 @@ local liquid_area_is_filled_array = Network.type_info("liquid_area_is_filled_arr
 local action_time_scale = Network.type_info("action_time_scale")
 
 NetworkConstants.action_time_scale = action_time_scale
+NetworkConstants.action_context_id = Network.type_info("action_context_id")
 
 local player_anim_state = Network.type_info("player_anim_state")
 
@@ -261,14 +263,17 @@ local prd_state = Network.type_info("prd_state")
 NetworkConstants.max_prd_state = prd_state.max
 
 local ability_charges = Network.type_info("ability_charges")
-local ability_cooldown = Network.type_info("ability_cooldown")
+local ability_resource_value = Network.type_info("ability_resource_value")
+
+NetworkConstants.ability_resource_precision = 1000000
 
 for name, ability in pairs(PlayerAbilities) do
-	local max_charges = ability.max_charges
-	local cooldown = ability.cooldown
+	local ability_usage_cost_type = ability.usage_cost_type
 
-	if cooldown and type(cooldown) == "table" then
-		cooldown = cooldown.max
+	if ability_usage_cost_type == "charges" then
+		local max_charges = ability.max_charges
+	elseif ability_usage_cost_type == "resource" then
+		local max_resource = ability.max_resource
 	end
 end
 

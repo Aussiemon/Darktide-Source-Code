@@ -14,6 +14,80 @@ RespawnBeaconQueries.spawn_locations = function (nav_world, physics_world, beaco
 	return spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions
 end
 
+local temp_flood_fill_positions = {}
+
+RespawnBeaconQueries.procgen_spawn_locations = function (nav_world, physics_world, position, beacon_unit, player_radius, player_height, num_needed_spawn_locations)
+	local above = 1
+	local below = 1
+	local horizontal = 2
+	local num_points = 20
+
+	num_needed_spawn_locations = num_needed_spawn_locations or 4
+
+	if beacon_unit then
+		position = Unit.world_position(beacon_unit, 1) - Quaternion.forward(Unit.world_rotation(beacon_unit, 1))
+	end
+
+	local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, above, below, horizontal)
+	local valid_positions = {}
+
+	if position_on_navmesh then
+		local num_positions = GwNavQueries.flood_fill_from_position(nav_world, position_on_navmesh, 1, 1, num_points, temp_flood_fill_positions)
+		local has_exclusion_volume = beacon_unit and Unit.has_node(beacon_unit, "c_respawn_exclusion_volume")
+
+		if has_exclusion_volume then
+			local i = 1
+
+			while i <= num_positions do
+				local pos = temp_flood_fill_positions[i]
+				local is_inside_exclusion_volume = Unit.is_point_inside_volume(beacon_unit, "c_respawn_exclusion_volume", pos)
+
+				if is_inside_exclusion_volume then
+					table.remove(temp_flood_fill_positions, i)
+
+					num_positions = num_positions - 1
+				else
+					i = i + 1
+				end
+			end
+		end
+
+		local capsule_rotation = Quaternion.axis_angle(Vector3.up(), 0)
+		local capsule_radius = player_radius * 0.5
+		local capsule_height = player_height * 0.5
+		local capsule_size = Vector3(capsule_radius, capsule_height, capsule_radius)
+
+		for i = 1, num_positions do
+			local test_pos = temp_flood_fill_positions[i]
+			local has_room_from_other_positions = true
+
+			for j = 1, #valid_positions do
+				local valid_pos = valid_positions[j]
+
+				if player_radius > Vector3.distance(test_pos, valid_pos) then
+					has_room_from_other_positions = false
+
+					break
+				end
+			end
+
+			if has_room_from_other_positions then
+				local _, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", test_pos, "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_respawn_beacon_check")
+
+				if actor_count == 0 then
+					valid_positions[#valid_positions + 1] = test_pos
+				end
+			end
+
+			if num_needed_spawn_locations <= #valid_positions then
+				break
+			end
+		end
+	end
+
+	return valid_positions
+end
+
 local temp_spawn_volume_positions = {}
 local DIAMETER_AROUND_VOLUME_CENTER = 20
 local RADIUS_AROUND_VOLUME_CENTER = DIAMETER_AROUND_VOLUME_CENTER * 0.5

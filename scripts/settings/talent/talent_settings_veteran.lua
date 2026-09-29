@@ -61,6 +61,13 @@ local talent_settings = {
 		veteran_increased_ranged_cleave = {
 			cleave = 0.5,
 		},
+		veteran_base_ranged_damage = {
+			ranged_damage = 0.25,
+		},
+		veteran_survivalist_passive = {
+			ammo = 0.01,
+			cooldown = 5,
+		},
 	},
 	veteran_2 = {
 		combat_ability_base = {
@@ -96,8 +103,8 @@ local talent_settings = {
 			max_charges = 3,
 		},
 		coherency = {
-			ammo_replenishment_percent = 0.0075,
-			ammo_replenishment_percent_improved = 0.01,
+			ammo_replenishment_percent = 0.0025,
+			ammo_replenishment_percent_improved = 0.005,
 			cooldown = 5,
 		},
 		passive_1 = {
@@ -142,6 +149,7 @@ local talent_settings = {
 			toughness_damage_taken_multiplier = 0.25,
 		},
 		defensive_2 = {
+			movement_speed = 0.05,
 			stamina_percent = 0.3,
 		},
 		defensive_3 = {
@@ -167,7 +175,7 @@ local talent_settings = {
 			recoil_modifier = -0.12,
 			shot_stamina = 0.1,
 			spread_modifier = -0.19,
-			stamina_per_second = 0.75,
+			stamina_per_second = 0.33,
 			sway_modifier = 0.4,
 		},
 		offensive_2_3 = {

@@ -45,19 +45,8 @@ weapon_template.actions = {
 		total_time = 0.5,
 		uninterruptible = true,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 		},
-	},
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
 	},
 	action_warp_charge_explode = {
 		anim_end_event = "explode_finished",
@@ -82,11 +71,7 @@ weapon_template.actions = {
 			damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
 			damage_type = damage_types.warp_overload,
 		},
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-		},
+		allowed_chain_actions = {},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.overheat_explosion_speed_modifier,
 		},

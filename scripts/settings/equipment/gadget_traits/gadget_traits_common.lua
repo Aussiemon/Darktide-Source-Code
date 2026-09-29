@@ -716,7 +716,7 @@ gadget_traits_common.gadget_cooldown_reduction = {
 				find_value_type = "trait_override",
 				path = {
 					"stat_buffs",
-					stat_buffs.ability_cooldown_modifier,
+					stat_buffs.combat_ability_resource_cost_per_use_modifier,
 				},
 			},
 			value_manipulation = function (value)
@@ -728,22 +728,22 @@ gadget_traits_common.gadget_cooldown_reduction = {
 		gadget_cooldown_reduction = {
 			{
 				stat_buffs = {
-					[stat_buffs.ability_cooldown_modifier] = -0.01,
+					[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.01,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.ability_cooldown_modifier] = -0.02,
+					[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.02,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.ability_cooldown_modifier] = -0.03,
+					[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.03,
 				},
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.ability_cooldown_modifier] = -0.04,
+					[stat_buffs.combat_ability_resource_cost_per_use_modifier] = -0.04,
 				},
 			},
 		},

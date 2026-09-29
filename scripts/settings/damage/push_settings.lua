@@ -56,6 +56,10 @@ push_settings.push_templates = {
 		max_speed_override = 4,
 		speed = 4,
 	},
+	nurgle_head_parasite_nurgle_explosion_2026 = {
+		max_speed_override = 2,
+		speed = 2,
+	},
 	melee_executor_default = {
 		ignore_stun_immunity = true,
 		max_speed_override = 6,
@@ -167,6 +171,12 @@ push_settings.push_templates = {
 		max_speed_override = 6,
 		push_through_block = true,
 		speed = 8,
+	},
+	daemonhost_torment_nova = {
+		ignore_stun_immunity = true,
+		max_speed_override = 6,
+		push_through_block = true,
+		speed = 12,
 	},
 	daemonhost_offtarget = {
 		max_speed_override = 10,

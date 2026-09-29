@@ -362,7 +362,7 @@ MissionBuffs._is_player_alive = function (self)
 end
 
 MissionBuffs._is_player_in_mission = function (self)
-	return self._current_game_mode == "survival"
+	return self._current_game_mode == "survival" or self._current_game_mode == "expedition"
 end
 
 MissionBuffs._should_force_inactivate = function (self)

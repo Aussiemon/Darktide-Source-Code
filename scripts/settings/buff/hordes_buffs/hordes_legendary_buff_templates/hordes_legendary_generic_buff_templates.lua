@@ -118,7 +118,7 @@ templates.hordes_buff_combat_ability_cooldown_on_kills = {
 	proc_func = function (params, template_data, template_context)
 		local ability_extension = template_data.ability_extension
 
-		ability_extension:reduce_ability_cooldown_percentage("combat_ability", percent_ability_cooldown_recovered_per_kill)
+		ability_extension:restore_ability_charge_percentage("combat_ability", percent_ability_cooldown_recovered_per_kill)
 	end,
 }
 
@@ -346,27 +346,6 @@ templates.hordes_buff_extra_ability_charge = {
 	keywords = {
 		buff_keywords.allow_extra_ability_charges,
 	},
-	start_func = function (template_data, template_context)
-		if not template_context.is_server then
-			return
-		end
-
-		template_data.restored_ability_charge = false
-	end,
-	post_update_keywords_and_stats_func = function (template_data, template_context)
-		if not template_context.is_server or template_data.restored_ability_charge then
-			return
-		end
-
-		local player_unit = template_context.unit
-		local ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
-
-		if ability_extension then
-			ability_extension:restore_ability_charge("combat_ability", 1)
-		end
-
-		template_data.restored_ability_charge = true
-	end,
 }
 
 local random_damage_immunity_chance = HordesBuffsData.hordes_buff_random_damage_immunity.buff_stats.chance.value

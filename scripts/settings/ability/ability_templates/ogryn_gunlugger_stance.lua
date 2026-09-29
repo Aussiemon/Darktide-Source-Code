@@ -7,7 +7,7 @@ ability_template.action_inputs = {
 		buffer_time = 0.5,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -21,11 +21,11 @@ ability_template.action_input_hierarchy = {
 }
 ability_template.actions = {
 	action_stance_change = {
-		ability_type = "combat_ability",
 		allowed_during_sprint = true,
 		anim = "mid_reload_finished",
 		anim_3p = "ability_shout",
 		auto_wield_slot = "slot_secondary",
+		consume_ability_usage_cost = true,
 		kind = "stance_change",
 		refill_toughness = false,
 		reload_secondary = true,
@@ -35,7 +35,6 @@ ability_template.actions = {
 		target_enemies = true,
 		total_time = 0,
 		uninterruptible = true,
-		use_ability_charge = true,
 		vo_tag = "ability_gun_lugger",
 	},
 }

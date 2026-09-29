@@ -37,6 +37,9 @@ MissionManager.init = function (self, mission_name, level, level_name, side_miss
 	MissionManager._num_missions_started = MissionManager._num_missions_started + 1
 
 	Crashify.print_property("num_missions_started", MissionManager._num_missions_started)
+
+	self._event_listener_levels = {}
+	self._event_listener_units = {}
 end
 
 MissionManager.num_missions_started = function (self)
@@ -88,6 +91,100 @@ MissionManager.mission_type_index = function (self)
 	local mission_type = MissionTypes[mission.mission_type]
 
 	return mission_type and mission_type.index or -1
+end
+
+MissionManager.register_mission_event_listener_unit = function (self, unit, event)
+	local units = self._event_listener_units[event]
+
+	if not units then
+		units = {
+			num = 0,
+		}
+		self._event_listener_units[event] = units
+	end
+
+	units.num = units.num + 1
+	units[units.num] = unit
+end
+
+MissionManager.unregister_mission_event_listener_unit = function (self, unit, event)
+	local units = self._event_listener_units[event]
+
+	if units then
+		for i = 1, units.num do
+			if units[i] == unit then
+				units[i], units[units.num] = units[units.num]
+				units.num = units.num - 1
+
+				break
+			end
+		end
+	end
+end
+
+MissionManager.trigger_mission_event = function (self, event_name, ...)
+	local units = self._event_listener_units[event_name]
+
+	if units then
+		for i = 1, units.num do
+			local unit = units[i]
+
+			for arg_index = 1, select("#", ...), 2 do
+				local arg_name = select(arg_index, ...)
+				local arg_value = select(arg_index + 1, ...)
+
+				Unit.set_flow_variable(unit, arg_name, arg_value)
+			end
+
+			Unit.flow_event(unit, event_name)
+		end
+	end
+
+	local levels = self._event_listener_levels[event_name]
+
+	if levels then
+		for i = 1, levels.num do
+			local level = levels[i]
+
+			for arg_index = 1, select("#", ...), 2 do
+				local arg_name = select(arg_index, ...)
+				local arg_value = select(arg_index + 1, ...)
+
+				Level.set_flow_variable(level, arg_name, arg_value)
+			end
+
+			Level.trigger_event(level, event_name)
+		end
+	end
+end
+
+MissionManager.register_mission_event_listener_level = function (self, level, event)
+	local levels = self._event_listener_levels[event]
+
+	if not levels then
+		levels = {
+			num = 0,
+		}
+		self._event_listener_levels[event] = levels
+	end
+
+	levels.num = levels.num + 1
+	levels[levels.num] = level
+end
+
+MissionManager.unregister_mission_event_listener_level = function (self, level, event)
+	local levels = self._event_listener_levels[event]
+
+	if levels then
+		for i = 1, levels.num do
+			if levels[i] == level then
+				levels[i], levels[levels.num] = levels[levels.num]
+				levels.num = levels.num - 1
+
+				break
+			end
+		end
+	end
 end
 
 return MissionManager

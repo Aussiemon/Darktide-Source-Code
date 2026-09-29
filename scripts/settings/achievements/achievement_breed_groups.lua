@@ -27,6 +27,7 @@ AchievementBreedGroups.all = {
 	"chaos_armored_infected",
 	"chaos_beast_of_nurgle",
 	"chaos_daemonhost",
+	"chaos_daemonhost_torment",
 	"chaos_hound_mutator",
 	"chaos_hound",
 	"chaos_lesser_mutated_poxwalker",
@@ -72,6 +73,7 @@ AchievementBreedGroups.all = {
 	"renegade_twin_captain_two",
 	"renegade_twin_captain",
 	"renegade_vanguard",
+	"renegade_wizard",
 }
 AchievementBreedGroups.chaos = {
 	"chaos_hound",

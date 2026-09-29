@@ -6,7 +6,7 @@ local NavQueries = require("scripts/utilities/nav_queries")
 local SpawnPointQueries = {}
 local ABOVE, BELOW, HORIZONTAL = 1, 1, 3
 
-SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_distance, group_cutoff_values, nav_tag_cost_table)
+SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_distance, group_cutoff_values, nav_tag_cost_table, optional_prepend_points_table, optional_append_points_table)
 	local main_path_length = EngineOptimized.main_path_total_length()
 	local half_distance = group_distance / 2
 	local travel_distance = half_distance
@@ -29,6 +29,38 @@ SpawnPointQueries.generate_nav_triangle_group = function (nav_world, group_dista
 		end
 
 		travel_distance = travel_distance + group_distance
+	end
+
+	local function populate_navmesh_point_table(point_table, conversion_table)
+		if not point_table then
+			return false
+		end
+
+		for index, point in pairs(point_table) do
+			local point_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, point, ABOVE, BELOW, HORIZONTAL)
+
+			point_table[index] = point_on_navmesh
+
+			local _, _, _, node_index, _ = MainPathQueries.closest_position(point_on_navmesh)
+
+			conversion_table[index] = node_index
+		end
+
+		return true
+	end
+
+	local temp_conversion_table = {}
+
+	if populate_navmesh_point_table(optional_prepend_points_table, temp_conversion_table) then
+		table.prepend(flood_fill_positions, optional_prepend_points_table)
+		table.prepend(group_index_to_mainpath_index, temp_conversion_table)
+	end
+
+	table.clear(temp_conversion_table)
+
+	if populate_navmesh_point_table(optional_append_points_table, temp_conversion_table) then
+		table.append(flood_fill_positions, optional_append_points_table)
+		table.append(group_index_to_mainpath_index, temp_conversion_table)
 	end
 
 	local nav_triangle_group = GwNavTriangleGroup.create_by_flood_fill_from_positions(nav_world, flood_fill_positions, group_cutoff_values, nav_tag_cost_table)

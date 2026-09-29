@@ -87,16 +87,8 @@ local function _sort_spawn_priority_func(a, b)
 end
 
 PlayerSpawnerSystem.add_spawn_point = function (self, unit, side, spawn_identifier, spawn_priority, parent_spawned)
-	local position, rotation
-
-	if Unit.has_node(unit, "spawn_location") then
-		local node = Unit.node(unit, "spawn_location")
-
-		position, rotation = Unit.world_position(unit, node), Unit.world_rotation(unit, node)
-	else
-		position, rotation = POSITION_LOOKUP[unit], Unit.local_rotation(unit, 1)
-	end
-
+	local node = Unit.has_node(unit, "spawn_location") and Unit.node(unit, "spawn_location") or 1
+	local position, rotation = Unit.world_position(unit, node), Unit.world_rotation(unit, node)
 	local spawn_point_data = {
 		unit = unit,
 		position = Vector3Box(position),

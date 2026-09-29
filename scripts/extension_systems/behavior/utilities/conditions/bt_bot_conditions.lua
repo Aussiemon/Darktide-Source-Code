@@ -567,6 +567,12 @@ conditions.is_too_far_from_ally = function (unit, blackboard, scratchpad, condit
 		return false
 	end
 
+	local t = Managers.time:time("gameplay")
+
+	if t < bot_group_data.hover_target.expires then
+		return false
+	end
+
 	local distance_squared = Vector3.distance_squared(latest_position_on_nav_mesh, follow_unit_latest_position_on_nav_mesh)
 
 	return distance_squared >= 1600

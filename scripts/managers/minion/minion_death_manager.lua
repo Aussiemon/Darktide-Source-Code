@@ -42,6 +42,10 @@ MinionDeathManager.delete_units = function (self)
 	self._minion_ragdoll:cleanup_ragdolls()
 end
 
+MinionDeathManager.delete_units_except = function (self, ragdoll_exceptions)
+	self._minion_ragdoll:remove_ragdolls_except(ragdoll_exceptions)
+end
+
 local INSTANT_RAGDOLL_STAGGER_TYPES = {
 	explosion = true,
 	heavy = true,
@@ -133,9 +137,14 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		end
 
 		Managers.state.pacing:remove_aggroed_minion(unit)
+		Managers.event:trigger("on_minion_death_event", unit, breed)
 	else
 		death_component.hit_during_death = true
 	end
+
+	local behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+
+	behavior_extension:prioritize_staggered_update()
 end
 
 local extensions_to_keep = {

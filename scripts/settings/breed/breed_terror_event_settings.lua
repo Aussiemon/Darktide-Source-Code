@@ -64,6 +64,9 @@ breed_terror_event_settings.renegade_executor = {
 breed_terror_event_settings.renegade_grenadier = {
 	point_cost = 6,
 }
+breed_terror_event_settings.renegade_wizard = {
+	point_cost = math.huge,
+}
 breed_terror_event_settings.renegade_gunner = {
 	point_cost = 5,
 }

@@ -7,10 +7,6 @@ PlayerQuickSwappedReporter.init = function (self)
 	self._reports = {}
 end
 
-PlayerQuickSwappedReporter.update = function (self, dt, t)
-	return
-end
-
 PlayerQuickSwappedReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

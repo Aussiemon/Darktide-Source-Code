@@ -1,6 +1,8 @@
 ﻿-- chunkname: @scripts/tests/test_cases/combat_test_cases.lua
 
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 CombatTestCases = {}
 
@@ -112,6 +114,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
 		local max_time = settings.max_time
+		local player_teleportation_speed_factor = settings.player_teleportation_speed_factor or 2
 		local back_to_hub_after_runthrough = settings.back_to_hub_after_runthrough or false
 		local telemetry_events = {
 			lua_trace = "lua_trace_stats",
@@ -163,7 +166,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local main_path_point = 0
 		local total_main_path_distance = Testify:make_request("total_main_path_distance")
 		local last_player_teleportation_time = os.clock()
-		local player_teleportation_speed_factor = 2
 		local memory_usage_measurement_count = 0
 		local num_memory_usage_measurements = 3
 		local memory_usage_main_path_increments = (total_main_path_distance - 10) / (num_memory_usage_measurements - 1)
@@ -358,6 +360,8 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 
 			num_remaining_path_queries = new_num_remaining_path_queries
 		end
+
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -492,6 +496,8 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 
 		if not spawn_simultaneously and not table.is_empty(minions_auto_killed) then
 			result = result .. "-Bots were unable to kill: " .. table.concat(minions_auto_killed, ", ")
+
+			Testify.expect:fail("bots_unable_to_kill", result)
 		end
 
 		if result == "" then
@@ -634,6 +640,8 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 
 		if string.value_or_nil(result) == nil then
 			result = "Success"
+		else
+			Testify.expect:fail("missing_ragdoll_actors", result)
 		end
 
 		return result
@@ -778,6 +786,8 @@ CombatTestCases.gib_all_minions = function (case_settings)
 
 		if string.value_or_nil(result) == nil then
 			result = "Success"
+		else
+			Testify.expect:fail("gib_all_minions_failure", result)
 		end
 
 		return result

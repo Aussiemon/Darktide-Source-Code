@@ -16,6 +16,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -60,10 +61,10 @@ local breed_data = {
 		ranged = "renegade_flamer_default",
 	},
 	tags = {
-		minion = true,
-		mutator = true,
-		scrambler = true,
-		special = true,
+		[breed_tags.special] = true,
+		[breed_tags.scrambler] = true,
+		[breed_tags.minion] = true,
+		[breed_tags.mutator] = true,
 	},
 	point_cost = math.huge,
 	armor_type = armor_types.berserker,

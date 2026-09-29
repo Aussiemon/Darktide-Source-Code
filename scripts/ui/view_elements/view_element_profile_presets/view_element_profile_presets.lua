@@ -510,9 +510,30 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_layout_changed = functi
 	grid:force_update_list_size()
 end
 
+ViewElementProfilePresets._show_delete_preset_popup = function (self, widget, element)
+	local context = {
+		description_text = "loc_popup_description_delete_profile_preset",
+		title_text = "loc_popup_header_delete_profile_preset",
+		options = {
+			{
+				close_on_pressed = true,
+				text = "loc_inventory_menu_profile_preset_delete",
+				callback = callback(self, "_remove_profile_preset", widget, element),
+			},
+			{
+				close_on_pressed = true,
+				hotkey = "back",
+				text = "loc_popup_button_close",
+			},
+		},
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context)
+end
+
 ViewElementProfilePresets.cb_on_profile_preset_icon_grid_left_pressed = function (self, widget, element)
 	if element.delete_button then
-		self:_remove_profile_preset(widget, element)
+		self:_show_delete_preset_popup(widget, element)
 
 		return
 	end

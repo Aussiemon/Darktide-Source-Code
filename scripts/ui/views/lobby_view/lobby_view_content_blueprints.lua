@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/ui/views/lobby_view/lobby_view_content_blueprints.lua
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local Colors = require("scripts/utilities/ui/colors")
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local MasterItems = require("scripts/backend/master_items")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local grid_width = LobbyViewSettings.grid_size[1]
 local blueprints = {}
 
@@ -103,7 +103,7 @@ blueprints.item_icon = {
 		{
 			pass_type = "texture",
 			style_id = "icon",
-			value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+			value = "content/ui/materials/icons/weapons/hud/debug_primary",
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",
@@ -213,7 +213,7 @@ blueprints.item_icon = {
 				end
 
 				if color then
-					ColorUtilities.color_copy(color, style.color)
+					Colors.color_copy(color, style.color)
 				end
 			end,
 		},
@@ -252,7 +252,7 @@ blueprints.item_icon = {
 				end
 
 				if color then
-					ColorUtilities.color_copy(color, style.color)
+					Colors.color_copy(color, style.color)
 				end
 			end,
 		},
@@ -261,7 +261,7 @@ blueprints.item_icon = {
 		local item = entry.item
 		local id = item.name
 		local master_item = MasterItems.get_item(id)
-		local hud_icon = "content/ui/materials/icons/weapons/hud/combat_blade_01"
+		local hud_icon = "content/ui/materials/icons/weapons/hud/debug_primary"
 
 		if master_item and master_item.hud_icon then
 			hud_icon = master_item.hud_icon

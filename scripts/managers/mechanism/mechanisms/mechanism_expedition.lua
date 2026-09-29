@@ -22,6 +22,9 @@ MechanismExpedition.init = function (self, ...)
 	self._promise_container = PromiseContainer:new()
 	self._pending_state_change = false
 
+	Expedition.start_fetch_slot_data_from_location()
+	Expedition.start_fetch_dsl_data_from_levels()
+
 	local context = self._context
 
 	if context.server_channel then
@@ -93,6 +96,7 @@ MechanismExpedition.init = function (self, ...)
 		data.pacing_control = context.pacing_control
 		data.current_location_index = expedition_step
 		data.layout_seed = layout_seed
+		data.level_seed = layout_seed
 		data.layout_config_name = layout_config_name
 
 		ThemePackage.level_resource_disable_theme(data.level_name)
@@ -102,21 +106,9 @@ MechanismExpedition.init = function (self, ...)
 		data.expedition_template_name = expedition_template_name
 		data.node_id = node_id
 
-		self:_fetch_expedition_template(expedition_template_name, node_id):next(function (expedition_template)
-			local use_local_expedition_template = not expedition_template or expedition_template.use_local == nil or expedition_template.use_local
+		local settings_version
 
-			if use_local_expedition_template then
-				expedition_template = ExpeditionTemplates[expedition_template_name]
-
-				Log.info("MechanismExpedition", "Using local expedition template for template name: %s", expedition_template_name)
-			else
-				self._mechanism_data.settings_version = expedition_template.version
-
-				Log.info("MechanismExpedition", "Using backend expedition template for template name: %s, version %s, node_id: %s", expedition_template_name, expedition_template.version, tostring(node_id or "nil"))
-			end
-
-			self:_setup_levels_spawner(expedition_template, layout_seed, nil, circumstance_name)
-		end)
+		self:_setup_expeditions_template(expedition_template_name, layout_seed, circumstance_name, node_id, settings_version)
 
 		local do_vote = self._is_owner_mission_server
 
@@ -153,6 +145,27 @@ MechanismExpedition._fetch_expedition_template = function (self, template_name, 
 	end)
 end
 
+MechanismExpedition._setup_expeditions_template = function (self, template_name, layout_seed, circumstance_name, node_id, optional_settings_version)
+	self:_fetch_expedition_template(template_name, node_id, optional_settings_version):next(function (backend_template)
+		local local_template = ExpeditionTemplates[template_name]
+		local use_local_expedition_template = not backend_template or backend_template.use_local == nil or backend_template.use_local
+
+		if use_local_expedition_template then
+			self._expedition_template = local_template
+
+			Log.info("MechanismExpedition", "Using local expedition template for template name: %s", template_name)
+		else
+			local expedition_template
+
+			expedition_template = backend_template
+			self._expedition_template = expedition_template
+			self._mechanism_data.settings_version = backend_template.version
+
+			Log.info("MechanismExpedition", "Using backend expedition template for template name: %s, version %s, node_id: %s", template_name, expedition_template.version or "unknown", tostring(node_id or "nil"))
+		end
+	end)
+end
+
 MechanismExpedition._setup_levels_spawner = function (self, expedition_template, layout_seed, optional_layout_config_name, circumstance_name)
 	if not expedition_template then
 		Log.error("MechanismExpedition", "_setup_levels_spawner called with nil expedition_template. Stack trace: %s", debug.traceback())
@@ -164,9 +177,11 @@ MechanismExpedition._setup_levels_spawner = function (self, expedition_template,
 		Log.info("MechanismExpedition", "setup with config: %q", optional_layout_config_name)
 
 		layout_config = Expedition.get_expedition_config_layout(optional_layout_config_name)
-	end
 
-	if not layout_config then
+		if not layout_config then
+			Log.error("MechanismExpedition", "Failed to load config: %s", optional_layout_config_name)
+		end
+	else
 		Log.info("MechanismExpedition", "setup with layout seed: %s", layout_seed)
 
 		layout_config = Expedition.generate_expedition_layout(expedition_template, layout_seed, nil, nil, circumstance_name)
@@ -179,8 +194,6 @@ MechanismExpedition._setup_levels_spawner = function (self, expedition_template,
 	local levels_spawner = ExpeditionSpawner:new(expedition_template, expedition)
 
 	self._levels_spawner = levels_spawner
-
-	return levels_spawner
 end
 
 MechanismExpedition.destroy = function (self)
@@ -240,6 +253,7 @@ MechanismExpedition.rpc_sync_mechanism_data_expedition = function (self, channel
 	data.ready_voting_completed = ready_voting_completed
 	data.current_location_index = current_location_index
 	data.layout_seed = layout_seed
+	data.level_seed = layout_seed
 
 	local expedition_template_name = mission_template.expedition_template
 
@@ -247,19 +261,7 @@ MechanismExpedition.rpc_sync_mechanism_data_expedition = function (self, channel
 	data.node_id = node_id
 	data.settings_version = settings_version
 
-	self:_fetch_expedition_template(expedition_template_name, node_id, settings_version):next(function (expedition_template)
-		local use_local_expedition_template = not expedition_template or expedition_template.use_local == nil or expedition_template.use_local
-
-		if use_local_expedition_template then
-			expedition_template = ExpeditionTemplates[expedition_template_name]
-
-			Log.info("MechanismExpedition", "Using local expedition template for template name: %s", expedition_template_name)
-		else
-			Log.info("MechanismExpedition", "Using backend expedition template for template name: %s, version %s, node_id: %s", expedition_template_name, expedition_template.version, tostring(node_id or "nil"))
-		end
-
-		self:_setup_levels_spawner(expedition_template, layout_seed, nil, circumstance_name)
-	end)
+	self:_setup_expeditions_template(expedition_template_name, layout_seed, circumstance_name, node_id, settings_version)
 	self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_expedition")
 
 	self._is_owner_mission_server = is_owner_mission_server
@@ -313,7 +315,9 @@ MechanismExpedition.game_mode_end = function (self, reason, session_id)
 end
 
 MechanismExpedition.client_exit_gameplay = function (self)
-	self:_set_state("client_exit_gameplay")
+	if Managers.state.game_session:is_client() then
+		self:_set_state("client_exit_gameplay")
+	end
 end
 
 MechanismExpedition.failed_fetching_session_report = function (self, peer_id)
@@ -474,6 +478,16 @@ MechanismExpedition.wanted_transition = function (self)
 
 	if self._waiting_for_expedition_template_from_backend then
 		return false
+	end
+
+	if not self._expedition then
+		if self._expedition_template and Expedition.is_slot_data_from_location_fetched() and Expedition.is_dsl_data_from_levels_fetched() then
+			local data = self._mechanism_data
+
+			self:_setup_levels_spawner(self._expedition_template, data.layout_seed, data.layout_config_name, data.circumstance_name)
+		else
+			return false
+		end
 	end
 
 	local data = self._mechanism_data

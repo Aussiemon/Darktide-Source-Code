@@ -2,6 +2,7 @@
 
 local LocalLoader = require("scripts/settings/equipment/local_items_loader")
 local MasterItems = require("scripts/backend/master_items")
+local NeckLock = require("scripts/utilities/neck_lock")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local PlayerCustomization = component("PlayerCustomization")
 
@@ -93,6 +94,19 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	attach_settings.item_definitions = item_defs
 
 	local item_table = {}
+	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, attach_settings)
+
+	if face_unit then
+		self._face_unit = face_unit
+
+		local face_sm_override = self:get_data(unit, "face_sm_override")
+
+		self._face_sm_override = face_sm_override
+
+		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
+
+		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
+	end
 
 	for _, item_name in pairs(item_names) do
 		local item = rawget(item_defs, item_name)
@@ -102,18 +116,6 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 	end
 
 	self:spawn_items(item_table)
-
-	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, attach_settings)
-
-	if face_unit then
-		local face_sm_override = self:get_data(unit, "face_sm_override")
-
-		self._face_sm_override = face_sm_override
-
-		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
-
-		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
-	end
 
 	if attach_settings.lod_group then
 		local bounding_volume = LODGroup.compile_time_bounding_volume(attach_settings.lod_group)
@@ -238,11 +240,27 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 					end
 				end
 
+				if item.mask_facial_hair_item and item.mask_facial_hair_item ~= "" then
+					local face_unit = self._face_unit or self:unit_in_slot("slot_body_face")
+
+					if face_unit then
+						VisualLoadoutCustomization.apply_material_override_item(face_unit, unit, false, item.mask_facial_hair_item, in_editor, attach_settings.item_definitions)
+					end
+				end
+
+				if item.mask_hair_item and item.mask_hair_item ~= "" then
+					local face_unit = self._face_unit or self:unit_in_slot("slot_body_face")
+
+					if face_unit then
+						VisualLoadoutCustomization.apply_material_override_item(face_unit, unit, false, item.mask_hair_item, in_editor, attach_settings.item_definitions)
+					end
+				end
+
 				local deform_override_items = item.deform_override_items
 
 				if deform_override_items then
 					for _, deform_override_item in pairs(deform_override_items) do
-						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, false, attach_settings.item_definitions)
+						VisualLoadoutCustomization.apply_material_override_item(item_unit, unit, false, deform_override_item, in_editor, attach_settings.item_definitions)
 					end
 				end
 
@@ -257,40 +275,8 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 		end
 	end
 
-	if stabilize_neck and Unit.has_animation_state_machine(unit) then
-		if Unit.has_animation_event(unit, "lock_head") and Unit.has_animation_event(unit, "unlock_head") then
-			if stabilize_neck > 0 then
-				Unit.animation_event(unit, "lock_head")
-
-				local sm_variable_index = Unit.animation_find_variable(unit, "lock_neck_weight")
-				local stabilize_amount
-
-				if sm_variable_index then
-					stabilize_amount = math.clamp(stabilize_neck, 0, 80) / 80
-
-					Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
-				end
-
-				sm_variable_index = Unit.animation_find_variable(unit, "lock_head_weight")
-
-				if sm_variable_index then
-					if stabilize_neck >= 50 then
-						stabilize_amount = (stabilize_neck - 50) / 50
-
-						Unit.animation_set_variable(unit, sm_variable_index, stabilize_amount)
-					else
-						Unit.animation_set_variable(unit, sm_variable_index, 0)
-					end
-				end
-
-				Log.info("PlayerCustomization", "Neck locked", unit)
-			else
-				Unit.animation_event(unit, "unlock_head")
-				Log.info("PlayerCustomization", "Neck unlocked", unit)
-			end
-		elseif stabilize_neck > 0 then
-			Log.info("PlayerCustomization", "Neck lock events not found in state machine for %s", unit)
-		end
+	if stabilize_neck then
+		NeckLock.stabilize_neck(unit, stabilize_neck)
 	end
 
 	self._total_num_attachments = attachment_count
@@ -512,6 +498,7 @@ PlayerCustomization.component_data = {
 	},
 	attachment_material_override_items = {
 		category = "Attachments",
+		filter = "item",
 		ui_name = "Item Material Overrides",
 		ui_type = "struct_array",
 		definition = {

@@ -3,6 +3,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
@@ -15,6 +16,7 @@ local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
 local Vo = require("scripts/utilities/vo")
+local attack_types = AttackSettings.attack_types
 local BtShootLiquidBeamAction = class("BtShootLiquidBeamAction", "BtNode")
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
 
@@ -663,7 +665,7 @@ BtShootLiquidBeamAction._shoot_sphere_cast = function (self, unit, t, shoot_posi
 	local physics_world = scratchpad.physics_world
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
-	local is_dodging = Dodge.is_dodging(target_unit)
+	local is_dodging = Dodge.is_dodging(target_unit, attack_types.ranged)
 	local radius = is_dodging and action_data.dodge_radius or action_data.radius
 	local hits = HitScan.sphere_sweep(physics_world, from_position, shoot_direction, distance, "dynamics", collision_filter, nil, radius)
 	local world = scratchpad.world

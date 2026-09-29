@@ -88,6 +88,9 @@ local mission_templates = {
 			story_start_delay = 10,
 			story_ticker_enabled = false,
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 }
 

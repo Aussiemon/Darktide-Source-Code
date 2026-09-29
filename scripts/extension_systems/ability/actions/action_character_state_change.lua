@@ -19,7 +19,9 @@ ActionCharacterStateChange.init = function (self, action_context, action_params,
 	self._spread_control_component = unit_data_extension:write_component("spread_control")
 end
 
-ActionCharacterStateChange.start = function (self, action_settings, t, time_scale, action_start_params)
+ActionCharacterStateChange.start = function (self, action_settings, t, time_scale, action_start_params, ...)
+	ActionCharacterStateChange.super.start(self, action_settings, t, time_scale, action_start_params, ...)
+
 	self._wanted_state_name = action_settings.state_name
 
 	local ability_template_tweak_data = self._ability_template_tweak_data
@@ -73,29 +75,29 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 	local action_settings = self._action_settings
 
 	if action_settings then
-		local use_ability_charge = action_settings.use_ability_charge
 		local ability_interrupted_reasons = action_settings.ability_interrupted_reasons
 		local should_use_charge = (not ability_interrupted_reasons or not ability_interrupted_reasons[reason]) and is_in_wanted_state
 
 		if is_in_wanted_state then
+			local consume_ability_usage_cost = action_settings.consume_ability_usage_cost
+
+			if consume_ability_usage_cost and should_use_charge and valid then
+				local ability_extension = self._ability_extension
+
+				self._ability_cost_at_finish = ability_extension:consume_ability_usage_cost(self._ability_type)
+			end
+
 			local player_unit = self._player_unit
 			local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 			local param_table = buff_extension:request_proc_event_param_table()
 
 			if param_table then
 				param_table.unit = player_unit
-				param_table.ability_charges_used = self._ability_charges_used_at_finish
+				param_table.ability_cost = self._ability_cost_at_finish
 				param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_finish
 
 				buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 			end
-		end
-
-		if use_ability_charge and should_use_charge and valid then
-			local ability_type = action_settings.ability_type
-			local ability_extension = self._ability_extension
-
-			ability_extension:use_ability_charge(ability_type)
 		end
 	end
 

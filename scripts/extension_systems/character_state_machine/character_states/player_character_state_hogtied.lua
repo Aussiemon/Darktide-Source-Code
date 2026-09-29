@@ -65,9 +65,10 @@ end
 PlayerCharacterStateHogtied.on_exit = function (self, unit, t, next_state)
 	PlayerCharacterStateHogtied.super.on_exit(self, unit, t, next_state)
 
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local first_person_mode_component = self._first_person_mode_component
+	local rewind_seconds = LagCompensation.rewind_seconds(self._is_server, self._is_local_unit, self._player)
 
-	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
+	FirstPersonView.enter(t, first_person_mode_component, rewind_seconds)
 
 	local inventory_component = self._inventory_component
 

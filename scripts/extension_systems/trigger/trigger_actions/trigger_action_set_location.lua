@@ -9,6 +9,7 @@ TriggerActionSetLocation.init = function (self, is_server, volume_unit, paramete
 
 	self._location_full = parameters.action_location_name_full
 	self._location_short = parameters.action_location_name_short
+	self._location_arguments = parameters.action_location_name_arguments
 end
 
 TriggerActionSetLocation.local_on_activate = function (self, unit)
@@ -19,11 +20,12 @@ end
 TriggerActionSetLocation._update_player_location = function (self, unit)
 	local location_full = self._location_full
 	local location_short = self._location_short
+	local location_arguments = self._location_arguments
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(unit)
 
 	if player then
-		Managers.event:trigger("event_player_set_new_location", player, location_full, location_short)
+		Managers.event:trigger("event_player_set_new_location", player, location_full, location_short, location_arguments)
 		Unit.flow_event(self._volume_unit, "lua_trigger_activated")
 	end
 end

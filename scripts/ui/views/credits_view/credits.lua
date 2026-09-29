@@ -404,19 +404,6 @@ local Credits = {
 			},
 			{
 				localized = true,
-				text = "loc_credits_view_head_of_design_title",
-				type = "title",
-			},
-			{
-				text = "Victor Magnuson",
-				type = "person",
-			},
-			{
-				text = " ",
-				type = "person",
-			},
-			{
-				localized = true,
 				text = "loc_credits_view_combat_design_lead_title",
 				type = "title",
 			},
@@ -1100,6 +1087,10 @@ local Credits = {
 			},
 			{
 				text = "Alexandra Martins",
+				type = "person",
+			},
+			{
+				text = "Jakob Svensson",
 				type = "person",
 			},
 			{
@@ -1984,6 +1975,10 @@ local Credits = {
 				type = "person",
 			},
 			{
+				text = "Michael Rådström",
+				type = "person",
+			},
+			{
 				text = " ",
 				type = "person",
 			},
@@ -2102,15 +2097,6 @@ local Credits = {
 			{
 				text = "Hanna Holmgren",
 				type = "person",
-			},
-			{
-				text = " ",
-				type = "person",
-			},
-			{
-				localized = true,
-				text = "loc_credits_view_additional_product_marketing_manager_title",
-				type = "title",
 			},
 			{
 				text = "Christie Moulding",
@@ -2501,10 +2487,6 @@ local Credits = {
 			},
 			{
 				text = "Max Gullstrand",
-				type = "person",
-			},
-			{
-				text = "Michael Rådström",
 				type = "person",
 			},
 			{
@@ -7258,7 +7240,7 @@ local Credits = {
 				type = "header",
 			},
 			{
-				text = "Teebo, Qui Gon, Freja, Lera, Maggan, Astrid, Chichi, Alfie, Zansi, Eira, Pira, Siri, Asta, Nero, Nisa, Motya, Kosmos, Buffy, Flora, Nairobi, Reeva, Xheva, Molly, Harry, Dexter, Jason, Krueger, Jammy, Ginger & Bourbon, Morja's Cat, Kida, Mochi, Muffin & Norah, Stinky, Gizmo, Doris, Elvis, Sune, Rune, Goshi, Neon, Moss, Otis, Siri, Selma, Scully, Cookie, Dante, Meiko, Zeratul, Zombie, Onyxia, Knorren, Svante, Goofy, Missie, Frodo, Quick, Omera, ZemZem, Motya, Lexi, Leroy Jenkins & Zoe, Tage, Deku, Ginger, Prince, Hunden, Dexter & Bruce, Kosmos, Buffy & Kimchi, Blue, Bulbasaur & Calcifer, Ascii, Theo & Milo, Mika, Louise & Gullis, Mi-Go von Yuggoth & Sienna Fuegonasus, Sune & Rune, Chewie, Nova & Daisy & Scarlet & Skrållan & Cordi & Gizmo & Ana & Elsa & Astrid & Isabella & Lulu & Gullan & Mirabell & Teodora & Madicken & Skye & Tango & Morgana & Nimue, Grobou & Hector, Hamish & Maple, Theramin & Marco & Ceinwyn & Zathras, Bosse, Dibu, Trixie, Spinelli, Fatshark",
+				text = "Teebo, Qui Gon, Freja, Lera, Maggan, Astrid, Chichi, Alfie, Zansi, Eira, Pira, Siri, Asta, Nero, Nisa, Motya, Kosmos, Buffy, Flora, Nairobi, Reeva, Xheva, Molly, Harry, Dexter, Jason, Krueger, Jammy, Ginger & Bourbon, Morja's Cat, Kida, Mochi, Muffin & Norah, Stinky, Gizmo, Doris, Elvis, Sune, Rune, Goshi, Neon, Moss, Otis, Siri, Selma, Scully, Cookie, Dante, Meiko, Zeratul, Zombie, Onyxia, Knorren, Svante, Goofy, Missie, Frodo, Quick, Omera, ZemZem, Motya, Lexi, Leroy Jenkins & Zoe, Tage, Deku, Ginger, Prince, Hunden, Dexter & Bruce, Kosmos, Buffy & Kimchi, Blue, Bulbasaur & Calcifer, Ascii, Theo & Milo, Mika, Louise & Gullis, Mi-Go von Yuggoth & Sienna Fuegonasus, Sune & Rune, Chewie, Nova & Daisy & Scarlet & Skrållan & Cordi & Gizmo & Ana & Elsa & Astrid & Isabella & Lulu & Gullan & Mirabell & Teodora & Madicken & Skye & Tango & Morgana & Nimue, Grobou & Hector, Hamish & Maple, Theramin & Marco & Ceinwyn & Zathras, Bosse, Dibu, Trixie, Spinelli, Fatshark, Tjirre, Mabel, Våfflan, Piggelin",
 				type = "person",
 			},
 			{

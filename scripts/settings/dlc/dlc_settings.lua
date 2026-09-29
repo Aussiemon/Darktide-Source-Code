@@ -20,8 +20,8 @@ local function _create_dlc_entry(script_path)
 	dlc_settings.dlcs[dlc.dlc_id] = dlc
 end
 
-_create_dlc_entry("scripts/settings/dlc/archetypes/adamant_deluxe_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/adamant_cosmetic_dlc_settings")
+_create_dlc_entry("scripts/settings/dlc/archetypes/adamant_deluxe_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/adamant_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/broker_cosmetic_dlc_settings")
 _create_dlc_entry("scripts/settings/dlc/archetypes/broker_deluxe_dlc_settings")

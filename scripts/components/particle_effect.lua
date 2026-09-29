@@ -317,6 +317,14 @@ ParticleEffect.stop_particle = function (self)
 	end
 end
 
+ParticleEffect.events.set_object_set_unit_visible = function (self, visible)
+	if visible then
+		self:create_particle()
+	else
+		self:destroy_particle()
+	end
+end
+
 ParticleEffect.component_data = {
 	particle = {
 		filter = "particles",

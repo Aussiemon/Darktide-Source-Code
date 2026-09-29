@@ -19,13 +19,9 @@ MissionObjectiveTargetExtension.init = function (self, extension_init_context, u
 	self._objective_group_id = mission_objective_system:get_objective_group_id_from_unit(unit)
 end
 
-MissionObjectiveTargetExtension.setup_from_component = function (self, objective_name, use_global_group, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
+MissionObjectiveTargetExtension.setup_from_component = function (self, objective_name, ui_target_type, objective_stage, register_self, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission)
 	self._objective_name = objective_name
-
-	if use_global_group then
-		self._objective_group_id = 0
-	end
-
+	self._objective_group_id = self._mission_objective_system:get_override_group_id_from_objective(objective_name) or self._objective_group_id
 	self._ui_target_type = ui_target_type
 	self._objective_stage = objective_stage
 	self._add_marker_on_registration = add_marker_on_registration
@@ -39,6 +35,7 @@ end
 
 MissionObjectiveTargetExtension.setup_from_external = function (self, objective_name, ui_target_type, objective_stage, add_marker_on_registration, add_marker_on_objective_start, enabled_only_during_mission, sync_to_clients)
 	self._objective_name = objective_name or self._objective_name
+	self._objective_group_id = self._mission_objective_system:get_override_group_id_from_objective(objective_name) or self._objective_group_id
 	self._ui_target_type = ui_target_type or self._ui_target_type
 	self._objective_stage = objective_stage or self._objective_stage
 

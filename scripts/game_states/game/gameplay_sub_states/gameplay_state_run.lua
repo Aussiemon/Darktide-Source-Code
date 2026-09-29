@@ -2,6 +2,7 @@
 
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -48,7 +49,6 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	end
 
 	TaskbarFlash.flash_window()
-	ScriptWorld.physics_run_queries(world)
 end
 
 GameplayStateRun.on_exit = function (self, exit_params)
@@ -76,16 +76,9 @@ end
 
 GameplayStateRun.update = function (self, main_dt, main_t)
 	local shared_state = self._shared_state
-	local world = shared_state.world
 	local is_server, is_dedicated_server = shared_state.is_server, shared_state.is_dedicated_server
 
 	self._fixed_frame_parsed = false
-
-	local is_physics_thread_locked = ScriptWorld.is_physics_thread_locked(world)
-
-	if is_physics_thread_locked then
-		ScriptWorld.physics_fetch_queries(world)
-	end
 
 	shared_state.network_receive_function(main_dt)
 	Managers.state.game_session:update(main_dt)
@@ -171,6 +164,7 @@ GameplayStateRun.post_update = function (self, main_dt, main_t)
 	end
 
 	Managers.player:state_post_update(main_dt, main_t)
+	Managers.state.level_object_set:post_update(main_dt, main_t)
 	Managers.state.unit_spawner:set_deletion_state(DELETION_STATES.default)
 	Managers.state.player_unit_spawn:process_queued_despawns()
 

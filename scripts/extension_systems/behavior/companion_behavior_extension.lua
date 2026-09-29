@@ -97,6 +97,10 @@ CompanionBehaviorExtension.extensions_ready = function (self, world, unit)
 	return
 end
 
+CompanionBehaviorExtension.prioritize_staggered_update = function (self)
+	return
+end
+
 CompanionBehaviorExtension.update = function (self, unit, dt, t, ...)
 	self._brain:update(unit, dt, t)
 end

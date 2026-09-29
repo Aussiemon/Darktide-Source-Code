@@ -215,20 +215,20 @@ HudElementSmartTagging._trigger_smart_tag = function (self, template_name, targe
 	smart_tag_system:set_tag(template_name, player_unit, target_unit, target_location)
 end
 
-HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit, optional_override_tag_name)
+HudElementSmartTagging._trigger_smart_tag_interaction = function (self, tag_id, target_unit, is_double_tag)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit, optional_override_tag_name)
+	smart_tag_system:trigger_tag_interaction(tag_id, player_unit, target_unit, is_double_tag)
 end
 
-HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, alternate)
+HudElementSmartTagging._trigger_smart_tag_unit_contextual = function (self, target_unit, is_double_tag)
 	local parent = self._parent
 	local player_unit = parent:player_unit()
 	local smart_tag_system = Managers.state.extension:system("smart_tag_system")
 
-	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, alternate)
+	smart_tag_system:set_contextual_unit_tag(player_unit, target_unit, is_double_tag)
 end
 
 HudElementSmartTagging._on_tag_stop = function (self, t, ui_renderer, render_settings)
@@ -269,40 +269,21 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local target_unit_or_marker_unit = target_unit or target_marker and target_marker.unit
 
 	if target_unit_or_marker_unit then
-		local companion_spawner_extension = ScriptUnit.has_extension(player_unit, "companion_spawner_system")
-		local can_tag_order = companion_spawner_extension and companion_spawner_extension:companion_can_tag_order()
+		local account_data = Managers.save:account_data()
+		local single_tap = account_data.input_settings.companion_command_tap == "single"
+		local smart_tag_system = Managers.state.extension:system("smart_tag_system")
+		local tag_id = smart_tag_system:unit_tag_id(target_unit_or_marker_unit)
+		local tag = smart_tag_system:unit_tag(target_unit_or_marker_unit)
+		local we_already_tagged = tag and tag:tagger_player() == player
+		local other_already_tagged = tag and not we_already_tagged
 
-		if can_tag_order then
-			local account_data = Managers.save:account_data()
-			local single_tap = account_data.input_settings.companion_command_tap == "single"
-			local smart_tag_system = Managers.state.extension:system("smart_tag_system")
-			local tag_id = smart_tag_system:unit_tag_id(target_unit_or_marker_unit)
-			local tag = smart_tag_system:unit_tag(target_unit_or_marker_unit)
-			local tag_template = tag and tag:template()
-			local companion_tag = tag_template and tag_template.companion_order
-			local we_already_tagged = tag and tag:tagger_player() == player
-			local other_already_tagged = tag and not we_already_tagged
+		if single_tap or double_tap then
+			local is_double_tag = true
 
-			if single_tap or double_tap then
-				if we_already_tagged then
-					self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, "companion_order")
-				elseif other_already_tagged then
-					if companion_tag then
-						self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, "companion_order")
-					else
-						self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, "companion_order")
-					end
-				else
-					self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, "companion_order")
-				end
-			elseif target_unit then
-				self:_handle_selected_unit(target_unit)
-
-				tag_context.enemy_tagged = true
-			elseif target_marker then
-				self:_handle_selected_marker(target_marker)
-
-				tag_context.marker_handled = true
+			if we_already_tagged or other_already_tagged then
+				self:_trigger_smart_tag_interaction(tag_id, target_unit_or_marker_unit, is_double_tag)
+			else
+				self:_trigger_smart_tag_unit_contextual(target_unit_or_marker_unit, is_double_tag)
 			end
 		elseif target_unit then
 			self:_handle_selected_unit(target_unit)

@@ -15,7 +15,6 @@ local archetype_data = {
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/zealot_terminal",
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/zealot_terminal_shadow",
 	archetype_name = "loc_class_zealot_name",
-	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/zealot",
 	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/zealot/class_selection_top_zealot",
 	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/zealot/class_selection_top_zealot_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_zealot/class_selection_zealot",
@@ -28,7 +27,6 @@ local archetype_data = {
 	companion_breed = nil,
 	companion_name_input = nil,
 	deluxe_dlc = nil,
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_zealot",
 	health = 200,
 	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_zealot",
 	knocked_down_health = 1000,
@@ -39,6 +37,8 @@ local archetype_data = {
 	requires_dlc = nil,
 	requires_dlc_reconciliation = nil,
 	spawn_companions_from_talent_func = nil,
+	specialization_talent_layout_file_path = nil,
+	specialization_talent_package_path = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/zealot_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/zealot",
 	toughness = ArchetypeToughnessTemplates.zealot,
@@ -48,9 +48,20 @@ local archetype_data = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	talents = ArchetypeTalents.zealot,
 	base_talents = {
-		zealot_dash = 1,
-		zealot_shock_grenade = 1,
-		zealot_toughness_damage_coherency = 1,
+		zealot_dash = {
+			target_slot = "slot_combat_ability",
+			tier = 1,
+		},
+		zealot_shock_grenade = {
+			target_slot = "slot_grenade_ability",
+			tier = 1,
+		},
+		zealot_toughness_damage_coherency = {
+			tier = 1,
+		},
+		zealot_more_toughness_on_melee = {
+			tier = 1,
+		},
 	},
 	main_menu_camera_offsets = {
 		x = 0,

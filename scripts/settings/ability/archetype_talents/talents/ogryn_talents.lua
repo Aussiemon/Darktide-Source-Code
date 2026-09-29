@@ -53,11 +53,10 @@ local archetype_talents = {
 				},
 				cooldown = {
 					format_type = "number",
-					value = PlayerAbilities.ogryn_charge.cooldown,
+					value = PlayerAbilities.ogryn_charge_increased_distance.cooldown,
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.ogryn_charge,
 			},
 			passive = {
@@ -110,7 +109,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.ogryn_taunt_shout,
 			},
 		},
@@ -206,7 +204,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/ogryn/ogryn_blitz_big_box_of_hurt",
 			name = "G-Ability - Ogryn Grenade Box",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.ogryn_grenade_box,
 			},
 		},
@@ -238,7 +235,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.ogryn_grenade_friend_rock,
 			},
 			passive = {
@@ -284,7 +280,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.ogryn_grenade_frag,
 			},
 			dev_info = {
@@ -357,7 +352,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.ogryn_ranged_stance,
 			},
 			special_rule = {
@@ -1199,7 +1193,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.ogryn_grenade_box_cluster,
 			},
 		},
@@ -1364,6 +1357,7 @@ local archetype_talents = {
 			format_values = {
 				cooldown_regen = {
 					format_type = "percentage",
+					prefix = "+",
 					value = talent_settings_2.coop_3.increased_cooldown_regeneration,
 				},
 				duration = {
@@ -1434,7 +1428,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.ogryn_charge_increased_distance,
 			},
 		},
@@ -2755,6 +2748,25 @@ local archetype_talents = {
 			passive = {
 				buff_template_name = "ogryn_crit_damage_increase",
 				identifier = "ogryn_crit_damage_increase",
+			},
+		},
+		ogryn_free_reload_after_ability = {
+			description = "loc_talent_cryptic_passive_ammo_replenishment_desc",
+			display_name = "loc_talent_ogryn_free_reload_after_ability",
+			name = "After using your Combat Ability, your next Reload is free",
+			passive = {
+				buff_template_name = "ogryn_passive_ammo_replenishment",
+				identifier = "ogryn_passive_ammo_replenishment",
+			},
+			format_values = {
+				interval = {
+					format_type = "number",
+					value = shared_talent_settings.ogryn_passive_ammo_replenishment.interval,
+				},
+				percent = {
+					format_type = "percentage",
+					value = shared_talent_settings.ogryn_passive_ammo_replenishment.percent_ammo_replenish_per_tick,
+				},
 			},
 		},
 	},

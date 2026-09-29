@@ -10,6 +10,14 @@ local function _include_ability_definition(file_name)
 	for ability_name, entry_data in pairs(definition) do
 		entry_data.name = ability_name
 
+		local ability_usage_cost_type = entry_data.usage_cost_type
+
+		if ability_usage_cost_type == "charges" and (entry_data.only_uses_charges or true) then
+			-- Nothing
+		elseif ability_usage_cost_type == "resource" then
+			-- Nothing
+		end
+
 		local entry = entry_data
 
 		player_abilities[ability_name] = entry

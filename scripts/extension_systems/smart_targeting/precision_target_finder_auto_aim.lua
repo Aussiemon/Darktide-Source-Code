@@ -72,7 +72,7 @@ local nearby_target_positions = Script.new_array(16)
 local nearby_target_distances = Script.new_array(16)
 
 PrecisionTargetFinderAutoAim._try_find_target_with_raycast = function (self, visibility_cache, visibility_check_frame, fixed_frame, ray_origin, forward, min_range, max_range, max_angle_rad, target_units, target_positions, target_distances)
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_miliseconds(self._is_server, self._is_local_unit, self._player)
 	local found_potential_targets = false
 	local hits, num_hits, num_columns = PhysicsWorld.raycast(self._physics_world, ray_origin, forward, max_range, "all", "collision_filter", "filter_ray_aim_assist", "rewind_ms", rewind_ms)
 
@@ -358,6 +358,7 @@ end
 local OVERRIDE_AIM_NODE_BY_BREED = {
 	chaos_armored_hound = "enemy_aim_target_02",
 	chaos_hound = "enemy_aim_target_02",
+	chaos_spawn = "enemy_aim_target_03",
 }
 
 PrecisionTargetFinderAutoAim._target_aim_position_using_actor = function (self, ray_origin, forward, right, up, hit_unit_center_pos, distance_to_center_pos, rewound_afro_center_pos, breed_name, half_width, half_height, x_diff_no_abs, hit_unit)

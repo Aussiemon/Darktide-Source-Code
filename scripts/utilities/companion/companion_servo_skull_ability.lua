@@ -256,7 +256,9 @@ CompanionServoSkullAbility.start_flamethrower_ability = function (companion_unit
 		end
 
 		if ability_charges > 0 and not cryptic_servo_skull_flamethrower_uses_no_charge then
-			ability_extension:use_ability_charge(ability_type, ability_charges, telemetry_ability_name)
+			local usage_cost_multiplier
+
+			ability_extension:consume_ability_usage_cost(ability_type, ability_charges, usage_cost_multiplier, telemetry_ability_name)
 		end
 	end
 end
@@ -317,7 +319,9 @@ CompanionServoSkullAbility.start_inject_ally_ability = function (companion_unit,
 	local telemetry_ability_name = ability_name .. "_heal_ally"
 
 	if ability_charges > 0 then
-		ability_extension:use_ability_charge(ability_type, ability_charges, telemetry_ability_name)
+		local usage_cost_multiplier
+
+		ability_extension:consume_ability_usage_cost(ability_type, ability_charges, usage_cost_multiplier, telemetry_ability_name)
 	end
 end
 
@@ -508,7 +512,7 @@ CompanionServoSkullAbility.start_shooting_ability = function (companion_unit, ta
 	local percent_cost = 1 - current_buff_duration_left_percent
 	local total_cooldown_cost = ability_percentage_consumed * percent_cost
 
-	ability_extension:increase_ability_cooldown_percentage("combat_ability", total_cooldown_cost)
+	ability_extension:consume_ability_charge_percentage("combat_ability", total_cooldown_cost)
 
 	local t = Managers.time:time("gameplay")
 
@@ -530,9 +534,11 @@ CompanionServoSkullAbility.validate_target_func_shooting_ability = function (tar
 		return false
 	end
 
-	local remaining_ability_capacitance = ability_extension:remaining_ability_capacitance("combat_ability")
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local is_training_grounds = game_mode_name == "training_grounds"
+	local has_enough_ability_charge = ability_extension:has_enough_ability_charge_percentage("combat_ability", talent_settings.servo_skull_shooting_tagging.minimum_capacitance)
 
-	if remaining_ability_capacitance < talent_settings.servo_skull_shooting_tagging.minimum_capacitance then
+	if not has_enough_ability_charge and not is_training_grounds then
 		local prevent_shooting_activation_on_fail = true
 
 		return false, prevent_shooting_activation_on_fail

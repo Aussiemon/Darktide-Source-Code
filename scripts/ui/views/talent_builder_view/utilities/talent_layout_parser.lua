@@ -23,7 +23,11 @@ TalentLayoutParser.verify = function (talent_layout)
 	return true
 end
 
-TalentLayoutParser.pack_backend_data = function (talent_layout, node_tiers)
+local FALLBACK_SELECTION_DATA = {
+	tier = 0,
+}
+
+TalentLayoutParser.pack_backend_data = function (talent_layout, selected_nodes)
 	local nodes = talent_layout.nodes
 	local num_nodes = #nodes
 	local node_string = ""
@@ -31,15 +35,13 @@ TalentLayoutParser.pack_backend_data = function (talent_layout, node_tiers)
 	for i = 1, num_nodes do
 		local node = nodes[i]
 		local widget_name = node.widget_name
+		local selection_data = selected_nodes[widget_name]
+		local tier = selection_data or 0
 
-		if node_tiers[widget_name] then
-			local tier = node_tiers[widget_name]
+		if tier > 0 then
+			local cost = tier * (node.cost or 1)
 
-			if tier > 0 then
-				local cost = tier * (node.cost or 1)
-
-				node_string = string.format("%s%i|%i,", node_string, i - 1, cost)
-			end
+			node_string = string.format("%s%i|%i,", node_string, i - 1, cost)
 		end
 	end
 
@@ -49,7 +51,11 @@ TalentLayoutParser.pack_backend_data = function (talent_layout, node_tiers)
 	return backend_data
 end
 
-TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, node_tiers)
+TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, selected_nodes)
+	if backend_data == "" then
+		return
+	end
+
 	local version_length = string.find(backend_data, ";")
 
 	if version_length == nil then
@@ -79,7 +85,7 @@ TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, 
 					local tier = node.cost == 0 and 1 or tonumber(cost_in_node) / (node.cost or 1)
 
 					if tier % 1 == 0 then
-						node_tiers[node.widget_name] = tier
+						selected_nodes[node.widget_name] = tier
 					end
 				end
 			end
@@ -92,27 +98,42 @@ TalentLayoutParser.unpack_backend_data = function (talent_layout, backend_data, 
 	local correct_version = talent_layout.version == version
 
 	if not correct_version or missing_nodes then
-		TalentLayoutParser.validate_talent_layouts(node_tiers, {
+		TalentLayoutParser.validate_talent_layouts(selected_nodes, {
 			talent_layout,
 		}, true)
 		Log.info("TalentLayoutParser", "Failed parsing talent string, mismatching version numbers (layout:%i backend:%i)", talent_layout.version, version)
 	end
 end
 
-TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layout, node_tiers, selected_talents)
+TalentLayoutParser.selected_talents_from_selected_nodes = function (talent_layout, selected_nodes, out_talents)
 	local nodes = talent_layout.nodes
 
 	for i = 1, #nodes do
 		local node = nodes[i]
-		local tier = node_tiers[node.widget_name] or 0
+		local selection_data = selected_nodes[node.widget_name]
+		local tier = selection_data or 0
 
 		if tier > 0 then
-			local talent = node.talent
+			local talent_name = node.talent
 
-			if talent ~= "not_selected" and talent ~= nil then
-				local previous_tier = selected_talents[talent] or 0
+			if talent_name ~= "not_selected" and talent_name ~= nil then
+				local talent_data = out_talents[talent_name] or {
+					tier = 0,
+				}
 
-				selected_talents[talent] = previous_tier + tier
+				talent_data.tier = talent_data.tier + tier
+
+				local assign = true
+				local node_slot = node.target_slot
+
+				if node_slot and (talent_data.target_slot and talent_data.target_slot ~= node_slot and false or assign) then
+					talent_data.target_slot = node_slot
+				end
+
+				if assign then
+					talent_data.node_name = node.widget_name
+					out_talents[talent_name] = talent_data
+				end
 			end
 		end
 	end
@@ -139,7 +160,7 @@ TalentLayoutParser.is_same_version = function (left, right)
 	return (tonumber(left) or left) == (tonumber(right) or right)
 end
 
-TalentLayoutParser.filter_layout_talents = function (profile, layout_key, selected_talents, out_talents)
+TalentLayoutParser.filter_layout_talents = function (profile, layout_key, selected_nodes, out_talents)
 	out_talents = out_talents or {}
 
 	local archetype = profile.archetype
@@ -151,8 +172,8 @@ TalentLayoutParser.filter_layout_talents = function (profile, layout_key, select
 		for i = 1, #nodes do
 			local node = nodes[i]
 
-			if selected_talents[node.widget_name] then
-				out_talents[node.widget_name] = selected_talents[node.widget_name]
+			if selected_nodes[node.widget_name] then
+				out_talents[node.widget_name] = selected_nodes[node.widget_name]
 			end
 		end
 	end
@@ -175,7 +196,7 @@ end
 
 local temp_ignore_list = {}
 
-local function _can_node_traverse_to_start(node, selected_talents, layout, ignore_list, step_count)
+local function _can_node_traverse_to_start(node, selected_nodes, layout, ignore_list, step_count)
 	step_count = (step_count or 0) + 1
 
 	if not ignore_list then
@@ -197,8 +218,8 @@ local function _can_node_traverse_to_start(node, selected_talents, layout, ignor
 			if parent_node then
 				if parent_node.type == "start" then
 					return true, step_count
-				elseif selected_talents[parent_name] then
-					local could_traverse_parent, parent_step_count = _can_node_traverse_to_start(parent_node, selected_talents, layout, ignore_list, step_count)
+				elseif selected_nodes[parent_name] then
+					local could_traverse_parent, parent_step_count = _can_node_traverse_to_start(parent_node, selected_nodes, layout, ignore_list, step_count)
 
 					if could_traverse_parent then
 						return true, parent_step_count
@@ -211,7 +232,7 @@ local function _can_node_traverse_to_start(node, selected_talents, layout, ignor
 	return false, 0
 end
 
-TalentLayoutParser.is_talent_selection_valid = function (profile, layout_key, selected_talents)
+TalentLayoutParser.is_talent_selection_valid = function (profile, layout_key, selected_nodes)
 	local archetype = profile.archetype
 
 	if not archetype[layout_key] then
@@ -224,8 +245,8 @@ TalentLayoutParser.is_talent_selection_valid = function (profile, layout_key, se
 	for i = 1, #nodes do
 		local node = nodes[i]
 
-		if selected_talents[node.widget_name] then
-			local valid_node = _can_node_traverse_to_start(node, selected_talents, layout)
+		if selected_nodes[node.widget_name] then
+			local valid_node = _can_node_traverse_to_start(node, selected_nodes, layout)
 
 			if not valid_node then
 				return false
@@ -238,13 +259,12 @@ end
 
 local function _talents_to_nodes(selected_talents, layout, base_talents)
 	local selected_nodes = {}
-	local nodes = layout.nodes
 
-	for i = 1, #nodes do
-		local node = nodes[i]
+	for talent_name, talent_data in pairs(selected_talents) do
+		local node_name = talent_data.node_name
 
-		if selected_talents[node.talent] then
-			selected_nodes[node.widget_name] = selected_talents[node.talent]
+		if node_name then
+			selected_nodes[node_name] = talent_data.tier
 		end
 	end
 
@@ -259,14 +279,18 @@ local function _nodes_to_talents(selected_nodes, layout)
 		local node = nodes[i]
 
 		if selected_nodes[node.widget_name] then
-			selected_talents[node.talent] = selected_nodes[node.widget_name]
+			selected_talents[node.talent] = {
+				tier = selected_nodes[node.widget_name],
+				target_slot = node.target_slot,
+				node_name = node.widget_name,
+			}
 		end
 	end
 
 	return selected_talents
 end
 
-TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts, is_node_format)
+TalentLayoutParser.validate_talent_layouts = function (selected_talents_or_nodes, layouts, is_node_format)
 	local out_nodes = {}
 	local archetype
 
@@ -275,7 +299,7 @@ TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts
 
 		archetype = archetype or Archetypes[layout.archetype_name]
 
-		local layout_nodes = is_node_format and table.shallow_copy(selected_talents) or _talents_to_nodes(selected_talents, layout)
+		local layout_nodes = is_node_format and table.shallow_copy(selected_talents_or_nodes) or _talents_to_nodes(selected_talents_or_nodes, layout)
 		local nodes = layout.nodes
 
 		for node_i = 1, #nodes do
@@ -294,7 +318,7 @@ TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts
 	end
 
 	if not is_node_format then
-		local out_talents = archetype and table.shallow_copy(archetype.base_talents) or {}
+		local out_talents = {}
 
 		for i = 1, #layouts do
 			local layout = layouts[i]
@@ -303,11 +327,17 @@ TalentLayoutParser.validate_talent_layouts = function (selected_talents, layouts
 			table.merge(out_talents, layout_talents)
 		end
 
+		for talent_name, talent_data in pairs(selected_talents_or_nodes) do
+			if not talent_data.node_name then
+				out_talents[talent_name] = talent_data
+			end
+		end
+
 		out_nodes = out_talents
 	end
 
-	table.clear(selected_talents)
-	table.merge(selected_talents, out_nodes)
+	table.clear(selected_talents_or_nodes)
+	table.merge(selected_talents_or_nodes, out_nodes)
 
 	return out_nodes
 end
@@ -683,23 +713,23 @@ TalentLayoutParser.talent_description = function (talent_definition, points_spen
 	return talent_description
 end
 
-TalentLayoutParser.node_points_spent = function (talent_layout, node_tiers)
+TalentLayoutParser.node_points_spent = function (talent_layout, selected_nodes)
 	local total_points = 0
 	local nodes = talent_layout.nodes
 
 	for i = 1, #nodes do
 		local node = nodes[i]
-		local tier = node_tiers[node.widget_name]
+		local selection_data = selected_nodes[node.widget_name]
 
-		if tier then
-			total_points = total_points + tier * node.cost
+		if selection_data then
+			total_points = total_points + selection_data * node.cost
 		end
 	end
 
 	return total_points
 end
 
-TalentLayoutParser.profile_percent_points_used = function (profile, optional_node_tiers)
+TalentLayoutParser.profile_percent_points_used = function (profile, optional_selected_nodes)
 	local archetype = profile.archetype
 
 	if not archetype.talent_layout_file_path then
@@ -707,22 +737,22 @@ TalentLayoutParser.profile_percent_points_used = function (profile, optional_nod
 	end
 
 	local talent_layout = require(archetype.talent_layout_file_path)
-	local node_tiers = optional_node_tiers or profile.selected_nodes
+	local selected_nodes = optional_selected_nodes or profile.selected_nodes
 	local max_points = profile.talent_points
 
-	return TalentLayoutParser.percent_points_used(talent_layout, node_tiers, max_points)
+	return TalentLayoutParser.percent_points_used(talent_layout, selected_nodes, max_points)
 end
 
-TalentLayoutParser.profile_percent_specialization_points_used = function (profile, optional_node_tiers)
+TalentLayoutParser.profile_percent_specialization_points_used = function (profile, optional_selected_nodes)
 	local archetype = profile.archetype
 	local layout_path = archetype.specialization_talent_layout_file_path
 
 	if layout_path then
 		local talent_layout = require(layout_path)
-		local node_tiers = optional_node_tiers or profile.selected_nodes
+		local selected_nodes = optional_selected_nodes or profile.selected_nodes
 		local max_points = profile.expertise_points
 
-		return TalentLayoutParser.percent_points_used(talent_layout, node_tiers, max_points)
+		return TalentLayoutParser.percent_points_used(talent_layout, selected_nodes, max_points)
 	end
 
 	return 1
@@ -740,10 +770,10 @@ TalentLayoutParser.profile_specialization_node_points_spent = function (profile,
 
 		for i = 1, #nodes do
 			local node = nodes[i]
-			local tier = node_tiers[node.widget_name]
+			local selection_data = node_tiers[node.widget_name]
 
-			if tier then
-				total_points = total_points + tier * node.cost
+			if selection_data then
+				total_points = total_points + selection_data * node.cost
 			end
 		end
 
@@ -757,8 +787,8 @@ TalentLayoutParser.profile_max_specialization_node_points = function (profile)
 	return profile.expertise_points or 0
 end
 
-TalentLayoutParser.percent_points_used = function (talent_layout, node_tiers, max_points)
-	local points_spent = TalentLayoutParser.node_points_spent(talent_layout, node_tiers)
+TalentLayoutParser.percent_points_used = function (talent_layout, selected_nodes, max_points)
+	local points_spent = TalentLayoutParser.node_points_spent(talent_layout, selected_nodes)
 
 	return max_points == 0 and 1 or points_spent / max_points
 end

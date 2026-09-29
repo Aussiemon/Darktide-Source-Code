@@ -79,6 +79,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._selected_item = context.preview_item
 	self._is_loading = false
+	self._can_purchase_premium_items = not Managers.ui:view_active("lobby_view")
 
 	local selected_item = self._selected_item
 
@@ -740,8 +741,7 @@ InventoryWeaponCosmeticsView.set_loading_state = function (self, is_loading)
 end
 
 InventoryWeaponCosmeticsView._fetch_inventory_items = function (self)
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
+	local player = self._preview_player or Managers.player:local_player(1)
 	local character_id = player:character_id()
 	local selected_item = self._selected_item
 	local promises = Promise.resolved({})
@@ -1060,7 +1060,7 @@ InventoryWeaponCosmeticsView._update_equip_button_status = function (self)
 		end
 
 		local is_locked = previewed_element and not not previewed_element.locked
-		local is_premium = previewed_element and previewed_element.premium_offer ~= nil
+		local is_premium = self._can_purchase_premium_items and previewed_element and previewed_element.premium_offer ~= nil
 		local is_equipped = false
 
 		if is_disabled then
@@ -1809,7 +1809,7 @@ InventoryWeaponCosmeticsView.cb_on_purchase_pressed = function (self)
 	local element = self._previewed_element
 	local premium_offer = element and element.premium_offer
 
-	if not premium_offer then
+	if not premium_offer or not self._can_purchase_premium_items then
 		return
 	end
 

@@ -70,9 +70,9 @@ local settings = {
 		hotkey_system = "system_view",
 	},
 	persistent_player_data_settings = {
-		max_damage_percent_from_bot = 0.75,
+		max_damage_percent_from_bot = 0,
 		max_damage_percent_from_self = 1,
-		max_permanent_damage_percent_from_bot = 0.75,
+		max_permanent_damage_percent_from_bot = 0,
 		max_permanent_damage_percent_from_self = 1,
 		respawn_dead_from_character_states = {
 			"hogtied",

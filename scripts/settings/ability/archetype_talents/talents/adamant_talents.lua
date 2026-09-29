@@ -20,7 +20,7 @@ local archetype_talents = {
 	talents = {
 		adamant_companion_damage_per_level = {
 			description = "loc_talent_arbites_mastiff_description",
-			display_name = "-",
+			display_name = "loc_inventory_title_slot_companion_gear_full",
 			name = "Companion Damage per Level",
 			passive = {
 				buff_template_name = "adamant_companion_damage_per_level",
@@ -29,7 +29,7 @@ local archetype_talents = {
 		},
 		adamant_command_dog_with_tag = {
 			description = "loc_talent_arbites_mastiff_target_description",
-			display_name = "-",
+			display_name = "loc_arbites_customization_dog_title",
 			name = "",
 		},
 		adamant_shout = {
@@ -52,7 +52,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.adamant_shout,
 			},
 		},
@@ -84,7 +83,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.adamant_shout_improved,
 			},
 		},
@@ -118,7 +116,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.adamant_charge,
 			},
 			passive = {
@@ -253,7 +250,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.adamant_stance,
 			},
 		},
@@ -351,7 +347,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base Order",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.adamant_whistle,
 			},
 			format_values = {
@@ -386,7 +381,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base adamant Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.adamant_grenade,
 			},
 			format_values = {
@@ -413,7 +407,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Base adamant Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.adamant_grenade_improved,
 			},
 			format_values = {
@@ -480,7 +473,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "Shock Mine",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.adamant_shock_mine,
 			},
 			format_values = {
@@ -509,12 +501,11 @@ local archetype_talents = {
 			},
 		},
 		adamant_area_buff_drone = {
-			description = "loc_talent_adamant_ability_nuncio_base_desc",
+			description = "loc_talent_ability_area_buff_drone_new_description",
 			display_name = "loc_talent_ability_area_buff_drone",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_area_buff_drone",
 			name = "Nuncio-Aquila",
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.adamant_area_buff_drone,
 			},
 			format_values = {
@@ -549,7 +540,7 @@ local archetype_talents = {
 			},
 		},
 		adamant_area_buff_drone_improved = {
-			description = "loc_talent_ability_area_buff_drone_improved_description",
+			description = "loc_talent_ability_area_buff_drone_new_improved_description",
 			display_name = "loc_talent_ability_area_buff_drone",
 			large_icon = "content/ui/textures/icons/talents/adamant/adamant_ability_area_buff_drone",
 			name = "Nuncio-Aquila",

@@ -61,7 +61,7 @@ GrowQueue.get_first = function (self)
 end
 
 GrowQueue.get_last = function (self)
-	return self.queue[self._last]
+	return self.queue[self.last]
 end
 
 GrowQueue.print_items = function (self, s)

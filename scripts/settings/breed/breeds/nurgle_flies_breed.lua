@@ -8,6 +8,7 @@ local PerceptionSettings = require("scripts/settings/perception/perception_setti
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local breed_name = "nurgle_flies"
 local breed_types = BreedSettings.types
+local breed_tags = BreedSettings.tags
 local hit_zone_names = HitZone.hit_zone_names
 local breed_data = {
 	base_height = 3.6,
@@ -39,7 +40,7 @@ local breed_data = {
 	breed_type = breed_types.living_prop,
 	blackboard_component_config = BreedBlackboardComponentTemplates.nurgle_flies,
 	tags = {
-		minion = true,
+		[breed_tags.minion] = true,
 	},
 	size_variation_range = {
 		1.04,

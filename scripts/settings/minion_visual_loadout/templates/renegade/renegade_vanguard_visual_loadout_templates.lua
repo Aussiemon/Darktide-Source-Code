@@ -48,6 +48,12 @@ local basic_renegade_vanguard_template = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/renegade_vanguard_var_01",
 			},
 		},
+		slot_hair = {
+			use_outline = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 		slot_melee_weapon = {
 			drop_on_death = true,
 			is_weapon = true,
@@ -654,6 +660,21 @@ for _, default_variation in pairs(templates.renegade_vanguard.default) do
 	}
 	void_variations[#void_variations + 1] = void_variation
 end
+
+templates.renegade_vanguard[zone_ids.void] = void_variations
+
+local depths_variations = {}
+
+for _, default_variation in pairs(templates.renegade_vanguard.default) do
+	local depths_variation = table.clone(default_variation)
+
+	depths_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_01",
+	}
+	depths_variations[#depths_variations + 1] = depths_variation
+end
+
+templates.renegade_vanguard[zone_ids.depths] = depths_variations
 
 local horde_variations = {}
 

@@ -419,33 +419,21 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_block_has_chance_to_stun = {
 	buffs = {
 		weapon_trait_bespoke_powermaul_shield_p1_block_has_chance_to_stun = {
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.1,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.15,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.2,
 				},
 			},
 			{
-				proc_events = {
-					[proc_events.on_perfect_block] = 1,
-				},
 				stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.25,
 				},
@@ -520,36 +508,32 @@ templates.weapon_trait_bespoke_powermaul_shield_p1_attack_speed_on_perfect_block
 				},
 			},
 		},
-		interval = {
-			format_type = "number",
-			value = 5,
-		},
 	},
 	buffs = {
 		weapon_trait_bespoke_powermaul_shield_p1_attack_speed_on_perfect_block = {
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.06,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.08,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.1,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.12,

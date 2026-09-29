@@ -650,6 +650,8 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 	return self:fetch_nodes():next(function ()
 		local personal_guards_progress = {}
 		local personal_stats = self._cached_data.personal_stats
+		local result = self._cached_data.result
+		local personal_guards_paths_by_node_id = self._cached_data.personal_guards_paths_by_node_id or {}
 
 		for i = 1, #all_updated_progress do
 			local updated_progress = all_updated_progress[i]
@@ -657,7 +659,7 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 			local last_path = updated_progress.path and updated_progress.path[#updated_progress.path]
 			local progress_node_id = last_path and string.find(last_path, "node_") and last_path
 
-			for node_id, personal_guard_indexes in pairs(self._cached_data.personal_guards_paths_by_node_id) do
+			for node_id, personal_guard_indexes in pairs(personal_guards_paths_by_node_id) do
 				for personal_guard_index, personal_path_string in pairs(personal_guard_indexes) do
 					if personal_path_string == path_string then
 						local personal_stat = personal_stats[node_id] and personal_stats[node_id][personal_guard_index]
@@ -676,9 +678,9 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 									progress = end_progress,
 									previous_progress = previous_progress_value,
 									progress_node = progress_node_id,
-									progress_node_name = progress_node_id and self._cached_data.result[progress_node_id].ui.display_name or "",
+									progress_node_name = progress_node_id and result[progress_node_id] and result[progress_node_id].ui.display_name or "",
 									affected_node = node_id,
-									affected_node_name = self._cached_data.result[node_id].ui.display_name or "",
+									affected_node_name = result[node_id] and result[node_id].ui.display_name or "",
 									key = personal_stat_key,
 									type = _get_stat_unlock_type(personal_stat_key, "personal", not not progress_node_id),
 								}
@@ -692,15 +694,15 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 			if last_path and string.find(last_path, "node_") and not table.is_empty(updated_progress.stats) then
 				self._cached_data.stats[last_path] = self._cached_data.stats[last_path] or {}
 
-				if self._cached_data.result and self._cached_data.result[last_path] then
-					self._cached_data.result[last_path].stats = self._cached_data.result[last_path].stats or {}
+				if result and result[last_path] then
+					result[last_path].stats = result[last_path].stats or {}
 				end
 
 				for key, stat in pairs(updated_progress.stats) do
 					self._cached_data.stats[last_path][key] = stat.toValue
 
-					if self._cached_data.result[last_path] then
-						self._cached_data.result[last_path].stats[key] = stat.toValue
+					if result[last_path] then
+						result[last_path].stats[key] = stat.toValue
 					end
 				end
 			end
@@ -719,7 +721,7 @@ ExpeditionService.update_node_personal_progress = function (self, node_id_played
 
 		self:_update_cache_result_guards()
 
-		local node_name_played = self._cached_data.result[node_id_played].ui.display_name
+		local node_name_played = result[node_id_played] and result[node_id_played].ui.display_name
 
 		return Promise.resolved({
 			node_name_played = node_name_played,
@@ -999,27 +1001,20 @@ end
 ExpeditionService._prepare_node_missions_data = function (self, node, missions)
 	local id = node.nodeId
 	local node_flag = string.format("exped-node-%s", id)
-	local node_misisons = {}
+	local node_missions = {}
 
 	for ii = 1, #missions do
 		local mission = missions[ii]
 		local flags = mission.flags
 
 		if flags[node_flag] then
-			node_misisons[#node_misisons + 1] = mission
+			node_missions[#node_missions + 1] = mission
 		end
 	end
 
-	local function sort_func(a, b)
-		local a_danger_level = Danger.calculate_danger(a.challenge, a.resistance)
-		local b_danger_level = Danger.calculate_danger(b.challenge, b.resistance)
+	Danger.sort_missions_by_danger(node_missions)
 
-		return a_danger_level < b_danger_level
-	end
-
-	table.sort(node_misisons, sort_func)
-
-	return node_misisons
+	return node_missions
 end
 
 ExpeditionService._prepare_node_layout_data = function (self, node, track_layout)

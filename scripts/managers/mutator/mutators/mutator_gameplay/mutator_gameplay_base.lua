@@ -15,7 +15,9 @@ MutatorGameplayBase.init = function (self, owner, settings, triggered_by_level)
 end
 
 MutatorGameplayBase.update = function (self, dt, t)
-	return
+	if not self._is_server then
+		self:_client_update(dt, t)
+	end
 end
 
 MutatorGameplayBase.destroy = function (self)
@@ -29,6 +31,10 @@ MutatorGameplayBase.destroy = function (self)
 end
 
 MutatorGameplayBase._client_setup = function (self)
+	return
+end
+
+MutatorGameplayBase._client_update = function (self, dt, t)
 	return
 end
 

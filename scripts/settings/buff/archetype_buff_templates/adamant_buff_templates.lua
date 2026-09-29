@@ -169,7 +169,7 @@ templates.adamant_charge_cooldown_buff = {
 			local cooldown_time = math.min(template_data.cooldown, talent_settings.combat_ability.charge.cooldown_max)
 
 			if cooldown_time > 0 then
-				template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_time)
+				template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_time)
 
 				template_data.cooldown = 0
 			end
@@ -314,10 +314,10 @@ templates.adamant_whistle_replenishment = {
 		local next_charge_t = template_data.next_charge_t
 
 		if not next_charge_t then
-			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+			local ability_charge_regen_time = ability_extension:max_regen_time_for_ability_charge("grenade_ability")
 
-			template_data.next_charge_t = t + cooldown
-			template_data.cooldown = cooldown
+			template_data.next_charge_t = t + ability_charge_regen_time
+			template_data.ability_charge_regen_time = ability_charge_regen_time
 
 			return
 		end
@@ -348,7 +348,7 @@ templates.adamant_whistle_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_charge_t - t
-		local percentage_left = time_until_next / template_data.cooldown
+		local percentage_left = time_until_next / template_data.ability_charge_regen_time
 
 		return 1 - percentage_left
 	end,
@@ -1174,7 +1174,7 @@ templates.adamant_execution_order_cdr = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.execution_order.cdr)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.execution_order.cdr)
 		end
 	end,
 	related_talents = {
@@ -1744,6 +1744,9 @@ templates.adamant_terminus_warrant_upgrade_stat_buff = {
 		[stat_buffs.ranged_attack_speed] = talent_settings.terminus_warrant.melee_attack_speed,
 		[stat_buffs.critical_strike_chance] = talent_settings.terminus_warrant.crit_chance,
 	},
+	related_talents = {
+		"adamant_terminus_warrant_improved_combined",
+	},
 }
 templates.adamant_terminus_warrant_cdr_buff = {
 	class_name = "buff",
@@ -1775,9 +1778,12 @@ templates.adamant_terminus_warrant_cdr_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.terminus_warrant.cdr)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.terminus_warrant.cdr)
 		end
 	end,
+	related_talents = {
+		"adamant_terminus_warrant_cdr",
+	},
 }
 templates.adamant_terminus_warrant_melee = {
 	always_show_in_hud = true,
@@ -2133,16 +2139,7 @@ templates.adamant_disable_companion_buff = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
-		local extra_grenades = stat_buffs
 		local is_server = template_context.is_server
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-
 		local unit_spawner_manager = Managers.state.unit_spawner
 
 		if is_server and unit_spawner_manager then
@@ -2152,14 +2149,6 @@ templates.adamant_disable_companion_buff = {
 				companion_spawner_extension:despawn_companion_units()
 			end
 		end
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-		local initial_num_charges = template_context.initial_num_charges
-
-		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
 	end,
 }
 
@@ -2601,6 +2590,9 @@ templates.adamant_wield_speed_on_melee_kill_buff = {
 	stat_buffs = {
 		[stat_buffs.wield_speed] = talent_settings.wield_speed_on_melee_kill.wield_speed_per_stack,
 	},
+	related_talents = {
+		"adamant_wield_speed_on_melee_kill",
+	},
 }
 templates.adamant_elite_special_kills_offensive_boost = {
 	allow_proc_while_active = true,
@@ -2865,9 +2857,12 @@ templates.adamant_pinning_dog_kills_cdr_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.pinning_dog_kills_cdr.regen)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.pinning_dog_kills_cdr.regen)
 		end
 	end,
+	related_talents = {
+		"adamant_pinning_dog_kills_cdr",
+	},
 }
 templates.adamant_pinning_dog_permanent_stacks = {
 	class_name = "proc_buff",
@@ -2908,6 +2903,9 @@ templates.adamant_pinning_dog_permanent_stacks_buff = {
 	max_stacks = talent_settings.pinning_dog_permanent_stacks.stacks,
 	stat_buffs = {
 		[stat_buffs.companion_damage_modifier] = talent_settings.pinning_dog_permanent_stacks.damage,
+	},
+	related_talents = {
+		"adamant_pinning_dog_permanent_stacks",
 	},
 }
 templates.adamant_pinning_dog_bonus_moving_towards = {

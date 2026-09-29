@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_area_buff_drone")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_broker_stimm_field")
+require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_buff")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_heal")
 require("scripts/extension_systems/proximity/side_relation_gameplay_logic/proximity_shock_mine")
 
@@ -17,6 +18,12 @@ SideRelationProximityExtension.init = function (self, extension_init_context, un
 	self._side_extension = ScriptUnit.extension(unit, "side_system")
 
 	local side_name = self._side_extension.side:name()
+
+	self._proximity_context = {
+		side_system = Managers.state.extension:system("side_system"),
+		physics_world = extension_init_context.physics_world,
+	}
+
 	local relation_data = {}
 
 	self._relation_data = relation_data
@@ -60,15 +67,18 @@ SideRelationProximityExtension.destroy = function (self)
 end
 
 SideRelationProximityExtension._initialize_relation = function (self, relation_name, relation_init_data, owner_unit_or_nil)
-	local proximity_radius = relation_init_data.proximity_radius
 	local logic = {}
+	local proximity_query_function_name = relation_init_data.proximity_query_function or "check_proximity_of_position"
+	local proximity_query_function = Proximity[proximity_query_function_name]
 	local data = {
 		num_in_proximity = 0,
 		num_logic = 0,
+		proximity_query_function = proximity_query_function,
 		units_in_proximity = {},
+		proximity_scratchpad = {},
 		temp = {},
 		stickiness_table = {},
-		proximity_radius = relation_init_data.proximity_radius,
+		proximity_check_params = relation_init_data.proximity_check_params,
 		stickiness_limit = relation_init_data.stickiness_limit,
 		stickiness_time = relation_init_data.stickiness_time,
 		logic = logic,
@@ -181,21 +191,24 @@ end
 SideRelationProximityExtension._update_proximity = function (self, unit, dt, t)
 	local broadphase = self._broadphase
 	local side = self._side_extension.side
+	local proximity_context = self._proximity_context
 
 	for relation_name, data in pairs(self._relation_data) do
+		local proximity_query_function = data.proximity_query_function
 		local relation_side_names = side:relation_side_names(relation_name)
-		local proximity_radius = data.proximity_radius
+		local proximity_check_params = data.proximity_check_params
 		local stickiness_limit = data.stickiness_limit
 		local stickiness_time = data.stickiness_time
 		local current_in_proximity = data.temp
 		local prev_in_proximity = data.units_in_proximity
 		local stickiness_table = data.stickiness_table
+		local proximity_scratchpad = data.proximity_scratchpad
 
 		local function filter_function(filter_unit)
 			return filter_unit ~= unit
 		end
 
-		Proximity.check_sticky_proximity(unit, relation_side_names, proximity_radius, current_in_proximity, filter_function, broadphase, stickiness_limit, stickiness_time, stickiness_table, prev_in_proximity, dt)
+		Proximity.check_sticky_proximity(proximity_context, proximity_scratchpad, unit, relation_side_names, proximity_check_params, current_in_proximity, proximity_query_function, filter_function, broadphase, stickiness_limit, stickiness_time, stickiness_table, prev_in_proximity, dt)
 
 		local data_logic = data.logic
 		local num_logic = data.num_logic

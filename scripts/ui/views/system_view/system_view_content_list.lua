@@ -3,7 +3,6 @@
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
 local Promise = require("scripts/foundation/utilities/promise")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 
 local function validation_is_in_mission()

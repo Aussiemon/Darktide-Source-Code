@@ -63,6 +63,8 @@ _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/re
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_twin_captain_two_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_twin_captain_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_vanguard_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/renegade/renegade_wizard_visual_loadout_templates")
 _extract_templates("scripts/settings/minion_visual_loadout/templates/companion/companion_servo_skull_visual_loadout_templates")
+_extract_templates("scripts/settings/minion_visual_loadout/templates/live_events/torment/live_event_torment_elite_chaos_daemonhost_visual_loadout_templates")
 
 return settings("MinionVisualLoadoutTemplates", minion_visual_loadout_templates)

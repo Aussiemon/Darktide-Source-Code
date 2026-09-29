@@ -11,6 +11,7 @@ BootStateStartupTests.test_definitions = {
 			cjson = true,
 			gRPC = true,
 			navigation = true,
+			opengjk = false,
 			["rule database"] = true,
 			wwise_plugin = true,
 		},

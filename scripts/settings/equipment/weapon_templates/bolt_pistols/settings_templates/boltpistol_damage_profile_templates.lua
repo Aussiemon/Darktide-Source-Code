@@ -1,12 +1,14 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/bolt_pistols/settings_templates/boltpistol_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_types = DamageSettings.damage_types
 local gibbing_power = GibbingSettings.gibbing_power
@@ -28,10 +30,10 @@ damage_templates.default_boltpistol_damage = {
 	suppression_value = 3,
 	cleave_distribution = single_plus_cleave,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	ranges = {
 		max = 30,
@@ -117,10 +119,10 @@ damage_templates.boltpistol_m2_damage = {
 	suppression_value = 10,
 	cleave_distribution = no_cleave,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	ranges = {
 		max = 30,
@@ -240,10 +242,10 @@ damage_templates.boltpistol_stop_explosion = {
 	stagger_category = "flamer",
 	suppression_value = 0.5,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	cleave_distribution = {
 		attack = 0.1,
@@ -323,10 +325,10 @@ damage_templates.boltpistol_kill_explosion = {
 	stagger_category = "flamer",
 	suppression_value = 0.5,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	cleave_distribution = {
 		attack = 0.1,
@@ -410,10 +412,10 @@ damage_templates.boltpistol_m2_stop_explosion = {
 	stagger_category = "flamer",
 	suppression_value = 0.5,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	cleave_distribution = {
 		attack = 5.1,
@@ -493,10 +495,10 @@ damage_templates.boltpistol_m2_kill_explosion = {
 	stagger_category = "flamer",
 	suppression_value = 0.5,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	cleave_distribution = {
 		attack = 5.1,

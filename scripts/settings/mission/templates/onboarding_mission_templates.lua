@@ -30,6 +30,9 @@ local mission_templates = {
 			run_through_mission = false,
 			validate_minion_pathing_on_mission = false,
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	om_hub_02 = {
 		force_third_person_mode = true,
@@ -49,6 +52,9 @@ local mission_templates = {
 			mission_server = false,
 			run_through_mission = false,
 			validate_minion_pathing_on_mission = false,
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 	om_basic_combat_01 = {
@@ -76,6 +82,9 @@ local mission_templates = {
 			run_through_mission = false,
 			screenshot = false,
 			validate_minion_pathing_on_mission = false,
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 	tg_shooting_range = {
@@ -118,6 +127,9 @@ local mission_templates = {
 					"past",
 				},
 			},
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

@@ -387,9 +387,10 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent
+	local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
+	local grenades_percent = 1
 
-	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 
@@ -478,8 +479,9 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
+				local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
 
-				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 

@@ -181,7 +181,7 @@ DestructibleExtension.update = function (self, unit, dt, t)
 	self._timer_to_despawn = math.max(self._timer_to_despawn, 0)
 
 	if self._timer_to_despawn == 0 then
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 	end
 end
@@ -449,7 +449,7 @@ DestructibleExtension._handle_stage_zero = function (self, current_stage_index)
 				self._timer_to_despawn = self._despawn_timer_duration
 			end
 
-			self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+			self._owner_system:enable_update_function(self._unit, "update")
 		end
 	end
 end

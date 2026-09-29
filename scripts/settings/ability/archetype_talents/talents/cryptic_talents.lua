@@ -61,7 +61,6 @@ local archetype_talents = {
 			large_icon = "content/ui/textures/icons/talents/cryptic/cryptic_discharge",
 			name = "cryptic_discharge",
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.cryptic_discharge_base,
 			},
 			passive = {
@@ -109,7 +108,6 @@ local archetype_talents = {
 			large_icon = "content/ui/textures/icons/talents/cryptic/cryptic_discharge",
 			name = "cryptic_discharge",
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.cryptic_discharge,
 			},
 			passive = {
@@ -162,7 +160,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_discharge_attack_speed_increase = {
-			description = "loc_talent_cryptic_discharge_two_charge_bonus_desc",
+			description = "loc_talent_cryptic_discharge_attack_speed_bonus_desc",
 			display_name = "loc_talent_cryptic_discharge_two_charge_bonus",
 			name = "cryptic_discharge_attack_speed_increase",
 			special_rule = {
@@ -183,6 +181,11 @@ local archetype_talents = {
 					prefix = "+",
 					value = talent_settings.discharge_ability.two_charge_bonus.attack_speed,
 				},
+				attack_speed_per_charge = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.discharge_ability.two_charge_bonus.attack_speed_per_charge,
+				},
 				duration = {
 					format_type = "number",
 					value = talent_settings.discharge_ability.two_charge_bonus.duration,
@@ -190,7 +193,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_discharge_toughness = {
-			description = "loc_talent_cryptic_discharge_toughness_desc",
+			description = "loc_talent_cryptic_discharge_toughness_per_charge_desc",
 			display_name = "loc_talent_cryptic_discharge_toughness",
 			name = "cryptic_discharge_toughness",
 			special_rule = {
@@ -236,20 +239,21 @@ local archetype_talents = {
 			},
 		},
 		cryptic_precision_stance = {
-			description = "loc_talent_cryptic_precision_stance_drain_cost_desc",
+			description = "loc_talent_cryptic_precision_stance_drain_cost_combined_desc",
 			display_name = "loc_talent_cryptic_precision_stance",
 			large_icon = "content/ui/textures/icons/talents/cryptic/cryptic_precision_stance",
 			name = "cryptic_precision_stance",
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.cryptic_precision_stance,
 			},
 			passive = {
 				identifier = {
 					"cryptic_ability_recharge",
+					"cryptic_precision_stance_reload_speed_delayed",
 				},
 				buff_template_name = {
 					"cryptic_ability_recharge",
+					"cryptic_precision_stance_reload_speed_delayed",
 				},
 			},
 			format_values = {
@@ -300,6 +304,15 @@ local archetype_talents = {
 				zero_capacitance = {
 					format_type = "percentage",
 					value = 0,
+				},
+				reload_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.precision_stance.cryptic_precision_stance_reload_speed_delayed.reload_speed,
+				},
+				duration = {
+					format_type = "number",
+					value = talent_settings.precision_stance.cryptic_precision_stance_reload_speed_delayed.lingering_buff_time,
 				},
 			},
 		},
@@ -463,7 +476,6 @@ local archetype_talents = {
 			display_name = "loc_talent_cryptic_chordclaw",
 			name = "cryptic_chordclaw",
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.cryptic_chordclaw,
 			},
 			format_values = {
@@ -601,7 +613,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.cryptic_servo_skull_order_base,
 			},
 			special_rule = {
@@ -639,7 +650,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.cryptic_servo_skull_order_base_inactive,
 			},
 			special_rule = {
@@ -666,7 +676,6 @@ local archetype_talents = {
 			large_icon = "content/ui/textures/icons/talents/cryptic/cryptic_flamethrower",
 			name = "cryptic_flamethrower",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.cryptic_servo_skull_order,
 			},
 			format_values = {
@@ -764,7 +773,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				is_ability_modifier = true,
 				ability = PlayerAbilities.cryptic_servo_skull_order,
 			},
@@ -776,7 +784,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_force_field",
 			name = "triggers a protective bubble around and attached to the player",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.cryptic_force_field,
 			},
 			format_values = {
@@ -882,6 +889,34 @@ local archetype_talents = {
 				},
 			},
 		},
+		cryptic_force_field_capacitance_restore = {
+			description = "loc_talent_cryptic_force_field_capacitance_restore",
+			display_name = "loc_talent_cryptic_force_field_health_damage_limit",
+			icon = "content/ui/textures/icons/talents/cryptic/cryptic_force_field_health_damage_limit",
+			name = "cryptic_force_field_capacitance_restore",
+			special_rule = {
+				identifier = "cryptic_force_field_generates_capacitance_based_on_hits_blocked",
+				special_rule_name = special_rules.cryptic_force_field_generates_capacitance_based_on_hits_blocked,
+			},
+			format_values = {
+				capacitance = {
+					format_type = "percentage",
+					value = talent_settings.force_field.force_field_capacitance_restore.capacitance_per_attack,
+				},
+				max_capacitance = {
+					format_type = "percentage",
+					value = talent_settings.force_field.force_field_capacitance_restore.max_capacitance,
+				},
+				capacitance_keyword = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_power_keyword",
+				},
+				talent_name = {
+					format_type = "loc_string",
+					value = "loc_talent_cryptic_grenade_ability_force_field",
+				},
+			},
+		},
 		cryptic_grenade_ability_arc_grenade = {
 			description = "loc_talent_cryptic_arc_grenades_capacitance_gain_desc",
 			display_name = "loc_talent_cryptic_arc_grenades",
@@ -889,7 +924,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/cryptic/cryptic_grenade_ability_arc_grenade",
 			name = "Base Cryptic Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.arc_grenade,
 			},
 			format_values = {
@@ -926,7 +960,7 @@ local archetype_talents = {
 			},
 		},
 		cryptic_arc_grenades_weapon_malfunction = {
-			description = "loc_talent_cryptic_arc_grenades_weapon_malfunction_desc",
+			description = "loc_talent_cryptic_arc_grenades_weapon_malfunction_larger_desc",
 			display_name = "loc_talent_cryptic_arc_grenades_weapon_malfunction",
 			name = "cryptic_arc_grenades_weapon_malfunction",
 			passive = {

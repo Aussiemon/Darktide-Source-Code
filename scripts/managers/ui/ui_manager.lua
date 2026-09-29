@@ -9,6 +9,7 @@ local LoadingReason = require("scripts/ui/loading_reason")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
 local PortraitUI = require("scripts/ui/portrait_ui")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TaskbarFlash = require("scripts/utilities/taskbar_flash")
@@ -865,6 +866,16 @@ UIManager.emote_wheel_wants_camera_control = function (self)
 	return hud and hud:emote_wheel_wants_camera_control()
 end
 
+UIManager.tactical_overlay_active = function (self)
+	local hud = self._hud
+
+	return hud and hud:tactical_overlay_active()
+end
+
+UIManager.gameplay_hud_overlay_active = function (self)
+	return self:emote_wheel_active() or self:communication_wheel_active() or self:tactical_overlay_active()
+end
+
 UIManager.wwise_music_state = function (self, wwise_state_group_name)
 	return self._view_handler:wwise_music_state(wwise_state_group_name)
 end
@@ -1251,7 +1262,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 						callback_fn(dependency_package_data, view_loading_data)
 					end
 
-					dependency_package_data.package_id = Managers.package:load(dependency_package_data.package_name, dependency_package_data.reference_name, load_cb)
+					dependency_package_data.package_id = Managers.package:load(dependency_package_data.package_name, dependency_package_data.reference_name, load_cb, true)
 				end
 			end
 
@@ -1283,7 +1294,7 @@ UIManager.load_view = function (self, view_name, reference_name, loaded_callback
 				callback_fn(package_data, view_loading_data)
 			end
 
-			package_data.package_id = Managers.package:load(package_data.package_name, package_data.reference_name, load_cb)
+			package_data.package_id = Managers.package:load(package_data.package_name, package_data.reference_name, load_cb, true)
 		end
 
 		return true
@@ -1643,11 +1654,8 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local player = Managers.player:local_player(1)
 		local profile = dummy_profile or player:profile()
-		local gender_name = profile and profile.gender
-		local breed_name = profile and profile.archetype.breed
-		local archetype_name = profile and profile.archetype and profile.archetype.name
 
-		dummy_profile = Items.create_mannequin_profile_by_item(real_item, gender_name, archetype_name, breed_name)
+		dummy_profile = ProfileUtils.create_mannequin_profile(real_item, profile)
 
 		if real_item.slots and not table.is_empty(item.slots) then
 			dummy_profile.loadout[item.slots[1]] = real_item
@@ -1679,6 +1687,12 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			render_context.icon_camera_rotation_offset = nil
 		end
 
+		if table.find(slots, "slot_animation_end_of_round") then
+			render_context.use_end_of_round_camera = true
+		else
+			render_context.use_end_of_round_camera = nil
+		end
+
 		render_context.ignore_companion = not render_context.companion_state_machine and (real_item.companion_state_machine == "" or real_item.companion_state_machine == nil)
 		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 
@@ -1703,16 +1717,13 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local player = Managers.player:local_player(1)
 		local profile = dummy_profile or player:profile()
-		local gender_name = profile and profile.gender
-		local breed_name = profile and profile.archetype.breed
-		local archetype_name = profile and profile.archetype and profile.archetype.name
 
-		dummy_profile = Items.create_mannequin_profile_by_item(items[1], gender_name, archetype_name, breed_name)
+		dummy_profile = ProfileUtils.create_mannequin_profile(items[1], profile)
 
 		local loadout = dummy_profile.loadout
 
-		for i = 1, #items do
-			local set_item = items[i]
+		for ii = 1, #items do
+			local set_item = items[ii]
 			local first_slot_name = set_item.slots[1]
 
 			loadout[first_slot_name] = set_item

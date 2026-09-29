@@ -11,7 +11,6 @@ local ConditionalFunctions = require("scripts/settings/buff/helper_functions/con
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
@@ -2301,6 +2300,7 @@ base_templates.warp_burninating_on_crits_melee_and_special = {
 		internal_buff_name = "warp_fire",
 		max_stacks = 6,
 		num_stacks_on_proc = 2,
+		num_stacks_on_proc_special = 1,
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context, t)
@@ -2320,6 +2320,14 @@ base_templates.warp_burninating_on_crits_melee_and_special = {
 	end,
 	start_func = _add_debuff_on_hit_start,
 	proc_func = _add_debuff_on_hit_proc,
+	num_stacks_on_proc_func = function (t, params, template_data, template_context)
+		local template_override_data = template_context.template_override_data
+		local target_buff_data = template_override_data.target_buff_data
+		local is_weapon_special = CheckProcFunctions.on_warp_slice_crit_hit(params, template_data, template_context, t)
+		local num_stacks = is_weapon_special and target_buff_data.num_stacks_on_proc_special or target_buff_data.num_stacks_on_proc
+
+		return num_stacks or 1
+	end,
 }
 base_templates.wind_slash_crits = {
 	class_name = "proc_buff",

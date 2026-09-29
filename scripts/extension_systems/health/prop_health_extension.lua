@@ -24,6 +24,7 @@ PropHealthExtension.init = function (self, extension_init_context, unit, extensi
 	self._breed_white_list = nil
 	self._ignored_colliders = {}
 	self._update_enabled = not PropHealthExtension.UPDATE_DISABLED_BY_DEFAULT
+	self._attack_type_validation_func = extension_init_data.attack_type_validation_func
 	self._speed_on_hit = 0
 end
 
@@ -74,7 +75,7 @@ PropHealthExtension.setup_from_component = function (self, create_health_game_ob
 	if regenerate_health and not self._update_enabled then
 		self._update_enabled = true
 
-		self._owner_system:enable_update_function(self.__class_name, "fixed_update", self._unit, self)
+		self._owner_system:enable_update_function(self._unit, "fixed_update")
 	end
 end
 
@@ -121,7 +122,7 @@ PropHealthExtension.on_game_object_created = function (self, game_session, game_
 	if not self._update_enabled then
 		self._update_enabled = true
 
-		self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:enable_update_function(self._unit, "update")
 	end
 end
 
@@ -132,7 +133,7 @@ PropHealthExtension.on_game_object_destroyed = function (self, game_session, gam
 	if self._update_enabled then
 		self._update_enabled = false
 
-		self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:disable_update_function(self._unit, "update")
 	end
 end
 
@@ -177,7 +178,7 @@ PropHealthExtension.update = function (self, unit, dt, t)
 		if self._update_enabled then
 			self._update_enabled = false
 
-			self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+			self._owner_system:disable_update_function(self._unit, "update")
 		end
 	end
 end
@@ -201,6 +202,7 @@ PropHealthExtension.kill = function (self)
 end
 
 PropHealthExtension._died = function (self)
+	Managers.event:trigger("unit_died", self._unit)
 	Component.event(self._unit, "unit_died")
 	Unit.flow_event(self._unit, "lua_prop_died")
 
@@ -225,6 +227,10 @@ end
 
 PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage, hit_actor, damage_profile, attack_type, attack_direction, attacking_unit)
 	if self._ignored_colliders[hit_actor] then
+		return 0
+	end
+
+	if self._attack_type_validation_func and not self._attack_type_validation_func(self._unit, hit_actor, attack_type) then
 		return 0
 	end
 
@@ -427,6 +433,14 @@ PropHealthExtension._can_receive_damage = function (self, attacking_unit, attack
 	end
 
 	return false
+end
+
+PropHealthExtension.can_actor_collide_with_attack_type = function (self, hit_actor, attack_type)
+	if self._attack_type_validation_func then
+		return self._attack_type_validation_func(self._unit, hit_actor, attack_type)
+	end
+
+	return true
 end
 
 implements(PropHealthExtension, HealthExtensionInterface)

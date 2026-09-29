@@ -60,7 +60,7 @@ UIWidget.destroy = function (ui_renderer, widget)
 		local ui_pass = UIPasses[pass_type]
 
 		if ui_pass.destroy then
-			ui_pass.destroy(pass, ui_renderer)
+			ui_pass.destroy(pass, ui_renderer, widget)
 		end
 	end
 end
@@ -467,7 +467,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 				pass_data.visible = pass_visibility
 
 				if visible_previous and not pass_visibility then
-					ui_pass.destroy(pass_info, ui_renderer)
+					ui_pass.destroy(pass_info, ui_renderer, widget)
 
 					break
 				elseif not visible_previous and pass_visibility then
@@ -652,7 +652,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 					pass_pos_x, pass_pos_y, pass_size_x, pass_size_y, clip_modified_uvs = UIWidget._get_clip_uv(clip_pos_x, clip_pos_y, clip_size_x, clip_size_y, pass_pos_x, pass_pos_y, pass_size_x, pass_size_y, style_data.uvs, clip_modified_uvs)
 				end
 
-				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y), clip_modified_uvs)
+				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y), clip_modified_uvs, widget)
 			end
 		until true
 	end
@@ -767,7 +767,7 @@ UIWidget.set_visible = function (widget, ui_renderer, visible)
 			local destroy_function = ui_pass.destroy
 
 			if destroy_function then
-				destroy_function(pass_info, ui_renderer)
+				destroy_function(pass_info, ui_renderer, widget)
 			end
 		end
 

@@ -81,6 +81,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._sort_options = {}
 	self._debug = context.debug
 	self._hide_item_source_in_tooltip = true
+	self._can_purchase_premium_items = not Managers.ui:view_active("lobby_view")
 	self._promise_container = PromiseContainer:new()
 	context.preview_player = context.player or Managers.player:local_player(1)
 	context.preview_loadout = self._preview_profile_equipped_items or context.preview_player.loadout
@@ -473,7 +474,7 @@ InventoryCosmeticsView._setup_side_panel = function (self, item, is_locked, dx, 
 			_add_text_widget(Definitions.big_details_text_pass, unlock_description)
 		end
 
-		local achievement = unlock_title and AchievementUiHelper.get_acheivement_by_reward_item(item)
+		local achievement = unlock_title and AchievementUiHelper.get_achievement_by_reward_item(item)
 		local stats = achievement and achievement.stats
 
 		if stats and is_locked then
@@ -1274,7 +1275,7 @@ InventoryCosmeticsView._update_equip_button_status = function (self)
 	local previewed_element = self._previewed_element
 	local is_disabled = not previewed_item
 	local is_locked = previewed_element and not not previewed_element.locked
-	local is_premium = previewed_element and previewed_element.premium_offer ~= nil
+	local is_premium = self._can_purchase_premium_items and previewed_element and previewed_element.premium_offer
 	local is_equipped
 
 	if is_disabled then
@@ -1531,9 +1532,7 @@ InventoryCosmeticsView._setup_background_world = function (self)
 		local is_gear = slot.slot_type == "gear"
 		local is_body = slot.slot_type == "body"
 		local is_companion_gear = slot_name == "slot_companion_gear_full"
-		local valid_player_slot = is_gear and not is_companion_gear
-
-		valid_player_slot = valid_player_slot or is_body
+		local valid_player_slot = (is_gear or is_body) and not is_companion_gear
 
 		if valid_player_slot then
 			local item_camera_event_id = string.format("event_register_%s_%s_cosmetics_preview_item_camera", body_size, slot_name)
@@ -1671,7 +1670,7 @@ InventoryCosmeticsView.cb_on_purchase_pressed = function (self)
 	local element = self._previewed_element
 	local premium_offer = element and element.premium_offer
 
-	if not premium_offer then
+	if not premium_offer or not self._can_purchase_premium_items then
 		return
 	end
 

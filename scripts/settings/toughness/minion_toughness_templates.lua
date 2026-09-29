@@ -112,5 +112,55 @@ toughness_templates.twin_captain_one = {
 		vfx = "content/fx/particles/enemies/renegade_captain/renegade_captain_shield_regen",
 	},
 }
+toughness_templates.spillway_wizard = {
+	effect_template_name = "renegade_wizard_warp_shield",
+	ignore_flickering_on_depleted = true,
+	ignore_stagger_on_damage = true,
+	linked_actor = "c_captain_void_shield",
+	regeneration_delay = 6,
+	regeneration_speed = 0,
+	stagger_immune_while_active = true,
+	start_depleted = true,
+	uses_shield_toggle = true,
+	template_type = template_types.minion,
+	max = {
+		5000,
+		6000,
+		8000,
+		10000,
+		12000,
+	},
+	regenerate_full_delay = {
+		30000,
+		30000,
+		30000,
+		30000,
+		30000,
+	},
+	max_hit_percent = {
+		0.5,
+		0.5,
+		0.5,
+		0.5,
+		0.5,
+	},
+	depleted_settings = {
+		explosion_power_level = 500,
+		stagger_strength_multiplier = 10,
+		stagger_duration = {
+			7,
+			7,
+			6,
+			5,
+			4,
+		},
+		stagger_type = StaggerSettings.stagger_types.shield_broken,
+		explosion_template = ExplosionTemplates.renegade_captain_toughness_depleted,
+	},
+	reactivated_settings = {
+		sfx = "wwise/events/minions/play_traitor_captain_shield_reactivate",
+		vfx = "content/fx/particles/enemies/renegade_captain/renegade_captain_shield_regen",
+	},
+}
 
 return settings("MinionToughnessTemplates", toughness_templates)

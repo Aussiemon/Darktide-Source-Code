@@ -152,6 +152,10 @@ MinigameBase.stop = function (self, is_automatic)
 	if self:is_completed() then
 		local mistakes = self._mistakes
 
+		if self._is_automatic then
+			mistakes = nil
+		end
+
 		if player then
 			Managers.stats:record_private("hook_hack", player, mistakes)
 		end
@@ -159,7 +163,7 @@ MinigameBase.stop = function (self, is_automatic)
 		local is_human_player = player and player:is_human_controlled()
 
 		if is_human_player then
-			Managers.telemetry_events:player_hacked_terminal(player, mistakes, self._is_automatic)
+			Managers.telemetry_events:player_hacked_terminal(player, mistakes or 0, self._is_automatic)
 		end
 
 		self._mistakes = 0

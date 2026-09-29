@@ -484,6 +484,18 @@ local weapon_ammo_templates = {
 			lerp_perfect = 30,
 		},
 	},
+	ogryn_thumper_p1_m3 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 1,
+				lerp_perfect = 1,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 28,
+			lerp_perfect = 48,
+		},
+	},
 	shotgun_p1_m1 = {
 		ammunition_clips = {
 			{
@@ -530,6 +542,30 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_basic = 50,
 			lerp_perfect = 90,
+		},
+	},
+	shotgun_p2_m3 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 2,
+				lerp_perfect = 2,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 44,
+			lerp_perfect = 76,
+		},
+	},
+	shotgun_p3_m1 = {
+		ammunition_clips = {
+			{
+				lerp_basic = 6,
+				lerp_perfect = 6,
+			},
+		},
+		ammunition_reserve = {
+			lerp_basic = 36,
+			lerp_perfect = 72,
 		},
 	},
 	shotgun_p4_m1 = {

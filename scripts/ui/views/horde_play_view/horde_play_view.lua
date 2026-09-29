@@ -1,22 +1,17 @@
 ﻿-- chunkname: @scripts/ui/views/horde_play_view/horde_play_view.lua
 
 local HordePlayViewDefinitions = require("scripts/ui/views/horde_play_view/horde_play_view_definitions")
-local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local Danger = require("scripts/utilities/danger")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local Text = require("scripts/utilities/ui/text")
-local Promise = require("scripts/foundation/utilities/promise")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
-local Zones = require("scripts/settings/zones/zones")
-local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
-local MissionUtilities = require("scripts/utilities/ui/mission")
-local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
-local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
-local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
+local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
+local RegionLocalizationMappings = require("scripts/settings/backend/region_localization")
+local Text = require("scripts/utilities/ui/text")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
+local Zones = require("scripts/settings/zones/zones")
 local _MISSION_DUMMY_DATA = {
 	{
 		category = "narrative",
@@ -283,14 +278,7 @@ HordePlayView._fetch_success = function (self, data)
 		end
 	end
 
-	local function sort_func(a, b)
-		local a_danger_level = Danger.calculate_danger(a.challenge, a.resistance)
-		local b_danger_level = Danger.calculate_danger(b.challenge, b.resistance)
-
-		return a_danger_level < b_danger_level
-	end
-
-	table.sort(filtered_missions, sort_func)
+	Danger.sort_missions_by_danger(filtered_missions)
 
 	self._missions = filtered_missions
 
@@ -308,8 +296,8 @@ HordePlayView._fetch_success = function (self, data)
 
 			option_widgets[i] = widgets_by_name["option_" .. i]
 
-			local danger = Danger.danger_by_difficulty(mission.challenge, mission.resistance)
-			local is_unlocked = Managers.data_service.mission_board:is_difficulty_unlocked(danger.name)
+			local danger_settings = Danger.danger_by_difficulty(mission.challenge, mission.resistance)
+			local is_unlocked = Managers.data_service.mission_board:is_difficulty_unlocked(danger_settings.name)
 
 			widgets_by_name["option_" .. i].content.hotspot.disabled = not is_unlocked
 		end
@@ -391,10 +379,6 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 
 	content.hotspot.pressed_callback = callback(self, "_cb_on_options_button_pressed", option_index, data)
 
-	local danger_settings = Danger.danger_by_difficulty(data.challenge, data.resistance)
-	local danger_color = danger_settings.color
-	local difficulty_icon_color = style.difficulty_icon.color
-	local ignore_alpha = false
 	local xp = data.xp
 	local credits = data.credits
 	local extraRewards = data.extraRewards.circumstance
@@ -440,6 +424,7 @@ HordePlayView._assign_option_data = function (self, option_index, data)
 		total_reward_horizontal_offset = total_reward_horizontal_offset + text_width + icon_text_width_difference + reward_spacing
 	end
 
+	local danger_settings = Danger.danger_by_difficulty(data.challenge, data.resistance)
 	local display_name = danger_settings.display_name
 
 	content.title_text = Localize(display_name)

@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/interaction/interactions/ui_interaction")
 
+local DifficultySettings = require("scripts/settings/difficulty/difficulty_settings")
 local HubLocationIntroductionSettings = require("scripts/settings/cinematic_video/hub_location_introduction_settings")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ViewInteraction = class("ViewInteraction", "UIInteraction")
@@ -19,6 +20,14 @@ local ui_view_progression_requirement = {
 		expedition_view = PlayerProgressionUnlocks.expeditions,
 	},
 }
+local difficulty_mapping = DifficultySettings.difficulty_mapping
+local ui_view_difficulty_requirement = {
+	expedition_view = "malice",
+}
+
+for _, mapping in pairs(ui_view_difficulty_requirement) do
+	-- Nothing
+end
 
 ViewInteraction.init = function (self, ...)
 	ViewInteraction.super.init(self, ...)
@@ -75,6 +84,14 @@ ViewInteraction._is_blocked = function (self, interactor_unit, interactee_unit)
 		return self:_set_cache(interactor_unit, interactee_unit, true, "loc_requires_level", {
 			level = level_requirement,
 		})
+	end
+
+	local character_id = player_profile.character_id
+	local highest_difficulty_unlocked = Managers.data_service.mission_board:get_highest_difficulty_unlocked(character_id)
+	local difficulty_requirement = ui_view_difficulty_requirement[ui_interaction]
+
+	if difficulty_requirement and (difficulty_mapping[highest_difficulty_unlocked] or -1) < difficulty_mapping[difficulty_requirement] then
+		return self:_set_cache(interactor_unit, interactee_unit, true, "loc_hub_expedition_deadside_interaction_requirement")
 	end
 
 	local hub_facility_progression_requirement = ui_view_progression_requirement.hub_facility[ui_interaction]

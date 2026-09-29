@@ -17,4 +17,8 @@ ToughnessDepleted.all_damage_spill_over = function (current_toughness_damage, ma
 	return damage_amount
 end
 
+ToughnessDepleted.half_damage_spill_over = function (current_toughness_damage, max_toughness, damage_amount)
+	return damage_amount * 0.5
+end
+
 return ToughnessDepleted

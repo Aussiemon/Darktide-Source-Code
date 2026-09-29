@@ -147,7 +147,6 @@ CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment
 	local second_control_pos = self._second_control_position:unbox()
 	local arm_end_position = self._arm_end_position:unbox()
 	local arm_start_position = self._arm_start_position:unbox()
-	local transform = self._transform:unbox()
 	local joint_increment = 1 / total_joint_amount
 	local mesh_increment = 1 / mesh_amount
 
@@ -168,7 +167,7 @@ CorruptorArm._spline_position = function (self, unit, multi_mesh, mesh_increment
 
 		local function _get_local_pose()
 			local new_position = Matrix4x4.transform(Matrix4x4.identity(), curve_position)
-			local new_rotation = Quaternion.multiply(Quaternion.look(curve_tangent, Matrix4x4.up(transform)), Quaternion.from_euler_angles_xyz(0, mesh_rotation, 90))
+			local new_rotation = Quaternion.multiply(Quaternion.look(curve_tangent, Vector3.up()), Quaternion.from_euler_angles_xyz(0, mesh_rotation, 90))
 
 			return Matrix4x4.from_quaternion_position(new_rotation, new_position)
 		end

@@ -47,9 +47,12 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	local game_mode_settings = Managers.state.game_mode:settings()
 	local side_sub_faction_types = game_mode_settings.side_sub_faction_types
 	local sub_faction_types = side_sub_faction_types[side_name]
+	local mission_manager = Managers.state.mission
+	local mission = mission_manager and mission_manager:mission()
 
+	self._mission_sub_faction_override = mission and mission.forced_faction
 	self._heat_pacing = HeatPacing:new(template, world, side_id, target_side_id)
-	self._roamer_pacing = RoamerPacing:new(nav_world, template.roamer_pacing_template, level_seed, sub_faction_types)
+	self._roamer_pacing = RoamerPacing:new(nav_world, template.roamer_pacing_template, level_seed, sub_faction_types, self._mission_sub_faction_override)
 	self._horde_pacing = HordePacing:new(nav_world)
 	self._specials_pacing = SpecialsPacing:new(nav_world)
 	self._monster_pacing = MonsterPacing:new(nav_world)
@@ -73,25 +76,15 @@ PacingManager.init = function (self, world, nav_world, level_seed, pacing_contro
 	self._nav_world, self._level_seed, self._sub_faction_types = nav_world, level_seed, sub_faction_types
 end
 
-PacingManager.on_gameplay_post_init = function (self, level_name)
-	local template = self._template
-
+PacingManager._apply_template = function (self, template, level_name, t)
+	self._template = template
 	self._progression_type = template.progression_type
-
-	local combat_state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.combat_state_settings)
-
-	self._combat_state_settings = combat_state_settings
-
-	local state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.state_settings)
-
-	self._state_settings = state_settings
-
-	local starting_state = template.starting_state
-
-	self._next_state = starting_state
+	self._combat_state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.combat_state_settings)
+	self._state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.state_settings)
+	self._next_state = template.starting_state
 	self._state_orders = template.state_orders
 
-	self:_change_state(0, starting_state)
+	self:_change_state(t, template.starting_state)
 
 	self._max_tension = Managers.state.difficulty:get_table_entry_by_challenge(template.max_tension)
 	self._ramp_up_frequency_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.ramp_up_frequency_modifiers)
@@ -104,16 +97,23 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	end
 
 	self._challenge_rating_thresholds = challenge_rating_thresholds
+	self._min_wound_tension_requirement = Managers.state.difficulty:get_table_entry_by_challenge(template.min_wound_tension_requirement)
 
-	self._heat_pacing:on_gameplay_post_init()
 	self._roamer_pacing:on_gameplay_post_init(level_name)
 
 	local horde_resistance_templates = template.horde_pacing_template.resistance_templates
 	local horde_pacing_template = Managers.state.difficulty:get_table_entry_by_resistance(horde_resistance_templates)
 
 	self._horde_pacing:on_gameplay_post_init(level_name, horde_pacing_template)
+end
 
-	local monster_challenge_templates = template.monster_pacing_template.challenge_templates
+PacingManager.on_gameplay_post_init = function (self, level_name)
+	self._level_name = level_name
+
+	self._heat_pacing:on_gameplay_post_init()
+	self:_apply_template(self._template, level_name, 0)
+
+	local monster_challenge_templates = self._template.monster_pacing_template.challenge_templates
 	local monster_challenge_template = Managers.state.difficulty:get_table_entry_by_challenge(monster_challenge_templates)
 
 	self._monster_pacing:on_gameplay_post_init(level_name, monster_challenge_template)
@@ -128,10 +128,6 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 	Managers.event:register(self, "intro_cinematic_played", "_event_intro_cinematic_played")
 
 	self._first_aggro = true
-
-	local min_wound_tension_requirement = Managers.state.difficulty:get_table_entry_by_challenge(template.min_wound_tension_requirement)
-
-	self._min_wound_tension_requirement = min_wound_tension_requirement
 end
 
 PacingManager.on_spawn_points_generated = function (self)
@@ -142,12 +138,48 @@ PacingManager.on_spawn_points_generated = function (self)
 	local specials_pacing_template = Managers.state.difficulty:get_table_entry_by_resistance(specials_resistance_templates)
 
 	self._specials_pacing:on_spawn_points_generated(specials_pacing_template)
+
+	local pending_monster_template = self._pending_monster_template
+
+	if pending_monster_template then
+		self._pending_monster_template = nil
+
+		local monster_challenge_templates = pending_monster_template.monster_pacing_template.challenge_templates
+		local monster_challenge_template = Managers.state.difficulty:get_table_entry_by_challenge(monster_challenge_templates)
+
+		self._monster_pacing:on_gameplay_post_init(self._level_name, monster_challenge_template)
+	end
 end
 
 PacingManager.reset = function (self)
 	self._roamer_pacing:delete()
 
-	self._roamer_pacing = RoamerPacing:new(self._nav_world, self._template.roamer_pacing_template, self._level_seed, self._sub_faction_types)
+	self._roamer_pacing = RoamerPacing:new(self._nav_world, self._template.roamer_pacing_template, self._level_seed, self._sub_faction_types, self._mission_sub_faction_override)
+end
+
+PacingManager.set_pacing_template = function (self, template_name, t)
+	local template = PacingTemplates[template_name] or PacingTemplates.default
+
+	if template == self._template then
+		return
+	end
+
+	local new_uses_heat = template.heat_settings ~= nil
+
+	self._roamer_pacing:delete()
+
+	self._roamer_pacing = RoamerPacing:new(self._nav_world, template.roamer_pacing_template, self._level_seed, self._sub_faction_types, self._mission_sub_faction_override)
+
+	self._auto_event:swap_auto_event_template(template.auto_event_template)
+	self:_apply_template(template, self._level_name, t or 0)
+
+	if new_uses_heat then
+		self._heat_pacing:resume(template)
+	else
+		self._heat_pacing:suspend()
+	end
+
+	self._pending_monster_template = template
 end
 
 PacingManager.destroy = function (self)
@@ -680,12 +712,14 @@ PacingManager._update_player_combat_state = function (self, dt, side_id)
 		player_combat_states[player_unit] = current_combat_state
 	end
 
-	if num_high == num_valid_player_units then
-		self._current_combat_state = combat_states.high
-	elseif num_medium == num_valid_player_units then
-		self._current_combat_state = combat_states.medium
-	elseif num_low == num_valid_player_units then
-		self._current_combat_state = combat_states.low
+	if num_valid_player_units > 0 then
+		if num_high == num_valid_player_units then
+			self._current_combat_state = combat_states.high
+		elseif num_medium == num_valid_player_units then
+			self._current_combat_state = combat_states.medium
+		elseif num_low == num_valid_player_units then
+			self._current_combat_state = combat_states.low
+		end
 	end
 
 	local ALIVE = ALIVE
@@ -1318,6 +1352,10 @@ PacingManager.set_specials_force_move_timer = function (self, should_force_move_
 	return self._specials_pacing:set_force_move_timer(should_force_move_timer)
 end
 
+PacingManager.set_specials_max_alive_bonus_multiplier = function (self, multiplier)
+	return self._specials_pacing:set_max_alive_specials_bonus_multiplier(multiplier)
+end
+
 PacingManager.set_ramp_up_enabled = function (self, is_enabled)
 	self._ramp_up_enabled = is_enabled
 end
@@ -1435,21 +1473,6 @@ end
 
 PacingManager.expedition_extraction_status = function (self)
 	return self._heat_pacing:expedition_extraction_status()
-end
-
-PacingManager.get_minimum_roamer_groups = function (self)
-	if not self:heat_active() then
-		return 30
-	end
-
-	local heat_settings = self._heat_pacing:heat_settings()
-	local roamer_minimum_settings = heat_settings.roamer_minimum_settings
-	local current_stage_name = self:current_stage_name() or "none"
-	local stage_multiplier = roamer_minimum_settings.multiplier_per_stage[current_stage_name]
-	local amount_indexed_by_resistance = Managers.state.difficulty:get_table_entry_by_challenge(roamer_minimum_settings.base_value)
-	local value = math.round(amount_indexed_by_resistance * stage_multiplier)
-
-	return value
 end
 
 PacingManager.heat_trickle_should_patrol = function (self)

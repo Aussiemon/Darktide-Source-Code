@@ -302,6 +302,7 @@ local views = {
 	title_view = {
 		class = "TitleView",
 		display_name = "loc_title_view_display_name",
+		draw_while_loading = true,
 		package = "packages/ui/views/title_view/title_view",
 		path = "scripts/ui/views/title_view/title_view",
 		state_bound = true,
@@ -406,6 +407,9 @@ local views = {
 			sound_name = "content/videos/fatshark_splash",
 			video_name = "content/videos/fatshark_splash",
 		},
+		testify_flags = {
+			ui_views = false,
+		},
 	},
 	mission_board_view = {
 		class = "MissionBoardView",
@@ -434,6 +438,7 @@ local views = {
 		class = "LobbyView",
 		disable_game_world = true,
 		display_name = "loc_lobby_view_display_name",
+		draw_while_loading = true,
 		package = "packages/ui/views/lobby_view/lobby_view",
 		path = "scripts/ui/views/lobby_view/lobby_view",
 		preload_in_hub = "always",
@@ -459,6 +464,9 @@ local views = {
 		},
 		exit_sound_events = {
 			UISoundEvents.main_menu_exit,
+		},
+		testify_flags = {
+			ui_views = false,
 		},
 	},
 	barber_vendor_background_view = {
@@ -850,6 +858,7 @@ _declare_view("dlc_purchase_view", require("scripts/ui/views/dlc_purchase_view/d
 _declare_view("premium_currency_purchase_view", require("scripts/ui/views/premium_currency_purchase_view/premium_currency_purchase_view_declaration_settings"))
 _declare_view("player_survey_view", require("scripts/ui/views/player_survey_view/player_survey_view_declaration_settings"))
 _declare_view("live_event_skulls_guns_progress_view", require("scripts/ui/views/live_events_view/live_event_skulls_guns_progress_view/live_event_skulls_guns_progress_view_declaration_settings"))
+_declare_view("live_event_torment_progress_view", require("scripts/ui/views/live_events_view/live_event_torment_progress_view/live_event_torment_progress_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

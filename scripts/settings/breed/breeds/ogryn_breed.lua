@@ -7,6 +7,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local TargetSelectionTemplates = require("scripts/extension_systems/perception/target_selection_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_results = AttackSettings.stagger_results
@@ -43,7 +44,7 @@ local breed_data = {
 		spawn_all_enemies = false,
 	},
 	tags = {
-		ogryn = true,
+		[breed_tags.ogryn] = true,
 	},
 	armor_type = armor_types.player,
 	heights = {

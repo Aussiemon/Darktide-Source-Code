@@ -9,10 +9,6 @@ PenanceViewReporter.init = function (self)
 	self._claim_track_report = {}
 end
 
-PenanceViewReporter.update = function (self, dt, t)
-	return
-end
-
 PenanceViewReporter.report = function (self)
 	if not table.is_empty(self._tracking_report) then
 		Managers.telemetry_events:penances_tracked_report(self._tracking_report)

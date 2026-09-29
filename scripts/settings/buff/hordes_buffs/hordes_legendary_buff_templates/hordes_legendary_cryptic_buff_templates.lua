@@ -1,31 +1,11 @@
 ﻿-- chunkname: @scripts/settings/buff/hordes_buffs/hordes_legendary_buff_templates/hordes_legendary_cryptic_buff_templates.lua
 
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
-local Explosion = require("scripts/utilities/attack/explosion")
-local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local HordesBuffsData = require("scripts/settings/buff/hordes_buffs/hordes_buffs_data")
-local HordesBuffsUtilities = require("scripts/settings/buff/hordes_buffs/hordes_buffs_utilities")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local ShoutAbility = require("scripts/extension_systems/ability/utilities/shout_ability")
-local StaggerSettings = require("scripts/settings/damage/stagger_settings")
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local buff_categories = BuffSettings.buff_categories
 local buff_keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
-local armor_types = ArmorSettings.types
-local attack_types = AttackSettings.attack_types
-local damage_types = DamageSettings.damage_types
-local hit_zone_names = HitZone.hit_zone_names
-local stagger_types = StaggerSettings.stagger_types
-local SFX_NAMES = HordesBuffsUtilities.SFX_NAMES
-local VFX_NAMES = HordesBuffsUtilities.VFX_NAMES
-local BROADPHASE_RESULTS = {}
 local templates = {}
 
 table.make_unique(templates)
@@ -115,7 +95,7 @@ templates.hordes_buff_cryptic_dodge_costs_cooldown = {
 		[proc_events.on_dodge_start] = 1,
 	},
 	proc_func = function (params, template_data, template_context, t)
-		template_data.ability_extension:increase_ability_cooldown_percentage("combat_ability", dodges_cooldown_percent_cost)
+		template_data.ability_extension:consume_ability_resource_percentage("combat_ability", dodges_cooldown_percent_cost)
 	end,
 }
 

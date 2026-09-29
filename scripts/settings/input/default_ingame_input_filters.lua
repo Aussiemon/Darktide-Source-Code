@@ -264,6 +264,38 @@ local default_ingame_input_filters = {
 		turnaround_threshold = 0.925,
 		turnaround_time_ref = 0.75,
 	},
+	look_controller_angular_velocity = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = 1,
+		state = "look",
+	},
+	look_controller_angular_velocity_ranged = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = "controller_motion_look_ranged_multiplier",
+		state = "ranged",
+	},
+	look_controller_angular_velocity_ranged_alternate_fire = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = "controller_motion_look_ranged_alternate_fire_multiplier",
+		state = "ranged_alternate_fire",
+	},
+	look_controller_angular_velocity_melee = {
+		filter_type = "scale_vector3_angular_velocity",
+		input_mappings = "angular_velocity",
+		invert_look_y = "controller_motion_invert_look_y",
+		scale = "controller_motion_look_scale",
+		sensitivity_modifier = 1,
+		state = "melee",
+	},
 }
 
 return settings("DefaultIngameInputFilters", default_ingame_input_filters)

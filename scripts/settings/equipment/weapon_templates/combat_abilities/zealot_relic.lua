@@ -11,24 +11,11 @@ local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {}
 
 weapon_template.action_inputs = {
-	wield = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				inputs = wield_inputs,
-			},
-		},
-	},
-	combat_ability = {
-		buffer_time = 0,
-		input_sequence = nil,
-	},
 	channel = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -38,17 +25,17 @@ weapon_template.action_inputs = {
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
 	},
-	grenade_ability = {
+	exit_ability = {
 		buffer_time = 0,
 		clear_input_queue = true,
 		input_sequence = {
 			{
-				input = "grenade_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -91,7 +78,7 @@ weapon_template.action_input_hierarchy = {
 				transition = "base",
 			},
 			{
-				input = "grenade_ability",
+				input = "exit_ability",
 				transition = {
 					{
 						input = "wield_previous",
@@ -103,14 +90,6 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		abort_sprint = true,
 		allowed_during_sprint = true,
@@ -123,7 +102,6 @@ weapon_template.actions = {
 			channel = {
 				action_name = "action_zealot_channel",
 			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
 			action_end = {
@@ -132,7 +110,6 @@ weapon_template.actions = {
 		},
 	},
 	action_zealot_channel = {
-		ability_type = "combat_ability",
 		abort_sprint = true,
 		allowed_during_sprint = true,
 		defensive_buff = "zealot_channel_toughness_damage_reduction",
@@ -146,17 +123,16 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		start_input = "channel",
 		stop_input = "cancel_channeling",
-		total_time = 5.5,
+		total_time = 3.6666666666666665,
 		toughness_bonus_buff = "zealot_channel_toughness_bonus",
 		uninterruptible = true,
 		vo_tag = "ability_litany",
 		damage_profile = DamageProfileTemplates.zealot_channel_stagger,
 		add_buff_time = talent_settings_bolstering_prayer.tick_rate * 4,
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
+			wield = BaseTemplateSettings.generate_wield_chain_actions({
 				chain_time = 0.5,
-			},
+			}),
 			cancel_channeling = {
 				action_name = "action_unwield_to_previous",
 				chain_time = 0.5,
@@ -165,7 +141,6 @@ weapon_template.actions = {
 				action_name = "action_unwield_to_previous",
 				chain_time = 0.5,
 			},
-			grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 		},
 		conditional_state_to_action_input = {
 			action_end = {
@@ -179,7 +154,6 @@ weapon_template.actions = {
 		start_input = "wield_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = true,
 		allowed_chain_actions = {},
 	},
 }

@@ -304,7 +304,7 @@ function _souls_proc_func(params, template_data, template_context)
 			local cooldown_reduction_percent = talent_settings_2.combat_ability_1.cooldown_reduction_percent
 			local cooldown_percentage = cooldown_reduction_percent * num_souls
 
-			ability_extension:reduce_ability_cooldown_percentage("combat_ability", cooldown_percentage)
+			ability_extension:restore_ability_charge_percentage("combat_ability", cooldown_percentage)
 		end
 	end
 
@@ -536,7 +536,7 @@ templates.psyker_reduced_throwing_knife_cooldown = {
 	class_name = "buff",
 	predicted = false,
 	stat_buffs = {
-		[stat_buffs.grenade_ability_cooldown_modifier] = -0.3,
+		[stat_buffs.grenade_ability_resource_regen_modifier] = 0.3,
 	},
 }
 
@@ -591,10 +591,10 @@ templates.psyker_knife_replenishment = {
 		local next_knife_t = template_data.next_knife_t
 
 		if not next_knife_t then
-			local cooldown = ability_extension:max_ability_cooldown("grenade_ability")
+			local ability_charge_regen_time = ability_extension:max_regen_time_for_ability_charge("grenade_ability")
 
-			template_data.next_knife_t = t + cooldown
-			template_data.cooldown = cooldown
+			template_data.next_knife_t = t + ability_charge_regen_time
+			template_data.ability_charge_regen_time = ability_charge_regen_time
 
 			return
 		end
@@ -625,7 +625,7 @@ templates.psyker_knife_replenishment = {
 
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_until_next = next_knife_t - t
-		local percentage_left = time_until_next / template_data.cooldown
+		local percentage_left = time_until_next / template_data.ability_charge_regen_time
 
 		return 1 - percentage_left
 	end,
@@ -1273,7 +1273,7 @@ templates.psyker_overcharge_weakspot_kill_bonuses = {
 	conditional_proc_func = function (template_data, template_context)
 		return template_data.active
 	end,
-	proc_func = function (params, template_data, template_context, dt, t)
+	proc_func = function (params, template_data, template_context, t)
 		template_context.buff_extension:add_internally_controlled_buff("psyker_overcharge_weakspot_kill_bonuses_buff", t)
 	end,
 }
@@ -1677,28 +1677,12 @@ templates.psyker_aura_cooldown_reduction_on_elite_kill = {
 			return
 		end
 
-		local coherency_extension = template_data.coherency_extension
-
-		if not coherency_extension then
-			return
-		end
-
 		local attacking_unit = params.attacking_unit
 
 		if attacking_unit == template_context.unit then
 			template_context.buff_extension:add_internally_controlled_buff("psyker_cooldown_buff", t)
 
 			return
-		end
-
-		local in_coherence_units = coherency_extension:in_coherence_units()
-
-		for coherence_unit, _ in pairs(in_coherence_units) do
-			if attacking_unit == coherence_unit then
-				template_context.buff_extension:add_internally_controlled_buff("psyker_cooldown_buff", t)
-
-				break
-			end
 		end
 	end,
 }
@@ -1732,7 +1716,7 @@ templates.psyker_cooldown_buff = {
 		if t > template_data.timer then
 			template_data.timer = template_data.timer + 1
 
-			template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", talent_settings.psyker_cooldown.cooldown)
+			template_data.ability_extension:restore_ability_resource("combat_ability", talent_settings.psyker_cooldown.cooldown)
 		end
 	end,
 	related_talents = {
@@ -1750,11 +1734,17 @@ templates.psyker_damage_to_peril_conversion = {
 			return
 		end
 
+		local warp_charge_component = template_data.warp_charge_component
+		local current_warp_charge = warp_charge_component.current_percentage
+		local below_critical = template_data.warp_charge_component.current_percentage < 0.97
+
+		if not below_critical then
+			return
+		end
+
 		local toughness_damage_amount = params.toughness_damage_amount or 0
 		local damage_taken = params.damage_amount + toughness_damage_amount
 		local peril_converted = damage_taken * 0.0025
-		local warp_charge_component = template_data.warp_charge_component
-		local current_warp_charge = warp_charge_component.current_percentage
 		local stat_buffs = template_context.buff_extension:stat_buffs()
 		local warp_charge_amount_multiplier = stat_buffs.warp_charge_amount or 1
 
@@ -1837,6 +1827,9 @@ templates.psyker_damage_resistance_stun_immunity_duration = {
 		keywords.stun_immune,
 	},
 	duration = talent_settings.psyker_damage_resistance_stun_immunity.duration,
+	related_talents = {
+		"psyker_damage_resistance_stun_immunity",
+	},
 }
 templates.psyker_damage_vs_ogryns_and_monsters = {
 	class_name = "buff",
@@ -1967,6 +1960,7 @@ templates.psyker_venting_improvements = {
 	stat_buffs = {
 		[stat_buffs.vent_warp_charge_decrease_movement_reduction] = talent_settings_2.defensive_3.vent_warp_charge_decrease_movement_reduction,
 		[stat_buffs.reload_decrease_movement_reduction] = talent_settings_2.defensive_3.reload_decrease_movement_reduction,
+		[stat_buffs.movement_speed] = talent_settings_2.defensive_3.movement_speed,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2640,7 +2634,7 @@ templates.psyker_aura_ability_cooldown = {
 	max_stacks = talent_settings_3.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = talent_settings_3.coherency.ability_cooldown_modifier,
 	},
 	start_func = _penance_start_func("psyker_cooldown_reduction_aura_tracking_buff"),
 	related_talents = {
@@ -2666,8 +2660,8 @@ templates.psyker_cooldown_reduction_aura_tracking_buff = {
 			return
 		end
 
-		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
-		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge("combat_ability")
+		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
 		local parent_buff_name = "psyker_aura_ability_cooldown"
@@ -2687,7 +2681,7 @@ templates.psyker_aura_ability_cooldown_improved = {
 	max_stacks = talent_settings_3.coop_2.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved,
+		[stat_buffs.combat_ability_resource_cost_per_use_modifier] = talent_settings_3.coherency.ability_cooldown_modifier_improved,
 	},
 	start_func = _penance_start_func("psyker_improved_cooldown_reduction_aura_tracking_buff"),
 	related_talents = {
@@ -2713,8 +2707,8 @@ templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
 			return
 		end
 
-		local modified_cooldown_time = template_data.ability_extension:get_current_ability_cooldown_time()
-		local default_cooldown_time = modified_cooldown_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge()
+		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier_improved * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
 		local parent_buff_name = "psyker_cooldown_aura_improved"
@@ -3820,6 +3814,110 @@ templates.psyker_toughness_on_melee_buff = {
 	end,
 	related_talents = {
 		"psyker_toughness_on_melee",
+	},
+}
+templates.psyker_increased_warp_damage = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.warp_damage] = talent_settings.psyker_increased_warp_damage.warp_damage,
+	},
+	related_talents = {
+		"psyker_increased_warp_damage",
+	},
+}
+templates.psyker_increased_blitz_damage = {
+	class_name = "buff",
+	predicted = false,
+	stat_buffs = {
+		[stat_buffs.smite_damage] = talent_settings.psyker_increased_blitz_damage.damage,
+		[stat_buffs.chain_lightning_damage] = talent_settings.psyker_increased_blitz_damage.damage,
+		[stat_buffs.psyker_throwing_knives_damage_multiplier] = talent_settings.psyker_increased_blitz_damage.damage,
+	},
+	related_talents = {
+		"psyker_increased_blitz_damage",
+	},
+}
+
+local psyker_weapon_attacks_peril_equilibrium_settings = talent_settings.psyker_weapon_attacks_peril_equilibrium
+
+templates.psyker_weapon_attacks_peril_equilibrium = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_hit] = 1,
+	},
+	check_proc_func = function (params, template_data, template_context, t)
+		if params.attacking_unit ~= template_context.unit then
+			return false
+		end
+
+		if params.damage == 0 then
+			return false
+		end
+
+		local damage_type = params.damage_type
+
+		if warp_damage_types[damage_type] then
+			return false
+		end
+
+		local attack_type = params.attack_type
+
+		return attack_type == attack_types.melee or attack_type == attack_types.ranged
+	end,
+	start_func = function (template_data, template_context)
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+
+		template_data.warp_charge_component = unit_data_extension:write_component("warp_charge")
+		template_data.procs = 0
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		template_data.procs = template_data.procs + 1
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.procs <= 0 then
+			return
+		end
+
+		template_data.procs = template_data.procs - 1
+
+		local warp_charge_component = template_data.warp_charge_component
+		local current_percentage = warp_charge_component.current_percentage
+		local threshold = psyker_weapon_attacks_peril_equilibrium_settings.threshold
+		local amount = psyker_weapon_attacks_peril_equilibrium_settings.warp_charge_percent
+		local new_percentage
+
+		if current_percentage < threshold then
+			new_percentage = math.min(current_percentage + amount, threshold)
+		else
+			return
+		end
+
+		if new_percentage == current_percentage then
+			template_data.procs = 0
+
+			return
+		end
+
+		warp_charge_component.last_charge_at_t = t
+		warp_charge_component.current_percentage = new_percentage
+
+		local buff_extension = template_context.buff_extension
+		local percentage_change = current_percentage - new_percentage
+
+		if percentage_change ~= 0 then
+			local param_table = buff_extension:request_proc_event_param_table()
+
+			if param_table then
+				param_table.percentage_change = percentage_change
+
+				buff_extension:add_proc_event(proc_events.on_warp_charge_changed, param_table)
+			end
+		end
+	end,
+	related_talents = {
+		"psyker_weapon_attacks_peril_equilibrium",
 	},
 }
 

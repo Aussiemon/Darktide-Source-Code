@@ -596,6 +596,25 @@ local widget_definitions = {
 	}),
 }
 local animations = {
+	initializing_backend = {
+		{
+			end_time = 4,
+			name = "update_loading",
+			start_time = 2.5,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				parent.animation_alpha_multiplier = 0
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local anim_progress = math.easeOutCubic(progress)
+
+				for _, widget in pairs(widgets) do
+					widget.alpha_multiplier = anim_progress
+				end
+
+				parent.animation_alpha_multiplier = anim_progress
+			end,
+		},
+	},
 	on_enter = {
 		{
 			end_time = 0,
@@ -614,9 +633,9 @@ local animations = {
 			end,
 		},
 		{
-			end_time = 2,
+			end_time = 1,
 			name = "fade_in",
-			start_time = 1,
+			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				return
 			end,

@@ -39,23 +39,6 @@ local function _breed_unit_name_position_rotation_from_game_object(session, obje
 	end
 end
 
-local function _broadphase_radius_and_categories(breed, side_id)
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side(side_id)
-	local side_name = side:name()
-	local broadphase_radius, breed_type = breed.broadphase_radius, breed.breed_type
-	local broadphase_categories = {
-		side_name,
-		breed_type,
-	}
-
-	if breed.broadphase_categories then
-		table.append(broadphase_categories, breed.broadphase_categories)
-	end
-
-	return broadphase_radius, broadphase_categories
-end
-
 local spineless_minion_unit_template = {
 	local_unit = function (unit_name, position, rotation, material, init_data, ...)
 		local breed, random_seed = init_data.breed, init_data.random_seed
@@ -81,7 +64,6 @@ local spineless_minion_unit_template = {
 	end,
 	local_init = function (unit, config, template_context, game_object_data, init_data, ...)
 		local breed, side_id = init_data.breed, init_data.side_id
-		local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 		local blackboard_component_config = breed.blackboard_component_config
 		local breed_name, behavior_tree_name = breed.name, breed.behavior_tree_name
 		local spawn_buffs = breed.spawn_buffs
@@ -107,11 +89,6 @@ local spineless_minion_unit_template = {
 
 		config:add("BlackboardExtension", {
 			component_config = blackboard_component_config,
-		})
-		config:add("BroadphaseExtension", {
-			moving = true,
-			radius = broadphase_radius,
-			categories = broadphase_categories,
 		})
 		config:add("MinionUnitDataExtension", {
 			breed = breed,
@@ -184,13 +161,7 @@ local spineless_minion_unit_template = {
 		local breed_id = go_field(game_session, game_object_id, "breed_id")
 		local breed_name = NetworkLookup.breed_names[breed_id]
 		local breed = Breeds[breed_name]
-		local broadphase_radius, broadphase_categories = _broadphase_radius_and_categories(breed, side_id)
 
-		config:add("BroadphaseExtension", {
-			moving = true,
-			radius = broadphase_radius,
-			categories = broadphase_categories,
-		})
 		config:add("MinionUnitDataExtension", {
 			breed = breed,
 		})

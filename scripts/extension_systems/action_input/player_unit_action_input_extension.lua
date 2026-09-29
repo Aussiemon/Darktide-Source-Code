@@ -111,6 +111,14 @@ PlayerUnitActionInputExtension.extensions_ready = function (self, world, unit)
 	end
 end
 
+PlayerUnitActionInputExtension.set_active_slot = function (self, id, slot_name_or_nil)
+	local parser = self._action_input_parsers[id]
+
+	if parser then
+		parser:set_active_slot(slot_name_or_nil)
+	end
+end
+
 PlayerUnitActionInputExtension.peek_next_input = function (self, id)
 	local parser = self._action_input_parsers[id]
 

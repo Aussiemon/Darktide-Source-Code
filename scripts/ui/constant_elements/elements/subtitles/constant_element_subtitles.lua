@@ -238,6 +238,8 @@ ConstantElementSubtitles._stop_world_vo = function (self, view_dialogue_system)
 		if world_dialogue_system and world_dialogue_system ~= view_dialogue_system then
 			world_dialogue_system:force_stop_all()
 		end
+
+		return world_dialogue_system == view_dialogue_system
 	end
 end
 
@@ -251,10 +253,9 @@ ConstantElementSubtitles._get_active_dialogue_system = function (self)
 			local view_name = active_views[i]
 			local view = ui_manager:view_instance(view_name)
 			local view_dialogue_system = view and view:dialogue_system()
+			local same_as_world = self:_stop_world_vo(view_dialogue_system)
 
-			self:_stop_world_vo(view_dialogue_system)
-
-			if view_dialogue_system then
+			if view_dialogue_system and not same_as_world then
 				return view_dialogue_system
 			end
 		end
@@ -376,9 +377,13 @@ ConstantElementSubtitles._add_subtitle = function (self, currently_playing, seco
 		if player and player:is_human_controlled() then
 			speaker_display_name = player:name()
 		else
+			local cutscene_character_extension = ScriptUnit.has_extension(currently_playing_unit, "cutscene_character_system")
+			local cutscene_player_profile = cutscene_character_extension and cutscene_character_extension:player_profile()
 			local speaker_name = currently_playing.speaker_name
 
-			if speaker_name then
+			if cutscene_player_profile then
+				speaker_display_name = cutscene_player_profile.name
+			elseif speaker_name then
 				local speaker_voice_settings = DialogueSpeakerVoiceSettings[speaker_name]
 				local character_short_name = speaker_voice_settings.short_name
 

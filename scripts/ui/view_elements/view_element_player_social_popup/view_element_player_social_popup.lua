@@ -73,6 +73,28 @@ ViewElementPlayerSocialPopup._update_portrait = function (self)
 
 		content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	end
+
+	self:_refresh_header_avatar(player_info)
+end
+
+ViewElementPlayerSocialPopup._refresh_header_avatar = function (self, player_info)
+	local parent = self._parent
+
+	if not parent or not parent._load_widget_avatar then
+		return
+	end
+
+	local player_header = self._widgets_by_name.player_header
+	local content = player_header.content
+
+	parent:_unload_widget_avatar(player_header)
+
+	content.avatar_unavailable = nil
+	content.player_info = player_info
+
+	if player_info then
+		parent:_load_widget_avatar(player_header, player_info)
+	end
 end
 
 ViewElementPlayerSocialPopup.close = function (self, on_done_callback)
@@ -436,6 +458,8 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	end
 
+	self:_refresh_header_avatar(player_info)
+
 	if show_friend_code then
 		header_content.user_fatshark_id = Localize("loc_social_menu_find_player_fetch_id")
 
@@ -623,6 +647,8 @@ ViewElementPlayerSocialPopup.destroy = function (self, ui_renderer)
 
 		widget.content.portrait_load_id = nil
 	end
+
+	self:_refresh_header_avatar(nil)
 
 	local virtual_keyboard_widget = self._widgets_by_name.fatshark_id_entry
 	local virtual_keyboard_content = virtual_keyboard_widget and virtual_keyboard_widget.content

@@ -48,5 +48,6 @@ end
 
 sound_events["wwise/events/world/play_lightning_storm_thunder"] = true
 sound_events["wwise/events/world/stop_lightning_storm_thunder"] = true
+sound_events["wwise/events/world/play_event_daemonhost_spawn_stinger"] = true
 
 return sound_events

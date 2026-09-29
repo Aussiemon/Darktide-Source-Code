@@ -768,6 +768,78 @@ damage_templates.warp_charge_exploding_tick = {
 		},
 	},
 }
+damage_templates.no_damage_knock = {
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 500,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.1,
+	},
+	ranges = {
+		max = 20,
+		min = 19,
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 5,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 5,
+				[armor_types.player] = 5,
+				[armor_types.berserker] = 5,
+				[armor_types.super_armor] = 5,
+				[armor_types.disgustingly_resilient] = 5,
+				[armor_types.void_shield] = 5,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+			},
+			impact = {
+				[armor_types.unarmored] = 5,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 5,
+				[armor_types.player] = 5,
+				[armor_types.berserker] = 5,
+				[armor_types.super_armor] = 5,
+				[armor_types.disgustingly_resilient] = 5,
+				[armor_types.void_shield] = 5,
+			},
+		},
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 7.5,
+	},
+	targets = {
+		default_target = {
+			boost_curve_multiplier_finesse = 1.2,
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 1,
+			},
+		},
+	},
+}
 damage_templates.vortex_grab_wall_slam = {
 	disorientation_type = "falling_light",
 	ignore_shield = true,

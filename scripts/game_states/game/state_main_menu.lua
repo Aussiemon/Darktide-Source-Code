@@ -2,12 +2,10 @@
 
 local CharacterCreate = require("scripts/utilities/character_create")
 local MasterItems = require("scripts/backend/master_items")
-local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 
 local function _set_player_profile(profile)
@@ -572,11 +570,11 @@ StateMainMenu.update = function (self, main_dt, main_t)
 		local next_state, state_context
 
 		if self._onboarding_mission_name then
-			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name, SINGLEPLAY_TYPES.onboarding)
-		elseif not Managers.multiplayer_session:has_session() then
-			next_state, state_context = Managers.multiplayer_session:find_available_session()
-		else
+			next_state, state_context = Managers.multiplayer_session:start_singleplayer_session(self._onboarding_mission_name)
+		elseif Managers.multiplayer_session:is_booting_session() or Managers.multiplayer_session:has_session() then
 			next_state, state_context = Managers.multiplayer_session:poll_available_session()
+		else
+			next_state, state_context = Managers.multiplayer_session:find_available_session()
 		end
 
 		return next_state, state_context

@@ -119,9 +119,14 @@ end
 
 WwiseStateGroupCombat._expedition_wwise_state = function (self)
 	local music_parameter_extension = self._music_parameter_extension
+	local current_stage_name = music_parameter_extension:current_heat_stage_name()
+
+	if current_stage_name == "off" then
+		return self:_default_wwise_state()
+	end
+
 	local intensity_percent = music_parameter_extension:intensity_percent()
 	local num_aggroed_minions = music_parameter_extension:num_aggroed_minions() or 0
-	local current_stage_name = music_parameter_extension:current_heat_stage_name()
 	local is_currently_in_combat = num_aggroed_minions > 2 and intensity_percent > 0
 	local is_currently_in_safe_zone = current_stage_name == "safe_room"
 	local is_extracting = music_parameter_extension:expedition_extraction_status()

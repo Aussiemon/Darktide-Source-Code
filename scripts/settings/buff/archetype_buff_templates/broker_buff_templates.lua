@@ -295,6 +295,8 @@ local function _focus_proc_func(params, template_data, template_context, t)
 
 				if tags and tags.elite then
 					cooldown_to_restore = template_context.template.sub_3_cooldown_replenish_elite
+				elseif tags and tags.special then
+					cooldown_to_restore = template_context.template.sub_3_cooldown_replenish_elite
 				end
 
 				local max_restore = template_context.template.sub_3_cooldown_replenish_max
@@ -302,7 +304,7 @@ local function _focus_proc_func(params, template_data, template_context, t)
 				cooldown_to_restore = math.min(max_restore - template_data.cooldown_restored, cooldown_to_restore)
 
 				if cooldown_to_restore > 0 then
-					template_data.ability_extension:reduce_ability_cooldown_time("combat_ability", cooldown_to_restore)
+					template_data.ability_extension:restore_ability_resource("combat_ability", cooldown_to_restore)
 
 					template_data.cooldown_restored = template_data.cooldown_restored + cooldown_to_restore
 				end
@@ -1656,6 +1658,8 @@ local function _blitz_charge_on_kill_proc_func(params, template_data, template_c
 	if remaining_ability_charges < max_ability_charges then
 		local num_kills = template_data.tracked_kills + 1
 
+		template_context.buff_extension:add_internally_controlled_buff("broker_passive_blitz_charge_on_kill_stack", t)
+
 		if num_kills >= talent_settings.blitz.flash_grenade.num_kills then
 			num_kills = 0
 
@@ -1667,11 +1671,7 @@ local function _blitz_charge_on_kill_proc_func(params, template_data, template_c
 end
 
 templates.broker_passive_blitz_charge_on_kill = {
-	always_show_in_hud = true,
 	class_name = "proc_buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_flash_grenade",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
-	hud_priority = 1,
 	max_stacks = 1,
 	predicted = false,
 	skip_tactical_overlay = true,
@@ -1691,6 +1691,10 @@ templates.broker_passive_blitz_charge_on_kill = {
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		_bespoke_needlepistol_close_range_kill_update(template_data, template_context, dt, t)
+
+		if template_data.tracked_kills < template_context.buff_extension:current_stacks("broker_passive_blitz_charge_on_kill_stack") then
+			template_context.buff_extension:add_internally_controlled_buff("broker_passive_blitz_charge_on_kill_stack", t)
+		end
 	end,
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
@@ -1710,8 +1714,17 @@ templates.broker_passive_blitz_charge_on_kill = {
 		end,
 		[proc_events.on_kill] = _blitz_charge_on_kill_proc_func,
 	},
-	visual_stack_count = function (template_data, template_context)
-		return template_data.tracked_kills
+}
+templates.broker_passive_blitz_charge_on_kill_stack = {
+	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/buffs/hud/broker/broker_broker_flash_grenade",
+	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
+	hud_priority = 1,
+	max_stacks = 20,
+	predicted = false,
+	skip_tactical_overlay = true,
+	conditional_exit_func = function (template_data, template_context)
+		return template_context.stack_count >= template_context.template.max_stacks
 	end,
 }
 templates.broker_passive_weakspot_on_x_hit = {
@@ -2106,10 +2119,24 @@ templates.broker_passive_damage_on_reload_buff = {
 
 local instakill_params_scratch = {}
 local instakill_passalong_params = {
+	"target_index",
+	"target_number",
+	"charge_level",
+	"is_critical_strike",
+	"attack_direction",
+	"hit_zone_name",
+	"hit_world_position",
 	"attack_type",
+	"damage_type",
+	"close_explosion_hit",
 }
 
 instakill_passalong_params[0] = #instakill_passalong_params
+
+local triggered_proc_events = {
+	on_hit = true,
+}
+
 templates.broker_passive_melee_crit_instakill = {
 	class_name = "proc_buff",
 	health_by_damage_threshold = 2,
@@ -2144,6 +2171,8 @@ templates.broker_passive_melee_crit_instakill = {
 			instakill_params_scratch[2] = true
 			instakill_params_scratch[3] = "attacking_unit"
 			instakill_params_scratch[4] = template_context.unit
+			instakill_params_scratch[5] = "triggered_proc_events"
+			instakill_params_scratch[6] = triggered_proc_events
 
 			local next_idx = 5
 
@@ -2285,16 +2314,6 @@ templates.broker_passive_increased_blitz_ammo = {
 	stat_buffs = {
 		[stat_buffs.extra_max_amount_of_grenades] = 1,
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local template = template_context.template
-		local extra_grenades = template.stat_buffs.extra_max_amount_of_grenades
-		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
-
-		template_context.initial_num_charges = grenade_ability_component.num_charges
-		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
-	end,
 }
 templates.broker_passive_increased_aura_size = {
 	class_name = "buff",
@@ -2314,11 +2333,10 @@ templates.broker_passive_stimm_cd_on_kill = {
 	start_func = function (template_data, template_context)
 		template_data.ability_extension = ScriptUnit.extension(template_context.unit, "ability_system")
 	end,
+	check_proc_func = function (params, template_data, template_context)
+		return not template_data.ability_extension:is_ability_resource_regen_paused("pocketable_ability")
+	end,
 	proc_func = function (params, template_data, template_context, t)
-		if template_data.ability_extension:is_cooldown_paused("pocketable_ability") then
-			return
-		end
-
 		local restore
 		local buff_extension = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
 
@@ -2328,7 +2346,7 @@ templates.broker_passive_stimm_cd_on_kill = {
 			restore = template_context.template.restore
 		end
 
-		template_data.ability_extension:reduce_ability_cooldown_percentage("pocketable_ability", restore)
+		template_data.ability_extension:restore_ability_resource("pocketable_ability", restore)
 	end,
 }
 
@@ -2927,13 +2945,13 @@ templates.broker_passive_low_ammo_regen = {
 
 		if max_reserve > 0 then
 			local current_ammo_reserve = Ammo.current_ammo_in_reserve(slot_secondary_component)
-			local threshold = template_data.ammo_threshold
-			local clip_percentage = current_ammo_reserve / max_reserve
+			local ammo_threshold = template_data.ammo_threshold
+			local threshold = math.floor(max_reserve * ammo_threshold)
 
-			if clip_percentage <= threshold then
-				local ammo_return = template_data.ammo_return
+			if current_ammo_reserve < threshold then
+				local ammo_return = math.floor(max_reserve * template_data.ammo_return) - current_ammo_reserve
 
-				Ammo.add_to_reserve(slot_secondary_component, math.max(math.floor(max_reserve * ammo_return) - current_ammo_reserve, 1))
+				Ammo.add_to_reserve(slot_secondary_component, math.max(ammo_return, 1))
 			end
 		end
 	end,
@@ -2986,15 +3004,7 @@ templates.broker_passive_blitz_inflicts_toxin = {
 			return false
 		end
 
-		local attacking_item = params.attacking_item
-
-		if not attacking_item then
-			return false
-		end
-
-		local equipped_item = template_data.visual_loadout_extension:item_in_slot("slot_grenade_ability")
-
-		return equipped_item and attacking_item.name == equipped_item.name and params.attack_type == "explosion"
+		return params.attacking_slot_name == "slot_grenade_ability" and params.attack_type == "explosion"
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		local buff_ext = ScriptUnit.has_extension(params.attacked_unit, "buff_system")
@@ -3283,6 +3293,9 @@ templates.broker_passive_non_crits_increase_crit_stack = {
 	stat_buffs = {
 		[stat_buffs.melee_critical_strike_chance] = 0.05,
 	},
+	related_talents = {
+		"broker_passive_non_crits_increase_crit",
+	},
 }
 templates.broker_passive_non_crits_increase_crit_stack.max_stacks = math.ceil(1 / templates.broker_passive_non_crits_increase_crit_stack.stat_buffs[stat_buffs.melee_critical_strike_chance])
 templates.broker_passive_knockback_on_taking_melee_damage = {
@@ -3303,9 +3316,8 @@ templates.broker_passive_knockback_on_taking_melee_damage = {
 		local attacking_unit = params.attack_instigator_unit or params.attacking_unit
 		local target_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
 		local breed = target_unit_data_extension and target_unit_data_extension:breed()
-		local enemy_type = breed and Breed.enemy_type(breed)
 
-		if enemy_type == "special" then
+		if breed.tags.disabler then
 			return false
 		end
 
@@ -3525,7 +3537,7 @@ templates.broker_keystone_chemical_dependency_stack = {
 	sub_3_max_stacks = talent_settings.broker_keystone_chemical_dependency.sub_3_max_stacks,
 	sub_3_max_stacks_cap = talent_settings.broker_keystone_chemical_dependency.sub_3_max_stacks,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = talent_settings.broker_keystone_chemical_dependency.combat_ability_cooldown_regen_modifier,
+		[stat_buffs.combat_ability_resource_regen_modifier] = talent_settings.broker_keystone_chemical_dependency.combat_ability_cooldown_regen_modifier,
 	},
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = talent_settings.broker_keystone_chemical_dependency.critical_strike_chance,
@@ -3584,6 +3596,37 @@ templates.broker_keystone_chemical_dependency_stack = {
 		record_broker_max_stacks_of_chemical_dependency(template_data, template_context, true)
 	end,
 }
+
+local function _adrenaline_junkie_proc_hit(params, template_data, template_context, t)
+	local template = template_context.template
+	local on_regular = template.regular_grant
+	local stacks_to_grant = on_regular
+
+	if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
+		local sub_1_regular_grant = template.sub_1_regular_grant
+
+		stacks_to_grant = sub_1_regular_grant
+
+		if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
+			local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
+
+			stacks_to_grant = sub_1_weakspot_grant
+		end
+	end
+
+	local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
+
+	if is_crit then
+		stacks_to_grant = stacks_to_grant + template.crit_grant
+	end
+
+	for _ = 1, stacks_to_grant do
+		local buff_extension = template_context.buff_extension
+
+		buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+	end
+end
+
 templates.broker_keystone_adrenaline_junkie = {
 	class_name = "proc_buff",
 	predicted = false,
@@ -3598,10 +3641,6 @@ templates.broker_keystone_adrenaline_junkie = {
 			return false
 		end
 
-		if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) and not CheckProcFunctions.on_melee_kill(params, template_data, template_context, t) then
-			return false
-		end
-
 		return true
 	end,
 	proc_events = {
@@ -3613,50 +3652,30 @@ templates.broker_keystone_adrenaline_junkie = {
 	end,
 	specific_proc_func = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
-			local template = template_context.template
-			local on_regular = template.regular_grant
-			local stacks_to_grant = on_regular
-
-			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_no_regular_stacks) then
-				local sub_1_regular_grant = template.sub_1_regular_grant
-
-				stacks_to_grant = sub_1_regular_grant
-
-				if CheckProcFunctions.on_weakspot_hit(params, template_data, template_context, t) then
-					local sub_1_weakspot_grant = template.regular_grant + template.sub_1_weakspot_additional_grant
-
-					stacks_to_grant = sub_1_weakspot_grant
-				end
+			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
+				return
 			end
 
-			local is_crit = CheckProcFunctions.on_crit(params, template_data, template_context, t)
-
-			if is_crit then
-				stacks_to_grant = stacks_to_grant + template.crit_grant
-			end
-
-			for _ = 1, stacks_to_grant do
-				local buff_extension = template_context.buff_extension
-
-				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
-			end
+			_adrenaline_junkie_proc_hit(params, template_data, template_context, t)
 		end,
 		[proc_events.on_kill] = function (params, template_data, template_context, t)
-			local template = template_context.template
-			local stacks_to_grant = 0
-
 			if template_data.talent_extension:has_special_rule(special_rules.broker_keystone_adrenaline_junkie_extra_killing_blow_stacks) then
+				_adrenaline_junkie_proc_hit(params, template_data, template_context, t)
+
+				local template = template_context.template
+				local stacks_to_grant = 0
+
 				stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_grant
 
 				if CheckProcFunctions.on_elite_kill(params, template_data, template_context, t) then
 					stacks_to_grant = stacks_to_grant + template.sub_2_kill_additional_elite_grant
 				end
-			end
 
-			for _ = 1, stacks_to_grant do
-				local buff_extension = template_context.buff_extension
+				for _ = 1, stacks_to_grant do
+					local buff_extension = template_context.buff_extension
 
-				buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+					buff_extension:add_internally_controlled_buff("broker_keystone_adrenaline_junkie_stack", t)
+				end
 			end
 		end,
 	},
@@ -3758,27 +3777,11 @@ templates.broker_keystone_adrenaline_junkie_proc = {
 		[stat_buffs.melee_damage] = talent_settings.broker_keystone_adrenaline_junkie.melee_damage,
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = 0,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = 0,
 		[stat_buffs.critical_strike_chance] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.critical_strike_chance],
 		[stat_buffs.movement_speed] = templates.broker_keystone_adrenaline_junkie_stack.stat_buffs[stat_buffs.movement_speed],
 		[stat_buffs.toughness_damage_taken_multiplier] = 0.9,
 	},
 	conditional_stat_buffs_funcs = {
-		[stat_buffs.alternate_fire_movement_speed_reduction_modifier] = function (template_data, template_context)
-			local visual_loadout_extension = template_data.visual_loadout_extension
-			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
-			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
-
-			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
-		end,
-		[stat_buffs.weapon_action_movespeed_reduction_multiplier] = function (template_data, template_context)
-			local visual_loadout_extension = template_data.visual_loadout_extension
-			local wielded_slot = visual_loadout_extension:currently_wielded_slot()
-			local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot)
-
-			return weapon_template and weapon_template.keywords and table.array_contains(weapon_template.keywords, "melee")
-		end,
 		[stat_buffs.critical_strike_chance] = function (template_data, template_context)
 			return template_data.sub_7_scaling_ms_crit
 		end,
@@ -3852,7 +3855,7 @@ templates.broker_ability_stimm_field_sub_3 = {
 		local has_syringe_now = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(template_data.visual_loadout_extension, "slot_pocketable_small", "syringe") or false
 
 		if has_syringe_now and has_syringe_now ~= has_syringe_before then
-			template_data.ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			template_data.ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		template_data.has_syringe = has_syringe_now
@@ -3861,7 +3864,7 @@ templates.broker_ability_stimm_field_sub_3 = {
 		local charges_now = template_data.ability_extension:remaining_ability_charges("pocketable_ability")
 
 		if charges_before < charges_now then
-			template_data.ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+			template_data.ability_extension:restore_ability_charge_percentage("combat_ability", 1)
 		end
 
 		template_data.num_ability_charges = charges_now
@@ -3876,6 +3879,12 @@ templates.broker_syringe_toughness_restore = {
 			return
 		end
 
+		if template_context.first_time_affected == false then
+			template_data.procced = true
+
+			return
+		end
+
 		local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 		local talent = ArchetypeTalents.broker[template_context.from_talent]
 		local toughness_amount
@@ -3887,6 +3896,10 @@ templates.broker_syringe_toughness_restore = {
 		template_data.toughness_amount = toughness_amount
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -3930,7 +3943,7 @@ templates.broker_syringe_melee_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = 0.75,
+		[stat_buffs.combat_ability_resource_regen_modifier] = 0.75,
 	},
 	stat_buff_multiplier = function (template_data)
 		return template_data.melee_cd_regen
@@ -3963,7 +3976,7 @@ templates.broker_syringe_ranged_cooldown_buff = {
 	refresh_duration_on_stack = true,
 	skip_tactical_overlay = true,
 	stat_buffs = {
-		[stat_buffs.combat_ability_cooldown_regen_modifier] = 0.75,
+		[stat_buffs.combat_ability_resource_regen_modifier] = 0.75,
 	},
 	stat_buff_multiplier = function (template_data)
 		return template_data.ranged_cd_regen
@@ -3985,8 +3998,18 @@ templates.broker_syringe_health_restore = {
 			return
 		end
 
+		if template_context.first_time_affected == false then
+			template_data.procced = true
+
+			return
+		end
+
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	update_func = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -4029,6 +4052,10 @@ templates.broker_syringe_toughness_over_time = {
 		template_data.toughness_amount = toughness_amount
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.toughness_extension = ScriptUnit.extension(template_context.unit, "toughness_system")
+
+		local unit_data_extension = ScriptUnit.has_extension(template_context.unit, "unit_data_system")
+
+		template_data.character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 	end,
 	interval_func = function (template_data, template_context, template)
 		if not template_context.is_server then
@@ -4047,6 +4074,15 @@ templates.broker_syringe_toughness_over_time = {
 			Managers.stats:record_private("hook_broker_stimm_restored_tougness", template_context.player, recovered_tougness, template_context.player)
 		end
 	end,
+}
+templates.broker_syringe_slow_and_stun_immune = {
+	class_name = "buff",
+	predicted = false,
+	skip_tactical_overlay = true,
+	keywords = {
+		keywords.stun_immune,
+		keywords.slowdown_immune,
+	},
 }
 
 local TEMP_BUFF_APPLY_ARR = {}
@@ -4070,7 +4106,6 @@ templates.syringe_broker_buff = {
 		keywords.syringe,
 		keywords.syringe_broker,
 	},
-	single_application_buff_overrides = {},
 	start_func = function (template_data, template_context)
 		template_data.health_extension = ScriptUnit.extension(template_context.unit, "health_system")
 
@@ -4085,7 +4120,8 @@ templates.syringe_broker_buff = {
 		template_data.stimm_provider = template_context.buff:owner_unit()
 		template_data.talent_tiers = {}
 
-		local single_application_buff_overrides = template_context.template.single_application_buff_overrides
+		local first_time_affected = template_context.first_time_affected
+		local skip_toughness_replenishment = not first_time_affected
 
 		table.clear(TEMP_BUFF_APPLY_ARR)
 
@@ -4098,7 +4134,7 @@ templates.syringe_broker_buff = {
 
 			local buff_data = data.buff_data
 
-			if not template_data.skip_talent and buff_data.buff_target and not single_application_buff_overrides[talent_name] then
+			if not template_data.skip_talent and buff_data.buff_target then
 				local template = templates[buff_data.buff_target]
 
 				if not template.predicted or not template_context.added_during_server_correction then
@@ -4119,7 +4155,13 @@ templates.syringe_broker_buff = {
 			local t = FixedFrame.get_latest_fixed_time()
 
 			for _ = 1, talent_tier do
-				local _, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name)
+				local _, local_index, component_index
+
+				if not template_context.template.predicted then
+					_, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name, "first_time_affected", first_time_affected)
+				else
+					_, local_index, component_index = template_context.buff_extension:add_externally_controlled_buff(buff_data.buff_target, t, "owner_unit", template_data.stimm_provider, "from_talent", talent_name)
+				end
 
 				local_indices[#local_indices + 1] = local_index
 				component_indices[#component_indices + 1] = component_index

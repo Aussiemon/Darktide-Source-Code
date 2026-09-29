@@ -91,6 +91,18 @@ HudElementCombatFeed._get_unit_presentation_name = function (self, unit)
 	end
 end
 
+HudElementCombatFeed._get_unit_combat_feed_message = function (self, unit)
+	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+	local target_is_minion = breed_or_nil and Breed.is_minion(breed_or_nil)
+
+	if not target_is_minion then
+		return nil
+	end
+
+	return breed_or_nil.combat_feed_message
+end
+
 HudElementCombatFeed._color_by_enemy_tags = function (self, tags)
 	local color
 
@@ -186,11 +198,12 @@ end
 HudElementCombatFeed.event_combat_feed_kill = function (self, attacking_unit, attacked_unit)
 	local killer = self:_get_unit_presentation_name(attacking_unit)
 	local victim = self:_get_unit_presentation_name(attacked_unit)
+	local combat_feed_message = self:_get_unit_combat_feed_message(attacked_unit) or kill_message_localization_key
 
 	temp_kill_message_localization_params.killer = killer
 	temp_kill_message_localization_params.victim = victim
 
-	local text = self:_localize(kill_message_localization_key, true, temp_kill_message_localization_params)
+	local text = self:_localize(combat_feed_message, true, temp_kill_message_localization_params)
 
 	self:_add_combat_feed_message(text)
 end

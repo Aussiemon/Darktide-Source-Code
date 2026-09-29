@@ -25,7 +25,7 @@ ComponentExtension.init = function (self, extension_init_context, unit, extensio
 		self._component_system = Managers.state.extension:system("component_system")
 	end
 
-	self:_parse_components(unit)
+	self:_parse_components(unit, ...)
 end
 
 ComponentExtension.extensions_ready = function (self, world, unit)
@@ -95,7 +95,7 @@ ComponentExtension._register_extension_update = function (self)
 	local component_system = self._component_system
 
 	if component_system and not rawget(component_system, "__deleted") then
-		component_system:enable_update_function("ComponentExtension", "update", unit, self)
+		component_system:enable_update_function(self._unit, "update")
 
 		self._extension_updates_enabled = true
 	end
@@ -106,7 +106,7 @@ ComponentExtension._unregister_extension_update = function (self)
 	local component_system = self._component_system
 
 	if component_system and not rawget(component_system, "__deleted") and component_system.disable_update_function then
-		component_system:disable_update_function("ComponentExtension", "update", unit)
+		component_system:disable_update_function(unit, "update")
 
 		self._extension_updates_enabled = false
 	end
@@ -165,7 +165,7 @@ ComponentExtension.flow_call_component = function (self, guid, function_name, ..
 	return self._num_updates
 end
 
-ComponentExtension._parse_components = function (self, unit)
+ComponentExtension._parse_components = function (self, unit, ...)
 	local cbs = self._event_callbacks
 	local is_server, nav_world = self._is_server, self._nav_world
 	local i = 1
@@ -174,7 +174,7 @@ ComponentExtension._parse_components = function (self, unit)
 	while component_guid do
 		local component_name = Unit.get_data(unit, "components", component_guid, "name")
 		local component_class = Components[component_name]
-		local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world)
+		local component, run_update = component_class:new(component_guid, i, unit, is_server, nav_world, ...)
 		local is_enabled = component:get_data(unit, "starts_enabled")
 
 		component.is_enabled = is_enabled == nil and true or is_enabled or false

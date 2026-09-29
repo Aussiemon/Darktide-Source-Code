@@ -6,16 +6,23 @@ local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerHuskAbilityExtension = class("PlayerHuskAbilityExtension")
+local ability_configuration = PlayerCharacterConstants.ability_configuration
 local ability_types = table.keys(PlayerCharacterConstants.ability_configuration)
+local RESOURCE_AMOUNT_PRECISION = 1000000
 
 PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._game_session = game_session
 	self._game_object_id = game_object_id
+
+	local player = extension_init_data.player
+
+	self._player = player
 	self._equipped_abilities = {}
 	self._enabled_abilities = {}
 	self._ability_max_charges = {}
-	self._ability_max_cooldown = {}
-	self._components = {}
+	self._ability_max_resource = {}
+	self._ability_charge_max_regen_time = {}
+	self._ability_components = {}
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
@@ -24,8 +31,9 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 
 		self._enabled_abilities[component_name] = false
 		self._ability_max_charges[component_name] = 0
-		self._ability_max_cooldown[component_name] = 0
-		self._components[component_name] = unit_data_extension:read_component(component_name)
+		self._ability_max_resource[component_name] = 0
+		self._ability_charge_max_regen_time[component_name] = 0
+		self._ability_components[component_name] = unit_data_extension:read_component(component_name)
 	end
 
 	self._equipped_ability_effect_scripts = {}
@@ -35,8 +43,8 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 		wwise_world = extension_init_context.wwise_world,
 		unit = unit,
 		unit_data_extension = unit_data_extension,
-		is_local_unit = extension_init_data.is_server,
-		is_server = extension_init_data.is_local_unit,
+		is_local_unit = extension_init_data.is_local_unit,
+		is_server = extension_init_data.is_server,
 	}
 
 	if GameParameters.destroy_unmanaged_particles then
@@ -90,7 +98,8 @@ for i = 1, #ability_types do
 	game_object_fields[ability_type .. "_equipped"] = 0
 	game_object_fields[ability_type .. "_enabled"] = false
 	game_object_fields[ability_type .. "_max_charges"] = 0
-	game_object_fields[ability_type .. "_max_cooldown"] = 0
+	game_object_fields[ability_type .. "_max_resource"] = 0
+	game_object_fields[ability_type .. "_charge_max_regen_time"] = 0
 end
 
 PlayerHuskAbilityExtension._read_game_object = function (self, game_session, game_object_id)
@@ -104,7 +113,8 @@ PlayerHuskAbilityExtension._read_game_object = function (self, game_session, gam
 
 		self._enabled_abilities[component_name] = game_object_fields[component_name .. "_enabled"]
 		self._ability_max_charges[component_name] = game_object_fields[component_name .. "_max_charges"]
-		self._ability_max_cooldown[component_name] = game_object_fields[component_name .. "_max_cooldown"]
+		self._ability_max_resource[component_name] = game_object_fields[component_name .. "_max_resource"]
+		self._ability_charge_max_regen_time[component_name] = game_object_fields[component_name .. "_charge_max_regen_time"]
 	end
 end
 
@@ -158,6 +168,34 @@ PlayerHuskAbilityExtension.ability_is_equipped = function (self, ability_type)
 	return self._equipped_abilities[ability_type]
 end
 
+PlayerHuskAbilityExtension.ability_slot_by_ability_name = function (self, name)
+	for ability_type, ability in pairs(self._equipped_abilities) do
+		if ability.name == name then
+			return self:get_slot_name(ability_type)
+		end
+	end
+
+	return nil
+end
+
+PlayerHuskAbilityExtension.ability_type_by_ability_name = function (self, name)
+	for ability_type, ability in pairs(self._equipped_abilities) do
+		if ability.name == name then
+			return ability_type
+		end
+	end
+
+	return nil
+end
+
+PlayerHuskAbilityExtension.has_enough_ability_charge_percentage = function (self, ability_type, charge_percentage_needed)
+	local remaining_ability_resource = self:remaining_ability_resource(ability_type)
+	local resource_cost_per_charge = self:get_ability_resource_cost_per_charge(ability_type)
+	local remaining_charges_percentage_value = remaining_ability_resource / resource_cost_per_charge
+
+	return charge_percentage_needed <= remaining_charges_percentage_value
+end
+
 PlayerHuskAbilityExtension.remaining_ability_charges = function (self, ability_type)
 	local enabled = self:ability_enabled(ability_type)
 
@@ -165,7 +203,7 @@ PlayerHuskAbilityExtension.remaining_ability_charges = function (self, ability_t
 		return 0
 	end
 
-	return self._components[ability_type].num_charges
+	return self._ability_components[ability_type].num_charges
 end
 
 PlayerHuskAbilityExtension.max_ability_charges = function (self, ability_type)
@@ -178,57 +216,6 @@ PlayerHuskAbilityExtension.missing_ability_charges = function (self, ability_typ
 	local missing_charges = max_charges - remaining_ability_charges
 
 	return missing_charges
-end
-
-PlayerHuskAbilityExtension.is_cooldown_paused = function (self, ability_type)
-	local enabled = self:ability_enabled(ability_type)
-
-	if not enabled then
-		return true
-	end
-
-	local ability_components = self._ability_components
-	local component = ability_components[ability_type]
-
-	return component.cooldown_paused
-end
-
-PlayerHuskAbilityExtension.is_cooldown_regen_over_time_disabled = function (self, ability_type)
-	local enabled = self:ability_enabled(ability_type)
-
-	if not enabled then
-		return false
-	end
-
-	local equipped_ability = self._equipped_abilities[ability_type]
-	local cooldown_regen_over_time_disabled = equipped_ability and equipped_ability.cooldown_regen_over_time_disabled or false
-
-	return cooldown_regen_over_time_disabled
-end
-
-PlayerHuskAbilityExtension.pause_cooldown = function (self, ability_type)
-	local ability_components = self._ability_components
-	local component = ability_components[ability_type]
-
-	component.cooldown_paused = true
-end
-
-PlayerHuskAbilityExtension.remaining_ability_cooldown = function (self, ability_type)
-	local enabled = self:ability_enabled(ability_type)
-
-	if not enabled then
-		return math.huge
-	end
-
-	local cooldown = self._components[ability_type].cooldown
-	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
-	local remaining_cooldown = math.max(cooldown - fixed_frame_t, 0)
-
-	return remaining_cooldown
-end
-
-PlayerHuskAbilityExtension.max_ability_cooldown = function (self, ability_type)
-	return self._ability_max_cooldown[ability_type] or 0
 end
 
 PlayerHuskAbilityExtension.set_ability_enabled = function (self)
@@ -275,11 +262,11 @@ PlayerHuskAbilityExtension.get_num_ability_charges_to_use = function (self)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.use_ability_charge = function (self)
+PlayerHuskAbilityExtension.ability_charges_used_on_activation = function (self)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.ability_charges_used_on_activation = function (self)
+PlayerHuskAbilityExtension.restore_ability_charge_percentage = function (self)
 	error("not allowed to call on husk")
 end
 
@@ -287,28 +274,216 @@ PlayerHuskAbilityExtension.restore_ability_charge = function (self)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.reduce_ability_cooldown_percentage = function (self)
+PlayerHuskAbilityExtension.is_ability_active = function (self, ability_type)
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	return component.active
+end
+
+PlayerHuskAbilityExtension.should_update_ability_regen = function (self, ability_type)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.reduce_ability_cooldown_time = function (self)
+PlayerHuskAbilityExtension.pause_ability_resource_regen = function (self, ability_type)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.remaining_ability_capacitance = function (self)
+PlayerHuskAbilityExtension.resume_ability_resource_regen = function (self, ability_type)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.has_enough_ability_capacitance = function (self)
+PlayerHuskAbilityExtension.is_ability_resource_regen_paused = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return true
+	end
+
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	return component.resource_regen_paused
+end
+
+PlayerHuskAbilityExtension.max_ability_resource = function (self, ability_type)
+	return self._ability_max_resource[ability_type] or 0
+end
+
+PlayerHuskAbilityExtension.missing_ability_resource = function (self, ability_type)
+	local remaining_ability_resource = self:remaining_ability_resource(ability_type)
+	local max_ability_resource = self:max_ability_resource(ability_type)
+
+	return max_ability_resource - remaining_ability_resource
+end
+
+PlayerHuskAbilityExtension.remaining_ability_resource = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return 0
+	end
+
+	return self._ability_components[ability_type].resource / RESOURCE_AMOUNT_PRECISION
+end
+
+PlayerHuskAbilityExtension.remaining_ability_resource_percentage = function (self, ability_type)
+	local remaining_ability_resource = self:remaining_ability_resource(ability_type) or 0
+	local max_ability_resource = self:max_ability_resource(ability_type)
+
+	if max_ability_resource <= 0 then
+		return 0
+	end
+
+	return remaining_ability_resource / max_ability_resource
+end
+
+PlayerHuskAbilityExtension.missing_ability_resource_until_next_charge = function (self, ability_type)
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+
+	if not ability then
+		return 0, 0
+	end
+
+	local target_ability_resource_pool = self:get_target_ability_resource_pool(ability_type)
+	local max_ability_resource = self:max_ability_resource(target_ability_resource_pool)
+	local remaining_ability_resource = self:remaining_ability_resource(target_ability_resource_pool)
+
+	if max_ability_resource <= remaining_ability_resource then
+		return 0, 0
+	end
+
+	local uses_ability_charges = self:uses_ability_charges(ability_type)
+
+	if not uses_ability_charges then
+		return math.clamp(max_ability_resource - remaining_ability_resource, 0, max_ability_resource)
+	end
+
+	local only_uses_charges = ability.only_uses_charges
+
+	if only_uses_charges then
+		return 0, 0
+	end
+
+	local resource_cost_per_charge = self:get_ability_resource_cost_per_charge(ability_type)
+	local remaining_ability_charges = self:remaining_ability_charges(target_ability_resource_pool)
+	local remaining_ability_resource_for_current_charge = remaining_ability_resource - remaining_ability_charges * resource_cost_per_charge
+	local missing_ability_resource = math.clamp(resource_cost_per_charge - remaining_ability_resource_for_current_charge, 0, resource_cost_per_charge)
+	local missing_ability_resource_percentage = math.clamp(missing_ability_resource / resource_cost_per_charge, 0, 1)
+
+	return missing_ability_resource, missing_ability_resource_percentage
+end
+
+PlayerHuskAbilityExtension.consume_ability_charge_percentage = function (self, ability_type)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.increase_ability_cooldown_percentage = function (self)
+PlayerHuskAbilityExtension.consume_ability_charge = function (self, ability_type)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.increase_ability_cooldown_time = function (self)
+PlayerHuskAbilityExtension.set_ability_resource = function (self, ability_type)
 	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.consume_ability_usage_cost = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.consume_ability_resource_percentage = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.consume_ability_resource = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.restore_ability_resource_percentage = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.restore_ability_resource = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.uses_ability_charges = function (self, ability_type)
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+
+	if not ability then
+		return false
+	end
+
+	local usage_cost_type = ability.usage_cost_type or "charges"
+
+	return usage_cost_type == "charges"
+end
+
+PlayerHuskAbilityExtension.get_target_ability_resource_pool = function (self, ability_type)
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+
+	if not ability then
+		return 0
+	end
+
+	return ability.resource_pool_override or ability_type
+end
+
+PlayerHuskAbilityExtension.get_ability_resource_regen_progress = function (self, ability_type)
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+
+	if not ability then
+		return 0
+	end
+
+	local usage_cost_type = ability.usage_cost_type or "charges"
+
+	if usage_cost_type == "charges" then
+		local _, missing_ability_resource_until_next_charge_percentage = self:missing_ability_resource_until_next_charge(ability_type)
+
+		return 1 - missing_ability_resource_until_next_charge_percentage
+	elseif usage_cost_type == "resource" then
+		local target_ability_resource_pool = self:get_target_ability_resource_pool(ability_type)
+		local max_ability_resource = self:max_ability_resource(target_ability_resource_pool)
+		local missing_ability_resource = self:missing_ability_resource(target_ability_resource_pool)
+
+		return 1 - math.clamp(missing_ability_resource / max_ability_resource, 0, 1)
+	end
+end
+
+PlayerHuskAbilityExtension.max_regen_time_for_ability_charge = function (self, ability_type)
+	return self._ability_charge_max_regen_time[ability_type]
+end
+
+PlayerHuskAbilityExtension.get_ability_resource_cost_per_second = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.get_ability_resource_cost_per_use = function (self, ability_type)
+	error("not allowed to call on husk")
+end
+
+PlayerHuskAbilityExtension.get_ability_resource_cost_per_charge = function (self, ability_type)
+	local abilities = self._equipped_abilities
+	local ability = abilities[ability_type]
+
+	if not ability then
+		return 0
+	end
+
+	local only_uses_charges = ability.only_uses_charges
+	local resource_cost_per_charge = only_uses_charges and 1 or ability.resource_cost_per_charge
+
+	if type(resource_cost_per_charge) == "table" then
+		local min, max = resource_cost_per_charge.min, resource_cost_per_charge.max
+
+		resource_cost_per_charge = ability.resource_cost_per_charge_lerp_func(self._player:profile(), min, max)
+	end
+
+	return resource_cost_per_charge
 end
 
 PlayerHuskAbilityExtension.can_wield = function (self)
@@ -327,15 +502,11 @@ PlayerHuskAbilityExtension.running_action_settings = function (self)
 	error("not allowed to call on husk")
 end
 
-PlayerHuskAbilityExtension.get_slot_name = function (self)
-	error("not implemented.")
+PlayerHuskAbilityExtension.get_slot_name = function (self, ability_type)
+	return ability_configuration[ability_type]
 end
 
 PlayerHuskAbilityExtension.charge_replenished = function (self)
-	error("not allowed to call on husk")
-end
-
-PlayerHuskAbilityExtension.get_current_ability_cooldown_time = function (self)
 	error("not allowed to call on husk")
 end
 

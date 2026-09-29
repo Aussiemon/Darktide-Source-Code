@@ -42,6 +42,14 @@ local function do_async(callback)
 	end
 end
 
+local function error_message(value)
+	if type(value) == "table" then
+		return table.tostring(value, 2, true)
+	end
+
+	return tostring(value)
+end
+
 local function cancel(promise)
 	promise.queue = {}
 	promise.state = State.CANCELED
@@ -199,6 +207,8 @@ function resolve(promise, x)
 				fatal = true,
 				message = inner_message or err,
 			}
+		elseif err.message == nil then
+			err.message = error_message(err)
 		end
 
 		err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(promise) .. "\n<</Promise Context>>\n"
@@ -251,6 +261,8 @@ function run(promise)
 						fatal = true,
 						message = inner_message or err,
 					}
+				elseif err.message == nil then
+					err.message = error_message(err)
 				end
 
 				err.__traceback = "<<Promise Stack>> " .. debug.traceback("Error in promise resolve", 2) .. "\n<</Promise Stack>>\n<<Promise Context>>\n" .. extract_stored_traceback(obj) .. "\n<</Promise Context>>\n"

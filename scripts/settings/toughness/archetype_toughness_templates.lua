@@ -9,7 +9,7 @@ local gunlugger_talent_settings = TalentSettings.ogryn_1
 local archetype_toughness_templates = {}
 
 archetype_toughness_templates.veteran = {
-	max = 100,
+	max = 120,
 	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
@@ -48,7 +48,7 @@ archetype_toughness_templates.psyker = {
 	},
 }
 archetype_toughness_templates.zealot = {
-	max = 100,
+	max = 125,
 	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,
@@ -67,7 +67,7 @@ archetype_toughness_templates.zealot = {
 	},
 }
 archetype_toughness_templates.ogryn = {
-	max = 75,
+	max = 125,
 	optional_on_hit_function = nil,
 	regeneration_delay = 3,
 	template_type = template_types.player,

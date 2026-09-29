@@ -14,15 +14,6 @@ local weapon_template = {}
 
 weapon_template.not_scroll_wieldable = true
 weapon_template.action_inputs = {
-	grenade_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = nil,
-	},
-	combat_ability = {
-		buffer_time = 0,
-		input_sequence = nil,
-	},
 	aim_servo_skull = {
 		buffer_time = 0,
 		input_sequence = {
@@ -126,26 +117,13 @@ weapon_template.action_input_hierarchy = {
 		input = "unwield_to_previous",
 		transition = "stay",
 	},
-	{
-		input = "grenade_ability",
-		transition = "stay",
-	},
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_unwield_to_previous = {
 		allowed_during_sprint = true,
 		kind = "unwield_to_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = true,
 		allowed_chain_actions = {},
 	},
 	action_wield = {
@@ -213,9 +191,7 @@ weapon_template.actions = {
 			sfx_source_name = "_charge",
 		},
 		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			order_servo_skull = {
 				action_name = "action_order_servo_skull",
 				chain_time = 0.1,

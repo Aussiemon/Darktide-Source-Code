@@ -392,22 +392,28 @@ end
 
 local SESSION_MAX_SEED = 2147483647
 
-LoadingHost.generate_mission_seed = function (self)
+LoadingHost.generate_mission_seed = function (self, mission_name)
+	self._mission_seed = nil
+
 	local override
 
-	override = tonumber(DevParameters.mission_seed)
+	override = tonumber(DevParameters.mission_seed_override)
 
 	if override then
 		self._mission_seed = override
-	else
+	end
+
+	if self._mission_seed == nil then
 		self._mission_seed = math.random(SESSION_MAX_SEED)
 	end
+
+	_info("Mission seed: %s", self._mission_seed)
 end
 
 LoadingHost.load_mission = function (self, loading_context)
 	local mission = loading_context.mission_name
 
-	self:generate_mission_seed()
+	self:generate_mission_seed(mission)
 	self:stop_load_mission()
 
 	self._mission = mission

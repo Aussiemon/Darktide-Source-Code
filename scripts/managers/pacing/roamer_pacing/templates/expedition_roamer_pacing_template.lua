@@ -96,10 +96,9 @@ local roamer_pacing_template = {
 		"high",
 	},
 	density_order = {
-		default = "none",
-		high = "none",
+		default = "low",
+		high = "low",
 		low = "high",
-		none = "low",
 	},
 	sub_faction_types = {
 		"cultist",

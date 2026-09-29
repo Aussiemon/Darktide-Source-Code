@@ -11,7 +11,7 @@ local templates = {}
 table.make_unique(templates)
 
 templates.weapon_trait_bespoke_thunderhammer_2h_p1_hit_mass_consumption_reduction_on_kill = {
-	active_duration = 2,
+	active_duration = 3,
 	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	predicted = false,

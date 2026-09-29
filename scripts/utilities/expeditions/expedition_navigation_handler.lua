@@ -16,6 +16,7 @@ ExpeditionNavigationHandler.init = function (self, template, is_server, world)
 	self._registered_extractions = {}
 	self._registered_opportunities = {}
 	self._completed_levels = {}
+	self._hidden_levels = {}
 	self._player_slot_marked = {}
 	self._num_opportunities_left = 0
 
@@ -25,6 +26,8 @@ ExpeditionNavigationHandler.init = function (self, template, is_server, world)
 	event_manager:register(self, "extraction_level_spawned", "extraction_level_spawned")
 	event_manager:register(self, "opportunity_level_spawned", "opportunity_level_spawned")
 	event_manager:register(self, "expedition_mark_level_complete", "expedition_mark_level_complete")
+	event_manager:register(self, "expedition_show_level_on_map", "expedition_show_map")
+	event_manager:register(self, "expedition_hide_level_on_map", "expedition_hide_map")
 
 	local minigame_class = MinigameClasses.expedition_map
 	local wwise_world = Wwise.wwise_world(world)
@@ -41,6 +44,10 @@ ExpeditionNavigationHandler.hot_join_sync = function (self, channel_id)
 
 	for level_index, _ in pairs(self._completed_levels) do
 		RPC.rpc_expedition_navigation_complete_level(channel_id, level_index)
+	end
+
+	for level_index, _ in pairs(self._hidden_levels) do
+		RPC.rpc_expedition_navigation_show_level(channel_id, level_index, false)
 	end
 
 	RPC.rpc_expedition_set_navigation_active(channel_id, self._is_active)
@@ -85,6 +92,8 @@ ExpeditionNavigationHandler.destroy = function (self)
 	event_manager:unregister(self, "extraction_level_spawned")
 	event_manager:unregister(self, "opportunity_level_spawned")
 	event_manager:unregister(self, "expedition_mark_level_complete")
+	event_manager:unregister(self, "expedition_show_map")
+	event_manager:unregister(self, "expedition_hide_map")
 end
 
 local SLOT_NAME = "slot_device"
@@ -212,6 +221,10 @@ ExpeditionNavigationHandler.is_level_completed = function (self, level_index)
 	return self._completed_levels[level_index]
 end
 
+ExpeditionNavigationHandler.is_level_visible = function (self, level_index)
+	return not self._hidden_levels[level_index]
+end
+
 ExpeditionNavigationHandler.exit_level_spawned = function (self, level_index, position)
 	self._registered_exits[level_index] = Vector3Box(position)
 end
@@ -279,6 +292,22 @@ ExpeditionNavigationHandler.expedition_mark_level_complete = function (self, lev
 		if self._num_opportunities_left == 0 then
 			Vo.mission_giver_mission_info_vo("selected_voice", "tech_priest_a", "expeditions_opportunities_no_more_a")
 		end
+	end
+end
+
+ExpeditionNavigationHandler.expedition_show_map = function (self, level_index)
+	self._hidden_levels[level_index] = nil
+
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_expedition_navigation_show_level", level_index, true)
+	end
+end
+
+ExpeditionNavigationHandler.expedition_hide_map = function (self, level_index)
+	self._hidden_levels[level_index] = true
+
+	if self._is_server then
+		Managers.state.game_session:send_rpc_clients("rpc_expedition_navigation_show_level", level_index, false)
 	end
 end
 

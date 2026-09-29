@@ -19,6 +19,7 @@ local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local breed_name = "renegade_netgunner"
 local armor_types = ArmorSettings.types
 local breed_terror_event_settings = BreedTerrorEventSettings[breed_name]
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -61,9 +62,9 @@ local breed_data = {
 		ranged = "renegade_default_shot",
 	},
 	tags = {
-		disabler = true,
-		minion = true,
-		special = true,
+		[breed_tags.special] = true,
+		[breed_tags.disabler] = true,
+		[breed_tags.minion] = true,
 	},
 	vortex_settings = {
 		die_on_vortex_land = false,

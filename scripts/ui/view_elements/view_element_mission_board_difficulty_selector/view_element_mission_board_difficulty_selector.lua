@@ -3,14 +3,12 @@
 local Definitions = require("scripts/ui/view_elements/view_element_mission_board_difficulty_selector/view_element_mission_board_difficulty_selector_definitions")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local InputDevice = require("scripts/managers/input/input_device")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local Text = require("scripts/utilities/ui/text")
 local Danger = require("scripts/utilities/danger")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local StepperPassTemplates = require("scripts/ui/pass_templates/stepper_pass_templates")
-local MissionBoardViewSettings = require("scripts/ui/views/mission_board_view/mission_board_view_settings")
-local Dimensions = MissionBoardViewSettings.dimensions
+local DANGER_LEVELS = DangerSettings.danger_levels
 local ViewElementMissionBoardDifficultySelector = class("ViewElementMissionBoardDifficultySelector", "ViewElementBase")
 
 ViewElementMissionBoardDifficultySelector.init = function (self, parent, draw_layer, start_scale, context)
@@ -150,19 +148,18 @@ end
 ViewElementMissionBoardDifficultySelector._create_difficulty_stepper_indicators = function (self, optional_difficulty_index)
 	local parent = self:parent()
 	local context = self._context
-	local difficulty_settings = parent.get_difficulty_settings and parent:get_difficulty_settings() or DangerSettings
+	local difficulty_settings = parent.get_difficulty_settings and parent:get_difficulty_settings() or DANGER_LEVELS
 	local current_selected_index = parent.get_current_selected_difficulty and parent:get_current_selected_difficulty() or optional_difficulty_index or 1
 	local num_settings = difficulty_settings and #difficulty_settings or 0
 	local stepper_indicators = {}
-	local context = self._context
 	local callbacks = context and context.callbacks
 
-	for i = 1, num_settings do
-		local difficulty_data = difficulty_settings[i]
-		local danger_settings = DangerSettings[i]
+	for ii = 1, num_settings do
+		local difficulty_data = difficulty_settings[ii]
+		local danger_settings = DANGER_LEVELS[ii]
 
 		if parent.get_current_selected_difficulty_name then
-			danger_settings = self:_get_difficulty_data_by_name(parent:get_current_selected_difficulty_name())
+			danger_settings = Danger.danger_by_name(parent:get_current_selected_difficulty_name())
 		end
 
 		local indicator_pass_templates = StepperPassTemplates.difficulty_stepper_indicator.passes
@@ -173,22 +170,22 @@ ViewElementMissionBoardDifficultySelector._create_difficulty_stepper_indicators 
 		end
 
 		local content_overrides = {
-			icon = difficulty_settings and difficulty_settings[i].icon or danger_settings.digital_icon,
-			internal_selected_difficulty = i,
+			icon = difficulty_settings and difficulty_settings[ii].icon or danger_settings.digital_icon,
+			internal_selected_difficulty = ii,
 			current_selected_difficulty = current_selected_index,
 			is_unlocked = is_difficulty_unlocked,
-			active = i == current_selected_index,
+			active = ii == current_selected_index,
 		}
 		local indicator = UIWidget.create_definition(indicator_pass_templates, "difficulty_stepper_indicators", content_overrides)
-		local widget = UIWidget.init("difficulty_indicator_" .. i, indicator)
+		local widget = UIWidget.init("difficulty_indicator_" .. ii, indicator)
 		local stepper_width = self._ui_scenegraph.difficulty_stepper.size[1]
 
-		widget.offset[1] = 28 + (i - 1) * ((stepper_width - 56) / num_settings)
+		widget.offset[1] = 28 + (ii - 1) * ((stepper_width - 56) / num_settings)
 
 		local content = widget.content
 
-		content.hotspot.pressed_callback = callbacks and callback(parent, callbacks.on_indicator_pressed, i) or function ()
-			self._widgets_by_name.difficulty_stepper.content.danger = i
+		content.hotspot.pressed_callback = callbacks and callback(parent, callbacks.on_indicator_pressed, ii) or function ()
+			self._widgets_by_name.difficulty_stepper.content.danger = ii
 		end
 		stepper_indicators[#stepper_indicators + 1] = widget
 	end
@@ -202,7 +199,7 @@ ViewElementMissionBoardDifficultySelector._update_difficulty_stepper = function 
 	difficulty_index = difficulty_index or 1
 
 	local parent = self:parent()
-	local difficulty_settings = parent.get_difficulty_settings and parent:get_difficulty_settings() or DangerSettings
+	local difficulty_settings = parent.get_difficulty_settings and parent:get_difficulty_settings() or DANGER_LEVELS
 	local difficulty_setting = difficulty_settings and difficulty_settings[difficulty_index]
 	local difficulty_selector = self._widgets_by_name.difficulty_stepper
 	local content = difficulty_selector.content
@@ -210,7 +207,7 @@ ViewElementMissionBoardDifficultySelector._update_difficulty_stepper = function 
 	content.danger = difficulty_index
 	content.difficulty_text = Text.localize_to_upper(difficulty_setting.loc_name or difficulty_setting.display_name)
 
-	local target_color = difficulty_setting and difficulty_setting.color or DangerSettings[difficulty_index].color
+	local target_color = difficulty_setting and difficulty_setting.color or DANGER_LEVELS[difficulty_index].color
 
 	content.target_color = target_color
 
@@ -227,7 +224,7 @@ ViewElementMissionBoardDifficultySelector._update_difficulty_stepper = function 
 
 		indicator_content.current_selected_difficulty = current_difficulty_index
 		indicator_content.active = i == current_difficulty_index
-		indicator_content.target_color = difficulty_settings and difficulty_settings[difficulty_index].color or DangerSettings[difficulty_index].color
+		indicator_content.target_color = difficulty_settings and difficulty_settings[difficulty_index].color or DANGER_LEVELS[difficulty_index].color
 	end
 
 	local next_difficulty = difficulty_settings[difficulty_index + 1]
@@ -265,8 +262,8 @@ ViewElementMissionBoardDifficultySelector._setup_threat_level_tooltip = function
 	local next_difficulty = difficulty_progress_data.next_difficulty
 	local current_exp = difficulty_progress_data.current or 0
 	local next_exp = difficulty_progress_data.target or 0
-	local current_difficulty_data = self:_get_difficulty_data_by_name(current_difficulty)
-	local next_difficulty_data = self:_get_difficulty_data_by_name(next_difficulty)
+	local current_difficulty_data = Danger.danger_by_name(current_difficulty)
+	local next_difficulty_data = Danger.danger_by_name(next_difficulty)
 
 	if not current_difficulty_data or not next_difficulty_data then
 		difficulty_selector.style.tooltip_frame.visible = false
@@ -353,13 +350,13 @@ ViewElementMissionBoardDifficultySelector._update_threat_level_progress = functi
 
 	local progress = 0
 	local current_unlocked_difficulty = difficulty_progress_data.current_difficulty
-	local current_unlocked_difficulty_data = current_unlocked_difficulty ~= "n/a" and self:_get_difficulty_data_by_name(difficulty_progress_data.current_difficulty)
+	local current_unlocked_difficulty_data = current_unlocked_difficulty ~= "n/a" and Danger.danger_by_name(difficulty_progress_data.current_difficulty)
 
 	if current_unlocked_difficulty_data then
 		local current_unlocked_difficulty_index = current_unlocked_difficulty_data.index
 
 		if parent.get_current_selected_difficulty_name then
-			local selected_difficulty_data = self:_get_difficulty_data_by_name(parent:get_current_selected_difficulty_name())
+			local selected_difficulty_data = Danger.danger_by_name(parent:get_current_selected_difficulty_name())
 
 			difficulty_index = selected_difficulty_data and selected_difficulty_data.index or difficulty_index
 		end
@@ -369,16 +366,6 @@ ViewElementMissionBoardDifficultySelector._update_threat_level_progress = functi
 
 	content.progress = progress
 	content.target_color = target_color
-end
-
-ViewElementMissionBoardDifficultySelector._get_difficulty_data_by_name = function (self, difficulty_name)
-	for i = 1, #DangerSettings do
-		local difficulty_data = DangerSettings[i]
-
-		if difficulty_data.name == difficulty_name then
-			return difficulty_data
-		end
-	end
 end
 
 ViewElementMissionBoardDifficultySelector.get_current_selected_difficulty = function (self)

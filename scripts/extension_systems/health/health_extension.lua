@@ -13,6 +13,7 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	self._last_hit_was_critical = false
 	self._was_hit_by_critical_hit_this_render_frame = false
 	self._damage = 0
+	self._overdamage_protection = nil
 
 	local hit_mass = extension_init_data.hit_mass or 1
 
@@ -30,6 +31,10 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	end
 
 	self._damaging_players = {}
+end
+
+HealthExtension.extensions_ready = function (self)
+	self._behavior_extension = ScriptUnit.has_extension(self._unit, "behavior_system")
 end
 
 HealthExtension.game_object_initialized = function (self, session, object_id)
@@ -123,6 +128,10 @@ HealthExtension.add_damage = function (self, damage_amount, permanent_damage, hi
 		end
 	end
 
+	if self._behavior_extension then
+		self._behavior_extension:prioritize_staggered_update()
+	end
+
 	local actual_damage_dealt = math.clamp(damage_amount, 0, health - current_damage)
 
 	return actual_damage_dealt
@@ -140,6 +149,10 @@ HealthExtension.add_heal = function (self, heal_amount, heal_type)
 	GameSession.set_game_object_field(game_session, game_object_id, "damage", network_damage)
 
 	self._damage = new_damage
+
+	if self._behavior_extension then
+		self._behavior_extension:prioritize_staggered_update()
+	end
 
 	return actual_heal_amount
 end
@@ -206,6 +219,14 @@ end
 
 HealthExtension.set_invulnerable = function (self, should_be_invulnerable)
 	self._is_invulnerable = should_be_invulnerable
+end
+
+HealthExtension.set_overdamage_protection = function (self, params)
+	self._overdamage_protection = params
+end
+
+HealthExtension.overdamage_protection = function (self)
+	return self._overdamage_protection
 end
 
 HealthExtension.kill = function (self)

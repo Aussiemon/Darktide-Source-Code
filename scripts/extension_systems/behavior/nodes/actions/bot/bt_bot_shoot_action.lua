@@ -302,8 +302,16 @@ end
 local ACCEPTABLE_ACCURACY = 0.1
 
 BtBotShootAction._wanted_aim_rotation = function (self, self_unit, target_unit, target_breed, current_position, projectile_template, aim_at_node)
-	local target_node = Unit.node(target_unit, aim_at_node)
-	local target_node_position = Unit.world_position(target_unit, target_node)
+	local target_node_position
+
+	if aim_at_node and Unit.has_node(target_unit, aim_at_node) then
+		local target_node = Unit.node(target_unit, aim_at_node)
+
+		target_node_position = Unit.world_position(target_unit, target_node)
+	else
+		target_node_position = POSITION_LOOKUP[target_unit]
+	end
+
 	local target_rotation, target_position
 
 	if projectile_template and projectile_template.gravity then

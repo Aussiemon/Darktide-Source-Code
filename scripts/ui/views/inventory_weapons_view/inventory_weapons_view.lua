@@ -43,6 +43,7 @@ InventoryWeaponsView.on_enter = function (self)
 	self:_register_event("event_replace_list_item", "event_replace_list_item")
 	self:_register_event("event_switch_mark_complete", "event_switch_mark_complete")
 	self:_register_event("event_discard_items", "event_discard_items")
+	self:_register_event("event_weapon_cosmetic_updated", "event_weapon_cosmetic_updated")
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
 	self:_setup_background_world()
@@ -52,6 +53,28 @@ InventoryWeaponsView.on_enter = function (self)
 	local profile = self._preview_player:profile()
 
 	self:_setup_background_frames_by_archetype(profile)
+end
+
+InventoryWeaponsView.event_weapon_cosmetic_updated = function (self, item)
+	local selected_slot = self._selected_slot
+
+	if not item or not selected_slot then
+		return
+	end
+
+	local slots = item.slots
+
+	if not slots or not table.contains(slots, selected_slot.name) then
+		return
+	end
+
+	local inventory_items = self._inventory_items
+
+	if inventory_items and inventory_items[item.gear_id] then
+		self:event_replace_list_item(item)
+
+		return
+	end
 end
 
 InventoryWeaponsView.event_switch_mark_complete = function (self, item)
@@ -901,8 +924,7 @@ InventoryWeaponsView.on_exit = function (self)
 end
 
 InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
-	local local_player_id = 1
-	local player = Managers.player:local_player(local_player_id)
+	local player = self._preview_player or Managers.player:local_player(1)
 	local character_id = player:character_id()
 	local slot_name = selected_slot.name
 	local slot_filter = {
@@ -951,20 +973,21 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 		self._offer_items_layout = layout
 
 		local slot_display_name = selected_slot and selected_slot.display_name
-		local start_index = #layout > 0 and 1
-		local equipped_item = start_index and self:equipped_item_in_slot(slot_name)
+		local keep_selected_gear_id = self._selected_gear_id
 
-		if equipped_item then
-			start_index = self:item_grid_index(equipped_item) or start_index
-
-			if start_index then
-				self._selected_gear_id = equipped_item and equipped_item.gear_id
-			end
+		if keep_selected_gear_id then
+			self._selected_gear_id = keep_selected_gear_id
 		else
-			local first_item = self:first_grid_item()
+			local equipped_item = self:equipped_item_in_slot(slot_name)
 
-			if first_item then
-				self._selected_gear_id = first_item and first_item.gear_id
+			if equipped_item then
+				self._selected_gear_id = equipped_item.gear_id
+			else
+				local first_item = self:first_grid_item()
+
+				if first_item then
+					self._selected_gear_id = first_item.gear_id
+				end
 			end
 		end
 

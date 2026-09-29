@@ -18,6 +18,9 @@ SpecialsPacing.init = function (self, nav_world)
 	self._timer_multiplier = 1
 	self._max_alive_specials_multiplier = 1
 	self._max_alive_specials_bonus = 0
+	self._max_alive_specials_bonus_multiplier = 1
+	self._max_alive_specials = 0
+	self._effective_max_alive_specials = 0
 	self._rush_prevention_cooldown = 0
 	self._loner_prevention_cooldown = 0
 	self._frozen = false
@@ -212,6 +215,8 @@ SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	self._num_spawned_specials = 0
 	self._max_alive_specials = max_alive_specials
 
+	self:_update_effective_max_alive_specials()
+
 	for i = 1, max_alive_specials do
 		local specials_slot = {}
 
@@ -372,7 +377,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 					self:_on_special_spawned(specials_slot, spawned_unit)
 				end
 			end
-		elseif specials_slot.spawn_timer <= 0 then
+		elseif specials_slot.spawn_timer <= 0 and self._num_spawned_specials < self._effective_max_alive_specials then
 			self:_check_disabler_override(template, target_side_id, specials_slot)
 
 			local success, spawned_unit, spawner_queue_id, spawner = self:_spawn_special(specials_slot, side_id, target_side_id)
@@ -536,7 +541,7 @@ SpecialsPacing._get_timer_reduction_multiplier = function (self, template, speci
 	end
 
 	if not Managers.state.pacing:heat_active() then
-		return
+		return 1
 	end
 
 	local breed_name = special_slot.breed_name
@@ -1139,9 +1144,7 @@ SpecialsPacing._check_monster_override = function (self, template)
 	end
 
 	if max_monsters <= num_monsters then
-		if not self._max_monster_duration then
-			self._max_monster_duration = t + math.random_range(monster_spawn_config.max_monster_duration[1], monster_spawn_config.max_monster_duration[2])
-		end
+		self:_start_monster_cooldown(t, monster_spawn_config)
 
 		return
 	end
@@ -1162,9 +1165,23 @@ SpecialsPacing._check_monster_override = function (self, template)
 		end
 	end
 
+	if max_monsters <= num_monsters + 1 then
+		self:_start_monster_cooldown(t, monster_spawn_config)
+	end
+
 	local optional_health_modifier = monster_spawn_config.health_modifiers and monster_spawn_config.health_modifiers[monster_breed_name]
 
 	return monster_breed_name, optional_health_modifier
+end
+
+SpecialsPacing._start_monster_cooldown = function (self, t, monster_spawn_config)
+	if self._max_monster_duration then
+		return
+	end
+
+	local duration_range = monster_spawn_config.max_monster_duration
+
+	self._max_monster_duration = t + math.random_range(duration_range[1], duration_range[2])
 end
 
 local MIN_COORDINATED_TIMER = 20
@@ -1282,7 +1299,7 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 		return
 	end
 
-	if self._num_spawned_specials >= self._max_alive_specials then
+	if self._num_spawned_specials >= self._effective_max_alive_specials then
 		return
 	end
 
@@ -1382,7 +1399,7 @@ SpecialsPacing._update_loner_prevention = function (self, target_side_id, templa
 		return
 	end
 
-	if self._num_spawned_specials >= self._max_alive_specials then
+	if self._num_spawned_specials >= self._effective_max_alive_specials then
 		return
 	end
 
@@ -1619,6 +1636,27 @@ SpecialsPacing.set_max_alive_specials_multiplier = function (self, multiplier)
 	local first_spawn_timer_modifer = template.first_spawn_timer_modifer
 
 	self:_setup(template, first_spawn_timer_modifer)
+end
+
+SpecialsPacing._update_effective_max_alive_specials = function (self)
+	local template = self._template
+
+	if not template then
+		self._effective_max_alive_specials = self._max_alive_specials
+
+		return
+	end
+
+	local scaled_bonus = self._max_alive_specials_bonus * self._max_alive_specials_bonus_multiplier
+	local effective_max_alive_specials = math.ceil(template.max_alive_specials * self._max_alive_specials_multiplier + scaled_bonus)
+
+	self._effective_max_alive_specials = math.min(effective_max_alive_specials, self._max_alive_specials)
+end
+
+SpecialsPacing.set_max_alive_specials_bonus_multiplier = function (self, multiplier)
+	self._max_alive_specials_bonus_multiplier = multiplier or 1
+
+	self:_update_effective_max_alive_specials()
 end
 
 SpecialsPacing.set_chance_of_coordinated_strike = function (self, coordinated_strike_chance)

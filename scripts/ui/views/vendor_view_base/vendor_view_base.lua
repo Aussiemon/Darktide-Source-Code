@@ -630,31 +630,6 @@ VendorViewBase._update_bundle_offers_owned_skus = function (self)
 	end
 end
 
-VendorViewBase._generate_mannequin_loadout = function (self, profile)
-	local presentation_profile = profile
-	local gender_name = presentation_profile.gender
-	local archetype = presentation_profile.archetype
-	local breed_name = archetype.breed
-	local new_loadout = {}
-	local required_breed_item_names_per_slot = UiSettings.item_preview_required_slot_items_per_slot_by_breed_and_gender[breed_name]
-	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
-	local required_items = required_gender_item_names_per_slot and required_gender_item_names_per_slot.default
-
-	if required_items then
-		for slot_name, slot_item_name in pairs(required_items) do
-			local item_definition = MasterItems.get_item(slot_item_name)
-
-			if item_definition then
-				local slot_item = table.clone(item_definition)
-
-				new_loadout[slot_name] = slot_item
-			end
-		end
-	end
-
-	return new_loadout
-end
-
 VendorViewBase.update = function (self, dt, t, input_service)
 	if self._item_grid and self._current_rotation_end then
 		local server_time = Managers.backend:get_server_time(t)
@@ -875,18 +850,18 @@ VendorViewBase._update_wallets_presentation = function (self, wallets_data)
 	if wallets_data and wallets_data.wallets then
 		for i = 1, #wallets_data.wallets do
 			local currency = wallets_data.wallets[i].balance
-			local type = currency.type
-			local wallet = wallets_data:by_type(type)
+			local currency_type = currency.type
+			local wallet = wallets_data:by_type(currency_type)
 			local balance = wallet and wallet.balance
 			local amount = balance and balance.amount or 0
 
-			self._current_balance[type] = amount
+			self._current_balance[currency_type] = amount
 		end
 	end
 end
 
-VendorViewBase.can_afford = function (self, amount, type)
-	return amount <= (self._current_balance[type] or 0)
+VendorViewBase.can_afford = function (self, amount, currency_type)
+	return amount <= (self._current_balance[currency_type] or 0)
 end
 
 VendorViewBase._handle_input = function (self, input_service, dt, t)

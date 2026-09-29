@@ -11,6 +11,7 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local Items = require("scripts/utilities/items")
 local LoadingStateData = require("scripts/ui/loading_state_data")
 local MasterItems = require("scripts/backend/master_items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
@@ -50,6 +51,23 @@ local RESULT_TYPES = table.enum("wintrack", "penance")
 local PENANCE_TRACK_ID = "dec942ce-b6ba-439c-95e2-022c5d71394d"
 local PenanceOverviewView = class("PenanceOverviewView", "BaseView")
 
+PenanceOverviewView._static_state = PenanceOverviewView._static_state or {
+	view_reference = nil,
+	reporter = {},
+	penance = {
+		claim_promise = nil,
+		queued_claims = {},
+		inflight_claims = {},
+	},
+	wintrack = {
+		claim_promise = nil,
+		inflight_claims = {},
+	},
+}
+
+local _static_state = PenanceOverviewView._static_state
+local _static_claim_penance, _static_on_penance_claim_success, _static_on_penance_claim_failed, _static_add_new_item, _static_request_achievement_favorite_remove, _static_on_wintrack_claim_success, _static_on_wintrack_claim_failure
+
 PenanceOverviewView.init = function (self, settings, context)
 	self._legend_input_ids = nil
 	self._achievements = nil
@@ -65,7 +83,7 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._total_score = 0
 	self._visual_score = 0
 	self._target_score = 0
-	self._is_claiming_rewards = false
+	self._claim_animation_entries = {}
 
 	local save_manager = Managers.save
 
@@ -97,17 +115,51 @@ PenanceOverviewView.init = function (self, settings, context)
 	self._vo_world_spawner = nil
 	self._hub_interaction = context and context.hub_interaction
 
+	local alive_handle = self._promise_container:alive_handle()
+	local refresh_promise
+
+	if _static_state.penance.claim_promise or _static_state.wintrack.claim_promise then
+		local claim_promises = {}
+
+		table.insert(claim_promises, _static_state.penance.claim_promise)
+		table.insert(claim_promises, _static_state.wintrack.claim_promise)
+
+		refresh_promise = Promise.all(unpack(claim_promises)):next(function ()
+			if not alive_handle.is_alive then
+				return nil
+			end
+
+			return self:_refresh_backend_data()
+		end)
+	else
+		refresh_promise = self:_refresh_backend_data()
+	end
+
+	self._refresh_backend_promise = refresh_promise:next(callback(self, "_fetch_track_state", alive_handle)):next(callback(self, "_on_backend_success", alive_handle)):catch(callback(self, "_on_backend_error", alive_handle))
+end
+
+PenanceOverviewView._refresh_backend_data = function (self)
 	local promises = {}
 
 	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.account:has_migrated_commendation_score()):next(callback(self, "_on_migration_check_success"))
 	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.backend.interfaces.player_rewards:get_penance_rewards_by_source()):next(callback(self, "_on_penance_reward_check_success"), callback(self, "_on_penance_reward_check_error"))
 	promises[#promises + 1] = self._promise_container:cancel_on_destroy(Managers.data_service.penance_track:get_track(PENANCE_TRACK_ID)):next(callback(self, "_on_penance_track_fetched_success"))
 
-	Promise.all(unpack(promises)):next(callback(self, "_fetch_track_state")):next(callback(self, "_on_backend_success")):catch(callback(self, "_on_backend_error"))
+	return Promise.all(unpack(promises))
 end
 
-PenanceOverviewView._on_backend_error = function (self, error)
+PenanceOverviewView._on_backend_error = function (self, alive_handle, error)
+	if not alive_handle.is_alive then
+		return
+	end
+
 	Log.warning("PenanceOverviewView", "Can't open penance overview view. Got backend error: %s", table.tostring(error))
+
+	if self._initializing_backend_id then
+		self:_stop_animation(self._initializing_backend_id)
+
+		self._initializing_backend_id = nil
+	end
 
 	local view_name = self.view_name
 
@@ -143,23 +195,52 @@ PenanceOverviewView._on_penance_track_fetched_success = function (self, track_da
 	self._track_data = track_data
 end
 
-PenanceOverviewView._fetch_track_state = function (self)
-	return self._promise_container:cancel_on_destroy(Managers.backend.interfaces.tracks:get_track_state(PENANCE_TRACK_ID)):next(function (track_state)
+PenanceOverviewView._fetch_track_state = function (self, alive_handle)
+	if not alive_handle.is_alive then
+		return nil
+	end
+
+	return Managers.backend.interfaces.tracks:get_track_state(PENANCE_TRACK_ID):next(function (track_state)
 		if not track_state then
 			return Promise.rejected({
 				message = "Failed to fetch penance track state. Probably a 204 error...",
 			})
 		end
 
+		if not alive_handle.is_alive then
+			return nil
+		end
+
 		self._account_state_data = track_state
 	end)
 end
 
-PenanceOverviewView._on_backend_success = function (self)
+PenanceOverviewView._on_backend_success = function (self, alive_handle)
+	if not alive_handle.is_alive then
+		return
+	end
+
 	self._backend_ready = true
+
+	if self._initializing_backend_id then
+		self:_stop_animation(self._initializing_backend_id)
+
+		self._initializing_backend_id = nil
+	end
 end
 
 PenanceOverviewView.on_enter = function (self)
+	if self._refresh_backend_promise:is_pending() then
+		self._initializing_backend_id = self:_start_animation("initializing_backend")
+	end
+
+	if table.is_empty(_static_state.reporter) then
+		Managers.telemetry_reporters:start_reporter("penance_view")
+	end
+
+	_static_state.reporter.view = true
+	self._present_view_delay = 1
+
 	PenanceOverviewView.super.on_enter(self)
 	self:_setup_input_legend()
 	self:_add_element(ViewElementLoadingOverlay, "loading_overlay", 200)
@@ -175,12 +256,13 @@ PenanceOverviewView.on_enter = function (self)
 
 	self:play_vo_events(vo_events, "boon_vendor_a", nil, 0.8)
 	self:_register_event("event_request_achievement_favorite_add", "request_achievement_favorite_add")
-	self:_register_event("event_request_achievement_favorite_remove", "request_achievement_favorite_remove")
-	Managers.telemetry_reporters:start_reporter("penance_view")
 end
 
 PenanceOverviewView._finish_setup = function (self)
 	self._initialized = true
+	_static_state.view_reference = {
+		ref = self,
+	}
 
 	self:_setup_achievements()
 
@@ -222,23 +304,6 @@ PenanceOverviewView.request_achievement_favorite_add = function (self, achieveme
 	end
 
 	return added
-end
-
-PenanceOverviewView.request_achievement_favorite_remove = function (self, achievement_id)
-	local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id, false)
-
-	if removed then
-		Managers.telemetry_reporters:reporter("penance_view"):register_tracking_event(achievement_id, false)
-
-		local parent_id, favorite_count = self:_change_category_config_value(achievement_id, "favorite_count", -1)
-		local content = self._widget_content_by_category[parent_id]
-
-		if content then
-			content.has_favorite_penances = favorite_count > 0
-		end
-	end
-
-	return removed
 end
 
 PenanceOverviewView.is_favorite_achievement = function (self, achievement_id)
@@ -1258,17 +1323,37 @@ PenanceOverviewView.draw = function (self, dt, t, input_service, layer)
 	render_settings.alpha_multiplier = alpha_multiplier
 end
 
-PenanceOverviewView._add_carousel_entry = function (self, index)
+PenanceOverviewView._add_carousel_entry = function (self, index_or_nil)
+	local index = index_or_nil or #self._carousel_entries + 1
 	local carousel_entries = self._carousel_entries
-	local current_ids = table.set(table.map(carousel_entries, function (entry)
-		return entry.achievement_id
-	end))
+	local queued_claims = _static_state.penance.queued_claims
+	local inflight_claims = _static_state.penance.inflight_claims
+	local current_ids = table.remap(carousel_entries, function (_, entry)
+		return entry.achievement_id, true
+	end)
+
+	for i = 1, #queued_claims do
+		local achievement_id = table.find_by_key(self._penance_to_reward_bundle_map, "id", queued_claims[i].id)
+
+		if achievement_id then
+			current_ids[achievement_id] = true
+		end
+	end
+
+	for i = 1, #inflight_claims do
+		local achievement_id = table.find_by_key(self._penance_to_reward_bundle_map, "id", inflight_claims[i])
+
+		if achievement_id then
+			current_ids[achievement_id] = true
+		end
+	end
+
 	local add_layouts = 1
 	local new_layouts = self:_get_carousel_layouts(add_layouts, current_ids)
 
-	carousel_entries[index] = self:_create_carousel_entry(new_layouts[1])
-
-	return carousel_entries[index]
+	if new_layouts[1] then
+		carousel_entries[index] = self:_create_carousel_entry(new_layouts[1])
+	end
 end
 
 PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_service)
@@ -1315,11 +1400,6 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 	local carousel_slots = PenanceOverviewViewSettings.carousel_entry_settings
 	local slot_count = #carousel_slots
 	local center_index = math.ceil(slot_count * 0.5)
-	local index_offset = 0
-
-	if carousel_count < slot_count then
-		index_offset = math.floor((slot_count - carousel_count) * 0.5)
-	end
 
 	for i = 1, carousel_count do
 		local entry = carousel_entries[i]
@@ -1328,7 +1408,7 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 		grid:set_visibility(false)
 		grid:set_background_hovered(false)
 
-		local index = index_offset + 1 + (i - self._carousel_current_index + center_index - 1) % carousel_count
+		local index = center_index + math.normalize_modulus(i - self._carousel_current_index, carousel_count)
 
 		if index < 1 or slot_count < index then
 			-- Nothing
@@ -1382,7 +1462,7 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 	local changed_hover_entry = self._hovered_carousel_card_index ~= hovered_card_index
 	local previously_hovered_entry = carousel_entries[self._hovered_carousel_card_index]
 
-	if changed_hover_entry ~= hovered_card_index and previously_hovered_entry then
+	if changed_hover_entry and previously_hovered_entry then
 		local widgets = previously_hovered_entry.grid:widgets()
 
 		for i = 1, #widgets do
@@ -1418,7 +1498,7 @@ PenanceOverviewView._update_carousel_entries = function (self, dt, t, input_serv
 			local alpha_multiplier = grid:alpha_multiplier()
 			local allow_claim = alpha_multiplier >= 0.95 or not self._using_cursor_navigation
 
-			self:_on_carousel_card_pressed(hovered_card_index, hovered_entry, allow_claim)
+			self:_on_carousel_card_pressed(hovered_card_index, allow_claim)
 		end
 	end
 end
@@ -1607,7 +1687,9 @@ end
 PenanceOverviewView._add_points = function (self, points, animate)
 	self._target_score = self._target_score + points
 
-	self._wintrack_element:add_points(points, animate, true)
+	if self._wintrack_element then
+		self._wintrack_element:add_points(points, animate, true)
+	end
 
 	if animate then
 		self:_play_sound(UISoundEvents.penance_menu_penance_complete)
@@ -1698,9 +1780,9 @@ PenanceOverviewView._set_handle_navigation = function (self)
 end
 
 PenanceOverviewView._update_loading = function (self, dt, t)
-	local should_load = self._enter_animation ~= nil and (not self._initialized or self._is_claiming_rewards)
+	local should_load = self._enter_animation == nil and not self._initialized or not self._backend_ready
 	local is_loading = self._is_loading
-	local show_loading = is_loading and self._claim_animation_id == nil and not self._enter_animation
+	local show_loading = is_loading and not next(self._claim_animation_entries) and not self._enter_animation
 
 	if show_loading then
 		Managers.event:trigger("event_set_waiting_state", LoadingStateData.WAIT_REASON.backend)
@@ -1746,7 +1828,7 @@ PenanceOverviewView._update_result_queue = function (self, dt, t)
 end
 
 PenanceOverviewView._update_score = function (self, dt, t)
-	local skip_update = not self._initialized or self._is_claiming_rewards or self._result_overlay
+	local skip_update = not self._initialized or self._result_overlay
 
 	if skip_update then
 		return
@@ -1805,8 +1887,12 @@ end
 PenanceOverviewView.update = function (self, dt, t, input_service)
 	self:_update_loading(dt, t)
 
-	if self._backend_ready and self._entered and not self._initialized then
-		self:_finish_setup()
+	if not self._initialized then
+		if self._present_view_delay > 0 then
+			self._present_view_delay = self._present_view_delay - dt
+		elseif self._backend_ready and self._entered then
+			self:_finish_setup()
+		end
 	end
 
 	if not self._initialized then
@@ -1846,56 +1932,22 @@ PenanceOverviewView._remove_completed_favorites = function (self)
 	local account_data = Managers.save:account_data()
 	local favorite_achievements = table.shallow_copy_array(account_data.favorite_achievements or {})
 	local player = self:_player()
-end
 
-PenanceOverviewView._on_wintrack_claim_success = function (self, index, reward, data)
-	local claimed_rewards = table.nested_get(data, "body", "rewards")
+	for i = 1, #favorite_achievements do
+		local achievement_id = favorite_achievements[i]
+		local achievement_definition = Managers.achievements:achievement_definition(achievement_id)
+		local hide_missing = achievement_definition.flags and achievement_definition.flags.hide_missing
+		local can_claim = self:_can_claim_achievement_by_id(achievement_id)
+		local is_complete = Managers.achievements:achievement_completed(player, achievement_id)
+		local should_remove = not achievement_definition or not can_claim and is_complete or hide_missing
 
-	if not claimed_rewards then
-		Log.warning("PenanceOverviewView", "Failed claiming track, no rewards returned")
-
-		return self:_on_wintrack_claim_failure()
-	end
-
-	self._is_claiming_rewards = false
-
-	for _, claimed_reward in pairs(claimed_rewards) do
-		if claimed_reward.type == "item" then
-			Items.register_track_reward(claimed_reward)
+		if should_remove then
+			_static_request_achievement_favorite_remove(_static_state.view_reference, achievement_id)
 		end
 	end
-
-	self._wintrack_element:on_reward_claimed(index)
-	Managers.telemetry_reporters:reporter("penance_view"):register_track_claim_event(index)
-
-	local reward_items = reward.items
-
-	for _, item in ipairs(reward_items) do
-		self._result_overlay_queue[#self._result_overlay_queue + 1] = {
-			reward = {
-				type = "item",
-				item = item,
-			},
-			type = RESULT_TYPES.wintrack,
-		}
-	end
-
-	self:_play_sound(UISoundEvents.penance_menu_wintrack_reward_claim)
-end
-
-PenanceOverviewView._on_wintrack_claim_failure = function (self)
-	Log.warning("PenanceOverviewView", "Failed to claim wintrack reward.")
-
-	self._is_claiming_rewards = false
 end
 
 PenanceOverviewView._claim_wintrack_reward = function (self, index)
-	if self._is_claiming_rewards then
-		return
-	end
-
-	self._is_claiming_rewards = true
-
 	local rewards = self._wintrack_rewards
 	local reward = rewards[index]
 	local points_required = reward.points_required
@@ -1906,12 +1958,42 @@ PenanceOverviewView._claim_wintrack_reward = function (self, index)
 		return
 	end
 
-	local backend_tier_index = index - 1
+	local inflight_claims = _static_state.wintrack.inflight_claims
 
-	self._promise_container:cancel_on_destroy(Managers.backend.interfaces.tracks:claim_track_tier(PENANCE_TRACK_ID, backend_tier_index)):next(callback(self, "_on_wintrack_claim_success", index, reward), callback(self, "_on_wintrack_claim_failure"))
+	if table.array_contains(inflight_claims, index) then
+		Log.warning("PenanceOverviewView", "Attempted to claim wintrack reward at index %d, but it is already inflight.", index)
+
+		return
+	end
+
+	Log.info("PenanceOverviewView", "Claiming wintrack reward at index %d", index)
+
+	local view_reference = _static_state.view_reference
+	local backend_tier_index = index - 1
+	local async_state = _static_state.wintrack
+
+	table.insert(async_state.inflight_claims, index)
+
+	async_state.claim_promise = async_state.claim_promise or Promise:new()
+
+	if table.is_empty(_static_state.reporter) then
+		Managers.telemetry_reporters:start_reporter("penance_view")
+	end
+
+	_static_state.reporter.wintrack = true
+
+	self._wintrack_element:on_reward_claimed(index)
+	self:_play_sound(UISoundEvents.penance_menu_wintrack_reward_claim)
+	Managers.backend.interfaces.tracks:claim_track_tier(PENANCE_TRACK_ID, backend_tier_index):next(callback(_static_on_wintrack_claim_success, view_reference, index, reward), callback(_static_on_wintrack_claim_failure, index))
 end
 
 PenanceOverviewView.on_exit = function (self)
+	_static_state.reporter.view = nil
+
+	if table.is_empty(_static_state.reporter) then
+		Managers.telemetry_reporters:stop_reporter("penance_view")
+	end
+
 	local save_manager = Managers.save
 
 	if save_manager then
@@ -1979,8 +2061,9 @@ PenanceOverviewView.on_exit = function (self)
 		Level.trigger_event(level, "lua_penances_store_closed")
 	end
 
-	if self._entered then
-		Managers.telemetry_reporters:stop_reporter("penance_view")
+	if self._initialized then
+		_static_state.view_reference.ref = nil
+		_static_state.view_reference = nil
 	end
 end
 
@@ -2191,18 +2274,6 @@ PenanceOverviewView._present_penance_grid_layout = function (self, layout, optio
 	grid:set_handle_grid_navigation(true)
 end
 
-PenanceOverviewView._add_new_item = function (self, master_item)
-	local gear_id, gear = Items.track_reward_item_to_gear(master_item)
-
-	Managers.data_service.gear:on_gear_created(gear_id, gear)
-
-	local item = MasterItems.get_item_instance(gear, gear_id)
-
-	if item then
-		Items.mark_item_id_as_new(item, false)
-	end
-end
-
 PenanceOverviewView._remove_penance_from_unclaimed_count = function (self, achievement_id)
 	local parent_id, unclaimed_count = self:_change_category_config_value(achievement_id, "unclaimed_count", -1)
 	local content = self._widget_content_by_category[parent_id]
@@ -2210,90 +2281,6 @@ PenanceOverviewView._remove_penance_from_unclaimed_count = function (self, achie
 	if content then
 		content.has_unclaimed_penances = unclaimed_count > 0
 	end
-end
-
-PenanceOverviewView._on_penance_claim_success = function (self, reward_bundle, backend_data)
-	local rewards = table.nested_get(backend_data, "body", "rewards")
-
-	if not rewards then
-		return self:_on_penance_claim_failed(reward_bundle)
-	end
-
-	local achievement_id = reward_bundle.sourceInfo.sourceIdentifier
-
-	Managers.telemetry_reporters:reporter("penance_view"):register_penance_claim_event(achievement_id)
-	self:request_achievement_favorite_remove(achievement_id)
-	self:_remove_penance_from_unclaimed_count(achievement_id)
-
-	self._penance_to_reward_bundle_map[achievement_id] = nil
-
-	local item_rewards, total_xp_awarded = {}, 0
-
-	for _, reward in pairs(rewards) do
-		local reward_type = reward.type
-
-		if reward_type == "track-xp" then
-			local xp_awarded = reward.xp
-
-			total_xp_awarded = total_xp_awarded + xp_awarded
-		end
-
-		if reward_type == "item" then
-			local master_id = reward.id
-
-			if MasterItems.item_exists(master_id) then
-				local rewarded_master_item = MasterItems.get_item(master_id)
-
-				rewarded_master_item.uuid = reward.gearId
-				rewarded_master_item.masterDataInstance = {
-					id = master_id,
-					overrides = {},
-					slots = rewarded_master_item.slots,
-				}
-
-				self:_add_new_item(rewarded_master_item)
-
-				item_rewards[#item_rewards + 1] = {
-					type = "item",
-					item = rewarded_master_item,
-				}
-			end
-		end
-	end
-
-	for _, item_reward in ipairs(item_rewards) do
-		self._result_overlay_queue[#self._result_overlay_queue + 1] = {
-			reward = item_reward,
-			type = RESULT_TYPES.penance,
-		}
-	end
-
-	self._total_score = self._total_score + total_xp_awarded
-	self._is_claiming_rewards = false
-
-	return true
-end
-
-PenanceOverviewView._on_penance_claim_failed = function (self, reward_bundle, error)
-	Log.warning("PenanceOverviewView", "Failed to claim penance reward '%s' with error: %s", reward_bundle.id, error or "Unknown error")
-
-	self._is_claiming_rewards = false
-
-	return false
-end
-
-PenanceOverviewView._claim_penance = function (self, reward_bundle)
-	if self._is_claiming_rewards then
-		return Promise.resolved(false)
-	end
-
-	self._is_claiming_rewards = true
-
-	local backend_interface = Managers.backend.interfaces
-	local player_rewards = backend_interface.player_rewards
-	local promise = self._promise_container:cancel_on_destroy(player_rewards:claim_bundle_reward(reward_bundle.id)):next(callback(self, "_on_penance_claim_success", reward_bundle)):catch(callback(self, "_on_penance_claim_failed", reward_bundle))
-
-	return promise
 end
 
 PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget)
@@ -2307,35 +2294,27 @@ PenanceOverviewView._cb_on_penance_secondary_pressed = function (self, widget)
 end
 
 PenanceOverviewView._cb_on_penance_pressed = function (self, widget, config)
-	local claim_requested = widget.content.can_claim and not self._is_claiming_rewards
+	local penance_grid = self._penance_grid
+
+	penance_grid:select_grid_widget(widget)
+
+	local claim_requested = widget.content.can_claim
 
 	if not claim_requested then
-		local penance_grid = self._penance_grid
-
-		penance_grid:select_grid_widget(widget)
-
 		return
 	end
 
 	local achievement_id = widget.content.element.achievement_id
 	local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
-	local promise = Promise.resolved(true)
+	local content = widget.content
+
+	content.can_claim = false
+	content.completed = true
+	content.tracked = false
 
 	if reward_bundle then
-		promise = self:_claim_penance(reward_bundle)
+		_static_claim_penance(_static_state.view_reference, reward_bundle, false)
 	end
-
-	self._panel_promise_container:cancel_on_destroy(promise):next(function (success)
-		if not success then
-			return
-		end
-
-		local content = widget.content
-
-		content.can_claim = false
-		content.completed = true
-		content.tracked = false
-	end)
 end
 
 PenanceOverviewView._setup_result_overlay = function (self, result_data, result_type)
@@ -2365,7 +2344,9 @@ PenanceOverviewView._achievement_should_display_progress_bar = function (self, a
 end
 
 PenanceOverviewView._can_claim_achievement_by_id = function (self, achievement_id)
-	return self._penance_to_reward_bundle_map[achievement_id] ~= nil
+	return self._penance_to_reward_bundle_map[achievement_id] ~= nil and not table.find_func(self._claim_animation_entries, function (_, data)
+		return data.entry.achievement_id == achievement_id
+	end)
 end
 
 PenanceOverviewView._get_achievement_bar_progress = function (self, achievement_definition)
@@ -2672,11 +2653,13 @@ PenanceOverviewView._setup_carousel_entries = function (self, achievement_layout
 	self:_set_carousel_index(1, false)
 end
 
-PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry, allow_claim)
+PenanceOverviewView._on_carousel_card_pressed = function (self, index, allow_claim)
+	local entry = self._carousel_entries[index]
+
 	allow_claim = allow_claim ~= false
 
 	local achievement_id = entry.achievement_id
-	local claim_requested = allow_claim and not self._destroyed_carousel_index and self:_can_claim_achievement_by_id(achievement_id)
+	local claim_requested = allow_claim and self:_can_claim_achievement_by_id(achievement_id)
 
 	if not claim_requested then
 		self:_set_carousel_index(index, true)
@@ -2687,7 +2670,7 @@ PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry, al
 	local reward_bundle = self._penance_to_reward_bundle_map[achievement_id]
 
 	if reward_bundle then
-		self:_claim_penance(reward_bundle)
+		_static_claim_penance(_static_state.view_reference, reward_bundle, false)
 	end
 
 	local grid = entry.grid
@@ -2709,13 +2692,15 @@ PenanceOverviewView._on_carousel_card_pressed = function (self, index, entry, al
 		background = grid._widgets_by_name.grid_background,
 	}
 
-	self._claim_animation_id = self:_start_animation("on_carousel_claimed", widgets, {
-		additional_widgets = additional_widgets,
-		grid = grid,
-		start_height = start_height,
-		start_pivot_offset = start_pivot_offset,
-	})
-	self._destroyed_carousel_index = index
+	self._claim_animation_entries[#self._claim_animation_entries + 1] = {
+		entry = entry,
+		id = self:_start_animation("on_carousel_claimed", widgets, {
+			additional_widgets = additional_widgets,
+			grid = grid,
+			start_height = start_height,
+			start_pivot_offset = start_pivot_offset,
+		}),
+	}
 end
 
 PenanceOverviewView._can_switch_favorite_status = function (self, achievement_id)
@@ -2749,7 +2734,7 @@ PenanceOverviewView._switch_favorite_status = function (self, achievement_id)
 		self:_play_sound(UISoundEvents.penance_menu_penance_track)
 	end
 
-	if is_currently_favorite and can_switch and self:request_achievement_favorite_remove(achievement_id) then
+	if is_currently_favorite and can_switch and _static_request_achievement_favorite_remove(_static_state.view_reference, achievement_id) then
 		is_favorite = false
 
 		self:_play_sound(UISoundEvents.penance_menu_penance_untrack)
@@ -2947,29 +2932,52 @@ PenanceOverviewView._update_carousel_panel = function (self, dt, t, input_servic
 	self:_handle_carousel_scroll(input_service, dt)
 	self:_update_carousel_entries(dt, t, input_service)
 
-	local claim_animation_id = self._claim_animation_id
-	local claim_is_animating = claim_animation_id and not self:_is_animation_completed(claim_animation_id)
+	local claim_animation_entries = self._claim_animation_entries
+	local claim_is_animating = false
 
-	if claim_animation_id and not claim_is_animating then
-		self._claim_animation_id = nil
+	for i = #claim_animation_entries, 1, -1 do
+		local claim_animation_entry = claim_animation_entries[i]
+		local claim_animation_id = claim_animation_entry and claim_animation_entry.id
+
+		if claim_animation_id and not self:_is_animation_completed(claim_animation_id) then
+			claim_is_animating = true
+		else
+			table.remove(claim_animation_entries, i)
+
+			local entry = claim_animation_entry.entry
+			local grid = entry.grid
+
+			grid:destroy()
+
+			local idx = table.index_of(self._carousel_entries, entry)
+			local delta = math.normalize_modulus(idx - self._carousel_target_index, #self._carousel_entries)
+
+			if delta < 0 then
+				self._carousel_target_index = math.index_wrapper(self._carousel_target_index - 1, #self._carousel_entries)
+				self._carousel_current_index = math.index_wrapper(self._carousel_current_index - 1, #self._carousel_entries)
+			end
+
+			table.remove(self._carousel_entries, idx)
+			self:_add_carousel_entry(nil)
+
+			if next(self._carousel_entries) then
+				self._carousel_target_index = math.index_wrapper(self._carousel_target_index, #self._carousel_entries)
+				self._carousel_current_index = math.index_wrapper(self._carousel_current_index, #self._carousel_entries)
+
+				if not self._using_cursor_navigation then
+					self:_focus_on_card(self._carousel_target_index)
+				end
+			else
+				self._carousel_target_index = 0
+				self._carousel_current_index = 0
+			end
+		end
 	end
 
-	local can_update_carousel = not claim_is_animating and not self._is_claiming_rewards
+	local can_update_carousel = not claim_is_animating
 
 	if not can_update_carousel then
 		return
-	end
-
-	local destroyed_carousel_index = self._destroyed_carousel_index
-
-	if destroyed_carousel_index then
-		local new_entry = self:_add_carousel_entry(destroyed_carousel_index)
-
-		if not self._using_cursor_navigation then
-			new_entry.grid:select()
-		end
-
-		self._destroyed_carousel_index = nil
 	end
 end
 
@@ -2993,13 +3001,16 @@ end
 PenanceOverviewView._exit_carousel_panel = function (self)
 	self:_delete_carousel_entries()
 
-	self._destroyed_carousel_index = nil
+	for i = #self._claim_animation_entries, 1, -1 do
+		local claim_animation_entry = self._claim_animation_entries[i]
+		local claim_animation_id = claim_animation_entry and claim_animation_entry.id
 
-	if self._claim_animation_id then
-		self:_stop_animation(self._claim_animation_id)
-
-		self._claim_animation_id = nil
+		if claim_animation_id then
+			self:_stop_animation(claim_animation_id)
+		end
 	end
+
+	table.clear(self._claim_animation_entries)
 
 	self._widgets_by_name.carousel_header.content.visible = false
 	self._widgets_by_name.carousel_footer.content.visible = false
@@ -3232,9 +3243,8 @@ PenanceOverviewView.cb_on_inspect_pressed = function (self)
 	local correct_archetype = visual_item.archetypes == nil or #visual_item.archetypes == 0 or player_archetype ~= nil and table.array_contains(visual_item.archetypes, player_archetype.name)
 	local correct_breed = visual_item.breeds == nil or #visual_item.breeds == 0 or player_archetype ~= nil and table.array_contains(visual_item.breeds, player_archetype.breed)
 	local is_item_supported_on_played_character = correct_archetype and correct_breed
-	local preferred_gender = player_profile and player_profile.gender
 
-	player_profile = is_item_supported_on_played_character and player_profile or Items.create_mannequin_profile_by_item(visual_item, preferred_gender)
+	player_profile = is_item_supported_on_played_character and player_profile or ProfileUtils.create_mannequin_profile(visual_item, player_profile)
 
 	local context
 
@@ -3281,6 +3291,341 @@ PenanceOverviewView.can_inspect_item = function (self)
 	end
 
 	return false
+end
+
+function _static_claim_penance(view_reference, reward_bundles, claim_multiple)
+	local async_state = _static_state.penance
+	local queued_claims = async_state.queued_claims
+
+	if not table.is_empty(async_state.inflight_claims) then
+		Log.info("PenanceOverviewView", "Queueing %s claim%s '%s'", claim_multiple and "multiple" or "one", claim_multiple and "s" or "", claim_multiple and table.tostring(table.select_array(reward_bundles, function (k, v)
+			return v.id
+		end), 2) or reward_bundles.id)
+
+		if claim_multiple then
+			for i = 1, #reward_bundles do
+				queued_claims[#queued_claims + 1] = reward_bundles[i]
+			end
+		else
+			queued_claims[#queued_claims + 1] = reward_bundles
+		end
+
+		return
+	end
+
+	if table.is_empty(_static_state.reporter) then
+		Managers.telemetry_reporters:start_reporter("penance_view")
+	end
+
+	_static_state.reporter.penance = true
+
+	Log.info("PenanceOverviewView", "Claiming %s reward%s '%s'", claim_multiple and "multiple" or "one", claim_multiple and "s" or "", claim_multiple and table.tostring(table.select_array(reward_bundles, function (k, v)
+		return v.id
+	end), 2) or reward_bundles.id)
+
+	local to_claim
+
+	if claim_multiple then
+		to_claim = table.select_array(reward_bundles, function (_, reward_bundle)
+			return reward_bundle.id
+		end)
+
+		table.append(async_state.inflight_claims, to_claim)
+	else
+		to_claim = reward_bundles.id
+
+		table.insert(async_state.inflight_claims, to_claim)
+	end
+
+	local backend_interface = Managers.backend.interfaces
+	local player_rewards = backend_interface.player_rewards
+	local claim_promise = async_state.claim_promise
+
+	if not claim_promise then
+		claim_promise = Promise:new()
+		async_state.claim_promise = claim_promise
+	end
+
+	player_rewards:claim_bundle_reward(to_claim):next(callback(_static_on_penance_claim_success, view_reference, reward_bundles, claim_multiple)):catch(callback(_static_on_penance_claim_failed, view_reference, reward_bundles, claim_multiple))
+end
+
+function _static_on_penance_claim_success(view_reference, reward_bundles, claimed_multiple, backend_data)
+	local async_state = _static_state.penance
+	local rewards_by_bundle_id = {}
+	local issue_bundles
+
+	if claimed_multiple then
+		local claim_batch = table.nested_get(backend_data, "body", "claimBatch")
+
+		if claim_batch then
+			for bundle_id, result in pairs(claim_batch) do
+				if result.issue then
+					issue_bundles = issue_bundles or {}
+
+					local _, bundle = table.find_by_key(reward_bundles, "id", bundle_id)
+
+					issue_bundles[#issue_bundles + 1] = bundle
+
+					Log.warning("PenanceOverviewView", "Detected issue '%s' with reward '%s'", result.issue, bundle_id)
+				elseif result.claim then
+					rewards_by_bundle_id[bundle_id] = result.claim
+				end
+			end
+		end
+	else
+		reward_bundles = {
+			reward_bundles,
+		}
+
+		local rewards = table.nested_get(backend_data, "body", "rewards")
+
+		if rewards then
+			rewards_by_bundle_id[reward_bundles[1].id] = rewards
+		else
+			issue_bundles = {
+				reward_bundles[1],
+			}
+		end
+	end
+
+	if issue_bundles then
+		local filtered_reward_bundles = {}
+
+		for i = 1, #reward_bundles do
+			if not table.array_contains(issue_bundles, reward_bundles[i]) then
+				filtered_reward_bundles[#filtered_reward_bundles + 1] = reward_bundles[i]
+			end
+		end
+
+		reward_bundles = filtered_reward_bundles
+	end
+
+	for i = 1, #reward_bundles do
+		local achievement_id = reward_bundles[i].sourceInfo.sourceIdentifier
+
+		Managers.telemetry_reporters:reporter("penance_view"):register_penance_claim_event(achievement_id)
+		_static_request_achievement_favorite_remove(view_reference, achievement_id)
+
+		local self_ref = view_reference.ref
+
+		if self_ref then
+			self_ref:_remove_penance_from_unclaimed_count(achievement_id)
+
+			self_ref._penance_to_reward_bundle_map[achievement_id] = nil
+		end
+
+		local item_rewards, total_xp_awarded = {}, 0
+		local rewards = rewards_by_bundle_id[reward_bundles[i].id]
+
+		for _, reward in pairs(rewards) do
+			local reward_type = reward.type
+
+			if reward_type == "track-xp" then
+				local xp_awarded = reward.xp
+
+				total_xp_awarded = total_xp_awarded + xp_awarded
+			end
+
+			if reward_type == "item" then
+				local master_id = reward.id
+
+				if MasterItems.item_exists(master_id) then
+					local rewarded_master_item = MasterItems.get_item(master_id)
+
+					rewarded_master_item.uuid = reward.gearId
+					rewarded_master_item.masterDataInstance = {
+						id = master_id,
+						overrides = {},
+						slots = rewarded_master_item.slots,
+					}
+
+					_static_add_new_item(rewarded_master_item)
+
+					item_rewards[#item_rewards + 1] = {
+						type = "item",
+						item = rewarded_master_item,
+					}
+				end
+			end
+		end
+
+		if self_ref then
+			for _, item_reward in ipairs(item_rewards) do
+				self_ref._result_overlay_queue[#self_ref._result_overlay_queue + 1] = {
+					reward = item_reward,
+					type = RESULT_TYPES.penance,
+				}
+			end
+
+			self_ref._total_score = self_ref._total_score + total_xp_awarded
+		end
+	end
+
+	if issue_bundles then
+		local claim_batch = table.nested_get(backend_data, "body", "claimBatch")
+		local issues = table.select_array(issue_bundles, function (_, bundle)
+			return bundle.id .. ": " .. claim_batch[bundle.id].issue
+		end)
+
+		return _static_on_penance_claim_failed(view_reference, issue_bundles, claimed_multiple, table.concat(issues, ", "))
+	else
+		table.clear(async_state.inflight_claims)
+
+		if not table.is_empty(async_state.queued_claims) then
+			local queued_claims = table.shallow_copy(async_state.queued_claims)
+
+			table.clear(async_state.queued_claims)
+			_static_claim_penance(view_reference, queued_claims, true)
+		else
+			_static_state.reporter.penance = nil
+
+			if table.is_empty(_static_state.reporter) then
+				Managers.telemetry_reporters:stop_reporter("penance_view")
+			end
+
+			async_state.claim_promise:resolve()
+
+			async_state.claim_promise = nil
+		end
+	end
+
+	return true
+end
+
+function _static_on_penance_claim_failed(view_reference, reward_bundles, claimed_multiple, error_msg)
+	if claimed_multiple then
+		Log.warning("PenanceOverviewView", "Failed to claim penance rewards with errors: %s", error_msg or "Unknown error")
+	else
+		Log.warning("PenanceOverviewView", "Failed to claim penance reward '%s' with error: %s", reward_bundles.id, error_msg or "Unknown error")
+	end
+
+	local async_state = _static_state.penance
+
+	table.clear(async_state.inflight_claims)
+
+	if not table.is_empty(async_state.queued_claims) then
+		local queued_claims = table.shallow_copy(async_state.queued_claims)
+
+		table.clear(async_state.queued_claims)
+		_static_claim_penance(view_reference, queued_claims, true)
+	else
+		_static_state.reporter.penance = nil
+
+		if table.is_empty(_static_state.reporter) then
+			Managers.telemetry_reporters:stop_reporter("penance_view")
+		end
+
+		async_state.claim_promise:resolve()
+
+		async_state.claim_promise = nil
+	end
+
+	return false
+end
+
+function _static_add_new_item(master_item)
+	local gear_id, gear = Items.track_reward_item_to_gear(master_item)
+
+	Managers.data_service.gear:on_gear_created(gear_id, gear)
+
+	local item = MasterItems.get_item_instance(gear, gear_id)
+
+	if item then
+		Items.mark_item_id_as_new(item, false)
+	end
+end
+
+function _static_request_achievement_favorite_remove(view_reference, achievement_id)
+	local removed = AchievementUIHelper.remove_favorite_achievement(achievement_id, false)
+
+	if removed then
+		Managers.telemetry_reporters:reporter("penance_view"):register_tracking_event(achievement_id, false)
+
+		local self_ref = view_reference.ref
+
+		if self_ref then
+			local parent_id, favorite_count = self_ref:_change_category_config_value(achievement_id, "favorite_count", -1)
+			local content = self_ref._widget_content_by_category[parent_id]
+
+			if content then
+				content.has_favorite_penances = favorite_count > 0
+			end
+		end
+	end
+
+	return removed
+end
+
+function _static_on_wintrack_claim_success(view_reference, index, reward, data)
+	local claimed_rewards = table.nested_get(data, "body", "rewards")
+
+	if not claimed_rewards then
+		Log.warning("PenanceOverviewView", "Failed claiming track '%s', no rewards returned", index)
+
+		return _static_on_wintrack_claim_failure(index)
+	end
+
+	for _, claimed_reward in pairs(claimed_rewards) do
+		if claimed_reward.type == "item" then
+			local skip_notification = view_reference.ref and true or false
+
+			Items.register_track_reward(claimed_reward, skip_notification)
+		end
+	end
+
+	Managers.telemetry_reporters:reporter("penance_view"):register_track_claim_event(index)
+
+	local async_state = _static_state.wintrack
+
+	table.remove(async_state.inflight_claims, table.index_of(async_state.inflight_claims, index))
+
+	if table.is_empty(async_state.inflight_claims) then
+		_static_state.reporter.wintrack = nil
+
+		if table.is_empty(_static_state.reporter) then
+			Managers.telemetry_reporters:stop_reporter("penance_view")
+		end
+
+		async_state.claim_promise:resolve()
+
+		async_state.claim_promise = nil
+	end
+
+	local self_ref = view_reference.ref
+
+	if self_ref then
+		local reward_items = reward.items
+
+		for _, item in ipairs(reward_items) do
+			self_ref._result_overlay_queue[#self_ref._result_overlay_queue + 1] = {
+				reward = {
+					type = "item",
+					item = item,
+				},
+				type = RESULT_TYPES.wintrack,
+			}
+		end
+	end
+end
+
+function _static_on_wintrack_claim_failure(index)
+	Log.warning("PenanceOverviewView", "Failed claiming track '%s'", index)
+
+	local async_state = _static_state.wintrack
+
+	table.remove(async_state.inflight_claims, table.index_of(async_state.inflight_claims, index))
+
+	if table.is_empty(async_state.inflight_claims) then
+		_static_state.reporter.wintrack = nil
+
+		if table.is_empty(_static_state.reporter) then
+			Managers.telemetry_reporters:stop_reporter("penance_view")
+		end
+
+		async_state.claim_promise:resolve()
+
+		async_state.claim_promise = nil
+	end
 end
 
 PenanceOverviewView._update_vo = function (self, dt, t)

@@ -26,6 +26,7 @@ InputManager.init = function (self)
 	self._key_watch_result = nil
 	self._key_watch_devices = {}
 	self._key_watch = false
+	self._motion_active = false
 	self._user_rumble_state = true
 	self._wwise_rumble_state = nil
 	self._device_wwise_rumble_state = false
@@ -78,6 +79,7 @@ InputManager._event_player_authenticated = function (self)
 		return
 	end
 
+	self:load_settings()
 	self:_cb_update_dead_zone()
 	self:_cb_update_rumble_enabled()
 	self:_cb_update_rumble_intensity()
@@ -663,6 +665,26 @@ InputManager.load_input_layout = function (self, layout_name)
 		},
 	}
 	local gamepad_input_layout = GamepadInputLayouts[layout_name]
+
+	if not gamepad_input_layout then
+		local default_layout_name = "default"
+
+		if GamepadInputLayouts[default_layout_name] then
+			gamepad_input_layout = GamepadInputLayouts[default_layout_name]
+
+			local save_data = Managers.save:account_data()
+			local input_settings = save_data and save_data.input_settings
+
+			if input_settings and input_settings.controller_layout then
+				input_settings.controller_layout = default_layout_name
+
+				Managers.save:queue_save()
+			end
+		else
+			return
+		end
+	end
+
 	local input_settings = gamepad_input_layout.input_settings
 
 	for service_type, aliases in pairs(input_settings) do
@@ -723,6 +745,28 @@ InputManager.is_using_gamepad = function (self)
 	end
 
 	return false
+end
+
+InputManager.is_using_gamepad_without_motion = function (self)
+	local last_pressed_device = InputDevice.last_pressed_device
+
+	if not last_pressed_device then
+		return false
+	end
+
+	if last_pressed_device:type() == "xbox_controller" then
+		return true
+	end
+
+	if last_pressed_device:type() == "ps4_controller" then
+		return not self._motion_active
+	end
+
+	return false
+end
+
+InputManager.set_motion_active = function (self, motion_active)
+	self._motion_active = motion_active
 end
 
 InputManager._cb_update_dead_zone = function (self)

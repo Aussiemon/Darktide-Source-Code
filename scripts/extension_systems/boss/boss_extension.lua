@@ -134,6 +134,7 @@ BossExtension.start_boss_encounter = function (self)
 
 	if self._is_server then
 		Managers.telemetry_events:boss_encounter_started(self._breed.name)
+		Managers.event:trigger("boss_encounter_started", self._breed)
 	end
 end
 

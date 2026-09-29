@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
@@ -8,6 +9,7 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
 local damage_types = DamageSettings.damage_types
 local gibbing_power = GibbingSettings.gibbing_power
@@ -92,10 +94,10 @@ damage_templates.default_plasma_killshot = {
 	damage_type = damage_types.plasma,
 	gibbing_type = gibbing_types.plasma,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	on_kill_area_suppression = {
 		distance = 8,
@@ -190,10 +192,10 @@ damage_templates.default_plasma_bfg = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.plasma,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	on_kill_area_suppression = {
 		distance = 8,
@@ -292,10 +294,10 @@ damage_templates.default_plasma_bfg_light = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.plasma,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	on_kill_area_suppression = {
 		distance = 8,
@@ -367,10 +369,10 @@ damage_templates.default_plasma_demolition = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -432,10 +434,10 @@ damage_templates.close_light_plasma_demolition = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -497,10 +499,10 @@ damage_templates.light_plasma_demolition = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -597,10 +599,10 @@ damage_templates.plasma_p1_m2_light = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.plasma,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	on_kill_area_suppression = {
 		distance = 8,
@@ -705,10 +707,10 @@ damage_templates.plasma_p1_m2_charged = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.plasma,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	on_kill_area_suppression = {
 		distance = 8,
@@ -778,10 +780,10 @@ damage_templates.close_light_plasma_demolition_p1_m2 = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -843,10 +845,10 @@ damage_templates.far_light_plasma_demolition_p1_m2 = {
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -910,10 +912,10 @@ damage_templates.close_charged_plasma_demolition_p1_m2 = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {
@@ -975,10 +977,10 @@ damage_templates.far_charged_plasma_demolition_p1_m2 = {
 	gibbing_power = gibbing_power.heavy,
 	gibbing_type = gibbing_types.explosion,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {

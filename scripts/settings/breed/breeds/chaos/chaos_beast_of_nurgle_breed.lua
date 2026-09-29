@@ -20,6 +20,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local damage_types = DamageSettings.damage_types
 local hit_zone_names = HitZone.hit_zone_names
@@ -74,8 +75,8 @@ local breed_data = {
 		ranged = "chaos_beast_of_nurgle_ranged",
 	},
 	tags = {
-		minion = true,
-		monster = true,
+		[breed_tags.monster] = true,
+		[breed_tags.minion] = true,
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,

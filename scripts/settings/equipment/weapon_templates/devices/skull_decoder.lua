@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/devices/skull_decoder.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -23,15 +24,9 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
+	action_unwield = BaseTemplateSettings.generate_unwield_action({
 		anim_event = "unequip",
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
+	}),
 	action_wield = {
 		allowed_during_sprint = true,
 		anim_event = "servo_start",

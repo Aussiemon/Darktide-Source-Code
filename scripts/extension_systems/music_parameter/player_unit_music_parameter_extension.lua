@@ -101,16 +101,21 @@ PlayerUnitMusicParameterExtension._update_boss_near = function (self, unit)
 	local boss_near = self._boss_near
 	local side = self._side_system.side_by_unit[unit]
 	local alive_monsters = side:alive_units_by_tag("enemy", "monster")
+	local alive_lords = side:alive_units_by_tag("enemy", "lord")
 
-	if boss_near then
-		local alive_witches = side:alive_units_by_tag("enemy", "witch")
-		local num_alive_monsters, num_alive_witches = alive_monsters.size, alive_witches.size
+	if alive_lords.size == 0 then
+		if boss_near then
+			local alive_witches = side:alive_units_by_tag("enemy", "witch")
+			local num_alive_monsters, num_alive_witches = alive_monsters.size, alive_witches.size
 
-		boss_near = num_alive_witches < num_alive_monsters
+			boss_near = num_alive_witches < num_alive_monsters
+		else
+			local alive_witches_lookup = side.units_by_relation_tag_lookup.enemy.witch
+
+			boss_near = self:_check_is_boss_near(alive_monsters, alive_witches_lookup)
+		end
 	else
-		local alive_witches_lookup = side.units_by_relation_tag_lookup.enemy.witch
-
-		boss_near = self:_check_is_boss_near(alive_monsters, alive_witches_lookup)
+		boss_near = false
 	end
 
 	if boss_near ~= self._boss_near then
@@ -258,7 +263,7 @@ PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 
 	if self._is_expedition and t > self._heat_stage_check then
 		local pacing_manger_running = Managers.state.pacing:is_enabled()
-		local new_heat_stage = Managers.state.pacing:current_stage_name()
+		local new_heat_stage = Managers.state.pacing:current_stage_name() or "off"
 
 		if self._current_heat_stage ~= new_heat_stage or not pacing_manger_running then
 			local current_heat_stage_id

@@ -52,8 +52,10 @@ else
 	SaveManager = require("scripts/managers/save/save_manager")
 end
 
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local ServerMetricsManager = require("scripts/managers/server_metrics/server_metrics_manager")
 local ServerMetricsManagerDummy = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
+local SocialManager = require("scripts/managers/social/social_manager")
 local StateGameTestify = GameParameters.testify and require("scripts/game_states/state_game_testify")
 local StateSplash = require("scripts/game_states/game/state_splash")
 local StatsManager = require("scripts/managers/stats/stats_manager")
@@ -75,14 +77,7 @@ local WorldLevelDespawnManager = require("scripts/managers/world_level_despawn/w
 local WorldManager = require("scripts/foundation/managers/world/world_manager")
 local WwiseGameSyncManager = require("scripts/managers/wwise_game_sync/wwise_game_sync_manager")
 local XAsyncManager = require("scripts/managers/xasync/xasync_manager")
-local DefaultInputSettings = {}
-
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_debug_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_free_flight_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_ingame_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_imgui_input_settings"))
-table.insert(DefaultInputSettings, require("scripts/settings/input/default_view_input_settings"))
-
+local DefaultInputSettings = require("scripts/settings/input/default_input_settings")
 local StateGame = class("StateGame")
 
 StateGame.on_enter = function (self, parent, params)
@@ -200,6 +195,7 @@ StateGame._init_managers = function (self, event_delegate, approve_channel_deleg
 	if not DEDICATED_SERVER then
 		Managers.chat = ChatManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
+		Managers.social = SocialManager:new()
 	end
 
 	local version_id = PLATFORM .. "#" .. (APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION or "")
@@ -398,6 +394,8 @@ StateGame.update = function (self, dt)
 		Managers.ps5_uds:update(dt)
 	end
 
+	Managers.world:join_physics()
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(StateGameTestify, self)
 	end
@@ -433,6 +431,10 @@ StateGame.update = function (self, dt)
 
 	if Managers.url_loader then
 		Managers.url_loader:update(dt, t)
+	end
+
+	if Managers.social then
+		Managers.social:update(dt, t)
 	end
 
 	if Managers.chat then

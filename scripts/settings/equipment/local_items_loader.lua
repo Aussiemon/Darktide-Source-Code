@@ -3,7 +3,7 @@
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local Promise = require("scripts/foundation/utilities/promise")
 local LocalLoader = class("LocalLoader")
-local strip_tags = Application.get_strip_tags_table()
+local feature_flags = Application.get_feature_flags_table()
 
 local function _should_include_item(item, item_name)
 	local feature_flag_on = false
@@ -14,7 +14,7 @@ local function _should_include_item(item, item_name)
 		feature_flag_on = true
 	else
 		for _, feature_flag in pairs(item.feature_flags) do
-			if strip_tags[feature_flag] == true then
+			if feature_flags[feature_flag] == true then
 				feature_flag_on = true
 
 				break

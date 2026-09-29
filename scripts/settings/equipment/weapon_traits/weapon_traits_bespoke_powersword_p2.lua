@@ -10,8 +10,9 @@ local stat_buffs = BuffSettings.stat_buffs
 
 templates.weapon_trait_bespoke_powersword_p2_power_bonus_scaled_on_heat = {
 	format_values = {
-		power = {
+		amount = {
 			format_type = "percentage",
+			prefix = "+",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_powersword_p2_power_bonus_scaled_on_heat",
 				find_value_type = "trait_override",
@@ -21,7 +22,7 @@ templates.weapon_trait_bespoke_powersword_p2_power_bonus_scaled_on_heat = {
 				},
 			},
 			value_manipulation = function (value)
-				return value * 5
+				return value * 5 * 100
 			end,
 		},
 	},
@@ -408,10 +409,6 @@ templates.weapon_trait_bespoke_powersword_p2_slower_heat_buildup_on_perfect_bloc
 				},
 			},
 		},
-		interval = {
-			format_type = "number",
-			value = 5,
-		},
 	},
 	buffs = {
 		weapon_trait_bespoke_powersword_p2_slower_heat_buildup_on_perfect_block = {
@@ -474,36 +471,32 @@ templates.weapon_trait_bespoke_powersword_p2_attack_speed_on_perfect_block = {
 				},
 			},
 		},
-		interval = {
-			format_type = "number",
-			value = 5,
-		},
 	},
 	buffs = {
 		weapon_trait_bespoke_powersword_p2_attack_speed_on_perfect_block = {
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.06,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.08,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.1,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.12,

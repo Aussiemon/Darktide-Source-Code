@@ -196,7 +196,7 @@ MultiplayerSessionManager.error_transition = function (self)
 	return Managers.mechanism:wanted_transition()
 end
 
-MultiplayerSessionManager.start_singleplayer_session = function (self, mission_name, singeplay_type)
+MultiplayerSessionManager.start_singleplayer_session = function (self, mission_name)
 	self:boot_singleplayer_session()
 
 	local mechanism_manager = Managers.mechanism
@@ -205,7 +205,6 @@ MultiplayerSessionManager.start_singleplayer_session = function (self, mission_n
 
 	mechanism_manager:change_mechanism(mechanism_name, {
 		mission_name = mission_name,
-		singleplay_type = singeplay_type,
 	})
 
 	return mechanism_manager:wanted_transition()

@@ -58,12 +58,12 @@ local mission_types = {
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_horde",
 		name = "loc_horde_mission_type",
 	},
-	undefined = {
+	hub = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",
 	},
-	hub = {
+	undefined = {
 		icon = "content/ui/materials/icons/mission_types/mission_type_undefined",
 		mission_board_icon = "content/ui/materials/icons/mission_types_pj/mission_type_undefined",
 		name = "loc_mission_type_undefined_name",

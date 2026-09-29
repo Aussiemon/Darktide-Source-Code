@@ -37,7 +37,7 @@ end
 
 local HEALTHY_MIN_PERCENTAGE = 0.75
 local DamageCalculation = {}
-local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_boost_damage, _base_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_taken_by_breed_multiplier, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_multiplier
+local _apply_armor_type_buffs_to_damage, _apply_damage_type_buffs_to_damage, _apply_diminishing_returns_to_damage, _backstab_damage, _base_boost_damage, _base_damage, _boost_curve_multiplier, _calculate_damage_buff, _damage_taken_by_breed_multiplier, _dot_damage_multiplier, _finesse_boost_damage, _flanking_damage, _hit_zone_damage_multiplier, _power_level_scaled_damage, _rending_multiplier
 local EMPTY_STAT_BUFFS = {}
 local EMPTY_KEYWORDS = {}
 
@@ -103,6 +103,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	local hit_zone_damage_multiplier = _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, damage_profile.ignore_hitzone_multiplier, ignore_hitzone_multipliers_breed_tags)
 
 	damage = damage * hit_zone_damage_multiplier
+	damage = damage * _dot_damage_multiplier(breed_or_nil, damage_type)
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs)
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs)
 	damage = _apply_diminishing_returns_to_damage(damage, target_health_extension, breed_or_nil)
@@ -170,7 +171,7 @@ DamageCalculation.ui_finesse_multiplier = function (damage_profile, target_setti
 	return 1
 end
 
-function _apply_damage_type_buffs_to_damage(damage, attack_type, stat_buffs, target_index)
+function _apply_damage_type_buffs_to_damage(damage, damage_profile, attack_type, stat_buffs, target_index)
 	if attack_type == attack_types.melee then
 		local melee_damage_stat_buff = stat_buffs.melee_damage or 1
 
@@ -231,6 +232,7 @@ local EMPTY_TABLE = {}
 function _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, attacker_buff_extension, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_owner_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, stagger_impact, attacking_unit_or_nil, attacking_unit_blackboard_or_nil, attacker_owner_buff_extension, attacked_health_extension, target_index)
 	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
 	local target_is_player = Breed.is_player(attacked_breed_or_nil)
+	local is_first_target = target_index == 1
 	local damage_stat_buffs = 1
 	local damage_multiplier = 1
 	local damage_stat_buffs_bonus = 0
@@ -240,6 +242,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	local is_melee_attack = attack_type == attack_types.melee
 	local is_ranged_attack = attack_type == attack_types.ranged or damage_profile.count_as_ranged_attack
+	local is_weapon_special = damage_profile.weapon_special
 
 	if attacker_is_player and ALIVE[attacking_unit_or_nil] then
 		local player = Managers.state.player_unit_spawn:owner(attacking_unit_or_nil)
@@ -297,7 +300,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 
 	damage_stat_buffs_bonus = damage_stat_buffs_bonus + melee_damage_bonus_stat_buff
 
-	local first_target_melee_damage_modifier = (target_index == 1 and is_melee_attack and attacker_stat_buffs.first_target_melee_damage_modifier or 1) - 1
+	local first_target_melee_damage_modifier = (is_first_target and is_melee_attack and attacker_stat_buffs.first_target_melee_damage_modifier or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + first_target_melee_damage_modifier
 
@@ -314,6 +317,10 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local ranged_damage_stat_buff = (is_ranged_attack and attacker_stat_buffs.ranged_damage or 1) - 1
 
 	damage_stat_buffs = damage_stat_buffs + ranged_damage_stat_buff
+
+	local weapon_special_damage_stat_buff = (is_weapon_special and attacker_stat_buffs.weapon_special_damage or 1) - 1
+
+	damage_stat_buffs = damage_stat_buffs + weapon_special_damage_stat_buff
 
 	local fully_charged = charge_level == 1
 	local fully_charged_stat_buff = (fully_charged and attacker_stat_buffs.fully_charged_damage or 1) - 1
@@ -657,7 +664,7 @@ function _base_boost_damage(damage_profile, target_settings, power_level, charge
 	local boost_damage_armor_conversion = PowerLevelSettings.boost_damage_armor_conversion[armor_type]
 	local damage = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, boost_damage_armor_conversion, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type, is_weakspot, attacking_unit_or_nil, target_unit_or_nil)
 
-	damage = _apply_damage_type_buffs_to_damage(damage, attack_type, stat_buffs, target_index)
+	damage = _apply_damage_type_buffs_to_damage(damage, damage_profile, attack_type, stat_buffs, target_index)
 
 	return damage
 end
@@ -822,6 +829,20 @@ function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, i
 	end
 
 	return hit_zone_damage_multiplier
+end
+
+function _dot_damage_multiplier(breed_or_nil, damage_type)
+	if not breed_or_nil or not damage_type then
+		return 1
+	end
+
+	local dot_damage_multiplier = breed_or_nil.dot_damage_multiplier
+
+	if not dot_damage_multiplier then
+		return 1
+	end
+
+	return dot_damage_multiplier[damage_type] or 1
 end
 
 function _backstab_damage(damage, attack_type, stat_buffs, is_backstab, damage_profile)

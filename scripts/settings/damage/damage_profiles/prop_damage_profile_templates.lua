@@ -173,6 +173,50 @@ damage_templates.barrel_explosion_close = {
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
 }
+damage_templates.renegade_wizard_z_catapult = {
+	disorientation_type = "grenadier",
+	ignore_stagger_reduction = true,
+	ignore_stun_immunity = true,
+	ignore_toughness = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	override_allow_friendly_fire = true,
+	ragdoll_push_force = 1000,
+	stagger_category = "explosion",
+	suppression_value = 20,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15,
+	},
+	armor_damage_modifier_ranged = {
+		near = barrel_explosion_close_admr,
+		far = barrel_explosion_far_admr,
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 100,
+		},
+		impact = {
+			far = 2,
+			near = 30,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+	power_distribution = {
+		attack = 300,
+		impact = 100,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.renegade_wizard,
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy,
+}
 damage_templates.expeditions_lightning_strike_explosion_close = {
 	disorientation_type = "grenadier",
 	ignore_stagger_reduction = true,
@@ -318,6 +362,10 @@ damage_templates.nurgle_head_parasite.power_distribution = {
 	attack = 100,
 	impact = 50,
 }
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026 = table.clone(damage_templates.nurgle_head_parasite)
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.catapulting_template = CatapultingTemplates.nurgle_head_parasite_nurgle_explosion_2026
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.push_template = push_templates.nurgle_head_parasite_nurgle_explosion_2026
+damage_templates.nurgle_head_parasite_nurgle_explosion_2026.ragdoll_push_force = 500
 damage_templates.corruptor_damage_tick = {
 	ignore_toughness = true,
 	permanent_damage_ratio = 1,

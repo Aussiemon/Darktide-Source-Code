@@ -3,6 +3,7 @@
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local Styles = require("scripts/ui/views/live_events_view/live_events_view_styles")
 local Settings = require("scripts/ui/views/live_events_view/live_events_view_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -67,7 +68,7 @@ local scenegraph_definition = {
 			1080,
 		},
 	},
-	entries_anchor = {
+	entries_viewport = {
 		horizontal_alignment = "center",
 		parent = "right_panel",
 		vertical_alignment = "top",
@@ -81,9 +82,23 @@ local scenegraph_definition = {
 			1,
 		},
 	},
+	entries_anchor = {
+		horizontal_alignment = "center",
+		parent = "entries_viewport",
+		vertical_alignment = "top",
+		position = {
+			0,
+			0,
+			1,
+		},
+		size = {
+			default_entry_width,
+			1,
+		},
+	},
 	navigation_arrow_left = {
 		horizontal_alignment = "left",
-		parent = "entries_anchor",
+		parent = "entries_viewport",
 		vertical_alignment = "center",
 		position = {
 			10,
@@ -96,7 +111,7 @@ local scenegraph_definition = {
 	},
 	navigation_arrow_right = {
 		horizontal_alignment = "right",
-		parent = "entries_anchor",
+		parent = "entries_viewport",
 		vertical_alignment = "center",
 		position = {
 			-10,
@@ -123,7 +138,7 @@ local scenegraph_definition = {
 	},
 	entries_mask = {
 		horizontal_alignment = "center",
-		parent = "entries_anchor",
+		parent = "entries_viewport",
 		vertical_alignment = "center",
 		position = {
 			0,
@@ -132,6 +147,20 @@ local scenegraph_definition = {
 		},
 		size = {
 			default_entry_width,
+			1,
+		},
+	},
+	entries_scrollbar = {
+		horizontal_alignment = "right",
+		parent = "entries_viewport",
+		vertical_alignment = "center",
+		position = {
+			-12,
+			0,
+			20,
+		},
+		size = {
+			8,
 			1,
 		},
 	},
@@ -283,7 +312,7 @@ local background_masked = UIWidget.create_definition({
 		scenegraph_id = "entries_mask",
 		value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
 	},
-}, "entries_anchor")
+}, "entries_viewport")
 local navigation_arrow_left = UIWidget.create_definition({
 	{
 		content_id = "hotspot",
@@ -466,11 +495,25 @@ local navigation_arrow_right = UIWidget.create_definition({
 		end,
 	},
 }, "navigation_arrow_right")
+local entries_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "entries_scrollbar", {
+	axis = 2,
+	enable_gamepad_scrolling = true,
+	focused = true,
+	gamepad_axis_name = "navigate_controller_right",
+	hotspot = {
+		is_focused = true,
+	},
+}, nil, {
+	mouse_scroll = {
+		scenegraph_id = "entries_viewport",
+	},
+})
 local widget_definitions = {
 	background_masked = background_masked,
 	reward_info_tooltip = reward_info_tooltip,
 	navigation_arrow_left = navigation_arrow_left,
 	navigation_arrow_right = navigation_arrow_right,
+	entries_scrollbar = entries_scrollbar,
 }
 local animations = {}
 

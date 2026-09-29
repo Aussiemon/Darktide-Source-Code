@@ -4,7 +4,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
-local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_mininion_visual_overrides_settings")
+local MutatorMinionVisualOverrideSettings = require("scripts/settings/mutator/mutator_minion_visual_overrides_settings")
 local RegionConstants = require("scripts/settings/region/region_constants")
 local SideColor = require("scripts/utilities/side_color")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
@@ -732,6 +732,10 @@ MinionVisualLoadoutExtension.slot_unit = function (self, slot_name)
 	end
 
 	return slot_data.unit, slot_data.attachments
+end
+
+MinionVisualLoadoutExtension.is_server = function (self)
+	return self._is_server
 end
 
 MinionVisualLoadoutExtension.is_slot_visible = function (self, slot_name)

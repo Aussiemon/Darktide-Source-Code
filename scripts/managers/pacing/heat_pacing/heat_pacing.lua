@@ -4,6 +4,10 @@ local LoadedDice = require("scripts/utilities/loaded_dice")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
 local HeatPacing = class("HeatPacing")
+local SERVER_RPCS = {
+	"rpc_bind_to_callbacks",
+	"rpc_unbind_from_callbacks",
+}
 
 HeatPacing.init = function (self, template, world, side_id, target_side_id)
 	self._template = template
@@ -30,6 +34,14 @@ HeatPacing.init = function (self, template, world, side_id, target_side_id)
 
 	self._queued_vo = {}
 	self._vo_interval = 5
+
+	local connection_manager = Managers.connection
+
+	self._network_event_delegate = connection_manager:network_event_delegate()
+
+	self._network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+
+	self._registered_channels = {}
 end
 
 HeatPacing.on_gameplay_post_init = function (self)
@@ -105,6 +117,7 @@ HeatPacing.on_gameplay_post_init = function (self)
 	Managers.event:register(self, "loner_prevention_spawned", "_vo_loner_prevention")
 	Managers.event:register(self, "in_safe_zone", "_vo_in_safe_zone")
 	Managers.event:register(self, "left_safe_zone", "_vo_left_safe_zone")
+	Managers.event:register(self, "client_disconnected", "_event_client_disconnected")
 	Managers.event:register(self, "expedition_extraction_music_trigger", "_expedition_extraction_started")
 end
 
@@ -114,6 +127,34 @@ end
 
 HeatPacing.update_paused = function (self, should_pause)
 	self._heat_update_paused = should_pause
+end
+
+HeatPacing.suspend = function (self)
+	if not self._template.heat_settings or not self._active then
+		return
+	end
+
+	self._active = false
+	self._suspended = true
+
+	local pacing = Managers.state.pacing
+
+	pacing:update_only_injected_slots(false)
+	pacing:set_horde_pacing_rate_modifier(1)
+	pacing:set_horde_pacing_timer_modifier(1)
+end
+
+HeatPacing.resume = function (self, template)
+	self._template = template
+
+	if not self._template.heat_settings or self._active then
+		return
+	end
+
+	self._active = true
+	self._suspended = false
+
+	self:_change_heat_condition(self._current_stage_name)
 end
 
 HeatPacing.freeze = function (self, is_frozen, optional_frozen_time)
@@ -212,6 +253,7 @@ HeatPacing.delete = function (self)
 	Managers.event:unregister(self, "coordinated_horde_spawned")
 	Managers.event:unregister(self, "loner_prevention_spawned")
 	Managers.event:unregister(self, "expedition_extraction_music_trigger")
+	self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
 end
 
 HeatPacing.get_all_valid_player_heats = function (self)
@@ -313,8 +355,6 @@ HeatPacing.update = function (self, dt, t, side_id, target_side_id)
 			end
 		end
 
-		self._is_decaying_heat = false
-	else
 		self._is_decaying_heat = false
 	end
 
@@ -441,7 +481,7 @@ HeatPacing.heat_horde_allowance = function (self)
 end
 
 HeatPacing.current_stage_name = function (self)
-	return self._current_stage_name or "none"
+	return self:active() and self._current_stage_name or nil
 end
 
 HeatPacing.current_stage_settings = function (self)
@@ -558,6 +598,10 @@ local MARGIN_BY_LEVEL_TAG = {
 }
 
 HeatPacing.add_heat_on_oppertunity = function (self, oppertunity_type, level, sub_type)
+	if not self:active() then
+		return
+	end
+
 	local heat_lookups = self._heat_lookups
 	local oppertunities_lookup = heat_lookups.opportunities
 	local heat_value = oppertunities_lookup[oppertunity_type]
@@ -581,6 +625,11 @@ HeatPacing.add_heat_on_oppertunity = function (self, oppertunity_type, level, su
 
 		if tags then
 			local radius, margin = self:_get_first_available_radius_by_tags(tags)
+
+			if not radius then
+				return
+			end
+
 			local side = self._side_system:get_side(1)
 			local valid_player_units = side.valid_player_units
 			local num_valid_player_units = #valid_player_units
@@ -691,6 +740,10 @@ HeatPacing._add_heat = function (self, new_heat, optional_player_unit, reason)
 end
 
 HeatPacing.lower_heat_on_oppertunity = function (self, heat_reduction_type)
+	if not self:active() then
+		return
+	end
+
 	local heat_lookups = self._heat_lookups
 	local heat_reduction_lookup = heat_lookups.lower_heat
 	local heat_value = self:get_table_entry_by_heat_stage(heat_reduction_lookup[heat_reduction_type])
@@ -705,6 +758,22 @@ end
 HeatPacing._lower_heat = function (self, heat, reason)
 	self._heat = math.min(self._heat - heat, self._max_heat)
 	self._heat_graph_annotation = reason
+end
+
+HeatPacing.rpc_bind_to_callbacks = function (self, channel_id)
+	return
+end
+
+HeatPacing._event_client_disconnected = function (self, network_interface, peer_id, channel_id)
+	return
+end
+
+HeatPacing.rpc_unbind_from_callbacks = function (self, channel_id)
+	return
+end
+
+HeatPacing.request_heat_data = function (self)
+	return
 end
 
 HeatPacing._vo_monster_spawned = function (self)
@@ -757,6 +826,10 @@ HeatPacing.heat_trickle_should_patrol = function (self)
 end
 
 HeatPacing._trigger_vo = function (self, reason, sub_type)
+	if not self._active then
+		return
+	end
+
 	local dialogue_system = Managers.state.extension:system("dialogue_system")
 	local mission_giver_dialogue_playing = dialogue_system:is_mission_giver_dialogue_playing()
 	local allowed = false

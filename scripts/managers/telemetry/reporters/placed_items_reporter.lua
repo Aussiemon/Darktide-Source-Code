@@ -7,10 +7,6 @@ PlacedItemsReporter.init = function (self)
 	self._reports = {}
 end
 
-PlacedItemsReporter.update = function (self, dt, t)
-	return
-end
-
 PlacedItemsReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

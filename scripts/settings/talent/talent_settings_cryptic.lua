@@ -37,7 +37,7 @@ local talent_settings = {
 			toughness = 25,
 		},
 		cryptic_ammo_aura = {
-			ammo_reserve_capacity = 0.1,
+			ammo_reserve_capacity = 0.15,
 			toughness = 25,
 		},
 		servo_skull_medicae = {
@@ -58,10 +58,10 @@ local talent_settings = {
 			max_burn_stacks = 8,
 		},
 		servo_skull_shooting_tagging = {
-			capacitance = 0.25,
+			capacitance = 0.3,
 			cooldown_modifier = 0.15,
 			duration = 2,
-			minimum_capacitance = 0.25,
+			minimum_capacitance = 0.3,
 		},
 		servo_skull_extra_charges = {
 			extra_grenade_charges = 2,
@@ -80,7 +80,8 @@ local talent_settings = {
 				toughness_replenish_modifier = 0.5,
 			},
 			two_charge_bonus = {
-				attack_speed = 0.15,
+				attack_speed = 0.05,
+				attack_speed_per_charge = 0.05,
 				duration = 15,
 				num_charges_used_required = 2,
 			},
@@ -173,6 +174,10 @@ local talent_settings = {
 				max_arcs = 4,
 				num_hits_needed_per_arc = 6,
 			},
+			force_field_capacitance_restore = {
+				capacitance_per_attack = 0.025,
+				max_capacitance = 0.75,
+			},
 		},
 		force_field_extra_charges = {
 			charges = 1,
@@ -183,7 +188,7 @@ local talent_settings = {
 			charges = 3,
 			cooldown = 75,
 			extra_arcs = 2,
-			radius = 8,
+			radius = 10,
 			rending_stacks_on_minions_hit_by_arc = 8,
 		},
 		monster_hunter = {
@@ -246,7 +251,7 @@ local talent_settings = {
 		dissector = {
 			critical_strike_chance = 0.015,
 			damage = 0.025,
-			extra_cooldown_on_elite_or_special_kills = 0.05,
+			extra_cooldown_on_elite_or_special_kills = 0.025,
 			extra_max_stacks = 2,
 			max_stacks = 6,
 			melee_attack_speed = 0.015,
@@ -411,7 +416,7 @@ local talent_settings = {
 			toughness_damage_taken_multiplier = 0.025,
 		},
 		cryptic_stun_suppression_immune = {
-			duration = 4,
+			duration = 5,
 		},
 		cryptic_successful_dodge_stamina = {
 			stamina_replenished_percent = 0.1,
@@ -490,7 +495,7 @@ local talent_settings = {
 			toughness_replenish_percent = 0.25,
 		},
 		cryptic_electrocution_applies_brittleness = {
-			stacks = 4,
+			stacks = 3,
 		},
 		cryptic_stamina_increases_damage = {
 			damage = 0.15,
@@ -521,11 +526,11 @@ local talent_settings = {
 		},
 		cryptic_stun_dr_power = {
 			damage_taken_multiplier = 0.85,
-			percent_cooldown_spent_per_melee_hit_taken = 0.05,
+			percent_cooldown_spent_per_melee_hit_taken = 0.075,
 		},
 		cryptic_revive_speed_and_dr = {
-			damage_taken_multiplier = 0.8,
-			revive_speed_modifier = 0.2,
+			damage_taken_multiplier = 0.75,
+			revive_speed_modifier = 0.25,
 		},
 		cryptic_stacking_ranged_dr_on_melee = {
 			duration = 5,
@@ -601,7 +606,7 @@ local talent_settings = {
 		},
 		cryptic_no_braced_movement_penalty = {
 			alternate_fire_movement_speed_reduction_modifier = 0.5,
-			spread_modifier = -0.3,
+			spread_modifier = -0.45,
 		},
 		cryptic_damage_on_ability = {
 			damage = 0.15,
@@ -614,13 +619,13 @@ local talent_settings = {
 		},
 		cryptic_push_stagger_stamina = {
 			push_impact_modifier = 0.75,
-			target_stamina_percent = 0.75,
+			target_stamina_percent = 0.5,
 		},
 		cryptic_specials_marking = {
 			outline_range = 12.5,
 		},
 		cryptic_electrocution_push = {
-			cooldown_duration = 15,
+			cooldown_duration = 12,
 		},
 		cryptic_toughness_replenishment_on_kill_bonus = {
 			improved_min_charges = 0,

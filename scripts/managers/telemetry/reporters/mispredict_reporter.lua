@@ -8,10 +8,6 @@ MispredictReporter.init = function (self)
 	self._count = 0
 end
 
-MispredictReporter.update = function (self, dt, t)
-	return
-end
-
 MispredictReporter.report = function (self)
 	Managers.telemetry_events:mispredict_report(self._entries, self._count)
 end

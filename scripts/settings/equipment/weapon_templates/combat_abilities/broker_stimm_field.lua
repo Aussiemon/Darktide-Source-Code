@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/combat_abilities/broker_stimm_field.lua
 
+local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local Deployables = require("scripts/settings/deployables/deployables")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -12,7 +13,7 @@ weapon_template.action_inputs = {
 		buffer_time = 0.2,
 		input_sequence = {
 			{
-				input = "combat_ability_pressed",
+				input_alias = "wielded_input_pressed",
 				value = true,
 			},
 		},
@@ -37,6 +38,9 @@ weapon_template.action_inputs = {
 		},
 	},
 }
+
+table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inputs)
+
 weapon_template.action_input_hierarchy = {
 	{
 		input = "ability_pressed",
@@ -74,14 +78,6 @@ weapon_template.action_input_hierarchy = {
 	},
 }
 weapon_template.actions = {
-	action_unwield = {
-		allowed_during_sprint = true,
-		kind = "unwield",
-		start_input = "wield",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
-	},
 	action_wield = {
 		abort_sprint = true,
 		allowed_during_sprint = true,
@@ -100,17 +96,15 @@ weapon_template.actions = {
 			ability_released = {
 				action_name = "action_release",
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 		},
 	},
 	action_release = {
-		ability_type = "combat_ability",
 		abort_sprint = true,
 		allowed_during_sprint = true,
 		anim_cancel_event = "action_finished",
 		can_drop_anim_event = "drop",
+		consume_ability_usage_cost = true,
 		kind = "place_deployable",
 		pause_ability_cooldown = true,
 		place_time = 0.54,
@@ -119,7 +113,6 @@ weapon_template.actions = {
 		start_input = nil,
 		try_until_placed = true,
 		uninterruptible = true,
-		use_ability_charge = true,
 		use_aim_date = false,
 		vo_tag = "ability_stimm",
 		total_time = math.huge,
@@ -138,9 +131,7 @@ weapon_template.actions = {
 			unwield_to_previous = {
 				action_name = "action_unwield_to_previous",
 			},
-			wield = {
-				action_name = "action_unwield",
-			},
+			wield = BaseTemplateSettings.generate_wield_chain_actions(),
 		},
 	},
 	action_unwield_to_previous = {
@@ -148,9 +139,11 @@ weapon_template.actions = {
 		kind = "unwield_to_previous",
 		total_time = 0,
 		uninterruptible = true,
-		unwield_to_weapon = true,
 	},
 }
+
+table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
+
 weapon_template.keywords = {
 	"pocketable",
 }

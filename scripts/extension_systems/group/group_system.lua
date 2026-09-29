@@ -232,6 +232,10 @@ GroupSystem.bot_groups_from_sides = function (self, sides)
 	return TEMP_BOT_GROUPS
 end
 
+GroupSystem.bot_group_from_side = function (self, side)
+	return self._bot_groups[side]
+end
+
 GroupSystem.group_from_id = function (self, group_id)
 	local groups = self._groups
 

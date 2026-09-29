@@ -1,5 +1,6 @@
 ﻿-- chunkname: @scripts/tests/testify_snippets.lua
 
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TestifySnippets = {}
 
 TestifySnippets.create_new_character = function ()
@@ -30,7 +31,7 @@ TestifySnippets.exit_to_main_menu_and_wait = function (duration)
 	Testify:make_request("exit_to_main_menu")
 
 	if not DEDICATED_SERVER then
-		Testify:make_request("wait_for_main_menu_displayed")
+		Testify:make_request("wait_for_state_main_menu")
 	end
 
 	TestifySnippets.wait(duration)
@@ -71,7 +72,7 @@ TestifySnippets.skip_splash_and_title_screen = function ()
 end
 
 TestifySnippets.wait_for_main_menu = function ()
-	Testify:make_request("wait_for_main_menu_displayed")
+	Testify:make_request("wait_for_state_main_menu")
 	Testify:make_request("wait_for_profile_synchronization")
 end
 

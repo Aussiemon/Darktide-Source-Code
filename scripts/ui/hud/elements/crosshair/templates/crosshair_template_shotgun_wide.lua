@@ -60,7 +60,7 @@ end
 template.update_function = function (parent, ui_renderer, widget, template, crosshair_settings, dt, t, draw_hit_indicator)
 	local style = widget.style
 	local hit_progress, hit_color, hit_weakspot = parent:hit_indicator()
-	local yaw, pitch = parent:_spread_yaw_pitch(dt)
+	local yaw, pitch = parent:_spread_yaw_pitch()
 
 	if yaw and pitch then
 		local scalar_vertical = SPREAD_DISTANCE_VERTICAL * (crosshair_settings.spread_scalar_vertical or 1)

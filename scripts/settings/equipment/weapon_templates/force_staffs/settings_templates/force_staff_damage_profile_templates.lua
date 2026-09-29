@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_damage_profile_templates.lua
 
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -8,6 +9,7 @@ local GibbingSettings = require("scripts/settings/gibbing/gibbing_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
@@ -107,10 +109,10 @@ damage_templates.default_force_staff_bfg = {
 	gibbing_type = gibbing_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_bfg,
 	ignore_hitzone_multipliers_breed_tags = {
-		"horde",
-		"roamer",
-		"elite",
-		"special",
+		breed_tags.horde,
+		breed_tags.roamer,
+		breed_tags.elite,
+		breed_tags.special,
 	},
 	targets = {
 		default_target = {

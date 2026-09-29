@@ -10,27 +10,8 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local weapon_template = {}
 
-weapon_template.action_inputs = {
-	combat_ability = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				input = "combat_ability_pressed",
-				value = true,
-			},
-		},
-	},
-}
-
-table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.combat_ability_action_inputs)
-
-weapon_template.action_input_hierarchy = {
-	{
-		input = "combat_ability",
-		transition = "base",
-	},
-}
+weapon_template.action_inputs = {}
+weapon_template.action_input_hierarchy = {}
 weapon_template.actions = {
 	action_wield = {
 		allowed_during_sprint = true,
@@ -38,11 +19,7 @@ weapon_template.actions = {
 		kind = "wield",
 		total_time = 0.5,
 		uninterruptible = true,
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-		},
+		allowed_chain_actions = {},
 	},
 	action_warp_charge_explode = {
 		anim_end_event = "explode_finished",
@@ -67,22 +44,10 @@ weapon_template.actions = {
 			damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
 			damage_type = damage_types.warp_overload,
 		},
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability",
-			},
-		},
+		allowed_chain_actions = {},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.overheat_explosion_speed_modifier,
 		},
-	},
-	combat_ability = {
-		kind = "unwield_to_specific",
-		slot_to_wield = "slot_combat_ability",
-		start_input = "combat_ability",
-		total_time = 0,
-		uninterruptible = true,
-		allowed_chain_actions = {},
 	},
 }
 weapon_template.breed_anim_state_machine_3p = {

@@ -267,70 +267,55 @@ SocialService.fetch_friends = function (self, force_update)
 
 	local platform_friends_promise = self:_fetch_platform_friends()
 	local fatshark_friends_promise = self:_fetch_fatshark_friends(force_update)
-	local num_promises = 2
 
-	local function aggregate_function(friends_data)
-		local PLATFORM_FRIEND_LIST = 1
-		local friends = {}
+	local function aggregate_function(fatshark_friends, platform_friends)
+		local friends_lists = {
+			fatshark_friends,
+			platform_friends,
+		}
+		local num_potential_friends = #fatshark_friends + #platform_friends
+		local friends_duplicate_lut = Script.new_map(num_potential_friends)
+		local player_info_by_platform_id = Script.new_map(num_potential_friends)
+		local friends = Script.new_array(num_potential_friends)
 
 		self._friends_list_has_changed = false
 
-		for friends_data_index = 1, num_promises do
-			local friends_data_list = friends_data[friends_data_index]
+		for i = 1, #friends_lists do
+			local friends_data_list = friends_lists[i]
 
-			if friends_data_list then
-				for friends_list_index = 1, #friends_data_list do
-					local friend = friends_data_list[friends_list_index]
+			for j = 1, #friends_data_list do
+				local friend = friends_data_list[j]
 
-					if friends_data_index == PLATFORM_FRIEND_LIST then
-						self:_get_player_info_by_platform_friend(friend:platform_social())
+				if friends_data_list == platform_friends then
+					local platform_user_id = friend:platform_user_id()
+
+					if platform_user_id ~= "" then
+						player_info_by_platform_id[platform_user_id] = friend
 					end
-
+				else
 					self:_update_player_info_platform_information(friend)
-					self:_remove_friend_request_if_friends_or_blocked(friend)
+				end
 
-					if friend:is_friend() then
-						local is_duplicate = false
-						local friend_platform_user_id = friend:platform_user_id()
+				self:_remove_friend_request_if_friends_or_blocked(friend)
 
-						if friends_data_index > 1 then
-							for i = 1, #friends do
-								is_duplicate = is_duplicate or friends[i]:account_id() == friend:account_id()
+				if friend:is_friend() then
+					local account_id = friend:account_id()
+					local already_referenced = friends_duplicate_lut[friend]
 
-								if friend_platform_user_id ~= "" and friends[i]:platform_user_id() == friend_platform_user_id then
-									is_duplicate = true
-									friends[i] = friend
-								end
-							end
-						end
+					if not already_referenced then
+						friends_duplicate_lut[friend] = true
 
-						if not is_duplicate then
-							local is_blocked_friend = false
+						local is_blocked_friend = self._blocked_accounts_list[account_id] ~= nil
 
-							if friends_data_index == PLATFORM_FRIEND_LIST then
-								for _, playerinfo in pairs(self._blocked_accounts_list) do
-									if playerinfo:platform_user_id() == friend:platform_user_id() then
-										is_blocked_friend = true
-
-										break
-									end
-								end
-							end
-
-							if not is_blocked_friend then
-								friends[#friends + 1] = friend
-							end
+						if not is_blocked_friend then
+							friends[#friends + 1] = friend
 						end
 					end
 				end
-
-				if friends_data_index == PLATFORM_FRIEND_LIST then
-					self:_update_platform_players(friends_data_list, PLATFORM_FRIENDS)
-				end
-			else
-				self._friends_list_has_changed = true
 			end
 		end
+
+		self:_update_platform_players(player_info_by_platform_id, PLATFORM_FRIENDS)
 
 		self._friends_list = friends
 		self._friend_invites_has_changed = true
@@ -339,7 +324,25 @@ SocialService.fetch_friends = function (self, force_update)
 		return friends
 	end
 
-	friends_list_promise = Promise.all(platform_friends_promise, fatshark_friends_promise):next(aggregate_function, aggregate_function)
+	friends_list_promise = Promise.all(fatshark_friends_promise, platform_friends_promise):next(function (data)
+		if data[1] == nil and data[2] == nil then
+			self._friends_list_has_changed = true
+
+			return self._friends_list
+		end
+
+		local result = aggregate_function(data[1] or {}, data[2] or {})
+
+		self._friends_list_has_changed = data[1] == nil or data[2] == nil
+
+		return result
+	end, function (error)
+		_warning(string.format("Failed aggregating friends lists: %s", table.tostring(error, 3)))
+
+		self._friends_list_has_changed = true
+
+		return self._friends_list
+	end)
 	self._friends_list_promise = friends_list_promise
 
 	return friends_list_promise
@@ -820,13 +823,25 @@ SocialService.can_kick_from_party = function (self, player_info)
 	local peer_id = player_info:peer_id()
 	local voting_template = self:_get_kick_voting_template(player_info)
 
-	if not voting_template or not Managers.voting:can_start_voting("kick_from_mission", {
-		kick_peer_id = peer_id,
-	}) then
+	if not voting_template then
 		return false
 	end
 
+	local params, fail_reason = self:_kick_voting_params(voting_template, peer_id)
+
+	if not params or not Managers.voting:can_start_voting(voting_template, params) then
+		return false, fail_reason
+	end
+
 	return true
+end
+
+SocialService._kick_voting_params = function (self, voting_template, kick_peer_id)
+	local params = {
+		kick_peer_id = kick_peer_id,
+	}
+
+	return params
 end
 
 SocialService._is_havoc_mission_order_owner = function (self, player_info)
@@ -863,11 +878,10 @@ SocialService.initiate_kick_vote = function (self, player_info)
 	end
 
 	local voting_template = self:_get_kick_voting_template(player_info)
+	local params = voting_template and self:_kick_voting_params(voting_template, peer_id)
 
-	if voting_template then
-		Managers.voting:start_voting(voting_template, {
-			kick_peer_id = peer_id,
-		}):next(function (data)
+	if params then
+		Managers.voting:start_voting(voting_template, params):next(function (data)
 			self._voting_id = data
 		end):catch(function (fail_reason)
 			Log.info("SocialService", fail_reason)
@@ -1096,11 +1110,7 @@ end
 SocialService.can_block = function (self, account_id)
 	local player_info = account_id and self._players_by_account_id[account_id]
 
-	if not player_info or player_info:online_status() ~= OnlineStatus.online then
-		local reason = "loc_social_fail_reason_user_not_online"
-
-		return false, reason
-	elseif self._num_blocked_accounts >= self._max_blocked_accounts then
+	if self._num_blocked_accounts >= self._max_blocked_accounts then
 		local reason = "loc_social_cannot_block_reason_max_num_reached"
 
 		return false, reason
@@ -1162,9 +1172,10 @@ SocialService._fetch_platform_friends = function (self)
 	local platform_friends_manager = self._platform_social
 
 	return platform_friends_manager:fetch_friends_list():next(function (platform_friends_data)
-		local friends = {}
+		local num_friends_data = #platform_friends_data
+		local friends = Script.new_array(num_friends_data)
 
-		for i = 1, #platform_friends_data do
+		for i = 1, num_friends_data do
 			local friend = platform_friends_data[i]
 			local player_info = self:_get_player_info_by_platform_friend(friend)
 
@@ -1195,9 +1206,10 @@ SocialService._fetch_fatshark_friends = function (self, force_update)
 		self._max_fatshark_friends = fatshark_friends_data.maxFriends
 
 		local fatshark_friends = fatshark_friends_data.friends
-		local friends = {}
+		local num_friends = #fatshark_friends
+		local friends = Script.new_array(num_friends)
 
-		for i = 1, #fatshark_friends do
+		for i = 1, num_friends do
 			local friend_data = fatshark_friends[i]
 			local account_id = friend_data.accountId
 			local account_name = friend_data.accountName
@@ -1228,7 +1240,8 @@ SocialService._update_blocked_players = function (self, blocked_accounts, platfo
 		local player_info = self:_get_player_info_by_platform_friend(blocked_account)
 
 		self:_remove_friend_request_if_friends_or_blocked(player_info)
-		table.insert(platform_player_info, player_info)
+
+		platform_player_info[player_info:platform_user_id()] = player_info
 	end
 
 	self:_update_platform_players(platform_player_info, PLATFORM_BLOCKED)
@@ -1336,7 +1349,9 @@ SocialService.cb_presence_account_id_change = function (self, updated_player_inf
 			player_info:set_platform_social(platform_social)
 		end
 
-		self._players_by_platform_user_id[account_id] = player_info
+		local platform_user_id = platform_social:id()
+
+		self._players_by_platform_user_id[platform_user_id] = player_info
 	end
 
 	self._friends_list_has_changed = true
@@ -1389,32 +1404,15 @@ end
 SocialService._update_platform_players = function (self, platform_accounts, account_type)
 	local players_by_platform_user_id = self._players_by_platform_user_id
 
-	if platform_accounts then
-		for key, value in pairs(players_by_platform_user_id) do
-			local current_user = players_by_platform_user_id[key]
+	for user_id, player_info in pairs(players_by_platform_user_id) do
+		if not platform_accounts[user_id] then
+			local platform_social = player_info:platform_social()
 
-			if current_user then
-				local found_user = false
+			if platform_social then
+				local is_blocked = platform_social:is_blocked()
 
-				for i = 1, #platform_accounts do
-					if platform_accounts[i]:platform_user_id() == key then
-						found_user = true
-
-						break
-					end
-				end
-
-				if not found_user then
-					local platform_social = current_user:platform_social()
-
-					if platform_social then
-						local is_friend_account = account_type == PLATFORM_FRIENDS and not platform_social:is_blocked()
-						local is_blocked_account = account_type == PLATFORM_BLOCKED and platform_social:is_blocked()
-
-						if is_friend_account or is_blocked_account then
-							players_by_platform_user_id[key] = nil
-						end
-					end
+				if account_type == PLATFORM_FRIENDS and not is_blocked or account_type == PLATFORM_BLOCKED and is_blocked then
+					players_by_platform_user_id[user_id] = nil
 				end
 			end
 		end
@@ -1422,9 +1420,8 @@ SocialService._update_platform_players = function (self, platform_accounts, acco
 end
 
 SocialService._update_player_info_platform_information = function (self, player_info)
-	local players_by_platform_user_id = self._players_by_platform_user_id
 	local platform_user_id = player_info:platform_user_id()
-	local platform_player_info = platform_user_id and players_by_platform_user_id[platform_user_id]
+	local platform_player_info = self._players_by_platform_user_id[platform_user_id]
 
 	player_info:set_platform_social(platform_player_info and platform_player_info:platform_social())
 end
@@ -1451,8 +1448,9 @@ SocialService._remove_friend_request_if_friends_or_blocked = function (self, pla
 	local platform_friend_status = player_info:platform_friend_status()
 	local friend_status = player_info:friend_status()
 	local is_platform_friend_and_invited = platform_friend_status == FriendStatus.friend and friend_status == FriendStatus.invited
-	local is_blocked_and_invited = player_info:is_blocked() and friend_status == FriendStatus.invited
-	local is_blocked_and_invite = player_info:is_blocked() and friend_status == FriendStatus.invite
+	local is_blocked = player_info:is_blocked()
+	local is_blocked_and_invited = is_blocked and friend_status == FriendStatus.invited
+	local is_blocked_and_invite = is_blocked and friend_status == FriendStatus.invite
 
 	if is_platform_friend_and_invited or is_blocked_and_invited then
 		self:cancel_friend_request(player_info:account_id())

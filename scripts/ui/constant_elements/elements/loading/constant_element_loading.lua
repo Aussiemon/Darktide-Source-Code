@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/ui/constant_elements/elements/loading/constant_element_loading.lua
 
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local Views = require("scripts/ui/views/views")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local NO_TRANSITION_UI = {
 	use_transition_ui = false,
@@ -53,7 +54,7 @@ local VIEW_SETTINGS = {
 				end
 			end
 
-			local mechanism_data = Managers.mechanism:mechanism_data()
+			local mechanism_data = Managers.mechanism:current_mechanism() and Managers.mechanism:mechanism_data()
 			local mission_name = mechanism_data and mechanism_data.mission_name
 
 			if mission_name == nil then
@@ -101,7 +102,20 @@ local VIEW_SETTINGS = {
 			end
 
 			if Managers.state and Managers.state.camera and not Managers.state.camera:has_proper_3d_camera() then
-				return true
+				local active_views = Managers.ui:active_views()
+				local need_coverage = true
+
+				for _, view_name in ipairs(active_views) do
+					if Views[view_name].disable_game_world then
+						need_coverage = false
+
+						break
+					end
+				end
+
+				if #active_views >= 1 and need_coverage then
+					return true
+				end
 			end
 
 			if Managers.state and Managers.state.extension then

@@ -127,6 +127,11 @@ function _try_localization_info(item, trait_level, lerp_value)
 
 	local trait = item.trait
 	local buff_name = trait
+
+	if not buff_name or buff_name == "" then
+		return nil
+	end
+
 	local buff_template = BuffTemplates[buff_name]
 
 	if not buff_template then

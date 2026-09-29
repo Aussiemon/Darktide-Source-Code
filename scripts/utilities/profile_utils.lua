@@ -1,10 +1,16 @@
 ﻿-- chunkname: @scripts/utilities/profile_utils.lua
 
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
+local BotSettings = require("scripts/settings/bot/bot_settings")
+local Breeds = require("scripts/settings/breed/breeds")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerTalents = require("scripts/utilities/player_talents/player_talents")
+local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
 local SaveData = require("scripts/managers/save/save_data")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
@@ -12,144 +18,20 @@ local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utiliti
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
-local special_rules = SpecialRulesSettings.special_rules
-local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
-local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local BOT_NAMES = BotSettings.bot_names
+local SPECIAL_RULES = SpecialRulesSettings.special_rules
 local ProfileUtils = {}
 
-ProfileUtils.character_names = {
-	male_names_1 = {
-		"Ackor",
-		"Barbor",
-		"Baudlarn",
-		"Brack",
-		"Candorick",
-		"Claren",
-		"Cockerill",
-		"Corot",
-		"Derlin",
-		"Dickot",
-		"Doran",
-		"Dorfan",
-		"Dorsworth",
-		"Farridge",
-		"Fascal",
-		"Foronat",
-		"Fusell",
-		"Goyan",
-		"Harken",
-		"Haveloch",
-		"Henam",
-		"Hugot",
-		"Jerican",
-		"Keating",
-		"Kradd",
-		"Lamark",
-		"Lukas",
-		"Martack",
-		"Mikel",
-		"Montov",
-		"Mussat",
-		"Narvast",
-		"Nura",
-		"Nzoni",
-		"Onceda",
-		"Rossel",
-		"Rudge",
-		"Salcan",
-		"Saldar",
-		"Scottor",
-		"Shaygor",
-		"Shiller",
-		"Skyv",
-		"Smither",
-		"Tademar",
-		"Taur",
-		"Tecker",
-		"Tuttor",
-		"Verbal",
-		"Victor",
-		"Villan",
-		"Xavier",
-		"Zapard",
-		"Zek",
-	},
-	female_names_1 = {
-		"Erith",
-		"Agda",
-		"Ambre",
-		"Amelia",
-		"Avrilia",
-		"Axella",
-		"Beretille",
-		"Blonthe",
-		"Clea",
-		"Coletta",
-		"Constanze",
-		"Dalilla",
-		"Diana",
-		"Doriana",
-		"Edithia",
-		"Eglantia",
-		"Elodine",
-		"Ephrael",
-		"Felicia",
-		"Genevieve",
-		"Greyla",
-		"Guendolys",
-		"Guenhvya",
-		"Guenievre",
-		"Heinrike",
-		"Helene",
-		"Helmia",
-		"Honorine",
-		"Ines",
-		"Iris",
-		"Isaure",
-		"Jacinta",
-		"Josea",
-		"Justine",
-		"Kelvi",
-		"Kerstin",
-		"Kinnia",
-		"Kline",
-		"Lassana",
-		"Leana",
-		"Leatha",
-		"Liari",
-		"Lorette",
-		"Lyta",
-		"Maia",
-		"Mallava",
-		"Marakanthe",
-		"Maylin",
-		"Mejara",
-		"Meliota",
-		"Melisande",
-		"Mira",
-		"Mylene",
-		"Nadia",
-		"Nalana",
-		"Natacha",
-		"Ophelia",
-		"Prothei",
-		"Rosemonde",
-		"Rosine",
-		"Ruby",
-		"Sanei",
-		"Sarine",
-		"Severa",
-		"Silvana",
-		"Undine",
-		"Unkara",
-		"Valleni",
-		"Vissia",
-		"Waynoka",
-		"Yvette",
-		"Zelie",
-		"Zellith",
-	},
-}
+local function _validate_profile_from_backend_data(backend_profile_data)
+	local character = backend_profile_data.character
+	local archetype_name = character.archetype
+
+	if not Archetypes[archetype_name] then
+		return false, "Archetype not found: " .. tostring(archetype_name)
+	end
+
+	return true
+end
 
 local function _fill_talents_and_selected_nodes(profile, character, archetype_name)
 	local archetype = Archetypes[archetype_name]
@@ -176,9 +58,21 @@ local function _fill_talents_and_selected_nodes(profile, character, archetype_na
 	end
 
 	PlayerTalents.add_archetype_base_talents(archetype, talents)
+
+	local active_layouts = TalentLayoutParser.archetype_layouts(archetype)
+
+	TalentLayoutParser.validate_talent_layouts(talents, active_layouts, false)
 end
 
 local function _profile_from_backend_data(backend_profile_data)
+	local profile_valid, not_valid_reason = _validate_profile_from_backend_data(backend_profile_data)
+
+	if not profile_valid then
+		Log.info("ProfileUtils", "Ignoring profile due to validation failure: '%s'", not_valid_reason)
+
+		return nil
+	end
+
 	local profile_data = table.clone(backend_profile_data)
 	local character = profile_data.character
 	local archetype_name = character.archetype
@@ -188,24 +82,23 @@ local function _profile_from_backend_data(backend_profile_data)
 	local expertise_points = progression and progression.expertisePoints or 0
 	local item_ids = character.inventory
 	local backend_profile = {
+		loadout = nil,
+		visual_loadout = nil,
 		character_id = character.id,
 		archetype = archetype_name,
+		current_level = current_level,
+		talent_points = talent_points,
+		expertise_points = expertise_points,
 		gender = character.gender,
 		selected_voice = character.selected_voice,
 		voice_effects = character.voice_effects,
-		skin_color = character.skin_color,
-		hair_color = character.hair_color,
-		eye_color = character.eye_color,
 		loadout_item_ids = item_ids,
 		loadout_item_data = {},
 		lore = character.lore,
 		selected_nodes = {},
 		talents = {},
-		current_level = current_level,
-		talent_points = talent_points,
-		expertise_points = expertise_points,
 		name = character.name,
-		personal = character.personal,
+		character_height = character.character_height,
 		companion = character.companion,
 		narrative = character.narrative,
 	}
@@ -637,7 +530,9 @@ end
 ProfileUtils.backend_profile_data_to_profile = function (backend_profile_data)
 	local profile = _profile_from_backend_data(backend_profile_data)
 
-	_convert_profile_from_lookups_to_data(profile)
+	if profile then
+		_convert_profile_from_lookups_to_data(profile)
+	end
 
 	return profile
 end
@@ -769,9 +664,6 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		gender = character.gender,
 		selected_voice = character.selected_voice,
 		voice_effects = character.voice_effects,
-		skin_color = character.skin_color,
-		hair_color = character.hair_color,
-		eye_color = character.eye_color,
 		loadout = {},
 		visual_loadout = {},
 		loadout_item_ids = item_ids,
@@ -780,13 +672,10 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		selected_nodes = {},
 		talents = {},
 		name = character.name,
-		personal = character.personal,
+		character_height = character.character_height,
+		companion = character.companion,
 		narrative = character.narrative,
 	}
-
-	if character.companion then
-		profile.companion = character.companion
-	end
 
 	for slot, gear_id in pairs(item_ids) do
 		if ItemSlotSettings[slot] then
@@ -835,9 +724,18 @@ ProfileUtils.character_companion_name = function (profile)
 	return profile.companion and profile.companion.name or "<profile_companion_name>"
 end
 
-ProfileUtils.generate_random_name = function (profile)
-	local name_list = ProfileUtils.character_names[profile.name_list_id]
-	local name = name_list and name_list[math.random(1, #name_list)] or "???"
+ProfileUtils.bot_character_name = function (profile)
+	local archetype = profile.archetype
+	local breed = archetype.breed
+	local gender = profile.gender
+	local breed_name_list = BOT_NAMES[breed]
+	local gender_name_list = breed_name_list and breed_name_list[gender]
+
+	if not gender_name_list or #gender_name_list == 0 then
+		return "<bot_character_name>"
+	end
+
+	local name = gender_name_list[math.random(1, #gender_name_list)]
 
 	return name
 end
@@ -1130,8 +1028,8 @@ ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id,
 	local talents = profile_preset.talents
 
 	if talent_nodes then
-		for talent_node_name, points_spent in pairs(talent_nodes) do
-			talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
+		for talent_node_name, selection_data in pairs(talent_nodes) do
+			talents[talent_node_name] = selection_data and selection_data > 0 and selection_data or nil
 		end
 
 		profile_preset.talents_version = talents_version
@@ -1140,14 +1038,14 @@ ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id,
 	Managers.save:queue_save()
 end
 
-ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, talent_node_name, points_spent)
+ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, talent_node_name, selection_data)
 	local character_data = _character_save_data()
 
 	if not character_data then
 		return
 	end
 
-	if points_spent and type(points_spent) ~= "number" then
+	if selection_data and type(selection_data) ~= "number" then
 		return
 	end
 
@@ -1169,7 +1067,7 @@ ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, 
 
 	local talents = profile_preset.talents
 
-	talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
+	talents[talent_node_name] = selection_data and selection_data > 0 and selection_data or nil
 
 	Managers.save:queue_save()
 end
@@ -1257,19 +1155,6 @@ ProfileUtils.get_profile_presets = function ()
 	return profile_presets
 end
 
-ProfileUtils.verify_saved_profile_presets_talents_version = function (character_id, archetype_name)
-	local save_manager = Managers.save
-	local character_data = character_id and save_manager and save_manager:character_data(character_id)
-
-	if not character_data then
-		return
-	end
-
-	local profile_presets = character_data.profile_presets
-
-	return profile_presets
-end
-
 ProfileUtils.generate_visual_loadout = function (loadout)
 	local ui_loadout = {}
 
@@ -1322,11 +1207,11 @@ ProfileUtils.has_companion = function (profile)
 
 				if type(special_rule_name) == "table" then
 					for ii = 1, #special_rule_name do
-						if special_rule_name[ii] == special_rules.disable_companion then
+						if special_rule_name[ii] == SPECIAL_RULES.disable_companion then
 							return false, companion_breed
 						end
 					end
-				elseif special_rule_name == special_rules.disable_companion then
+				elseif special_rule_name == SPECIAL_RULES.disable_companion then
 					return false, companion_breed
 				end
 			end
@@ -1334,6 +1219,169 @@ ProfileUtils.has_companion = function (profile)
 	end
 
 	return true, companion_breed
+end
+
+local function _mannequin_breed(item, profile)
+	local mannequin_breed_name
+	local profile_archetype = profile and profile.archetype
+	local profile_breed_name = profile_archetype and profile_archetype.breed
+	local item_breeds = item.breeds
+
+	if item_breeds and not table.is_empty(item_breeds) then
+		if profile_breed_name and table.find(item_breeds, profile_breed_name) then
+			mannequin_breed_name = profile_breed_name
+		end
+
+		if not mannequin_breed_name then
+			for ii = 1, #item_breeds do
+				local item_breed_name = item_breeds[ii]
+
+				if Breeds[item_breed_name] then
+					mannequin_breed_name = item_breed_name
+
+					break
+				end
+			end
+		end
+	end
+
+	return mannequin_breed_name or profile_breed_name
+end
+
+local function _mannequin_archetype(item, profile, mannequin_breed_name)
+	local mannequin_archetype_name
+	local profile_archetype = profile and profile.archetype
+	local profile_archetype_name = profile_archetype and profile_archetype.name
+	local item_archetypes = item.archetypes
+
+	if item_archetypes and not table.is_empty(item_archetypes) and profile_archetype_name and table.find(item_archetypes, profile_archetype_name) then
+		mannequin_archetype_name = profile_archetype_name
+	end
+
+	local archetypes_by_breed = {}
+	local archetypes_by_breed_size = 0
+
+	if not mannequin_archetype_name then
+		local compatible_archetype = false
+
+		for archetype_name, archetype in pairs(Archetypes) do
+			if archetype.breed == mannequin_breed_name then
+				archetypes_by_breed[#archetypes_by_breed + 1] = archetype_name
+				archetypes_by_breed_size = archetypes_by_breed_size + 1
+
+				if archetype_name == profile_archetype_name then
+					compatible_archetype = true
+				end
+			end
+		end
+
+		if compatible_archetype then
+			mannequin_archetype_name = profile_archetype_name
+		elseif archetypes_by_breed_size == 1 then
+			mannequin_archetype_name = archetypes_by_breed[1]
+		end
+	end
+
+	local archetypes_by_item = {}
+	local archetypes_by_item_size = 0
+
+	if not mannequin_archetype_name and item_archetypes then
+		local item_archetype
+		local num_archetypes = #item_archetypes
+		local compatible_archetype = false
+
+		for i = 1, num_archetypes do
+			local item_archetype_name = item_archetypes[i]
+
+			item_archetype = Archetypes[item_archetype_name]
+
+			if item_archetype then
+				archetypes_by_item[#archetypes_by_item + 1] = item_archetype_name
+				archetypes_by_item_size = archetypes_by_item_size + 1
+
+				if item_archetype_name == profile_archetype_name then
+					compatible_archetype = true
+				end
+			end
+		end
+
+		if compatible_archetype then
+			mannequin_archetype_name = profile_archetype_name
+		end
+	end
+
+	if not mannequin_archetype_name and archetypes_by_breed_size > 1 then
+		local archetype_index = math.random(1, archetypes_by_breed_size)
+
+		mannequin_archetype_name = archetypes_by_breed[archetype_index]
+	end
+
+	if not mannequin_archetype_name and archetypes_by_item_size > 1 then
+		local archetype_index = math.random(1, archetypes_by_item_size)
+
+		mannequin_archetype_name = archetypes_by_item[archetype_index]
+	end
+
+	return mannequin_archetype_name or profile_archetype_name
+end
+
+local function _mannequin_gender(item, profile, mannequin_breed_name)
+	local mannequin_gender
+	local profile_gender = profile and profile.gender
+	local item_genders = item.genders
+
+	if item_genders and not table.is_empty(item_genders) and profile_gender and table.find(item_genders, profile_gender) then
+		mannequin_gender = profile_gender
+	end
+
+	if not mannequin_gender then
+		local breed = Breeds[mannequin_breed_name]
+
+		if breed then
+			local default_gender
+			local breed_genders = breed.genders
+
+			for ii = 1, #breed_genders do
+				local gender = breed_genders[ii]
+
+				if gender == profile_gender then
+					mannequin_gender = profile_gender
+				end
+
+				if gender == "male" then
+					default_gender = gender
+				end
+			end
+
+			mannequin_gender = mannequin_gender or default_gender or breed_genders[1]
+		end
+
+		mannequin_gender = mannequin_gender or profile_gender
+	end
+
+	return mannequin_gender
+end
+
+ProfileUtils.create_mannequin_profile = function (item, profile)
+	local mannequin_breed_name = _mannequin_breed(item, profile)
+	local mannequin_archetype_name = _mannequin_archetype(item, profile, mannequin_breed_name)
+	local mannequin_gender = _mannequin_gender(item, profile, mannequin_breed_name)
+	local item_slot_name
+
+	if item.slots and not table.is_empty(item.slots) then
+		item_slot_name = item.slots[1]
+	end
+
+	local loadout = {}
+
+	PlayerCharacterBody.fill_mannequin_loadout(loadout, item, item_slot_name, mannequin_breed_name, mannequin_archetype_name, mannequin_gender)
+
+	return {
+		breed = Breeds[mannequin_breed_name],
+		archetype = Archetypes[mannequin_archetype_name],
+		gender = mannequin_gender,
+		loadout = loadout,
+	}
 end
 
 return ProfileUtils

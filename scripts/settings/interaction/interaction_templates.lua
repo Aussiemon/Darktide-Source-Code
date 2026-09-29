@@ -100,6 +100,16 @@ local interaction_templates = {
 		taggable = true,
 		ui_interaction_type = "pickup",
 	},
+	deployable_marker = {
+		action_text = "loc_action_interaction_use",
+		description = "loc_pickup_deployable_medical_crate_01",
+		duration = 0,
+		interaction_class_name = "deployable_marker",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/pocketable_medkit",
+		interaction_priority = 1,
+		taggable = true,
+		ui_interaction_type = "pickup",
+	},
 	health_station = {
 		action_text = "loc_action_interaction_use",
 		duration = 3,

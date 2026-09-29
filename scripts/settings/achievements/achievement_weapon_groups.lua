@@ -91,6 +91,9 @@ AchievementWeaponGroups.weapons = {
 		pattern = "ogryn_combatblade_p1",
 	},
 	{
+		pattern = "ogryn_hammer_2h_p1",
+	},
+	{
 		pattern = "ogryn_pickaxe_2h_p1",
 	},
 	{
@@ -178,6 +181,9 @@ AchievementWeaponGroups.weapons = {
 		pattern = "shotgun_p2",
 	},
 	{
+		pattern = "shotgun_p3",
+	},
+	{
 		pattern = "shotgun_p4",
 	},
 	{
@@ -204,6 +210,10 @@ AchievementWeaponGroups.weapons = {
 	{
 		pattern = "ogryn_thumper_p2",
 		pattern_name_string = "loc_weapon_family_ogryn_thumper_p1_m2",
+	},
+	{
+		pattern = "ogryn_thumper_p3",
+		pattern_name_string = "loc_weapon_family_ogryn_thumper_p1_m3",
 	},
 }
 

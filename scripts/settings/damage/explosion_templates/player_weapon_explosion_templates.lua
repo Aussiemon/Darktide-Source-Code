@@ -308,6 +308,96 @@ local explosion_templates = {
 			},
 		},
 	},
+	human_powermaul_activated_impact_m2 = {
+		collision_filter = "filter_player_character_explosion",
+		min_close_radius = 1,
+		min_radius = 2,
+		override_friendly_fire = false,
+		static_power_level = 500,
+		radius = {
+			4,
+			8,
+		},
+		close_radius = {
+			2,
+			3,
+		},
+		close_damage_profile = DamageProfileTemplates.powermaul_explosion_m2,
+		close_damage_type = damage_types.blunt_thunder,
+		damage_profile = DamageProfileTemplates.powermaul_explosion_outer_m2,
+		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			instant_aggro = true,
+			suppression_falloff = true,
+			distance = {
+				6,
+				12,
+			},
+			suppression_value = {
+				20,
+				50,
+			},
+		},
+		vfx = {
+			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				has_husk_events = true,
+			},
+		},
+	},
+	human_heavy_powermaul_activated_impact_m2 = {
+		collision_filter = "filter_player_character_explosion",
+		min_close_radius = 1,
+		min_radius = 2,
+		override_friendly_fire = false,
+		static_power_level = 500,
+		radius = {
+			4,
+			8,
+		},
+		close_radius = {
+			2,
+			3,
+		},
+		close_damage_profile = DamageProfileTemplates.powermaul_explosion_m2,
+		close_damage_type = damage_types.blunt_thunder,
+		damage_profile = DamageProfileTemplates.powermaul_explosion_outer_m2,
+		damage_type = damage_types.blunt_thunder,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+			"destructibles",
+		},
+		explosion_area_suppression = {
+			instant_aggro = true,
+			suppression_falloff = true,
+			distance = {
+				6,
+				12,
+			},
+			suppression_value = {
+				20,
+				50,
+			},
+		},
+		vfx = {
+			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave",
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				has_husk_events = true,
+			},
+		},
+	},
 	forcesword_activated_implosion = {
 		collision_filter = "filter_player_character_explosion",
 		min_close_radius = 2,

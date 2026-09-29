@@ -10,7 +10,7 @@ burning_settings.buff_effects = {
 	minions = {
 		fire = {
 			ailment_effect = ailment_effects.burning,
-			node_effects_priotity = minion_effects_priorities.ailment_effects,
+			node_effects_priority = minion_effects_priorities.ailment_effects,
 			node_effects = {
 				{
 					node_name = "j_spine",
@@ -133,7 +133,7 @@ burning_settings.buff_effects = {
 			},
 		},
 		bleedfire = {
-			node_effects_priotity = minion_effects_priorities.ailment_effects + 1,
+			node_effects_priority = minion_effects_priorities.ailment_effects + 1,
 			ailment_effect = ailment_effects.bleedfire,
 			node_effects = {
 				{

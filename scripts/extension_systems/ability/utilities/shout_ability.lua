@@ -10,6 +10,7 @@ local PlayerAssistNotifications = require("scripts/utilities/player_assist_notif
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ShoutTargetTemplates = require("scripts/settings/ability/shout_target_templates")
+local WeaponShoutTemplates = require("scripts/settings/equipment/weapon_handling_templates/weapon_shout_templates")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local Stagger = require("scripts/utilities/attack/stagger")
 local StaggerSettings = require("scripts/settings/damage/stagger_settings")
@@ -27,11 +28,18 @@ local ShoutAbility = {}
 local _handle_enemy_targets, _handle_allied_targets
 local broadphase_results = {}
 
-ShoutAbility.execute = function (radius, shout_target_template_name, player_unit, t, locomotion_component, shout_direction, backup_position, backup_rotation, external_power_modifier)
+ShoutAbility.execute = function (radius, shout_target_template_or_name, player_unit, t, locomotion_component, shout_direction, backup_position, backup_rotation, external_power_modifier)
 	local side_system = Managers.state.extension:system("side_system")
 	local player_side = side_system.side_by_unit[player_unit]
 	local player_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
-	local shout_target_template = ShoutTargetTemplates[shout_target_template_name]
+	local shout_target_template
+
+	if type(shout_target_template_or_name) == "table" then
+		shout_target_template = shout_target_template_or_name
+	else
+		shout_target_template = ShoutTargetTemplates[shout_target_template_or_name]
+	end
+
 	local enemies_hit = _handle_enemy_targets(t, radius, shout_target_template.enemies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)
 
 	_handle_allied_targets(t, radius, shout_target_template.allies, player_unit, locomotion_component, player_side, player_buff_extension, backup_position, backup_rotation, external_power_modifier)

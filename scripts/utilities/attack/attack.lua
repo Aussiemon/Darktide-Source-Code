@@ -170,6 +170,10 @@ ARGS = {
 	},
 	{
 		default = nil,
+		name = "slot_name",
+	},
+	{
+		default = nil,
 		name = "wounds_shape",
 	},
 	{
@@ -192,7 +196,7 @@ end
 
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
-function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attacking_unit_owner_unit, apply_owner_buffs, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape, triggered_proc_events_or_nil, close_explosion_hit)
+function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attacking_unit_owner_unit, apply_owner_buffs, attack_type, herding_template, damage_type, auto_completed_action, item, slot_name, wounds_shape, triggered_proc_events_or_nil, close_explosion_hit)
 	local was_alive_at_attack_start = HEALTH_ALIVE[attacked_unit]
 
 	attacking_unit = ALIVE[attacking_unit] and attacking_unit
@@ -202,6 +206,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
 	local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
 	local is_player_character = Breed.is_player(target_breed_or_nil)
+	local is_minion = Breed.is_minion(target_breed_or_nil)
 	local is_companion = Breed.is_companion(target_breed_or_nil)
 
 	if is_companion then
@@ -226,6 +231,16 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	local is_flanking, effective_flanking = AttackPositioning.is_flanking(attacked_unit, attacking_unit, attack_type, attack_direction)
+	local is_server = Managers.state.game_session:is_server()
+	local attacked_unit_target_unit
+
+	if is_minion and is_server then
+		local attacked_unit_blackboard = BLACKBOARDS[attacked_unit]
+		local perception_component = attacked_unit_blackboard.perception
+
+		attacked_unit_target_unit = perception_component and perception_component.target_unit
+	end
+
 	local attacked_action
 	local behaviour_extension = ScriptUnit.has_extension(attacked_unit, "behavior_system")
 
@@ -253,7 +268,6 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 		end
 	end
 
-	local is_server = Managers.state.game_session:is_server()
 	local attacker_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs()
 
 	if attacker_stat_buffs then
@@ -366,7 +380,7 @@ function _execute(attacked_unit, damage_profile, target_index, target_number, po
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack or false, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, close_explosion_hit, instakill)
+		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack or false, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position, item, slot_name, close_explosion_hit, instakill, attacked_unit_target_unit)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_owner_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -533,7 +547,7 @@ function _already_procced(triggered_proc_events_or_nil, proc_event)
 	return triggered_proc_events_or_nil[proc_event]
 end
 
-function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, close_explosion_hit, instakill)
+function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_owner_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, actual_damage_dealt, attack_result, stagger_result, was_staggered_before_attack, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_owner_breed_or_nil, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil, attacking_item_or_nil, attacking_slot_name_or_nil, close_explosion_hit, instakill, attacked_unit_target_unit)
 	local side_system = Managers.state.extension:system("side_system")
 	local attacker_is_player = Breed.is_player(attacker_owner_breed_or_nil)
 	local target_is_ally = side_system:is_ally(attacking_owner_unit, attacked_unit)
@@ -600,6 +614,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.hit_zone_name = hit_zone_name
 			attacker_param_table.attacking_item = attacking_item_or_nil
+			attacker_param_table.attacking_slot_name = attacking_slot_name_or_nil
 			attacker_param_table.close_explosion_hit = close_explosion_hit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
@@ -643,6 +658,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.hit_zone_name = hit_zone_name
 			attacker_param_table.attacking_item = attacking_item_or_nil
+			attacker_param_table.attacking_slot_name = attacking_slot_name_or_nil
 			attacker_param_table.close_explosion_hit = close_explosion_hit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_bleed_on_activated_hit_trait_hit, attacker_param_table)
@@ -686,7 +702,9 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.attacking_item = attacking_item_or_nil
+			attacker_param_table.attacking_slot_name = attacking_slot_name_or_nil
 			attacker_param_table.close_explosion_hit = close_explosion_hit
+			attacker_param_table.attacked_unit_target_unit = attacked_unit_target_unit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_kill, attacker_param_table)
 		end
@@ -723,6 +741,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.attacking_item = attacking_item_or_nil
+			attacker_param_table.attacking_slot_name = attacking_slot_name_or_nil
 			attacker_param_table.close_explosion_hit = close_explosion_hit
 
 			attacker_owner_buff_extension_or_nil:add_proc_event(proc_events.on_damage_dealt, attacker_param_table)
@@ -756,6 +775,7 @@ function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, 
 				target_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 				target_param_table.weapon_special = damage_profile.weapon_special
 				target_param_table.attacking_item = attacking_item_or_nil
+				target_param_table.attacking_slot_name = attacking_slot_name_or_nil
 				target_param_table.close_explosion_hit = close_explosion_hit
 
 				target_buff_extension_or_nil:add_proc_event(proc_events.on_player_hit_received, target_param_table)
@@ -847,9 +867,10 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 	end
 
 	if attacked_player then
+		local attacked_unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
+
 		if attack_result == attack_results.blocked then
-			local attacker_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
-			local weapon_action_component = attacker_data_extension:read_component("weapon_action")
+			local weapon_action_component = attacked_unit_data_extension:read_component("weapon_action")
 			local target_weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
 			local weapon_template_name = target_weapon_template and target_weapon_template.name
 
@@ -863,9 +884,10 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 			end
 		end
 
-		local did_damage_to_health = did_damage and attack_result ~= attack_results.toughness_absorbed
+		local character_state_component = attacked_unit_data_extension:read_component("character_state")
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
 
-		if did_damage_to_health then
+		if did_damage and not is_knocked_down then
 			local attacker_breed = attacker_owner_breed_or_nil or "none"
 
 			Managers.stats:record_private("hook_damage_taken", attacked_player, damage_dealt, attack_type, attacker_breed)

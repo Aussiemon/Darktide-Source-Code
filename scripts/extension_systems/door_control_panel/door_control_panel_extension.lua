@@ -49,11 +49,15 @@ end
 DoorControlPanelExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._state)
 
-	local object_id = Managers.state.unit_spawner:game_object_id(unit)
-	local door_level_index = Managers.state.unit_spawner:level_index(self._door_unit)
-	local channel = Managers.state.game_session:peer_to_channel(sender)
+	if self._door_extension then
+		local object_id, door_level_index, is_level_unit, channel
 
-	RPC.rpc_door_panel_register_door(channel, object_id, door_level_index)
+		object_id = Managers.state.unit_spawner:game_object_id(unit)
+		door_level_index = Managers.state.unit_spawner:level_index(self._door_unit)
+		channel = Managers.state.game_session:peer_to_channel(sender)
+
+		RPC.rpc_door_panel_register_door(channel, object_id, door_level_index)
+	end
 end
 
 DoorControlPanelExtension.is_active = function (self)

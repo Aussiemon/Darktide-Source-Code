@@ -3,6 +3,7 @@
 require("scripts/extension_systems/smart_tag/smart_tag_extension")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local LagCompensation = require("scripts/utilities/lag_compensation")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local SmartTagSettings = require("scripts/settings/smart_tag/smart_tag_settings")
 local SmartTag = require("scripts/extension_systems/smart_tag/smart_tag")
@@ -13,6 +14,7 @@ local REMOVE_TAG_REASONS_LOOKUP = table.mirror_array_inplace(table.keys(REMOVE_T
 local SERVER_RPCS = {
 	"rpc_request_set_smart_tag",
 	"rpc_request_cancel_smart_tag",
+	"rpc_request_replace_smart_tag",
 	"rpc_request_smart_tag_reply",
 }
 local CLIENT_RPCS = {
@@ -24,6 +26,82 @@ local CLIENT_RPCS = {
 
 local function _warning(...)
 	Log.warning("SmartTagSystem", ...)
+end
+
+local VIEW_CHECK_MIN_DISTANCE = 3
+local VIEW_CHECK_MIN_DOT = 0.75
+local AIM_CHECK_FILTER = "filter_player_ping_target_selection"
+local AIM_CHECK_MAX_HITS = 64
+local AIM_CHECK_MIN_RADIUS = 1
+local AIM_CHECK_RADIUS_PER_METER = 0.052
+
+local function _tag_target_valid_check(physics_world, tagger_unit, target_unit, look_rotation, tagger_player)
+	local first_person_extension = ScriptUnit.has_extension(tagger_unit, "first_person_system")
+	local first_person_unit = first_person_extension and first_person_extension:first_person_unit()
+
+	if not physics_world or not first_person_unit then
+		return true
+	end
+
+	local eye_position = Unit.world_position(first_person_unit, 1)
+	local distance = Vector3.distance(eye_position, Unit.world_position(target_unit, 1))
+	local radius = math.max(AIM_CHECK_MIN_RADIUS, distance * AIM_CHECK_RADIUS_PER_METER)
+	local forward = Quaternion.forward(look_rotation)
+	local to = eye_position + forward * (distance + radius)
+	local rewind_ms = LagCompensation.rewind_miliseconds(true, not tagger_player.remote, tagger_player)
+	local hits = PhysicsWorld.linear_sphere_sweep(physics_world, eye_position, to, radius, AIM_CHECK_MAX_HITS, "types", "both", "collision_filter", AIM_CHECK_FILTER, "rewind_ms", rewind_ms, "report_initial_overlap", true)
+
+	for i = 1, hits and #hits or 0 do
+		if Actor.unit(hits[i].actor) == target_unit then
+			return true
+		end
+	end
+
+	return false
+end
+
+local function _tagger_is_looking_at_target(tagger_unit, target_unit, physics_world)
+	if GameParameters.testify then
+		return true
+	end
+
+	if Unit.get_data(target_unit, "smart_tag_target_type") ~= "breed" then
+		return true
+	end
+
+	local tagger_player = tagger_unit and Managers.state.player_unit_spawn:owner(tagger_unit)
+
+	if not tagger_player then
+		return true
+	end
+
+	local unit_data_extension = ScriptUnit.has_extension(tagger_unit, "unit_data_system")
+	local first_person_component = unit_data_extension and unit_data_extension:read_component("first_person")
+
+	if not first_person_component then
+		return true
+	end
+
+	local to_target = Vector3.flat(Unit.world_position(target_unit, 1) - Unit.world_position(tagger_unit, 1))
+	local distance = Vector3.length(to_target)
+
+	if distance < VIEW_CHECK_MIN_DISTANCE then
+		return true
+	end
+
+	local forward = Vector3.flat(Quaternion.forward(first_person_component.rotation))
+
+	if Vector3.length(forward) < 0.001 then
+		return true
+	end
+
+	local dot = Vector3.dot(Vector3.normalize(forward), Vector3.normalize(to_target))
+
+	if dot < VIEW_CHECK_MIN_DOT then
+		return false
+	end
+
+	return _tag_target_valid_check(physics_world, tagger_unit, target_unit, first_person_component.rotation, tagger_player)
 end
 
 SmartTagSystem.init = function (self, extension_system_creation_context, ...)
@@ -186,6 +264,10 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 	end
 
 	if self._is_server then
+		if target_unit and not _tagger_is_looking_at_target(tagger_unit, target_unit, self._physics_world) then
+			return _warning("Rejected tag %q, tagger is not looking at the target", template_name)
+		end
+
 		local tag_id = self:_generate_tag_id()
 		local tag = self:_create_tag_locally(tag_id, template_name, tagger_unit, target_unit, target_location)
 
@@ -199,9 +281,39 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 	end
 end
 
-SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit, alternate)
+SmartTagSystem.replace_tag = function (self, tag_id, current_tag_unit, target_unit, interactor_unit, template_name)
+	if self._is_server then
+		self:cancel_tag(tag_id, current_tag_unit, true)
+		self:set_tag(template_name, interactor_unit, target_unit, nil)
+	else
+		local template_name_id = NetworkLookup.smart_tag_templates[template_name]
+		local interactor_game_object_id = Managers.state.unit_spawner:game_object_id(interactor_unit)
+		local is_level_unit, target_unit_id = Managers.state.unit_spawner:game_object_id_or_level_index(target_unit)
+		local target_game_object_id, target_level_index
+
+		if is_level_unit then
+			target_level_index = target_unit_id
+		else
+			target_game_object_id = target_unit_id
+		end
+
+		Managers.state.game_session:send_rpc_server("rpc_request_replace_smart_tag", tag_id, template_name_id, interactor_game_object_id, target_game_object_id, target_level_index)
+	end
+end
+
+SmartTagSystem._can_replace_existing_tag = function (self, tag, interactor_unit, new_template)
+	local can_override = new_template and new_template.can_override
+
+	if not can_override then
+		return false
+	end
+
+	return true
+end
+
+SmartTagSystem.set_contextual_unit_tag = function (self, tagger_unit, target_unit, is_double_tag)
 	local target_extension = self._unit_extension_data[target_unit]
-	local template = target_extension and target_extension:contextual_tag_template(tagger_unit, alternate)
+	local template = target_extension and target_extension:contextual_tag_template(tagger_unit, is_double_tag)
 
 	if template then
 		self:set_tag(template.name, tagger_unit, target_unit, nil)
@@ -226,24 +338,30 @@ SmartTagSystem.cancel_tag = function (self, tag_id, remover_unit, exernal_remova
 	end
 end
 
-SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit, target_unit, optional_alternate)
+SmartTagSystem.trigger_tag_interaction = function (self, tag_id, interactor_unit, target_unit, is_double_tag)
 	local all_tags = self._all_tags
 	local tag = all_tags[tag_id]
-	local target_extension = self._unit_extension_data[target_unit]
-	local template = target_extension and target_extension:contextual_tag_template(interactor_unit, optional_alternate)
-	local can_override = template and template.can_override
 
-	if can_override then
-		local current_tag_player = self:tagger_player_by_tag_id(tag_id)
-		local current_tag_unit = current_tag_player and current_tag_player.player_unit
+	if not tag then
+		return
+	end
+
+	local target_extension = self._unit_extension_data[target_unit]
+	local template = target_extension and target_extension:contextual_tag_template(interactor_unit, is_double_tag)
+	local template_name = template and template.name
+
+	if self:_can_replace_existing_tag(tag, interactor_unit, template) then
+		local current_tag_unit = tag:tagger_unit()
 
 		if current_tag_unit then
-			self:cancel_tag(tag_id, current_tag_unit, true)
-			self:set_tag(template.name, interactor_unit, target_unit, nil)
+			self:replace_tag(tag_id, current_tag_unit, target_unit, interactor_unit, template_name)
 
 			return
 		end
 	end
+
+	local new_template = target_extension and target_extension:contextual_tag_template(interactor_unit, is_double_tag)
+	local existing_template = tag:template()
 
 	if tag:tagger_unit() == interactor_unit then
 		if tag:is_cancelable() then
@@ -335,16 +453,6 @@ SmartTagSystem.unit_tag_id = function (self, unit)
 	return tag_id
 end
 
-SmartTagSystem.tag_by_id = function (self, tag_id)
-	if not tag_id then
-		return nil
-	end
-
-	local tag = self._all_tags[tag_id]
-
-	return tag
-end
-
 SmartTagSystem.unit_tag = function (self, unit)
 	local tag_id = self:unit_tag_id(unit)
 
@@ -361,6 +469,16 @@ SmartTagSystem.is_unit_tagged = function (self, unit)
 	local tag_id = self:unit_tag_id(unit)
 
 	return tag_id and true or false
+end
+
+SmartTagSystem.tag_by_id = function (self, tag_id)
+	if not tag_id then
+		return nil
+	end
+
+	local tag = self._all_tags[tag_id]
+
+	return tag
 end
 
 SmartTagSystem.location_tag_at_position = function (self, position, max_distance)
@@ -660,6 +778,10 @@ SmartTagSystem.rpc_request_set_smart_tag = function (self, channel_id, template_
 		end
 	end
 
+	if target_unit and not _tagger_is_looking_at_target(tagger_unit, target_unit, self._physics_world) then
+		return _warning("Rejected tag request from %s, tagger is not looking at the target", Network.peer_id(channel_id))
+	end
+
 	local tag_id = self:_generate_tag_id()
 	local tag = self:_create_tag_locally(tag_id, template_name, tagger_unit, target_unit, target_location)
 
@@ -719,6 +841,55 @@ SmartTagSystem.rpc_remove_smart_tag = function (self, channel_id, tag_id, reason
 	local reason = REMOVE_TAG_REASONS_LOOKUP[reason_id]
 
 	self:_remove_tag_locally(tag_id, reason)
+end
+
+SmartTagSystem.rpc_request_replace_smart_tag = function (self, channel_id, tag_id, template_name_id, interactor_game_object_id, target_game_object_id, target_level_index)
+	local tag = self._all_tags[tag_id]
+
+	if not tag then
+		return
+	end
+
+	local template_name = NetworkLookup.smart_tag_templates[template_name_id]
+	local template = SmartTagSettings.templates[template_name]
+
+	if not template then
+		return _warning("Rejected replace tag request from %s, tag template %q does not exist", Network.peer_id(channel_id), template_name)
+	end
+
+	local interactor_unit = Managers.state.unit_spawner:unit(interactor_game_object_id)
+
+	if not interactor_unit or not self._unit_extension_data[interactor_unit] then
+		return
+	end
+
+	local target_unit
+
+	if target_game_object_id then
+		target_unit = Managers.state.unit_spawner:unit(target_game_object_id, false)
+	elseif target_level_index then
+		target_unit = Managers.state.unit_spawner:unit(target_level_index, true)
+	end
+
+	if not target_unit or not self._unit_extension_data[target_unit] then
+		return
+	end
+
+	if tag:target_unit() ~= target_unit then
+		return _warning("Rejected replace tag request from %s, target unit does not match existing tag", Network.peer_id(channel_id))
+	end
+
+	if not self:_can_replace_existing_tag(tag, interactor_unit, template) then
+		return _warning("Rejected replace tag request from %s, template %q cannot override existing tag", Network.peer_id(channel_id), template_name)
+	end
+
+	local current_tag_unit = tag:tagger_unit()
+
+	if not current_tag_unit then
+		return
+	end
+
+	self:replace_tag(tag_id, current_tag_unit, target_unit, interactor_unit, template_name)
 end
 
 SmartTagSystem.rpc_request_cancel_smart_tag = function (self, channel_id, tag_id, remover_game_object_id)

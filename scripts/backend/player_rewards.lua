@@ -22,12 +22,23 @@ PlayerRewards.get_rewards_by_source_paged = function (self, limit, source)
 	end)
 end
 
-PlayerRewards.claim_bundle_reward = function (self, bundle_reward_id)
+PlayerRewards.claim_bundle_reward = function (self, bundle_reward_ids)
 	return Managers.backend:authenticate():next(function (account)
 		local account_id = account.sub
-		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/rewards/"):path(bundle_reward_id)
+		local builder = BackendUtilities.url_builder():path("/data/"):path(account_id):path("/account/rewards/")
+		local body
+
+		if type(bundle_reward_ids) == "table" then
+			body = {
+				rewardIds = bundle_reward_ids,
+			}
+		else
+			builder = builder:path(bundle_reward_ids)
+		end
+
 		local options = {
 			method = "PUT",
+			body = body,
 		}
 
 		return Managers.backend:title_request(builder:to_string(), options)

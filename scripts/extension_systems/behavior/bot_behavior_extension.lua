@@ -203,6 +203,10 @@ BotBehaviorExtension.extensions_ready = function (self, world, unit)
 	self._side = side
 end
 
+BotBehaviorExtension.prioritize_staggered_update = function (self)
+	return
+end
+
 BotBehaviorExtension.update = function (self, unit, dt, t, ...)
 	if self._player:is_human_controlled() then
 		return

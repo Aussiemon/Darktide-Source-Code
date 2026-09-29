@@ -278,12 +278,12 @@ MissionBuffsPersistentData.buff_family_choice_initiated = function (self)
 	self._persistent_data.should_have_buff_family_selected = true
 end
 
-MissionBuffsPersistentData.set_buff_family_for_player = function (self, player, buff_family_name, priotity_family_buffs, family_buffs, buffs_to_exclude)
+MissionBuffsPersistentData.set_buff_family_for_player = function (self, player, buff_family_name, priority_family_buffs, family_buffs, buffs_to_exclude)
 	local target_player_data = self:_get_or_create_player_data(player)
 
 	target_player_data.buff_family_chosen = buff_family_name
 
-	for _, buff_name in ipairs(priotity_family_buffs) do
+	for _, buff_name in ipairs(priority_family_buffs) do
 		if not buffs_to_exclude[buff_name] then
 			table.insert(target_player_data.priority_family_buffs_available, buff_name)
 		else
@@ -375,10 +375,12 @@ MissionBuffsPersistentData.get_current_choice_for_player = function (self, playe
 	return target_player_data.current_choice
 end
 
-MissionBuffsPersistentData.add_choice_for_player = function (self, player, options, is_buff_family_choice)
+MissionBuffsPersistentData.add_choice_for_player = function (self, player, options, is_buff_family_choice, optional_choice_settings)
 	local target_player_data = self:_get_or_create_player_data(player)
+	local choice_settings = optional_choice_settings or {}
 	local new_choice = {
 		is_buff_family_choice = is_buff_family_choice and true or false,
+		skip_automatic_restore = choice_settings.skip_automatic_restore and true or false,
 		options = options,
 	}
 
@@ -423,8 +425,9 @@ MissionBuffsPersistentData.try_resolve_current_choice_for_player = function (sel
 	local clamped_index = math.clamp(choice_index, 1, num_choices)
 	local selected_choice_name = choice_options[clamped_index]
 	local is_buff_family_choice = current_choice.is_buff_family_choice
+	local skip_automatic_restore = current_choice.skip_automatic_restore
 
-	if not is_buff_family_choice then
+	if not is_buff_family_choice and not skip_automatic_restore then
 		self:restore_unselected_legendary_buffs_to_player_pool(player, choice_options, clamped_index)
 	end
 
@@ -438,11 +441,15 @@ MissionBuffsPersistentData.restore_unselected_legendary_buffs_to_player_pool = f
 		if i ~= chosen_option_index then
 			local buff_name = buff_options[i]
 			local buff_data = HordesBuffsData[buff_name]
-			local buff_filter_category = buff_data.filter_category
+			local buff_filter_category = buff_data and buff_data.filter_category
 			local archetype_based_data = self:_get_or_create_player_archetype_data(player)
-			local target_pool = archetype_based_data.legendary_buffs_available[buff_filter_category]
+			local target_pool = buff_filter_category and archetype_based_data.legendary_buffs_available[buff_filter_category]
 
-			table.insert(target_pool, buff_name)
+			if target_pool then
+				table.insert(target_pool, buff_name)
+			else
+				Log.error("MissionBuffsPersistentData", "Cannot restore buff [%s] to the legendary pool of player (PeerID: %s): filter category [%s] has no pool. Buff dropped from the pool.", buff_name, player:peer_id(), tostring(buff_filter_category))
+			end
 		end
 	end
 end

@@ -5,6 +5,98 @@ local BackendError = require("scripts/managers/error/errors/backend_error")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
 local PromiseContainer = require("scripts/utilities/ui/promise_container")
 
+local function _is_story_mission(entry)
+	return entry.type == "mission" and entry.category == "story"
+end
+
+local function merge_entry(bucket, entry)
+	local key = entry.key
+
+	if not _is_story_mission(entry) then
+		bucket[key] = entry
+
+		return entry
+	end
+
+	local merged = bucket[key]
+
+	if merged == nil then
+		merged = {
+			type = entry.type,
+			key = entry.key,
+			category = entry.category,
+			campaign = entry.campaign,
+			completed = entry.completed,
+			unlocked = entry.unlocked,
+			prerequisites = entry.prerequisites,
+			completed_by_campaign = {},
+			unlocked_by_campaign = {},
+			prerequisites_by_campaign = {},
+		}
+		bucket[key] = merged
+	end
+
+	local campaign = entry.campaign
+
+	if campaign ~= nil then
+		merged.completed_by_campaign[campaign] = entry.completed or false
+		merged.unlocked_by_campaign[campaign] = entry.unlocked or false
+		merged.prerequisites_by_campaign[campaign] = entry.prerequisites
+	end
+
+	return merged
+end
+
+local function build_tree(progression_data, default_category)
+	default_category = default_category or "default"
+
+	local tree = {}
+
+	for i = 1, #progression_data do
+		local entry = progression_data[i]
+		local type = entry.type
+		local category = entry.category or default_category
+
+		tree[type] = tree[type] or {}
+		tree[type][category] = tree[type][category] or {}
+
+		merge_entry(tree[type][category], entry)
+	end
+
+	return tree
+end
+
+local function resolve_for_campaign(entry, campaign)
+	if entry == nil or campaign == nil or entry.completed_by_campaign == nil then
+		return entry
+	end
+
+	local resolved = table.shallow_copy(entry)
+
+	resolved.completed = entry.completed_by_campaign[campaign]
+	resolved.unlocked = entry.unlocked_by_campaign[campaign]
+	resolved.prerequisites = entry.prerequisites_by_campaign[campaign]
+	resolved.campaign = campaign
+
+	return resolved
+end
+
+local function campaign_from_flags(flags)
+	if flags == nil then
+		return nil
+	end
+
+	for key in pairs(flags) do
+		local campaign = string.match(key, "^campaign:(.+)$")
+
+		if campaign then
+			return string.match(campaign, "^[^,]+")
+		end
+	end
+
+	return nil
+end
+
 local function _filter_backend_unlock_data(backend_data)
 	local filtered_progression_data = {}
 
@@ -12,7 +104,6 @@ local function _filter_backend_unlock_data(backend_data)
 		local data = backend_data[i]
 
 		if data and data.type == "mission" then
-			local mission_key = data.key
 			local mission_category = data.category
 
 			if not filtered_progression_data[data.type] then
@@ -25,11 +116,7 @@ local function _filter_backend_unlock_data(backend_data)
 				filtered_mission_data[mission_category] = {}
 			end
 
-			if not filtered_mission_data[mission_category][mission_key] then
-				filtered_mission_data[mission_category][mission_key] = {}
-			end
-
-			filtered_mission_data[mission_category][mission_key] = data
+			merge_entry(filtered_mission_data[mission_category], data)
 		elseif data and data.type == "game_mode" then
 			local game_mode_key = data.key
 
@@ -78,6 +165,10 @@ local Interface = {
 }
 local MissionBoard = class("MissionBoard")
 local missionboard_path = "/mission-board"
+
+MissionBoard.build_tree = build_tree
+MissionBoard.resolve_for_campaign = resolve_for_campaign
+MissionBoard.campaign_from_flags = campaign_from_flags
 
 MissionBoard.init = function (self)
 	self._promise_container = PromiseContainer:new()

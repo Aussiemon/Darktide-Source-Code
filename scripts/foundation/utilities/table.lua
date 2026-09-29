@@ -79,7 +79,7 @@ end
 
 table.clone_instance = table.clone_instance or _table_clone_instance
 
-table.shallow_copy = function (t)
+local function _shallow_copy(t)
 	local copy = {}
 
 	for key, value in pairs(t) do
@@ -87,6 +87,37 @@ table.shallow_copy = function (t)
 	end
 
 	return copy
+end
+
+table.shallow_copy = _shallow_copy
+
+table.clone_with_overrides = function (t, overrides, recursive_lookup)
+	recursive_lookup = recursive_lookup or {}
+
+	local cloned = recursive_lookup[t]
+
+	if cloned then
+		return cloned
+	end
+
+	for k, v in pairs(overrides) do
+		if t[k] ~= v then
+			if not cloned then
+				cloned = _shallow_copy(t)
+				recursive_lookup[t] = cloned
+			end
+
+			if v == t then
+				cloned[k] = cloned
+			elseif type(v) == "table" and type(cloned[k]) == "table" then
+				cloned[k] = table.clone_with_overrides(cloned[k], v, recursive_lookup)
+			else
+				cloned[k] = v
+			end
+		end
+	end
+
+	return cloned or t
 end
 
 table.shallow_copy_array = function (arr, o)
@@ -329,6 +360,22 @@ table.append_non_indexed = function (dest, source)
 	end
 end
 
+table.prepend = function (dest, source, optional_size)
+	local dest_size = #dest
+	local source_size = optional_size or #source
+	local new_size = dest_size + source_size
+
+	for i = new_size, source_size, -1 do
+		dest[i] = dest[i - source_size]
+	end
+
+	for i = 1, source_size do
+		dest[i] = source[i]
+	end
+
+	return dest
+end
+
 table.array_contains = function (t, element)
 	for i = 1, #t do
 		if t[i] == element then
@@ -398,6 +445,24 @@ table.has_intersection = function (t1, t2)
 	end
 
 	return false
+end
+
+table.first = function (t, order_func)
+	local keys = {}
+
+	for k, _ in pairs(t) do
+		keys[#keys + 1] = k
+	end
+
+	if order_func then
+		table.sort(keys, function (a, b)
+			return order_func(t, a, b)
+		end)
+	else
+		table.sort(keys)
+	end
+
+	return keys[1], t[keys[1]]
 end
 
 table.find = function (t, element)
@@ -585,7 +650,7 @@ local _value_to_string_array, _table_tostring_array
 
 function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys, print_array_indices)
 	if type(v) == "table" then
-		if depth <= max_depth then
+		if depth < max_depth then
 			return _table_tostring_array(v, depth + 1, max_depth, skip_private, sort_keys, print_array_indices)
 		else
 			return {
@@ -869,6 +934,24 @@ table.keys = function (t, output)
 	return result
 end
 
+table.ordered_keys = function (t, optional_result_array, optional_order_func)
+	local ordered_keys = optional_result_array or {}
+
+	for k, _ in pairs(t) do
+		ordered_keys[#ordered_keys + 1] = k
+	end
+
+	if optional_order_func then
+		table.sort(ordered_keys, function (a, b)
+			return optional_order_func(t, a, b)
+		end)
+	else
+		table.sort(ordered_keys)
+	end
+
+	return ordered_keys
+end
+
 table.values = function (t, output)
 	local n = 0
 	local result = output or {}
@@ -1067,11 +1150,11 @@ table.make_unique = function (t, optional_format_string)
 	t.__data = {}
 
 	local metatable = {
-		__index = function (t, k)
-			return rawget(t.__data, k)
+		__index = function (t1, k)
+			return rawget(t1.__data, k)
 		end,
-		__newindex = function (t, k, v)
-			local data = rawget(t, "__data")
+		__newindex = function (t1, k, v)
+			local data = rawget(t1, "__data")
 
 			data[k] = v
 		end,
@@ -1110,10 +1193,10 @@ table.make_strict_with_interface = function (t, name, interface, optional_contex
 	end
 
 	return setmetatable(t, {
-		__index = function (t, key)
+		__index = function (_, key)
 			return nil
 		end,
-		__newindex = function (t, key, val)
+		__newindex = function (_, key, val)
 			rawset(t, key, val)
 		end,
 	})
@@ -1183,15 +1266,15 @@ table.make_strict_nil_exceptions = function (t)
 		__declared = declared_args,
 	}
 
-	meta.__newindex = function (t, k, v)
+	meta.__newindex = function (t1, k, v)
 		if meta.__declared[k] then
-			rawset(t, k, v)
+			rawset(t1, k, v)
 		else
 			ferror("Table is strict. Not allowed to add new fields.")
 		end
 	end
 
-	meta.__index = function (t, k)
+	meta.__index = function (_, k)
 		if not meta.__declared[k] then
 			ferror("Table does not have field_name %q defined.", k)
 		end
@@ -1336,7 +1419,8 @@ table.remove_empty_values = function (t)
 end
 
 table.array_remove_if = function (t, predicate)
-	local i, v = 1
+	local i = 1
+	local v
 
 	for j = 1, #t do
 		v, t[j] = t[j]

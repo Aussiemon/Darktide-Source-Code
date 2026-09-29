@@ -255,6 +255,19 @@ end
 
 templates.cultist_vanguard[zone_ids.void] = void_variations
 
+local depths_variations = {}
+
+for _, default_variation in pairs(templates.cultist_vanguard.default) do
+	local depths_variation = table.clone(default_variation)
+
+	depths_variation.slots.environmental_override.items = {
+		"content/items/characters/minions/environment_overrides/acid_01",
+	}
+	depths_variations[#depths_variations + 1] = depths_variation
+end
+
+templates.cultist_vanguard[zone_ids.depths] = depths_variations
+
 local horde_variations = {}
 
 for _, default_variation in pairs(templates.cultist_vanguard.default) do

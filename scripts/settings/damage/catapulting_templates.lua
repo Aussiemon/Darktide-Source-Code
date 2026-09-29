@@ -19,6 +19,13 @@ catapulting_templates.houndmaster_catapult_standing = {
 	force = 4.5,
 	z_force = 3,
 }
+catapulting_templates.renegade_wizard = {
+	catapult_through_block = true,
+	direction_from_node = "j_spine",
+	force = 0.1,
+	use_hit_position = true,
+	z_force = 40,
+}
 catapulting_templates.renegade_captain_kick_catapult = {
 	direction_from_node = "j_spine",
 	force = 10,
@@ -72,6 +79,11 @@ catapulting_templates.twin_gas_grenade_explosion = {
 catapulting_templates.corruptor_emerge_explosion = {
 	direction_from_node = "j_spine",
 	force = 12,
+	z_force = 3,
+}
+catapulting_templates.nurgle_head_parasite_nurgle_explosion_2026 = {
+	direction_from_node = "j_spine",
+	force = 9,
 	z_force = 3,
 }
 catapulting_templates.renegade_shocktrooper_frag_grenade_close_catapult = {

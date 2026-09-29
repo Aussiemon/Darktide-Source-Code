@@ -8,5 +8,13 @@ campaign_settings["player-journey"] = {
 campaign_settings["no-mans-land"] = {
 	display_name = "loc_nomansland_display_name",
 }
+campaign_settings.spillway = {
+	display_name = "loc_spillway_campaign_display_name",
+}
+campaign_settings.parallel_requirements = {}
+campaign_settings.parallel_requirements["player-journey"] = {
+	[9] = true,
+	[16] = true,
+}
 
 return settings("CampaignSettings", campaign_settings)

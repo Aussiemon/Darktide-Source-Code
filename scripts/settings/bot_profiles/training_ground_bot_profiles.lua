@@ -6,9 +6,9 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function training_ground_bot_profiles(all_profiles)
 	all_profiles.bot_training_grounds = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		gender = "male",
-		name_list_id = "male_names_1",
 		selected_voice = "veteran_male_a",
 		loadout = {
 			slot_body_arms = "content/items/characters/player/human/gear_arms/empty_arms",

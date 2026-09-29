@@ -224,6 +224,7 @@ BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 
 	stagger_component.count = 0
 	stagger_component.num_triggered_staggers = 0
+	stagger_component.staggered_by_melee_push = false
 
 	MinionShield.reset_block_timings(scratchpad, unit)
 

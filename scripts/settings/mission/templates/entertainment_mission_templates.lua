@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_raid = {
-		coordinates = "loc_mission_coordinates_cm_raid",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_cm_raid",
@@ -70,9 +69,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	fm_armoury = {
-		coordinates = "loc_mission_coordinates_fm_armoury",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_fm_armoury",
@@ -142,9 +143,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	km_heresy = {
-		coordinates = "loc_mission_coordinates_km_heresy",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/entertainment/missions/mission_km_heresy",
@@ -208,6 +211,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

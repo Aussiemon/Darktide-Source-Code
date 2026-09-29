@@ -2,6 +2,7 @@
 
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local ChaosHoundSettings = require("scripts/settings/specials/chaos_hound_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
@@ -10,6 +11,7 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
 local Vo = require("scripts/utilities/vo")
+local attack_types = AttackSettings.attack_types
 local BtChaosHoundApproachAction = class("BtChaosHoundApproachAction", "BtNode")
 
 BtChaosHoundApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -248,7 +250,7 @@ BtChaosHoundApproachAction._can_start_leap = function (self, unit, scratchpad, a
 	local target_node_name = ChaosHoundSettings.leap_target_node_name
 	local target_node = Unit.node(target_unit, target_node_name)
 	local leap_target_position = Unit.world_position(target_unit, target_node) + Vector3(0, 0, ChaosHoundSettings.leap_target_z_offset)
-	local is_dodging, _ = Dodge.is_dodging(target_unit)
+	local is_dodging, _ = Dodge.is_dodging(target_unit, attack_types.incapacitating_pounce)
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local target_locomotion_component = target_unit_data_extension:read_component("locomotion")
 	local target_velocity = is_dodging and Vector3.zero() or target_locomotion_component.velocity_current

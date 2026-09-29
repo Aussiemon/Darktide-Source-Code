@@ -94,6 +94,11 @@ TitleView._on_navigation_input_changed = function (self)
 	self:_apply_title_text()
 end
 
+TitleView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
+	Managers.ui:render_black_background()
+end
+
 TitleView.update = function (self, dt, t, input_service)
 	TitleView.super.update(self, dt, t, input_service)
 

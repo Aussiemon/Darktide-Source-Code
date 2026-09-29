@@ -156,7 +156,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 		if has_circumstance then
 			local category = mission.category
 			local is_story = parent.is_campaign_mission and parent:is_campaign_mission(mission)
-			local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
+			local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category, mission.campaign)
 			local circumstance = mission.circumstance
 			local circumstance_template = CircumstanceTemplates[circumstance]
 			local circumstance_ui_data = circumstance_template and circumstance_template.ui
@@ -210,9 +210,9 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info_panel = fun
 			local mission_template = MissionTemplates[mission.map]
 
 			objective_template = MissionTypes[mission_template.mission_type]
-			title = Localize(objective_template.name)
+			title = objective_template and objective_template.name and Localize(objective_template.name) or "n/a"
 			sub_title = Localize("loc_misison_board_main_objective_title")
-			icon = objective_template.mission_board_icon or objective_template.icon
+			icon = objective_template and objective_template.name and (objective_template.mission_board_icon or objective_template.icon) or "content/ui/materials/icons/mission_types_pj/mission_type_quick"
 
 			local widget = self:_create_panel_widget(title, sub_title, icon, "main_objective", tab_idx, active_tab_size, tab_width)
 			local content = widget.content
@@ -330,7 +330,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 				local circumstance = mission.circumstance
 				local circumstance_template = CircumstanceTemplates[circumstance]
 				local circumstance_ui_data = circumstance_template and circumstance_template.ui
-				local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category)
+				local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission.map, category, mission.campaign)
 				local circumstance_description = "???"
 
 				if is_story then
@@ -348,8 +348,7 @@ ViewElementMissionBoardObjectivesInfo._update_mission_objective_info = function 
 				content.is_quickplay_mission = false
 			elseif tab_id == "main_objective" then
 				local mission_template = MissionTemplates[mission.map]
-				local objective_template = MissionTypes[mission_template.mission_type]
-				local mission_description = Localize(mission_template.mission_description)
+				local mission_description = mission_template.mission_description and Localize(mission_template.mission_description) or "n/a"
 
 				content.objective_description = mission_description
 				xp, credits = mission.xp, mission.credits
@@ -524,7 +523,6 @@ end
 
 ViewElementMissionBoardObjectivesInfo._update_panel_tabs_offset = function (self, dt, t)
 	local cumulative_offset = 0
-	local tot_size = 0
 
 	for i = 1, #self._objectives_tabs do
 		local widget = self._objectives_tabs[i]

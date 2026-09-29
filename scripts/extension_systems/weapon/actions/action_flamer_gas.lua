@@ -8,28 +8,31 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FlamerAction = require("scripts/utilities/action/flamer_action")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
 local HazardProp = require("scripts/utilities/level_props/hazard_prop")
+local HitMass = require("scripts/utilities/attack/hit_mass")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local RangedAction = require("scripts/utilities/action/ranged_action")
 local Spread = require("scripts/utilities/spread")
-local Suppression = require("scripts/utilities/attack/suppression")
 local damage_types = DamageSettings.damage_types
 local proc_events = BuffSettings.proc_events
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local DEFAULT_DAMAGE_TYPE = damage_types.burning
+local NUM_RAYS_PER_FRAME = 8
+local ATTACK_TYPE = AttackSettings.attack_types.ranged
 local ActionFlamerGas = class("ActionFlamerGas", "ActionShoot")
 
 ActionFlamerGas.init = function (self, action_context, action_params, action_settings)
 	ActionFlamerGas.super.init(self, action_context, action_params, action_settings)
 
 	self._target_indexes = {}
+	self._target_hit_mass_lerp_t = {}
 	self._target_actors = {}
 	self._target_damage_times = {}
 	self._target_frame_counts = {}
-	self._dot_targets = {}
+	self._target_dot_stacks = {}
 
 	local unit_data_extension = action_context.unit_data_extension
 
@@ -59,8 +62,7 @@ ActionFlamerGas._setup_flame_data = function (self, action_settings)
 
 	local size_of_flame_template = weapon_extension:size_of_flame_template()
 
-	self._spread_angle = size_of_flame_template.spread_angle
-	self._suppression_cone_radius = size_of_flame_template.suppression_cone_radius
+	self._size_of_flame_template = size_of_flame_template
 
 	local weapon_handling_template = weapon_extension:weapon_handling_template()
 
@@ -77,30 +79,23 @@ ActionFlamerGas._setup_flame_data = function (self, action_settings)
 	local initial_burn_delay = burninating_template.initial_burn_delay or 0.25
 
 	self._burn_time = self._dot_stack_application_rate + initial_burn_delay
-
-	local range = size_of_flame_template.range
-
-	self._range = range
-	self._action_flamer_gas_component.range = range
+	self._action_flamer_gas_component.range = size_of_flame_template.range
 	self._killing_blow = false
 end
 
 ActionFlamerGas.start = function (self, action_settings, t, ...)
 	ActionFlamerGas.super.start(self, action_settings, t, ...)
 	table.clear(self._target_indexes)
+	table.clear(self._target_hit_mass_lerp_t)
 	table.clear(self._target_actors)
 	table.clear(self._target_damage_times)
 	table.clear(self._target_frame_counts)
-	table.clear(self._dot_targets)
+	table.clear(self._target_dot_stacks)
 
 	self._killing_blow = false
 
 	self:_setup_flame_data(action_settings)
 end
-
-local INDEX_POSITION = 1
-local INDEX_NORMAL = 3
-local INDEX_ACTOR = 4
 
 ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action, frame)
 	ActionFlamerGas.super.fixed_update(self, dt, t, time_in_action, frame)
@@ -112,111 +107,128 @@ ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action, frame)
 	self:_acquire_targets(t)
 
 	if self._is_server then
-		self:_damage_targets(dt, t)
-		self:_burn_targets(dt, t)
+		self:_damage_targets(dt, t, false)
+		self:_burn_targets(dt, t, false)
 	end
 end
 
-ActionFlamerGas._is_unit_blocking = function (self, unit, player_pos, hit_zone_name_or_nil)
-	local shield_extension = ScriptUnit.has_extension(unit, "shield_system")
+local INDEX_POSITION = 1
+local INDEX_NORMAL = 3
+local INDEX_ACTOR = 4
 
-	if shield_extension then
-		return shield_extension:can_block_from_position(player_pos, hit_zone_name_or_nil)
+ActionFlamerGas._process_hits = function (self, t, hits, player_unit, player_pos, side_system, hit_units, hit_mass_budget_attack, hit_mass_budget_impact, is_server)
+	if not hits then
+		return false, nil, nil, hit_mass_budget_attack, hit_mass_budget_impact
 	end
+
+	local num_hits = #hits
+
+	for ii = 1, num_hits do
+		repeat
+			local hit = hits[ii]
+			local hit_pos = hit[INDEX_POSITION]
+			local hit_actor = hit[INDEX_ACTOR]
+			local hit_normal = hit[INDEX_NORMAL]
+			local hit_unit = Actor.unit(hit_actor)
+			local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
+			local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
+			local is_critical_strike = self._critical_strike_component.is_active
+
+			if hit_units[hit_unit] then
+				break
+			end
+
+			if hit_afro then
+				break
+			end
+
+			if hit_unit == player_unit then
+				break
+			end
+
+			local target_health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
+			local target_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+
+			if not target_health_extension and not target_buff_extension or FlamerAction.is_unit_blocking_flame(hit_unit, player_pos, hit_zone_name_or_nil) then
+				return true, hit_pos, hit_normal, hit_mass_budget_attack, hit_mass_budget_impact
+			end
+
+			if side_system:is_ally(player_unit, hit_unit) and not FriendlyFire.is_enabled(player_unit, hit_unit) then
+				break
+			end
+
+			if is_server then
+				local max_hit_mass_budget = self._max_hit_mass_budget
+				local hit_mass_lerp_t = math.max(hit_mass_budget_attack, hit_mass_budget_impact) / max_hit_mass_budget
+
+				if target_health_extension then
+					self:_hit_target(hit_unit, hit_actor, hit_pos, hit_mass_lerp_t)
+				end
+
+				if target_buff_extension then
+					local flamer_gas_template = self._flamer_gas_template
+					local num_stacks_base = flamer_gas_template.num_stacks_base
+					local num_stacks_hit_mass_limit = flamer_gas_template.num_stacks_hit_mass_limit
+					local num_extra_stacks_crit = flamer_gas_template.num_extra_stacks_crit
+					local reached_hit_mass_limit = HitMass.hit_mass_limit_reached(hit_mass_budget_attack, hit_mass_budget_impact)
+					local num_stacks_to_add = (not reached_hit_mass_limit and num_stacks_base or num_stacks_hit_mass_limit) + (is_critical_strike and num_extra_stacks_crit or 0)
+
+					if num_stacks_to_add > 0 then
+						self._target_dot_stacks[hit_unit] = num_stacks_to_add
+					end
+				end
+
+				hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, false, is_critical_strike, ATTACK_TYPE, nil)
+			end
+
+			hit_units[hit_unit] = true
+		until true
+	end
+
+	return false, nil, nil, hit_mass_budget_attack, hit_mass_budget_impact
 end
 
-ActionFlamerGas._process_hit = function (self, hit, player_unit, player_pos, side_system, t, hit_units_this_frame, is_server)
-	local hit_pos = hit[INDEX_POSITION]
-	local hit_actor = hit[INDEX_ACTOR]
-	local hit_normal = hit[INDEX_NORMAL]
-	local hit_unit = Actor.unit(hit_actor)
-	local hit_zone_name_or_nil = HitZone.get_name(hit_unit, hit_actor)
-	local hit_afro = hit_zone_name_or_nil == HitZone.hit_zone_names.afro
-
-	if hit_units_this_frame[hit_unit] then
-		return false
-	end
-
-	if hit_afro then
-		return false
-	end
-
-	if hit_unit == player_unit then
-		return false
-	end
-
-	local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
-	local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
-	local is_unit_blocking = self:_is_unit_blocking(hit_unit, player_pos, hit_zone_name_or_nil)
-
-	if is_unit_blocking or not health_extension and not buff_extension then
-		return true, hit_pos, hit_normal
-	end
-
-	if side_system:is_ally(player_unit, hit_unit) and not FriendlyFire.is_enabled(player_unit, hit_unit) then
-		return false
-	end
-
-	if is_server and health_extension then
-		self:_hit_target(hit_unit, hit_pos)
-
-		self._target_actors[hit_unit] = hit_actor
-	end
-
-	if is_server and buff_extension then
-		self._dot_targets[hit_unit] = true
-	end
-
-	hit_units_this_frame[hit_unit] = true
-end
-
-ActionFlamerGas._do_raycast = function (self, i, position, rotation, max_range, num_rays_this_frame, spread_angle, player_unit, player_pos, side_system, t, hit_units_this_frame, is_server)
+ActionFlamerGas._do_raycast = function (self, t, ray_index, position, rotation, max_range, spread_angle, player_unit, player_pos, side_system, hit_units, hit_mass_budget_attack, hit_mass_budget_impact, is_server)
 	local ray_rotation = rotation
 
-	if i > 1 then
+	if ray_index > 1 then
 		ray_rotation = Spread.uniform_circle(rotation, spread_angle, spread_angle, math.random_seed())
 	end
 
 	local direction = Quaternion.forward(ray_rotation)
 	local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
 	local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting_raycast", rewind_ms)
-	local stop, stop_position, stop_normal
 
-	if hits then
-		local num_hit_results = #hits
-
-		for j = 1, num_hit_results do
-			repeat
-				local hit = hits[j]
-
-				stop, stop_position, stop_normal = self:_process_hit(hit, player_unit, player_pos, side_system, t, hit_units_this_frame, is_server)
-			until true
-
-			if stop then
-				break
-			end
-		end
-	end
-
-	return stop, stop_position, stop_normal
+	return self:_process_hits(t, hits, player_unit, player_pos, side_system, hit_units, hit_mass_budget_attack, hit_mass_budget_impact, is_server)
 end
 
-local _hit_units_this_frame = {}
+local _hit_units = {}
 
 ActionFlamerGas._acquire_targets = function (self, t)
-	table.clear(_hit_units_this_frame)
+	table.clear(_hit_units)
 
 	local is_server = self._is_server
 	local player_unit = self._player_unit
 	local player_pos = POSITION_LOOKUP[player_unit]
-	local spread_angle = self._spread_angle
-	local max_range = self._range
+	local spread_angle = self._size_of_flame_template.spread_angle
+	local max_range = self._size_of_flame_template.range
 	local position = self._first_person_component.position
 	local rotation = self._first_person_component.rotation
 	local position_finder_component = self._action_module_position_finder_component
 	local side_system = Managers.state.extension:system("side_system")
-	local num_rays_this_frame = 8
-	local stop, stop_position, stop_normal = self:_do_raycast(1, position, rotation, max_range, num_rays_this_frame, spread_angle, player_unit, player_pos, side_system, t, _hit_units_this_frame, is_server)
+	local flamer_gas_template = self._flamer_gas_template
+	local damage_config = flamer_gas_template.damage
+	local damage_profile = damage_config.impact.damage_profile
+	local is_critical_strike = self._critical_strike_component.is_active
+	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit)
+	local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(damage_profile, DEFAULT_POWER_LEVEL, 1, damage_profile_lerp_values, is_critical_strike, player_unit, ATTACK_TYPE)
+
+	self._max_hit_mass_budget = math.max(hit_mass_budget_attack, hit_mass_budget_impact)
+
+	local stop, stop_position, stop_normal, _
+	local remaining_hit_mass_budget_attack, remaining_hit_mass_budget_impact = hit_mass_budget_attack, hit_mass_budget_impact
+
+	stop, stop_position, stop_normal, remaining_hit_mass_budget_attack, remaining_hit_mass_budget_impact = self:_do_raycast(t, 1, position, rotation, max_range, spread_angle, player_unit, player_pos, side_system, _hit_units, remaining_hit_mass_budget_attack, remaining_hit_mass_budget_impact, is_server)
 
 	if stop then
 		position_finder_component.position = stop_position
@@ -227,13 +239,13 @@ ActionFlamerGas._acquire_targets = function (self, t)
 	end
 
 	if is_server then
-		for i = 2, num_rays_this_frame do
-			self:_do_raycast(i, position, rotation, max_range, num_rays_this_frame, spread_angle, player_unit, player_pos, side_system, t, _hit_units_this_frame, is_server)
+		for ii = 2, NUM_RAYS_PER_FRAME do
+			_, _, _, remaining_hit_mass_budget_attack, remaining_hit_mass_budget_impact = self:_do_raycast(t, ii, position, rotation, max_range, spread_angle, player_unit, player_pos, side_system, _hit_units, remaining_hit_mass_budget_attack, remaining_hit_mass_budget_impact, is_server)
 		end
 	end
 end
 
-ActionFlamerGas._hit_target = function (self, hit_unit, hit_pos)
+ActionFlamerGas._hit_target = function (self, hit_unit, hit_actor, hit_pos, hit_mass_lerp_t)
 	local damage_time = self._target_damage_times[hit_unit]
 	local frame_count = self._target_frame_counts[hit_unit]
 	local index = self._target_indexes[hit_unit]
@@ -241,14 +253,17 @@ ActionFlamerGas._hit_target = function (self, hit_unit, hit_pos)
 	if not index then
 		local player_pos = POSITION_LOOKUP[self._player_unit]
 		local distance = Vector3.distance(hit_pos, player_pos)
+		local max_range = self._size_of_flame_template.range
 
 		index = 1
-		damage_time = self._damage_times[index] + distance / self._range * 0.4
+		damage_time = self._damage_times[index] + distance / max_range * 0.4
 		frame_count = 1
 	else
 		frame_count = frame_count + 1
 	end
 
+	self._target_hit_mass_lerp_t[hit_unit] = hit_mass_lerp_t
+	self._target_actors[hit_unit] = hit_actor
 	self._target_damage_times[hit_unit] = damage_time
 	self._target_frame_counts[hit_unit] = frame_count
 	self._target_indexes[hit_unit] = index
@@ -259,6 +274,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 	local target_damage_times = self._target_damage_times
 	local target_frame_counts = self._target_frame_counts
 	local target_indexes = self._target_indexes
+	local target_hit_mass_lerp_t = self._target_hit_mass_lerp_t
 	local target_actors = self._target_actors
 	local ALIVE = ALIVE
 	local fixed_time_step = Managers.state.game_session.fixed_time_step
@@ -267,6 +283,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 		repeat
 			local current_damage_time = target_damage_times[target_unit]
 			local frame_count = target_frame_counts[target_unit]
+			local hit_mass_lerp_t = target_hit_mass_lerp_t[target_unit]
 			local hit_actor = target_actors[target_unit]
 			local hit_zone_name_or_nil = HitZone.get_name(target_unit, hit_actor)
 			local target_breed_or_nil = Breed.unit_breed_or_nil(target_unit)
@@ -278,6 +295,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 				target_damage_times[target_unit] = nil
 				target_frame_counts[target_unit] = nil
 				target_indexes[target_unit] = nil
+				target_hit_mass_lerp_t[target_unit] = nil
 				target_actors[target_unit] = nil
 
 				break
@@ -288,10 +306,19 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 					local damage_time_index = math.min(current_index, #damage_times)
 					local damage_time = damage_times[damage_time_index]
 					local aim_at_percent = frame_count / (damage_time / fixed_time_step)
-					local new_damage_time, new_frame_count, new_target_index, new_actor
+					local new_damage_time, new_frame_count, new_target_index, new_hit_mass_lerp_t, new_actor
 
 					if aim_at_percent > 0.33 then
-						self:_damage_target(target_unit)
+						local player_unit = self._player_unit
+						local target_index = self._target_indexes[target_unit]
+						local damage_type = self._damage_type
+						local is_critical_strike = self._critical_strike_component.is_active
+						local flamer_gas_template = self._flamer_gas_template
+						local weapon = self._weapon
+						local buff_extension = self._buff_extension
+						local target_died = FlamerAction.damage_target(player_unit, target_unit, target_index, hit_mass_lerp_t, damage_type, is_critical_strike, flamer_gas_template, weapon, buff_extension)
+
+						self._killing_blow = self._killing_blow or target_died
 
 						local new_damage_time_index = math.min(current_index + 1, #damage_times)
 
@@ -305,17 +332,20 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 						new_damage_time = damage_times[new_damage_time_index]
 						new_frame_count = 0
 						new_target_index = current_index - 1
+						new_hit_mass_lerp_t = hit_mass_lerp_t
 						new_actor = hit_actor
 					else
 						new_damage_time = nil
 						new_frame_count = nil
 						new_target_index = nil
+						new_hit_mass_lerp_t = nil
 						new_actor = nil
 					end
 
 					target_damage_times[target_unit] = new_damage_time
 					target_frame_counts[target_unit] = new_frame_count
 					target_indexes[target_unit] = new_target_index
+					target_hit_mass_lerp_t[target_unit] = new_hit_mass_lerp_t
 					target_actors[target_unit] = new_actor
 				end
 
@@ -327,77 +357,35 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 	end
 end
 
-ActionFlamerGas._damage_target = function (self, target_unit)
-	local player_unit = self._player_unit
-	local damage_config = self._flamer_gas_template.damage
-	local damage_profile = damage_config.impact.damage_profile
-	local player_pos = POSITION_LOOKUP[player_unit]
-	local target_pos = POSITION_LOOKUP[target_unit]
-	local target_index = self._target_indexes[target_unit]
-	local actor
-	local hit_position = target_pos
-	local hit_distance = Vector3.distance(target_pos, player_pos)
-	local direction = Vector3.normalize(target_pos - player_pos)
-	local hit_normal, hit_zone_name
-	local penetrated = false
-	local instakill = false
-	local damage_type = self._damage_type
-	local is_critical_strike = self._critical_strike_component.is_active
-	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
-	local charge_level = 1
-	local weapon_item = self._weapon.item
-	local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, instakill, damage_type, is_critical_strike, weapon_item)
-
-	if damage_dealt then
-		local buff_extension = self._buff_extension
-		local param_table = buff_extension:request_proc_event_param_table()
-
-		if param_table then
-			param_table.attacked_unit = target_unit
-
-			buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
-		end
-	end
-
-	local killing_blow = attack_result == AttackSettings.attack_results.died
-
-	self._killing_blow = self._killing_blow or killing_blow
-end
-
 ActionFlamerGas._burn_targets = function (self, dt, t, force_burn)
 	local player_unit = self._player_unit
 	local weapon_item = self._weapon.item
 	local burn_time = self._burn_time - dt
-	local is_critical_strike = self._critical_strike_component.is_active
 	local max_stacks = self._dot_max_stacks
-	local number_of_stacks = is_critical_strike and 2 or 1
 
 	if burn_time <= 0 or force_burn then
-		local targets = self._dot_targets
+		local targets_dot_stacks = self._target_dot_stacks
 		local dot_buff_name = self._flamer_gas_template.dot_buff_name
+		local ALIVE = ALIVE
 
-		if self._is_server then
-			local ALIVE = ALIVE
+		for hit_unit, num_stacks_to_add in pairs(targets_dot_stacks) do
+			if ALIVE[hit_unit] and num_stacks_to_add > 0 then
+				local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
-			for hit_unit, _ in pairs(targets) do
-				if ALIVE[hit_unit] then
-					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+				if buff_extension then
+					local current_stacks = buff_extension:current_stacks(dot_buff_name)
+					local start_time_with_offset = t + math.random() * 0.3
 
-					if buff_extension then
-						local current_stacks = buff_extension:current_stacks(dot_buff_name)
-						local start_time_with_offset = t + math.random() * 0.3
-
-						if current_stacks < max_stacks then
-							buff_extension:add_internally_controlled_buff_with_stacks(dot_buff_name, number_of_stacks, start_time_with_offset, "owner_unit", player_unit, "source_item", weapon_item)
-						elseif current_stacks == max_stacks then
-							buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, start_time_with_offset)
-						end
+					if current_stacks < max_stacks then
+						buff_extension:add_internally_controlled_buff_with_stacks(dot_buff_name, num_stacks_to_add, start_time_with_offset, "owner_unit", player_unit, "source_item", weapon_item)
+					elseif current_stacks == max_stacks then
+						buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, start_time_with_offset)
 					end
 				end
 			end
 		end
 
-		table.clear(targets)
+		table.clear(targets_dot_stacks)
 
 		burn_time = self._dot_stack_application_rate
 	end
@@ -407,18 +395,12 @@ end
 
 ActionFlamerGas._shoot = function (self, position, rotation, power_level, charge_level, t)
 	local player_unit = self._player_unit
-	local damage_config = self._flamer_gas_template.damage
-	local damage_profile = damage_config.impact.damage_profile
 
 	if self._is_server then
-		local units = self:_acquire_suppressed_units(t)
-
-		for hit_unit, _ in pairs(units) do
-			Suppression.apply_suppression(hit_unit, player_unit, damage_profile, POSITION_LOOKUP[player_unit])
-		end
+		FlamerAction.suppress_targets(t, player_unit, rotation, self._flamer_gas_template, self._size_of_flame_template)
 
 		local killing_blow = self._killing_blow
-		local has_targets = killing_blow or not table.is_empty(self._target_indexes) or not table.is_empty(self._dot_targets)
+		local has_targets = killing_blow or not table.is_empty(self._target_indexes) or not table.is_empty(self._target_dot_stacks)
 		local shot_result = self._shot_result
 
 		shot_result.data_valid = true
@@ -441,50 +423,6 @@ ActionFlamerGas._shoot = function (self, position, rotation, power_level, charge
 	end
 
 	self._killing_blow = false
-end
-
-local broadphase_results = {}
-local suppressed_units = {}
-
-ActionFlamerGas._acquire_suppressed_units = function (self, t)
-	table.clear(broadphase_results)
-	table.clear(suppressed_units)
-
-	local flamer_gas_template = self._flamer_gas_template
-	local suppression_radius = flamer_gas_template.suppression_radius
-	local suppression_radius_squared = suppression_radius * suppression_radius
-	local suppression_cone_radius = self._suppression_cone_radius
-	local suppression_cone_dot = flamer_gas_template.suppression_cone_dot
-	local player_unit = self._player_unit
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[player_unit]
-	local enemy_side_names = side:relation_side_names("enemy")
-	local player_position = POSITION_LOOKUP[self._player_unit]
-	local broadphase_system = Managers.state.extension:system("broadphase_system")
-	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase.query(broadphase, player_position, suppression_cone_radius, broadphase_results, enemy_side_names)
-	local rotation = self._first_person_component.rotation
-	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
-
-	for i = 1, num_hits do
-		local enemy_unit = broadphase_results[i]
-		local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
-		local flat_direction = Vector3.flat(enemy_unit_position - player_position)
-		local direction = Vector3.normalize(flat_direction)
-		local dot = Vector3.dot(forward, direction)
-
-		if suppression_cone_dot < dot then
-			suppressed_units[enemy_unit] = true
-		else
-			local distance_squared = Vector3.length_squared(flat_direction)
-
-			if distance_squared < suppression_radius_squared then
-				suppressed_units[enemy_unit] = true
-			end
-		end
-	end
-
-	return suppressed_units
 end
 
 ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)

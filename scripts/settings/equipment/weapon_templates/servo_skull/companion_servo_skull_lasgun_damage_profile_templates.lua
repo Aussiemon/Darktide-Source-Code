@@ -80,7 +80,7 @@ damage_templates.default_companion_servo_skull_lasgun_killshot = {
 		gibbing_type = gibbing_types.laser,
 	},
 	power_distribution = {
-		attack = 160,
+		attack = 100,
 		impact = 5,
 	},
 	gibbing_power = gibbing_power.always,
@@ -124,7 +124,7 @@ damage_templates.default_companion_servo_skull_lasgun_killshot = {
 	},
 }
 damage_templates.improved_companion_servo_skull_lasgun_killshot = table.clone(damage_templates.default_companion_servo_skull_lasgun_killshot)
-damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.attack = 160
+damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.attack = 100
 damage_templates.improved_companion_servo_skull_lasgun_killshot.power_distribution.impact = 5
 
 return {

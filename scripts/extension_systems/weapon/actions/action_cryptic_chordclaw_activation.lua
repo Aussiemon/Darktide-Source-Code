@@ -33,14 +33,8 @@ ActionCrypticChordclawActivation.start = function (self, dt, t, time_in_action, 
 
 	self._remaining_ability_charges_before_use_at_start = ability_extension:remaining_ability_charges(ability_type) or 0
 
-	local ability_charges_used = ability_extension:use_ability_charge(ability_type)
-
-	self._ability_charges_used_at_start = ability_charges_used
-
-	if self._is_server then
-		Managers.stats:record_private("hook_ability_charges_used_from_action", self._player, ability_type, ability_charges_used)
-	end
-
+	local target_cost, _ = self:_consume_ability_usage_cost()
+	local charges_used = target_cost
 	local has_chordclaw_gives_chordclaw_damage_on_use = talent_extension:has_special_rule("cryptic_chordclaw_gives_chordclaw_damage_on_use")
 
 	if has_chordclaw_gives_chordclaw_damage_on_use then
@@ -49,7 +43,7 @@ ActionCrypticChordclawActivation.start = function (self, dt, t, time_in_action, 
 
 	local has_three_charge_bonus_talent = talent_extension:has_special_rule("cryptic_chordclaw_gives_melee_attacks_speed_and_toughness")
 
-	if has_three_charge_bonus_talent and ability_charges_used >= chordclaw_ability_talent_settings.three_charge_bonus.num_charges_used_required then
+	if has_three_charge_bonus_talent and charges_used >= chordclaw_ability_talent_settings.three_charge_bonus.num_charges_used_required then
 		buff_extension:add_internally_controlled_buff("cryptic_chordclaw_melee_attack_speed_and_toughness_damage_taken", t)
 	end
 
@@ -60,7 +54,7 @@ ActionCrypticChordclawActivation.start = function (self, dt, t, time_in_action, 
 
 		if param_table then
 			param_table.unit = player_unit
-			param_table.ability_charges_used = ability_charges_used
+			param_table.ability_cost = charges_used
 			param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)

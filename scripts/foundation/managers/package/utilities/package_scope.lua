@@ -7,12 +7,12 @@ PackageScope.init = function (self, reference_name)
 	self._packages_in_scope = {}
 end
 
-PackageScope.add_package = function (self, package_name)
+PackageScope.add_package = function (self, package_name, callback)
 	if self._packages_in_scope[package_name] then
 		return
 	end
 
-	self._packages_in_scope[package_name] = Managers.package:load(package_name, self._reference_name, nil, false, false)
+	self._packages_in_scope[package_name] = Managers.package:load(package_name, self._reference_name, callback, false, false)
 
 	return self._packages_in_scope[package_name]
 end

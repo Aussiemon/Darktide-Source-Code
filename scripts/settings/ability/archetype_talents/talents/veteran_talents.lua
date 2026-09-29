@@ -37,7 +37,6 @@ local archetype_talents = {
 			icon = "content/ui/textures/icons/talents/veteran/veteran_blitz_frag_grenade",
 			name = "BASE: Frag Grenade",
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.veteran_frag_grenade,
 			},
 		},
@@ -54,7 +53,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.veteran_krak_grenade,
 			},
 			dev_info = {
@@ -81,7 +79,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "grenade_ability",
 				ability = PlayerAbilities.veteran_smoke_grenade,
 			},
 		},
@@ -233,7 +230,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.veteran_combat_ability_stance,
 			},
 			special_rule = {
@@ -351,7 +347,6 @@ local archetype_talents = {
 				identifier = "veteran_combat_ability_increased_ranged_and_weakspot_damage_outlines",
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.veteran_combat_ability_stance_improved,
 			},
 		},
@@ -560,7 +555,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.veteran_combat_ability_shout,
 			},
 			special_rule = {
@@ -585,7 +579,7 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.combat_ability_cooldown_modifier,
+							stat_buffs.combat_ability_resource_cost_per_use_modifier,
 						},
 					},
 				},
@@ -639,7 +633,7 @@ local archetype_talents = {
 						find_value_type = "buff_template",
 						path = {
 							"stat_buffs",
-							stat_buffs.combat_ability_cooldown_modifier,
+							stat_buffs.combat_ability_resource_cost_per_use_modifier,
 						},
 					},
 				},
@@ -1403,6 +1397,43 @@ local archetype_talents = {
 				identifier = "veteran_suppression_immunity",
 			},
 		},
+		veteran_base_ranged_damage = {
+			description = "loc_talent_veteran_base_ranged_damage_desc",
+			display_name = "loc_talent_veteran_base_ranged_damage",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_base_1",
+			name = "Increased Ranged Damage",
+			format_values = {
+				ranged_damage = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings.veteran_base_ranged_damage.ranged_damage,
+				},
+			},
+			passive = {
+				buff_template_name = "veteran_base_ranged_damage",
+				identifier = "veteran_base_ranged_damage",
+			},
+		},
+		veteran_survivalist_passive = {
+			description = "loc_talent_veteran_survivalist_passive_desc",
+			display_name = "loc_talent_veteran_survivalist_passive",
+			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_base_1",
+			name = "Increased Ranged Damage",
+			format_values = {
+				ammo = {
+					format_type = "percentage",
+					value = talent_settings.veteran_survivalist_passive.ammo,
+				},
+				cooldown = {
+					format_type = "number",
+					value = talent_settings.veteran_survivalist_passive.cooldown,
+				},
+			},
+			passive = {
+				buff_template_name = "veteran_survivalist_passive",
+				identifier = "veteran_survivalist_passive",
+			},
+		},
 		veteran_reduced_toughness_damage_in_coherency = {
 			description = "loc_talent_veteran_toughness_damage_reduction_per_ally_description",
 			display_name = "loc_talent_veteran_toughness_damage_reduction_per_ally",
@@ -1717,7 +1748,7 @@ local archetype_talents = {
 			},
 		},
 		veteran_dodging_grants_stamina = {
-			description = "loc_talent_veteran_stamina_on_ranged_dodge_desc",
+			description = "loc_talent_veteran_stamina_on_ranged_dodge_movement_speed_desc",
 			display_name = "loc_talent_ranger_stamina_on_ranged_dodge",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_2",
 			name = "Dodging Shots grants stamina - Dodging, Sprinting or Sliding to avoid ranged attacks grants stamina.",
@@ -1726,6 +1757,11 @@ local archetype_talents = {
 					format_type = "percentage",
 					prefix = "+",
 					value = talent_settings_2.defensive_2.stamina_percent,
+				},
+				movement_speed = {
+					format_type = "percentage",
+					prefix = "+",
+					value = talent_settings_2.defensive_2.movement_speed,
 				},
 			},
 			passive = {
@@ -2056,7 +2092,6 @@ local archetype_talents = {
 				},
 			},
 			player_ability = {
-				ability_type = "combat_ability",
 				ability = PlayerAbilities.veteran_combat_ability_stealth,
 			},
 			passive = {

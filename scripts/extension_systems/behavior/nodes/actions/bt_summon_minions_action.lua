@@ -393,6 +393,10 @@ BtSummonMinionsAction._circle_placement = function (self, unit, spawn_position_b
 
 	for i = 1, #spawned_slots do
 		local current_spawn_slot = spawned_slots[i]
+		local fx_system = Managers.state.extension:system("fx_system")
+		local vfx_name = "content/fx/particles/enemies/renegade_psyker/renegade_psyker_summoning_circle"
+
+		fx_system:trigger_vfx(vfx_name, current_spawn_slot.position:unbox(), Unit.local_rotation(unit, 1))
 
 		for ii = 1, spawns_per_location do
 			local random_x = math.random(1, 10)

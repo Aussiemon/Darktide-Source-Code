@@ -123,6 +123,8 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 end
 
 PlayerUnitBuffExtension.extensions_ready = function (self, world, unit)
+	PlayerUnitBuffExtension.super.extensions_ready(self, world, unit)
+
 	self._toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 end
 
@@ -730,12 +732,9 @@ PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, act
 			return
 		end
 
-		local activation_frame = activation_time / self._fixed_time_step
 		local player = self._player
 
 		if player.remote then
-			local channel_id = player:channel_id()
-			local game_object_id = self._game_object_id
 			local buffs_by_index = self._buffs_by_index
 			local buff_instance = buffs_by_index[index]
 

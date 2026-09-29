@@ -92,6 +92,7 @@ WorldTestCases.load_mission_circumstances = function (case_settings)
 		end
 
 		TestifySnippets.wait(2)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -145,6 +146,7 @@ WorldTestCases.load_mission_side_missions = function (case_settings)
 		end
 
 		TestifySnippets.wait(2)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -165,6 +167,35 @@ WorldTestCases.invalid_side_missions = function ()
 		TestifySnippets.load_mission("spawn_all_enemies", nil, nil, nil, side_mission_name)
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait(2)
+	end)
+end
+
+WorldTestCases.load_procgen_exp_missions = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local speed = 20
+
+		TestifySnippets.skip_splash_and_title_screen()
+
+		local settings = cjson.decode(case_settings or "{}")
+		local mission_key = settings.mission_key
+		local output = TestifySnippets.mission_exists(mission_key)
+
+		if output then
+			return output
+		end
+
+		TestifySnippets.skip_main_menu()
+		TestifySnippets.load_mission(mission_key)
+		Testify:make_request("expedition_wait_until_location_ready")
+		TestifySnippets.wait(5)
+		Testify:make_request("expedition_start_next_location")
+
+		local expedition_store_path = Testify:make_request("expedition_store_path")
+
+		TestifySnippets.free_flight_camera_follow_path(expedition_store_path, speed)
+		Testify:make_request("expedition_wait_until_location_ready")
+		TestifySnippets.wait(5)
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -259,6 +290,10 @@ WorldTestCases.test_triggers = function ()
 
 		result = result == "" and "Success" or result
 
+		if result ~= "Success" then
+			Testify.expect:fail("untriggered_triggers", result)
+		end
+
 		return result
 	end)
 end
@@ -317,5 +352,6 @@ WorldTestCases.check_isolated_islands = function (case_settings)
 		local has_islands = Testify:make_request("check_isolated_islands")
 
 		Testify.expect:is_true("has_islands", has_islands, "Level contains navmesh islands")
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end

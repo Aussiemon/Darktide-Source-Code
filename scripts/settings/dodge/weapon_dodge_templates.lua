@@ -360,6 +360,28 @@ weapon_dodge_templates.assault = {
 		lerp_perfect = 1.2,
 	},
 }
+weapon_dodge_templates.assault_eighty_percent_mobility_extra_dodge = {
+	distance_scale = {
+		lerp_basic = 0.75,
+		lerp_perfect = 1,
+	},
+	diminishing_return_distance_modifier = {
+		lerp_basic = 0.6,
+		lerp_perfect = 0.3,
+	},
+	diminishing_return_start = {
+		lerp_basic = 2,
+		lerp_perfect = 5,
+	},
+	diminishing_return_limit = {
+		lerp_basic = 2,
+		lerp_perfect = 4,
+	},
+	speed_modifier = {
+		lerp_basic = 1,
+		lerp_perfect = 1.2,
+	},
+}
 weapon_dodge_templates.shotgun = {
 	distance_scale = {
 		lerp_basic = 0.7,

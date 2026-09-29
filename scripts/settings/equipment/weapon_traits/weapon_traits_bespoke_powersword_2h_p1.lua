@@ -535,10 +535,6 @@ templates.weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_b
 				},
 			},
 		},
-		interval = {
-			format_type = "number",
-			value = 5,
-		},
 	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_slower_heat_buildup_on_perfect_block = {
@@ -601,36 +597,32 @@ templates.weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block = 
 				},
 			},
 		},
-		interval = {
-			format_type = "number",
-			value = 5,
-		},
 	},
 	buffs = {
 		weapon_trait_bespoke_powersword_2h_p1_attack_speed_on_perfect_block = {
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.06,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.08,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.1,
 				},
 			},
 			{
-				active_duration = 5,
+				active_duration = 6,
 				cooldown_duration = 0,
 				proc_stat_buffs = {
 					[stat_buffs.melee_attack_speed] = 0.12,

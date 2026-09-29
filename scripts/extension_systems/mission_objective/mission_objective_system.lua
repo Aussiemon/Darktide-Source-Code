@@ -118,6 +118,16 @@ MissionObjectiveSystem.objective_definition = function (self, objective_name)
 	return self._objective_definitions[objective_name]
 end
 
+MissionObjectiveSystem.get_override_group_id_from_objective = function (self, objective_name)
+	if self._support_objective_groups then
+		local objective_definitions = self._objective_definitions[objective_name]
+
+		return objective_definitions and objective_definitions.group_id
+	end
+
+	return nil
+end
+
 MissionObjectiveSystem.get_objective_group_id_from_unit = function (self, unit)
 	if self._support_objective_groups and unit then
 		local level = Unit.level(unit)
@@ -187,7 +197,7 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 end
 
 MissionObjectiveSystem.start_mission_objective = function (self, objective_name, group_id, progression, second_progression, increment, max_incremented, stage)
-	group_id = group_id or GLOBAL_GROUP_ID
+	group_id = group_id or self:get_override_group_id_from_objective(objective_name) or GLOBAL_GROUP_ID
 	progression = progression or 0
 	second_progression = second_progression or 0
 	increment = increment or 0
@@ -810,12 +820,12 @@ MissionObjectiveSystem.register_music_event_listener = function (self, listener)
 	self._music_event_listener = listener
 end
 
-MissionObjectiveSystem.register_objective_synchronizer = function (self, objective_name, group_id_override, objective_unit)
+MissionObjectiveSystem.register_objective_synchronizer = function (self, objective_name, objective_unit)
 	if not self._objective_definitions[objective_name] then
 		return
 	end
 
-	local group_id = group_id_override or self:get_objective_group_id_from_unit(objective_unit)
+	local group_id = self:get_override_group_id_from_objective(objective_name) or self:get_objective_group_id_from_unit(objective_unit)
 	local objective_group = self:_get_objective_group(group_id, true)
 
 	objective_group.objective_registered_synchronizer[objective_name] = objective_unit
@@ -840,7 +850,7 @@ MissionObjectiveSystem.register_objective_unit = function (self, objective_name,
 		return
 	end
 
-	local group_id = self:get_objective_group_id_from_unit(objective_unit)
+	local group_id = self:get_override_group_id_from_objective(objective_name) or self:get_objective_group_id_from_unit(objective_unit)
 	local objective_group = self:_get_objective_group(group_id, true)
 	local objective_units = objective_group.objective_registered_units[objective_name]
 
@@ -866,7 +876,7 @@ MissionObjectiveSystem.register_objective_unit = function (self, objective_name,
 end
 
 MissionObjectiveSystem.unregister_objective_unit = function (self, objective_name, objective_unit, objective_stage)
-	local group_id = self:get_objective_group_id_from_unit(objective_unit)
+	local group_id = self:get_override_group_id_from_objective(objective_name) or self:get_objective_group_id_from_unit(objective_unit)
 	local objective_group = self:_get_objective_group(group_id)
 
 	if not self._objective_definitions[objective_name] then

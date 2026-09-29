@@ -19,7 +19,7 @@ _system_require("behavior", "behavior_system")
 _system_require("blackboard", "blackboard_system")
 _system_require("boss", "boss_system")
 _system_require("broadphase", "broadphase_system")
-_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension", "projectile_unit_buff_extension")
+_system_require("buff", "minion_buff_extension", "player_unit_buff_extension", "player_husk_buff_extension", "player_projectile_unit_buff_extension")
 _system_require("camera", "camera_system")
 _system_require("character_state_machine", "character_state_machine_extension")
 _system_require("chest", "chest_system")
@@ -73,6 +73,7 @@ _system_require("mood", "player_unit_mood_extension")
 _system_require("moveable_platform", "moveable_platform_system")
 _system_require("music_parameter", "player_unit_music_parameter_extension", "player_husk_music_parameter_extension")
 _system_require("nav_block", "nav_block_extension")
+_system_require("nav_spawn_block", "nav_crossroad_spawn_block_extension")
 _system_require("nav_box_obstacle", "nav_box_obstacle_extension")
 _system_require("nav_graph", "nav_graph_system")
 _system_require("navigation", "navigation_system")
@@ -89,6 +90,7 @@ _system_require("pickups", "pickup_system")
 _system_require("player_spawner", "player_spawner_system")
 _system_require("player_visibility", "player_visibility_extension")
 _system_require("point_of_interest", "point_of_interest_system")
+_system_require("predicted_unit_spawner", "predicted_unit_spawner_system", "predicted_unit_extension")
 _system_require("projectile_damage", "projectile_damage_extension")
 _system_require("prop_collision", "prop_collision_extension")
 _system_require("proximity", "proximity_system", "side_relation_proximity_extension")
@@ -118,6 +120,7 @@ _system_require("token", "token_system")
 _system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "player_hub_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
 _system_require("visual_loadout", "visual_loadout_system")
+_system_require("vector_fields", "vector_fields_system")
 _system_require("volume_event", "volume_event_system")
 _system_require("weakspot", "weakspot_extension")
 _system_require("weapon", "weapon_system")
@@ -314,7 +317,7 @@ local systems = {
 			"PlayerUnitBuffExtension",
 			"PlayerHuskBuffExtension",
 			"MinionBuffExtension",
-			"ProjectileUnitBuffExtension",
+			"PlayerProjectileUnitBuffExtension",
 		},
 	},
 	{
@@ -813,6 +816,15 @@ local systems = {
 		},
 	},
 	{
+		"vector_fields_system",
+		"VectorFieldsSystem",
+		true,
+		true,
+		true,
+		true,
+		false,
+	},
+	{
 		"projectile_damage_system",
 		"ExtensionSystemBase",
 		false,
@@ -822,6 +834,18 @@ local systems = {
 		false,
 		{
 			"ProjectileDamageExtension",
+		},
+	},
+	{
+		"predicted_unit_spawner_system",
+		"PredictedUnitSpawnerSystem",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"PredictedUnitExtension",
 		},
 	},
 	{
@@ -1016,6 +1040,18 @@ local systems = {
 		},
 	},
 	{
+		"nav_spawn_block_system",
+		"ExtensionSystemBase",
+		false,
+		false,
+		false,
+		true,
+		false,
+		{
+			"NavCrossroadSpawnBlockExtension",
+		},
+	},
+	{
 		"door_system",
 		"DoorSystem",
 		false,
@@ -1153,7 +1189,7 @@ local systems = {
 		"ProximitySystem",
 		false,
 		false,
-		true,
+		false,
 		true,
 		false,
 		{

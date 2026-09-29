@@ -75,7 +75,13 @@ AutoEvent.auto_event_active = function (self)
 end
 
 AutoEvent.swap_auto_event_template = function (self, template_name)
-	self._template = AutoEventsTemplates[template_name]
+	if not template_name then
+		template_name = "dummy_auto_event_template"
+
+		Log.info("AutoEvent", "No auto event passed to swap_auto_event_template, using dummy template.")
+	end
+
+	self._template = AutoEventsTemplates[template_name or "dummy_auto_event_template"]
 end
 
 AutoEvent.restore_auto_event_template = function (self)
@@ -135,6 +141,12 @@ AutoEvent.request_auto_event = function (self, params, debug_position)
 
 		if params.level_reference and self._template.check_radius_to_players then
 			param_table.level_reference = params.owning_level
+		end
+
+		local spawner_groups = params.spawner_groups or self._template.spawner_groups
+
+		if spawner_groups and #spawner_groups > 0 then
+			param_table.spawner_groups = spawner_groups
 		end
 
 		local allowed_composition_types = self._template.composition
@@ -206,6 +218,32 @@ AutoEvent.remove_all_active_events = function (self)
 	for uuid, data in pairs(self._active_events) do
 		data.stop_requested = true
 	end
+end
+
+AutoEvent.force_remove_all_active_events = function (self)
+	local should_pause_pacing = self._template.pause_pacing_on_event
+
+	if should_pause_pacing then
+		local has_event_pause = false
+
+		for uuid, data in pairs(self._active_events) do
+			if data.pacing_paused then
+				has_event_pause = true
+
+				break
+			end
+		end
+
+		if has_event_pause then
+			for spawn_type, pause_duration_table in pairs(should_pause_pacing) do
+				Managers.state.pacing:pause_spawn_type(spawn_type, false, "paused_by_auto_event", nil)
+			end
+		end
+	end
+
+	self._num_active_events = 0
+
+	table.clear(self._active_events)
 end
 
 AutoEvent.highlight_remaining_enemies = function (self, uuid)
@@ -412,7 +450,9 @@ AutoEvent._check_players_in_radius = function (self, uuid, data)
 
 	if tags then
 		radius, margin = self:_get_first_available_radius_by_tags(tags)
-	else
+	end
+
+	if not radius then
 		radius, margin = RADIUS_BY_LEVEL_TAG.level_size_32, MARGIN_BY_LEVEL_TAG.level_size_32
 	end
 
@@ -917,6 +957,77 @@ end
 local MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS = 10, 60
 local INITIAL_GROUP_OFFSET = 1
 local nearby_spawners, nearby_occluded_positions = {}, {}
+
+AutoEvent._spawn_from_group_spawners = function (self, minion_spawn_system, event_data, navmesh_position, num_to_spawn, spawn_list, side, target_side, nav_world, nav_spawn_points, num_groups)
+	local target_side_id = target_side.side_id
+	local side_id = side.side_id
+	local num_spawn_locations, num_spawned = 0, 0
+	local max_spawn_locations = self._max_spawn_locations
+	local spawner_group_id = event_data.spawner_groups[1]
+	local group_spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group_id, navmesh_position)
+
+	if group_spawners then
+		local num_group_spawners = #group_spawners
+
+		num_spawn_locations = math.min(max_spawn_locations, num_group_spawners)
+
+		for i = num_spawn_locations + 1, num_group_spawners do
+			group_spawners[i] = nil
+		end
+
+		table.shuffle(group_spawners)
+
+		for j = 1, num_spawn_locations do
+			nearby_spawners[#nearby_spawners + 1] = group_spawners[j]
+		end
+	end
+
+	if num_spawn_locations == 0 then
+		Log.info("Auto Event", "\t\t (group spawners) for ambush horde! Failed")
+
+		return num_to_spawn, max_spawn_locations
+	end
+
+	local group_system = Managers.state.extension:system("group_system")
+	local group_id = group_system:generate_group_id()
+
+	event_data.groups[#event_data.groups + 1] = group_id
+
+	local whole = math.floor(num_to_spawn / num_spawn_locations)
+	local remainder = num_to_spawn % num_spawn_locations
+
+	for i = 1, #nearby_spawners do
+		local amount = whole + (i <= remainder and 1 or 0)
+
+		if amount > 0 then
+			local breed_list = {}
+
+			for j = 1, amount do
+				num_spawned = num_spawned + 1
+
+				local breed_name = spawn_list[num_spawned]
+
+				breed_list[#breed_list + 1] = breed_name
+			end
+
+			local spawner = nearby_spawners[i]
+			local param_table = spawner:request_param_table()
+
+			param_table.target_side_id = target_side_id
+			param_table.group_id = group_id
+			param_table.optional_target_unit = _get_valid_player_target(event_data.position)
+
+			spawner:add_spawns(breed_list, side_id, param_table)
+		end
+	end
+
+	Log.info("Auto Event", "Managed to spawn %d/%d horde enemies.", num_spawned, num_to_spawn)
+
+	local spawns_left = num_to_spawn - num_spawned
+	local spawn_locations_left = max_spawn_locations - num_spawn_locations
+
+	return spawns_left, spawn_locations_left, group_id
+end
 
 AutoEvent.execute = function (self, physics_world, nav_world, side, target_side, position, event_data)
 	local target_side_id = target_side.side_id

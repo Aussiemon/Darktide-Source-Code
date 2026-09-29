@@ -43,6 +43,11 @@ HordePacing.on_gameplay_post_init = function (self, level, template)
 	self._triggered_hordes = 0
 end
 
+HordePacing.reset_travel_distance = function (self)
+	self._old_furthest_travel_distance = 0
+	self._triggered_hordes = 0
+end
+
 HordePacing.update = function (self, dt, t, side_id, target_side_id)
 	local hordes_allowed = self:_update_horde_allowance(t, dt, side_id, target_side_id)
 

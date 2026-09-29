@@ -253,6 +253,299 @@ InputFilters.scale_vector3_xy_accelerated_x = {
 		},
 	},
 }
+
+local function _motion_gravity_vector(dt, gravity_vector, input, radian_velocity)
+	local current_gravity_vector = gravity_vector:unbox()
+	local acceleration = input:get("acceleration")
+	local rotation = Quaternion.axis_angle(-radian_velocity, Vector3.length(radian_velocity) * dt)
+
+	current_gravity_vector = Quaternion.rotate(rotation, current_gravity_vector)
+
+	local new_gravity = -acceleration
+	local new_gravity_vector = current_gravity_vector + (new_gravity - current_gravity_vector) * 0.02
+
+	gravity_vector:store(new_gravity_vector)
+
+	return new_gravity_vector
+end
+
+local function _tiered_smoothed_motion(current_input, threshold, input_magnitude, filter_data)
+	local motion_input_buffer_length = 6
+	local lower_threshold = threshold / 4
+	local direct_weight = math_clamp((input_magnitude - lower_threshold) / (threshold - lower_threshold), 0, 1)
+	local weighted_current_input = current_input * (1 - direct_weight)
+	local smoothing_input_buffer = filter_data.motion_smoothing_input_buffer
+
+	filter_data.motion_current_smoothing_input_index = filter_data.motion_current_smoothing_input_index % motion_input_buffer_length + 1
+
+	if not smoothing_input_buffer[filter_data.motion_current_smoothing_input_index] then
+		smoothing_input_buffer[filter_data.motion_current_smoothing_input_index] = Vector3Box(0, 0, 0)
+	end
+
+	smoothing_input_buffer[filter_data.motion_current_smoothing_input_index]:store(weighted_current_input)
+
+	local averaged_smoothed_input = Vector3.zero()
+
+	for _, input in ipairs(smoothing_input_buffer) do
+		local val = Vector3Box.unbox(input)
+
+		averaged_smoothed_input = averaged_smoothed_input + val
+	end
+
+	averaged_smoothed_input = averaged_smoothed_input / motion_input_buffer_length
+
+	return current_input * direct_weight + averaged_smoothed_input
+end
+
+local function _tiered_smoothed_stick_rotation(angle_change, filter_data)
+	local flick_input_buffer_length = 6
+	local turn_smooth_threshold = 0.1
+	local half_turn_smooth_threshold = turn_smooth_threshold / 2
+	local input_magnitude = math_abs(angle_change)
+	local direct_weight = math_clamp((input_magnitude - half_turn_smooth_threshold) / (turn_smooth_threshold - half_turn_smooth_threshold), 0, 1)
+	local weighted_angle_change = angle_change * (1 - direct_weight)
+	local smoothing_input_buffer = filter_data.flick_smoothing_input_buffer
+
+	filter_data.flick_current_smoothing_input_index = filter_data.flick_current_smoothing_input_index % flick_input_buffer_length + 1
+	smoothing_input_buffer[filter_data.flick_current_smoothing_input_index] = weighted_angle_change
+
+	local averaged_smoothed_change = 0
+
+	for _, val in ipairs(smoothing_input_buffer) do
+		averaged_smoothed_change = averaged_smoothed_change + val
+	end
+
+	averaged_smoothed_change = averaged_smoothed_change / flick_input_buffer_length
+
+	return angle_change * direct_weight + averaged_smoothed_change
+end
+
+local function _motion_acceleration(current_input, settings, fast_multiplier, input_magnitude)
+	local lower_threshold = settings.controller_motion_acceleration_start_threshold
+	local zone_size = settings.controller_motion_acceleration_zone_size
+	local threshold = lower_threshold + zone_size
+	local direct_weight = math_clamp((input_magnitude - lower_threshold) / (threshold - lower_threshold), 0, 1)
+
+	return current_input * (1 - direct_weight) + fast_multiplier * current_input * direct_weight
+end
+
+local function _steadied_motion(current_input, steadying_threshold, input_magnitude)
+	if input_magnitude < steadying_threshold then
+		local input_scale = input_magnitude / steadying_threshold
+
+		current_input = current_input * input_scale
+	end
+
+	return current_input
+end
+
+local function _eased_turn(dt, turn_time, turn_size, filter_data)
+	local last_turn_progress = filter_data.turn_progress
+	local temp_turn_progress = filter_data.turn_progress + dt
+
+	filter_data.turn_progress = math_min(temp_turn_progress, turn_time)
+
+	local last_per_one = last_turn_progress / turn_time
+	local this_per_one = filter_data.turn_progress / turn_time
+	local warped_last_per_one = math_ease_out_exp(last_per_one)
+	local warped_this_per_one = temp_turn_progress < turn_time and math_ease_out_exp(this_per_one) or 1
+
+	return Vector3((warped_this_per_one - warped_last_per_one) * turn_size, 0, 0)
+end
+
+local LAST_TURN = Vector3Box(0, 0, 0)
+
+local function _update_flick_stick(dt, input, filter_data)
+	local last_turn = LAST_TURN
+	local gamepad_override = Vector3.zero()
+	local flick_threshold = 0.9
+	local flick_time = 0.1
+	local last_input = last_turn:unbox()
+	local current_input = input:get("look_raw_controller")
+	local length = Vector3.length(current_input)
+	local last_length = Vector3.length(last_input)
+
+	last_turn:store(current_input)
+
+	if flick_threshold <= length then
+		if last_length < flick_threshold then
+			filter_data.turn_progress = 0
+		else
+			local stick_angle = math_atan2(-current_input.x, current_input.y)
+			local last_stick_angle = math_atan2(-last_input.x, last_input.y)
+			local angle_change = stick_angle - last_stick_angle
+
+			if angle_change > 1 or angle_change < -1 then
+				angle_change = 0
+			end
+
+			local smoothed_change = _tiered_smoothed_stick_rotation(angle_change, filter_data)
+
+			gamepad_override = Vector3(-smoothed_change, 0, 0)
+		end
+	elseif flick_threshold <= last_length then
+		local flick_smoothing_input_buffer = filter_data.flick_smoothing_input_buffer
+
+		table.clear(flick_smoothing_input_buffer)
+
+		filter_data.flick_current_smoothing_input_index = 0
+	end
+
+	if flick_time > filter_data.turn_progress then
+		local flick_size = math_atan2(current_input.x, current_input.y)
+
+		gamepad_override = _eased_turn(dt, flick_time, flick_size, filter_data)
+	end
+
+	return gamepad_override
+end
+
+local function _update_quick_turn_tilt(dt, input, filter_data)
+	local gamepad_override
+	local angular_velocity = input:get("angular_velocity")
+	local up_tilt = angular_velocity and angular_velocity.x > 0 and angular_velocity.x or 0
+	local quick_turn_time = 0.15
+
+	if up_tilt > 4 and filter_data.turn_progress == quick_turn_time then
+		filter_data.turn_progress = 0
+	end
+
+	if quick_turn_time > filter_data.turn_progress then
+		local one_eighty = math_pi
+
+		gamepad_override = _eased_turn(dt, quick_turn_time, one_eighty, filter_data)
+	else
+		filter_data.turn_progress = quick_turn_time
+	end
+
+	return gamepad_override
+end
+
+InputFilters.scale_vector3_angular_velocity = {
+	init = function (filter_data)
+		local internal_filter_data = table.clone(filter_data)
+
+		internal_filter_data.radian_scale = math_pi * 2 / 373
+		internal_filter_data.gravity_vector = Vector3Box(0, 0, 0)
+		internal_filter_data.motion_smoothing_input_buffer = {}
+		internal_filter_data.motion_current_smoothing_input_index = 0
+		internal_filter_data.flick_smoothing_input_buffer = {}
+		internal_filter_data.flick_current_smoothing_input_index = 0
+		internal_filter_data.turn_progress = 1
+		internal_filter_data.return_table = {
+			active = false,
+			override = false,
+			input = Vector3.zero(),
+		}
+
+		return internal_filter_data
+	end,
+	update = function (filter_data, input_service)
+		local dt = Managers.time:mean_dt()
+		local settings = Managers.save:account_data().input_settings
+		local motion_template = settings.controller_motion_template
+		local state = filter_data.state
+		local apply_motion = false
+
+		if motion_template == "all" then
+			apply_motion = true
+		elseif state == motion_template then
+			apply_motion = true
+		elseif state == "ranged_alternate_fire" and motion_template == "ranged" then
+			apply_motion = true
+		elseif (state == "melee" or state == "ranged_alternate_fire") and motion_template == "melee_ranged_alternate_fire" then
+			apply_motion = true
+		end
+
+		local motion_input = Vector3.zero()
+		local gamepad_override
+		local disable_motion = settings.controller_motion_touchbar_disable_motion
+
+		if disable_motion then
+			local touch_input = input_service:get("touch_1")
+			local stop_motion = touch_input.z ~= -1
+
+			if stop_motion then
+				apply_motion = false
+			end
+		end
+
+		local return_table = filter_data.return_table
+
+		if apply_motion then
+			local invert_look_y = settings[filter_data.invert_look_y] and -1 or 1
+			local scale = settings[filter_data.scale]
+			local val = input_service:get(filter_data.input_mappings)
+
+			val = Vector3.multiply_elements(val, Vector3(invert_look_y, 1, 1))
+
+			local radian_scale = filter_data.radian_scale
+			local radian_velocity = Vector3.multiply(val, radian_scale)
+			local old_gravity_vector = filter_data.gravity_vector
+			local current_gravity_vector = _motion_gravity_vector(dt, old_gravity_vector, input_service, radian_velocity)
+
+			scale = (settings[filter_data.sensitivity_modifier] or filter_data.sensitivity_modifier) * scale
+
+			local vertical_multiplier = settings.controller_motion_look_vertical_multiplier
+			local magnitude_x = (radian_velocity.y * current_gravity_vector.y + radian_velocity.z * current_gravity_vector.z) * scale
+			local magnitude_y = radian_velocity.x * scale * vertical_multiplier
+
+			motion_input.x = magnitude_x
+			motion_input.y = magnitude_y
+
+			local degrees_per_second = math_abs(Vector3.length(motion_input / radian_scale)) / dt
+			local fast_multiplier = settings.controller_motion_acceleration_fast_multiplier
+
+			if fast_multiplier > 1 then
+				motion_input = _motion_acceleration(motion_input, settings, fast_multiplier, degrees_per_second)
+			end
+
+			local steadying_threshold = settings.controller_motion_steadying_threshold
+
+			if steadying_threshold > 0 then
+				motion_input = _steadied_motion(motion_input, steadying_threshold, degrees_per_second)
+			end
+
+			local smoothing_threshold = settings.controller_motion_smoothing_threshold
+
+			if smoothing_threshold > 0 then
+				motion_input = _tiered_smoothed_motion(motion_input, smoothing_threshold, degrees_per_second, filter_data)
+			end
+
+			local flick_stick = settings.controller_motion_flick_stick
+
+			if flick_stick then
+				gamepad_override = _update_flick_stick(dt, input_service, filter_data)
+			end
+
+			return_table.active = true
+		else
+			local quick_turn_tilt = settings.controller_motion_disabled_quick_turn_tilt
+
+			if quick_turn_tilt then
+				gamepad_override = _update_quick_turn_tilt(dt, input_service, filter_data)
+			end
+
+			return_table.active = false
+		end
+
+		if gamepad_override then
+			return_table.input = motion_input + gamepad_override
+			return_table.override = true
+		else
+			return_table.input = motion_input
+			return_table.override = false
+		end
+
+		return return_table
+	end,
+	edit_types = {
+		{
+			"multiplier",
+			"number",
+		},
+	},
+}
 InputFilters.vector_y = {
 	init = function (filter_data)
 		local new_filter_data = table.clone(filter_data)

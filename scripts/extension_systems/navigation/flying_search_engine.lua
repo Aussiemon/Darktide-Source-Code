@@ -23,13 +23,7 @@ FlyingSearchEngine.init = function (self, shared_svo, from, to, radius)
 			from[3],
 		},
 	}
-
-	local bounds = shared_svo:bounds()
-	local max_bound = math.max(bounds[1], bounds[2], bounds[3])
-
-	self._max_f = max_bound * 4
 	self._query_margin = 0.5
-	self._debug_draw_voxels = {}
 end
 
 FlyingSearchEngine.step = function (self, timer, budget)
@@ -66,7 +60,7 @@ FlyingSearchEngine.step = function (self, timer, budget)
 		local done, points = self:_smooth_curves(step_data, timer, budget)
 
 		if done then
-			self._path = FlyingNavPath:new(points, self._max_speed)
+			self._path = FlyingNavPath:new(points)
 			search_complete, success = true, true
 		end
 	elseif self._state == State.find_navmesh then
@@ -81,7 +75,7 @@ FlyingSearchEngine.step = function (self, timer, budget)
 		success, points = self:_try_raw_path()
 
 		if success then
-			self._path = FlyingNavPath:new(points, self._max_speed)
+			self._path = FlyingNavPath:new(points)
 		end
 
 		search_complete = true
@@ -101,13 +95,10 @@ end
 FlyingSearchEngine._find_navmesh = function (self, step_data, timer, budget)
 	if not step_data.find_navmesh_begun then
 		step_data.find_navmesh_begun = true
-
-		local layer = 0
-
-		step_data.layer = layer
-		step_data.x = -layer
-		step_data.y = -layer
-		step_data.z = -layer
+		step_data.layer = 0
+		step_data.x = 0
+		step_data.y = 0
+		step_data.z = 0
 		step_data.pos = {}
 		step_data.from_found = false
 	end
@@ -118,11 +109,16 @@ FlyingSearchEngine._find_navmesh = function (self, step_data, timer, budget)
 	local step_size = self._step_size
 	local collides
 	local layer = step_data.layer
+	local start_x, start_y, start_z = step_data.x, step_data.y, step_data.z
 
-	for x = step_data.x, layer do
-		for y = step_data.y, layer do
-			for z = step_data.z, layer do
-				if budget <= Application_time_since_query(timer) and (x ~= step_data.x or y ~= step_data.y or z ~= step_data.z) then
+	for x = start_x, layer do
+		local y_start = x == start_x and start_y or -layer
+
+		for y = y_start, layer do
+			local z_start = x == start_x and y == start_y and start_z or -layer
+
+			for z = z_start, layer do
+				if budget <= Application_time_since_query(timer) and (x ~= start_x or y ~= start_y or z ~= start_z) then
 					step_data.x = x
 					step_data.y = y
 					step_data.z = z
@@ -147,9 +143,10 @@ FlyingSearchEngine._find_navmesh = function (self, step_data, timer, budget)
 					end
 
 					step_data.from_found = true
-					step_data.x = -layer
-					step_data.y = -layer
-					step_data.z = -layer
+					step_data.layer = 0
+					step_data.x = 0
+					step_data.y = 0
+					step_data.z = 0
 
 					if x ~= 0 or y ~= 0 or z ~= 0 then
 						self._points[2] = {
@@ -165,7 +162,10 @@ FlyingSearchEngine._find_navmesh = function (self, step_data, timer, budget)
 		end
 	end
 
-	step_data.layer = step_data.layer + 1
+	step_data.layer = layer + 1
+	step_data.x = -(layer + 1)
+	step_data.y = -(layer + 1)
+	step_data.z = -(layer + 1)
 
 	return false
 end
@@ -225,9 +225,12 @@ FlyingSearchEngine._traverse = function (self, step_data, timer, budget)
 		end
 
 		local ref_x, ref_y, ref_z = 0, 0, 0
+		local abs_x, abs_y, abs_z = math.abs(dir_x), math.abs(dir_y), math.abs(dir_z)
 
-		if dir_x + dir_y > 1e-06 then
+		if abs_z <= abs_x and abs_z <= abs_y then
 			ref_z = 1
+		elseif abs_y <= abs_x then
+			ref_y = 1
 		else
 			ref_x = 1
 		end
@@ -413,6 +416,10 @@ function _a_star_search(astar_data, timer, budget)
 	local found
 	local cell = _pop_from_open_list(astar_data)
 
+	while cell and _is_visited(astar_data, cell[CELL_X], cell[CELL_Y], cell[CELL_Z]) do
+		cell = _pop_from_open_list(astar_data)
+	end
+
 	while cell do
 		local x, y, z = cell[CELL_X], cell[CELL_Y], cell[CELL_Z]
 		local real_x, real_y, real_z = cell[CELL_REAL_X], cell[CELL_REAL_Y], cell[CELL_REAL_Z]
@@ -474,6 +481,10 @@ function _a_star_search(astar_data, timer, budget)
 		end
 
 		cell = _pop_from_open_list(astar_data)
+
+		while cell and _is_visited(astar_data, cell[CELL_X], cell[CELL_Y], cell[CELL_Z]) do
+			cell = _pop_from_open_list(astar_data)
+		end
 	end
 
 	if found then
@@ -540,13 +551,13 @@ end
 
 FlyingSearchEngine._trace_path = function (self, step_data)
 	local trace_path = step_data.trace_path
-	local hash = trace_path.found[CELL_HASH]
+	local closed_list = trace_path.closed_list
 	local temp_points = {}
 	local temp_n_points = 0
 	local last_dir_idx
+	local cell = trace_path.found
 
 	repeat
-		local cell = trace_path.seen_list[hash]
 		local dir_idx = cell[CELL_DIR_IDX]
 		local pos_x, pos_y, pos_z = cell[CELL_REAL_X], cell[CELL_REAL_Y], cell[CELL_REAL_Z]
 
@@ -566,8 +577,11 @@ FlyingSearchEngine._trace_path = function (self, step_data)
 		end
 
 		last_dir_idx = dir_idx
-		hash = cell[CELL_PARENT_HASH]
-	until not hash
+
+		local parent_hash = cell[CELL_PARENT_HASH]
+
+		cell = parent_hash and closed_list[parent_hash]
+	until not cell
 
 	local points = self._points
 	local points_n = #points
@@ -798,7 +812,7 @@ FlyingSearchEngine._validate_spline = function (self, from_point, to_point)
 	for i = 1, segments do
 		local next_point = FlyingNavPathUtility.position_in_spline(from_point, to_point, i / segments)
 
-		if self._nav_svo:overlap_capsule(Vector3.from_array(last_point), Vector3.from_array(next_point), self._radius) then
+		if self._nav_svo:overlap_capsule(last_point, next_point, self._radius) then
 			return false
 		end
 

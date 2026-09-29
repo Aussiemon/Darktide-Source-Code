@@ -189,7 +189,7 @@ local templates = {
 		use_liquid_drawer = true,
 		vfx_name_filled = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_lingering",
 		vfx_name_rim = "content/fx/particles/weapons/grenades/flame_grenade_hostile_fire_edge",
-		z_cell_size = 5,
+		z_cell_size = 3,
 		spread_function = LiquidSpread.pour,
 	},
 	cultist_grenadier_gas = {

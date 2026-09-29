@@ -1,7 +1,7 @@
 ﻿-- chunkname: @scripts/settings/damage/stagger_settings.lua
 
 local stagger_settings = {}
-local stagger_types = table.enum("light", "medium", "heavy", "light_ranged", "sticky", "electrocuted", "killshot", "shield_block", "shield_heavy_block", "shield_broken", "explosion", "wall_collision", "blinding", "companion_push")
+local stagger_types = table.enum("light", "medium", "heavy", "light_ranged", "sticky", "electrocuted", "killshot", "shield_block", "shield_heavy_block", "shield_broken", "shield_explosion", "explosion", "wall_collision", "blinding", "companion_push")
 
 stagger_settings.stagger_types = stagger_types
 stagger_settings.stagger_categories = {
@@ -76,11 +76,13 @@ stagger_settings.default_stagger_thresholds = {
 	[stagger_types.companion_push] = 0.25,
 	[stagger_types.shield_heavy_block] = 5,
 	[stagger_types.shield_broken] = 10,
+	[stagger_types.shield_explosion] = 40,
 	[stagger_types.wall_collision] = 0.25,
 	[stagger_types.blinding] = 0.25,
 }
 stagger_settings.stagger_impact_comparison = {
 	[stagger_types.explosion] = 4,
+	[stagger_types.shield_explosion] = 4,
 	[stagger_types.heavy] = 3,
 	[stagger_types.shield_broken] = 3,
 	[stagger_types.wall_collision] = 3,

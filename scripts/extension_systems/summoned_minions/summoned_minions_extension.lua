@@ -15,6 +15,11 @@ SummonedMinionsExtension.init = function (self, extension_init_context, unit, ex
 	self._index = 0
 	self._unit = unit
 
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+	local meat_grinder = game_mode_name == "shooting_range"
+
+	self._game_mode_hinder_summoning = meat_grinder
+
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_init_blackboard_components(blackboard)
@@ -139,6 +144,10 @@ SummonedMinionsExtension._wwise_on_player_stealth = function (self)
 end
 
 SummonedMinionsExtension.can_summon_minions = function (self, action_data, is_running)
+	if self._game_mode_hinder_summoning then
+		return false
+	end
+
 	local t = Managers.time:time("gameplay")
 	local amount = self._amount
 

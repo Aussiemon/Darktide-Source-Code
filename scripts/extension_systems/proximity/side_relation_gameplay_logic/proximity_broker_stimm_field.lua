@@ -94,21 +94,9 @@ ProximityBrokerStimmField.init = function (self, logic_context, init_data, owner
 			can_use_ability = ability_extension and ability_extension:remaining_ability_charges(ability) >= 1
 
 			if can_use_ability then
-				ability_extension:use_ability_charge("pocketable_ability")
+				ability_extension:consume_ability_usage_cost("pocketable_ability")
 			else
 				self._skip_talents = true
-			end
-		end
-
-		if can_use_ability then
-			local single_application_buff_overrides = BuffTemplates[settings.buff_to_add].single_application_buff_overrides
-
-			for talent_name in pairs(single_application_buff_overrides) do
-				if owner_talent_extension:buff_template_tier(talent_name) then
-					local buff_name = stimm_talent_settings[talent_name].buff_data.buff_target
-
-					self._single_application_buffs[talent_name] = buff_name
-				end
 			end
 		end
 	end
@@ -240,6 +228,10 @@ ProximityBrokerStimmField._add_buff_to_unit = function (self, t, unit)
 		return
 	end
 
+	local first_time_affected = not self._units_affected_during_lifetime[unit]
+
+	self._units_affected_during_lifetime[unit] = true
+
 	local linger_data = self._lingering_units[unit]
 
 	if linger_data then
@@ -251,7 +243,7 @@ ProximityBrokerStimmField._add_buff_to_unit = function (self, t, unit)
 			local reappliable_buff = buff_datas[i].reappliable_buff
 
 			if previous_local_id and reappliable_buff then
-				local _, new_local_id = buff_extension:reapply_externally_controlled_lingering_buff(previous_local_id, nil, template_name, t, "owner_unit", self._owner_unit_or_nil)
+				local _, new_local_id = buff_extension:reapply_externally_controlled_lingering_buff(previous_local_id, nil, template_name, t, "owner_unit", self._owner_unit_or_nil, "first_time_affected", first_time_affected, "skip_talent", self._skip_talents)
 
 				buff_datas[i].local_id = new_local_id
 				buff_datas[i].lingering = false
@@ -275,7 +267,7 @@ ProximityBrokerStimmField._add_buff_to_unit = function (self, t, unit)
 	table.clear(buff_datas)
 
 	for i = 1, #self._buffs_to_add do
-		local _, local_id = buff_extension:add_externally_controlled_buff(self._buffs_to_add[i], t, "owner_unit", self._owner_unit_or_nil, "skip_talent", self._skip_talents)
+		local _, local_id = buff_extension:add_externally_controlled_buff(self._buffs_to_add[i], t, "owner_unit", self._owner_unit_or_nil, "first_time_affected", first_time_affected, "skip_talent", self._skip_talents)
 
 		buff_datas[i] = {
 			reappliable_buff = true,
@@ -291,9 +283,9 @@ ProximityBrokerStimmField._add_buff_to_unit = function (self, t, unit)
 			local _, local_id
 
 			if talent_name == "no_talent" then
-				_, local_id = buff_extension:add_externally_controlled_buff(buff_name, t, "owner_unit", self._owner_unit_or_nil, "skip_talent", self._skip_talents)
+				_, local_id = buff_extension:add_externally_controlled_buff(buff_name, t, "owner_unit", self._owner_unit_or_nil, "first_time_affected", first_time_affected, "skip_talent", self._skip_talents)
 			else
-				_, local_id = buff_extension:add_externally_controlled_buff(buff_name, t, "owner_unit", self._owner_unit_or_nil, "from_talent", talent_name, "skip_talent", self._skip_talents)
+				_, local_id = buff_extension:add_externally_controlled_buff(buff_name, t, "owner_unit", self._owner_unit_or_nil, "first_time_affected", first_time_affected, "from_talent", talent_name, "skip_talent", self._skip_talents)
 			end
 
 			buff_datas[#buff_datas + 1] = {

@@ -140,6 +140,26 @@ GameModeExpedition.in_safe_zone = function (self)
 	return self._game_mode_logic:in_safe_zone()
 end
 
+GameModeExpedition.get_additional_nav_group_points = function (self)
+	local function get_entrance_position(section)
+		local safe_zone_entrance = section.safe_zone_entrance_slot_unit
+		local entrance_position = safe_zone_entrance and Unit.world_position(safe_zone_entrance, 1)
+
+		return entrance_position and Vector3Box(entrance_position) or nil
+	end
+
+	local previous_section = self._game_mode_logic:current_section(-1)
+	local prepend_nav_points = previous_section and {
+		get_entrance_position(previous_section),
+	}
+	local current_section = self._game_mode_logic:current_section()
+	local append_nav_points = current_section and {
+		get_entrance_position(current_section),
+	}
+
+	return prepend_nav_points, append_nav_points
+end
+
 GameModeExpedition.expedition_team_loot = function (self)
 	return self._game_mode_logic:expedition_team_loot()
 end
@@ -242,6 +262,22 @@ end
 
 GameModeExpedition.is_player_in_danger_zone = function (self, player)
 	return self._game_mode_logic:is_player_in_danger_zone(player)
+end
+
+GameModeExpedition.expedition_disable_transition_activators = function (self)
+	return self._game_mode_logic:expedition_disable_transition_activators()
+end
+
+GameModeExpedition.expedition_enable_active_transition_activators = function (self)
+	return self._game_mode_logic:expedition_enable_active_transition_activators()
+end
+
+GameModeExpedition.path_type = function (self)
+	return self._game_mode_logic:path_type()
+end
+
+GameModeExpedition.location_start_area = function (self)
+	return self._game_mode_logic:location_start_area()
 end
 
 GameModeExpedition.server_update = function (self, dt, t)
@@ -509,6 +545,7 @@ GameModeExpedition.on_player_unit_spawn = function (self, player, unit, is_respa
 	GameModeExpedition.super.on_player_unit_spawn(self, player)
 
 	if self._is_server then
+		Managers.event:trigger("mission_buffs_event_player_spawned", player, is_respawn, unit)
 		self:_set_ready_time_to_spawn(player, nil)
 
 		if is_respawn then
@@ -610,9 +647,10 @@ GameModeExpedition._store_persistent_player_data = function (self, player)
 	local ability_extension = ScriptUnit.extension(unit, "ability_system")
 	local equipped_abilities = ability_extension:equipped_abilities()
 	local grenade_ability = equipped_abilities.grenade_ability
-	local grenades_percent
+	local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
+	local grenades_percent = 1
 
-	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 
@@ -701,8 +739,9 @@ GameModeExpedition._apply_persistent_player_data = function (self, player)
 				local ability_extension = ScriptUnit.extension(player_unit, "ability_system")
 				local equipped_abilities = ability_extension:equipped_abilities()
 				local grenade_ability = equipped_abilities.grenade_ability
+				local uses_ability_charges = ability_extension:uses_ability_charges("grenade_ability")
 
-				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
+				if grenade_ability and not grenade_ability.exclude_from_persistant_player_data and uses_ability_charges then
 					local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 					local num_grenades = math.round(selected_data.grenades_percent * max_grenades)
 
@@ -808,15 +847,6 @@ GameModeExpedition.rpc_set_player_respawn_time = function (self, channel_id, pee
 			self:_set_ready_time_to_spawn(player, time)
 		end
 	end
-end
-
-GameModeExpedition._on_client_joined = function (self, peer_id)
-	GameModeExpedition.super._on_client_joined(self, peer_id)
-end
-
-GameModeExpedition._on_client_left = function (self, removed_players_data, host_became_empty)
-	GameModeExpedition.super._on_client_left(self, removed_players_data, host_became_empty)
-	self._game_mode_logic:on_client_left(removed_players_data)
 end
 
 GameModeExpedition.get_real_current_level_name = function (self)

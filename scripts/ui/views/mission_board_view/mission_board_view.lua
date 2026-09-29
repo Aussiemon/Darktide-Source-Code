@@ -960,8 +960,9 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 		local selected_mission_data = self:_mission(selected_mission_id, ignore_filter)
 		local category = selected_mission_data and selected_mission_data.category
 		local mission_key = selected_mission_data and selected_mission_data.map
+		local campaign = selected_mission_data and selected_mission_data.campaign
 
-		unlock_data = self._mission_board_logic:get_mission_unlock_data(mission_key, category)
+		unlock_data = self._mission_board_logic:get_mission_unlock_data(mission_key, category, campaign)
 	end
 
 	local required_data = {}
@@ -991,8 +992,9 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 					local chapters = requirement_data.chapters
 					local story_missions = self._mission_board_logic:_get_missions_per_category(requirement_category)
 					local mission = story_missions[requirement_key]
+					local is_completed = Managers.data_service.mission_board:is_key_completed(requirement_type, requirement_key, requirement_category, required_campaign)
 
-					if mission and (not mission.completed or mission.completed == false) then
+					if mission and not is_completed then
 						local requirement_display_order = self._mission_board_logic:get_campaign_mission_display_order(requirement_key, requirement_category, required_campaign)
 
 						chapters[#chapters + 1] = requirement_display_order
@@ -1002,34 +1004,60 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 		end
 	end
 
-	local requirement_text = Localize("loc_mission_board_locked_issue")
+	local requirement_text = ""
 
 	if not table.is_empty(required_data) then
 		local count = 0
 
 		for campaign_name, required_data in pairs(required_data) do
-			count = count + 1
+			if campaign_name ~= "player-journey" or requirement_text == "" then
+				count = count + 1
 
-			local chapters = required_data.chapters
-			local chapters_str = ""
+				local chapters = required_data.chapters
+				local chapters_str = ""
+				local latest_chapter = 0
 
-			for i = 1, #chapters do
-				local chapter = chapters[i]
+				for i = 1, #chapters do
+					local chapter = chapters[i]
 
-				chapters_str = chapters_str .. Text.convert_to_roman_numerals(chapter) .. (i < #chapters and ", " or "")
+					if latest_chapter < chapter then
+						chapters_str = Text.convert_to_roman_numerals(chapter)
+						latest_chapter = chapter
+					end
+				end
+
+				local parallel_paths = CampaignSettings.parallel_requirements[campaign_name]
+
+				if parallel_paths and parallel_paths[latest_chapter] then
+					local previous_chapter = latest_chapter - 1
+
+					for i = 1, #chapters do
+						local chapter = chapters[i]
+
+						if chapter == previous_chapter then
+							chapters_str = Text.convert_to_roman_numerals(previous_chapter) .. ", " .. Text.convert_to_roman_numerals(latest_chapter)
+
+							break
+						end
+					end
+				end
+
+				local campaign_display_name = CampaignSettings[campaign_name] and CampaignSettings[campaign_name].display_name or "loc_settings_option_unavailable"
+
+				if not CampaignSettings[campaign_name] then
+					Log.warning("MissionBoardView", "Unknown campaign '%s' in mission unlock requirements.", campaign_name)
+				end
+
+				requirement_text = requirement_text .. Localize("loc_mission_board_mission_locked_requirement", true, {
+					campaign_name = Localize(campaign_display_name),
+					chapters = chapters_str,
+				}) .. (count < #required_data and "\n" or "")
 			end
-
-			local campaign_display_name = CampaignSettings[campaign_name] and CampaignSettings[campaign_name].display_name or "loc_settings_option_unavailable"
-
-			if not CampaignSettings[campaign_name] then
-				Log.warning("MissionBoardView", "Unknown campaign '%s' in mission unlock requirements.", campaign_name)
-			end
-
-			requirement_text = requirement_text .. Localize("loc_mission_board_mission_locked_requirement", true, {
-				campaign_name = Localize(campaign_display_name),
-				chapters = chapters_str,
-			}) .. (count < #required_data and "\n" or "")
 		end
+	end
+
+	if requirement_text == "" then
+		requirement_text = Localize("loc_mission_board_locked_issue")
 	end
 
 	return requirement_text
@@ -1067,7 +1095,7 @@ MissionBoardView._update_info_state = function (self, t)
 		local view_element_campaign_mission_list = self:_element("mission_list")
 		local ignore_filter = view_element_campaign_mission_list and view_element_campaign_mission_list:visible()
 		local mission = self:_mission(mission_id, ignore_filter)
-		local is_locked = mission and self._mission_board_logic:is_mission_locked(mission)
+		local is_locked = mission and self._mission_board_logic:is_mission_locked(mission, mission.campaign)
 
 		self:_poll_issue_localized("mission_locked", 2, is_locked, "loc_mission_board_locked_issue")
 	end
@@ -1832,9 +1860,9 @@ MissionBoardView._callback_start_selected_mission = function (self)
 	local selected_mission_id = self._selected_mission_id
 	local mission_list = self:_element("mission_list")
 	local mission_list_visible = mission_list and mission_list:visible()
+	local should_close = false
 	local mission_is_selected = self:_mission(selected_mission_id, mission_list_visible) ~= nil
 	local private_game = self._mission_board_logic:is_private_match()
-	local should_close = false
 
 	if mission_is_selected then
 		should_close = self._mission_board_logic:start_mission_matchmaking(party_manager, selected_mission_id, private_game)
@@ -2003,12 +2031,12 @@ MissionBoardView._get_hologram_unit = function (self, unit_name)
 	return unit
 end
 
-MissionBoardView.is_mission_locked = function (self, mission)
-	return self._mission_board_logic and self._mission_board_logic:is_mission_locked(mission)
+MissionBoardView.is_mission_locked = function (self, mission, campaign)
+	return self._mission_board_logic and self._mission_board_logic:is_mission_locked(mission, campaign)
 end
 
-MissionBoardView.get_mission_unlock_data = function (self, map, category)
-	return self._mission_board_logic and self._mission_board_logic:get_mission_unlock_data(map, category)
+MissionBoardView.get_mission_unlock_data = function (self, map, category, campaign)
+	return self._mission_board_logic and self._mission_board_logic:get_mission_unlock_data(map, category, campaign)
 end
 
 MissionBoardView.is_campaign_mission = function (self, mission)

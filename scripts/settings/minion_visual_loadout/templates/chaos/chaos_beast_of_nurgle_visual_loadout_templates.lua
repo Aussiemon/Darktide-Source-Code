@@ -64,6 +64,15 @@ templates.chaos_beast_of_nurgle[zone_ids.void] = {
 	void_1,
 }
 
+local depths_1 = table.clone(base_visual_loadout_template)
+
+depths_1.slots.environmental_override.items = {
+	"content/items/characters/minions/environment_overrides/acid_01",
+}
+templates.chaos_beast_of_nurgle[zone_ids.depths] = {
+	depths_1,
+}
+
 local horde_1 = table.clone(base_visual_loadout_template)
 
 horde_1.slots.environmental_override.items = {

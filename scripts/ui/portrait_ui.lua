@@ -186,7 +186,7 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 
 	local icon_camera_adjustment = profile.loadout.slot_animation_end_of_round
 
-	if render_context and icon_camera_adjustment then
+	if render_context and render_context.use_end_of_round_camera and icon_camera_adjustment then
 		local position_offset = icon_camera_adjustment.icon_render_camera_position_offset
 
 		if position_offset then

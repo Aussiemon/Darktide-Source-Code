@@ -106,9 +106,9 @@ StoreService._get_store = function (self, function_name)
 		return
 	end
 
-	local store_interace = self._backend_interface.store
+	local store_interface = self._backend_interface.store
 
-	if not store_interace[function_name] then
+	if not store_interface[function_name] then
 		Log.error("StoreService", "Attempting fetch undefined store '%s'", function_name)
 
 		return
@@ -117,7 +117,7 @@ StoreService._get_store = function (self, function_name)
 	local character_id = _current_character_id()
 	local time_since_launch = Application.time_since_launch()
 
-	return store_interace[function_name](store_interace, time_since_launch, character_id)
+	return store_interface[function_name](store_interface, time_since_launch, character_id)
 end
 
 StoreService._get_cached_store = function (self, cache_key, logging_function)
@@ -185,7 +185,9 @@ StoreService._get_archetype_store_catalogue = function (self, store_by_archetype
 	local function_name = store_by_archetype[archetype_name]
 	local store_promise = self:_get_store(function_name)
 
-	store_promise = store_promise or Promise.rejected()
+	store_promise = store_promise or Promise.rejected({
+		code = 404,
+	})
 
 	local full_promise = store_promise:catch(function (error)
 		local is_404 = type(error) == "table" and error.code == 404

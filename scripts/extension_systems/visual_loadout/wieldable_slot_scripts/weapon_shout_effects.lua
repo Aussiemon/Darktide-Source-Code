@@ -71,6 +71,8 @@ end
 
 WeaponShoutEffects._update_activation = function (self, dt, t, action_settings, time_in_action)
 	if not action_settings then
+		self._last_action_name = ""
+
 		return
 	end
 
@@ -81,6 +83,15 @@ WeaponShoutEffects._update_activation = function (self, dt, t, action_settings, 
 	if is_push then
 		self._has_triggered_activation_fx = false
 	end
+
+	local reset_weapon_effect_on_different_action = action_settings.reset_weapon_effect_on_different_action
+	local action_name = action_settings.name
+
+	if reset_weapon_effect_on_different_action and action_name ~= self._last_action_name then
+		self._has_triggered_activation_fx = false
+	end
+
+	self._last_action_name = action_name
 
 	local shout_at_time = action_settings.shout_at_time
 	local waiting_for_shout = is_weapon_shout and time_in_action < shout_at_time

@@ -131,5 +131,12 @@ SessionStats.skulls_guns = {
 		recovered = "live_event_skulls_guns_recovered",
 	},
 }
+SessionStats.torment = {
+	fill_with_default = true,
+	type = BackendTypes.statistic_by,
+	stats = {
+		witch_damage_dealt = "live_event_torment_witch_damage_dealt",
+	},
+}
 
 return SessionStats

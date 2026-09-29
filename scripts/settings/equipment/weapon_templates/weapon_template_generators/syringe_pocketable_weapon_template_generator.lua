@@ -8,7 +8,7 @@ local PocketableUtils = require("scripts/settings/equipment/weapon_templates/poc
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
-local function generate_base_template(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, use_ability_charge, undroppable, auto_use)
+local function generate_base_template(buff_name, validate_target_func, hud_icon_small, pickup_name, assist_notification_type, vo_event, consume_on_use, givable, consume_ability_usage_cost, pause_ability_resource_regen, undroppable, auto_use)
 	local base_template = {}
 
 	base_template.action_inputs = {
@@ -122,14 +122,6 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 					input = "wield",
 					transition = "base",
 				},
-				{
-					input = "combat_ability",
-					transition = "base",
-				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 		{
@@ -143,14 +135,6 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 					input = "wield",
 					transition = "base",
 				},
-				{
-					input = "combat_ability",
-					transition = "base",
-				},
-				{
-					input = "grenade_ability",
-					transition = "base",
-				},
 			},
 		},
 	}
@@ -158,14 +142,6 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 	ActionInputHierarchy.add_missing(base_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 	base_template.actions = {
-		action_unwield = {
-			allowed_during_sprint = true,
-			kind = "unwield",
-			start_input = "wield",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
 		action_wield = {
 			allowed_during_sprint = true,
 			anim_event = "equip",
@@ -210,16 +186,15 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 				start_modifier = 1,
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
+				wield = BaseTemplateSettings.generate_wield_chain_actions({
 					chain_time = 0.81,
-				},
+				}),
 			},
 			buff_name = buff_name,
 			remove_item_from_inventory = consume_on_use,
 			validate_target_func = validate_target_func,
-			use_ability_charge = use_ability_charge,
-			ability_type = use_ability_charge and "pocketable_ability" or nil,
+			consume_ability_usage_cost = consume_ability_usage_cost,
+			pause_ability_resource_regen = pause_ability_resource_regen,
 		},
 		action_flair = {
 			abort_sprint = false,
@@ -231,9 +206,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 			start_input = "use_self",
 			total_time = 0.7,
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				aim = {
 					action_name = "action_aim",
 				},
@@ -282,13 +255,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 				use_ally = {
 					action_name = "action_use_ally",
 				},
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 		},
 		action_use_ally = {
@@ -340,67 +307,19 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 				start_modifier = 1.3,
 			},
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield",
+				wield = BaseTemplateSettings.generate_wield_chain_actions({
 					chain_time = 0.11,
-				},
+				}),
 			},
 			buff_name = buff_name,
 			remove_item_from_inventory = consume_on_use,
 			validate_target_func = validate_target_func,
 			assist_notification_type = assist_notification_type,
-			use_ability_charge = use_ability_charge,
-			ability_type = use_ability_charge and "pocketable_ability" or nil,
+			consume_ability_usage_cost = consume_ability_usage_cost,
+			pause_ability_resource_regen = pause_ability_resource_regen,
 		},
-		action_inspect_3p = {
-			action_prevents_jump = true,
-			block_first_person_rotation = true,
-			can_crouch = false,
-			can_jump = false,
-			force_look = true,
-			kind = "inspect_3p",
-			lock_view = false,
-			skip_3p_anims = false,
-			stop_input = "inspect_stop",
-			total_time = math.huge,
-			anim_end_event_condition_func = function (unit, data, end_reason)
-				return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-			end,
-			crosshair = {
-				crosshair_type = "inspect",
-			},
-			allowed_chain_actions = {
-				inspect_3p_stop = {
-					action_name = "action_inspect",
-					chain_time = 1.1,
-				},
-			},
-			action_movement_curve = {
-				{
-					modifier = 0,
-					t = 0,
-				},
-				start_modifier = 0,
-			},
-		},
-		action_inspect = {
-			anim_end_event = "inspect_end",
-			anim_event = "inspect_start",
-			kind = "inspect",
-			lock_view = true,
-			start_input = "inspect_start",
-			stop_input = "inspect_stop",
-			total_time = math.huge,
-			crosshair = {
-				crosshair_type = "inspect",
-			},
-			allowed_chain_actions = {
-				inspect_3p_start = {
-					action_name = "action_inspect_3p",
-					chain_time = 0.75,
-				},
-			},
-		},
+		action_inspect = BaseTemplateSettings.generate_inspect_action(),
+		action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action(),
 	}
 
 	if givable then
@@ -427,13 +346,7 @@ local function generate_base_template(buff_name, validate_target_func, hud_icon_
 				aim_give_release = {
 					action_name = "action_give",
 				},
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 		}
 		base_template.actions.action_give = {

@@ -545,6 +545,34 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		toggle_player_stats_inventory = {
+			"keyboard_w",
+			"ps4_controller_l2",
+			"xbox_controller_left_trigger",
+			bindable = false,
+			description = "",
+		},
+		toggle_player_navigation_inventory = {
+			"keyboard_s",
+			"ps4_controller_r2",
+			"xbox_controller_right_trigger",
+			bindable = false,
+			description = "",
+		},
+		rate_match_positive = {
+			"keyboard_a",
+			"xbox_controller_left_shoulder",
+			"ps4_controller_l1",
+			bindable = false,
+			description = "",
+		},
+		rate_match_negative = {
+			"keyboard_d",
+			"xbox_controller_right_shoulder",
+			"ps4_controller_r1",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -955,6 +983,14 @@ local default_view_input_settings = {
 			raw = "keyboard_left ctrl+keyboard_v",
 			type = "pressed",
 		},
+		undo = {
+			raw = "keyboard_left ctrl+keyboard_z",
+			type = "pressed",
+		},
+		redo = {
+			raw = "keyboard_left ctrl+keyboard_y",
+			type = "pressed",
+		},
 		navigate_beginning = {
 			raw = "keyboard_home",
 			type = "pressed",
@@ -1081,6 +1117,22 @@ local default_view_input_settings = {
 		},
 		expedition_menu_show_tutorial = {
 			key_alias = "expedition_menu_show_tutorial",
+			type = "pressed",
+		},
+		toggle_player_stats_inventory = {
+			key_alias = "toggle_player_stats_inventory",
+			type = "pressed",
+		},
+		toggle_player_navigation_inventory = {
+			key_alias = "toggle_player_navigation_inventory",
+			type = "pressed",
+		},
+		rate_match_positive = {
+			key_alias = "rate_match_positive",
+			type = "pressed",
+		},
+		rate_match_negative = {
+			key_alias = "rate_match_negative",
 			type = "pressed",
 		},
 	},

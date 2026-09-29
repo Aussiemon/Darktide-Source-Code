@@ -24,6 +24,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._next_spawn_time = nil
 	self._is_setup = false
 	self._spawned_minions_by_queue_id = {}
+	self._hide_error = false
 end
 
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 1, 1
@@ -175,7 +176,7 @@ MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, o
 		self._next_spawn_time = 0
 
 		Component.event(self._unit, "minion_spawner_spawning_started")
-		self._owner_system:enable_update_function(self.__class_name, "update", self._unit, self)
+		self._owner_system:enable_update_function(self._unit, "update")
 	end
 
 	return queue_id
@@ -234,7 +235,7 @@ MinionSpawnerExtension.update = function (self, unit, dt, t)
 				self._next_spawn_time = nil
 
 				Component.event(self._unit, "minion_spawner_spawning_done")
-				self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+				self._owner_system:disable_update_function(self._unit, "update")
 			end
 		end
 	end

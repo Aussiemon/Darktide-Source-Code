@@ -2,9 +2,10 @@
 
 local CompanionVisualLoadout = require("scripts/utilities/companion_visual_loadout")
 local Component = require("scripts/utilities/component")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local Items = require("scripts/utilities/items")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
+local NeckLock = require("scripts/utilities/neck_lock")
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local VisualLoadoutLodGroup = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_lod_group")
 local unit_alive = Unit.alive
@@ -923,15 +924,36 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 				local mask_hair_override = item.mask_hair_override
 
 				for i = 1, #mask_hair_override do
-					local mask_hair_item = item.mask_hair_override[i].HairItem
+					local override = item.mask_hair_override[i]
+					local mask_hair_item = override.HairItem
 					local hair_slot_data = _get_unit_3p_and_item_for_wanted_slot(equipment, "slot_body_hair")
 					local current_hair_item = hair_slot_data.item
 
 					if current_hair_item and mask_hair_item == current_hair_item.name then
-						local mask_hair_override_item = item.mask_hair_override[i].HairMaskOverrideItem
+						local mask_hair_override_item = override.HairMaskOverrideItem
 
-						if mask_hair_override_item and item.mask_hair_override ~= "" then
-							VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_hair_override_item, false, item_definitions)
+						if mask_hair_override_item and mask_hair_override_item ~= "" then
+							local external_property_overrides
+							local vec2_i = 0
+
+							repeat
+								vec2_i = vec2_i + 1
+
+								local property_name_key = string.format("vector2_override_%d_property_name", vec2_i)
+								local property_name_value = override[property_name_key]
+
+								if property_name_value and property_name_value ~= "" then
+									external_property_overrides = external_property_overrides or {
+										vector2_material_overrides = {},
+									}
+
+									local value_key = string.format("vector2_override_%d_value", vec2_i)
+
+									external_property_overrides.vector2_material_overrides[property_name_value] = override[value_key]
+								end
+							until not property_name_value
+
+							VisualLoadoutCustomization.apply_material_override_item(slot_body_face_unit, unit_3p, false, mask_hair_override_item, false, item_definitions, external_property_overrides)
 						end
 					end
 				end
@@ -965,37 +987,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 		_set_slot_hidden(slot, is_hidden_3p, is_hidden_1p)
 	end
 
-	if stabilize_neck and Unit.has_animation_state_machine(unit_3p) then
-		if Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then
-			if stabilize_neck > 0 then
-				Unit.animation_event(unit_3p, "lock_head")
-
-				local sm_variable_index = Unit.animation_find_variable(unit_3p, "lock_neck_weight")
-				local stabilize_amount
-
-				if sm_variable_index then
-					stabilize_amount = math.clamp(stabilize_neck, 0, 80) / 80
-
-					Unit.animation_set_variable(unit_3p, sm_variable_index, stabilize_amount)
-				end
-
-				sm_variable_index = Unit.animation_find_variable(unit_3p, "lock_head_weight")
-
-				if sm_variable_index then
-					if stabilize_neck >= 50 then
-						stabilize_amount = (stabilize_neck - 50) / 50
-
-						Unit.animation_set_variable(unit_3p, sm_variable_index, stabilize_amount)
-					else
-						Unit.animation_set_variable(unit_3p, sm_variable_index, 0)
-					end
-				end
-			else
-				Unit.animation_event(unit_3p, "unlock_head")
-			end
-		elseif stabilize_neck > 0 then
-			-- Nothing
-		end
+	if stabilize_neck then
+		NeckLock.stabilize_neck(unit_3p, stabilize_neck)
 	end
 
 	if first_person_mode then

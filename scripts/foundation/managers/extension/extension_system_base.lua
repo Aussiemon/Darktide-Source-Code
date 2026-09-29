@@ -2,6 +2,7 @@
 
 local StaggeredIterator = require("scripts/utilities/staggered_iterator")
 local ExtensionSystemBase = class("ExtensionSystemBase")
+local DEFAULT_DISABLE_REASON = "__default_disable_reason__"
 local Profiler_start, Profiler_stop = Profiler.start, Profiler.stop
 
 ExtensionSystemBase.init = function (self, extension_system_creation_context, system_init_data, system_name, extension_list, has_pre_update, has_fixed_update, has_post_update)
@@ -34,6 +35,7 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		owner_system = self,
 	}
 	self._update_list = {}
+	self._disable_reasons = {}
 	self._staggered_update_iterators = {}
 	self._extensions = {}
 	self._profiler_names = {}
@@ -52,7 +54,6 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		local extension_name = extension_list[i]
 		local update_list = {
 			update = {},
-			hot_join_sync = {},
 		}
 
 		if has_pre_update then
@@ -68,6 +69,12 @@ ExtensionSystemBase.init = function (self, extension_system_creation_context, sy
 		end
 
 		self._update_list[extension_name] = update_list
+		self._disable_reasons[extension_name] = {}
+
+		for update_function_name in pairs(update_list) do
+			self._disable_reasons[extension_name][update_function_name] = {}
+		end
+
 		self._extensions[extension_name] = 0
 		self._profiler_names[extension_name] = extension_name .. " [ALL]"
 	end
@@ -108,22 +115,15 @@ end
 
 ExtensionSystemBase.register_extension_update = function (self, unit, extension_name, extension)
 	local extension_update_list = self._update_list[extension_name]
+	local disabled_by_default = extension.UPDATE_DISABLED_BY_DEFAULT
 
-	if not extension.UPDATE_DISABLED_BY_DEFAULT then
-		if extension.pre_update then
-			extension_update_list.pre_update[unit] = extension
-		end
-
-		if extension.fixed_update then
-			extension_update_list.fixed_update[unit] = extension
-		end
-
-		if extension.update then
-			extension_update_list.update[unit] = extension
-		end
-
-		if extension.post_update then
-			extension_update_list.post_update[unit] = extension
+	for update_function_name, unit_list in pairs(extension_update_list) do
+		if unit_list[unit] ~= nil then
+			-- Nothing
+		elseif disabled_by_default then
+			self:disable_update_function(unit, update_function_name)
+		elseif extension[update_function_name] then
+			unit_list[unit] = extension
 		end
 	end
 end
@@ -162,6 +162,12 @@ ExtensionSystemBase.on_remove_extension = function (self, unit, extension_name)
 
 	ScriptUnit.remove_extension(unit, self._name)
 
+	local disable_reasons = self._disable_reasons[extension_name]
+
+	for update_function_name in pairs(disable_reasons) do
+		disable_reasons[update_function_name][unit] = nil
+	end
+
 	self._unit_to_extension_map[unit] = nil
 	self._extension_to_unit_map[extension] = nil
 	self._uninitiated_units[unit] = nil
@@ -179,15 +185,66 @@ ExtensionSystemBase.call_gameplay_post_init_on_extensions = function (self)
 	table.clear(uninitiated_units)
 end
 
-ExtensionSystemBase.enable_update_function = function (self, extension_name, update_function_name, unit, extension)
+ExtensionSystemBase.enable_update_function = function (self, unit, update_function_name, optional_reason)
+	local extension = self._unit_to_extension_map[unit]
+	local extension_name = extension.__class_name
+
+	optional_reason = optional_reason or DEFAULT_DISABLE_REASON
+
+	local disable_reasons = self._disable_reasons[extension_name][update_function_name][unit]
+
+	if optional_reason and disable_reasons then
+		disable_reasons[optional_reason] = nil
+
+		if not next(disable_reasons) then
+			disable_reasons = nil
+			self._disable_reasons[extension_name][update_function_name][unit] = nil
+		end
+	end
+
+	if disable_reasons then
+		return
+	end
+
 	self._update_list[extension_name][update_function_name][unit] = extension
 end
 
-ExtensionSystemBase.disable_update_function = function (self, extension_name, update_function_name, unit)
+ExtensionSystemBase.disable_update_function = function (self, unit, update_function_name, optional_reason)
+	optional_reason = optional_reason or DEFAULT_DISABLE_REASON
+
+	local extension = self._unit_to_extension_map[unit]
+	local extension_name = extension.__class_name
+	local disable_reasons = self._disable_reasons[extension_name][update_function_name][unit] or {}
+
+	disable_reasons[optional_reason] = true
+	self._disable_reasons[extension_name][update_function_name][unit] = disable_reasons
 	self._update_list[extension_name][update_function_name][unit] = nil
 end
 
-ExtensionSystemBase.has_update_function = function (self, extension_name, update_function_name, unit)
+ExtensionSystemBase.enable_update_functions = function (self, unit, optional_reason)
+	local extension = self._unit_to_extension_map[unit]
+	local extension_name = extension.__class_name
+	local update_functions = self._update_list[extension_name]
+
+	for update_function_name in pairs(update_functions) do
+		self:enable_update_function(unit, update_function_name, optional_reason)
+	end
+end
+
+ExtensionSystemBase.disable_update_functions = function (self, unit, optional_reason)
+	local extension = self._unit_to_extension_map[unit]
+	local extension_name = extension.__class_name
+	local update_functions = self._update_list[extension_name]
+
+	for update_function_name in pairs(update_functions) do
+		self:disable_update_function(unit, update_function_name, optional_reason)
+	end
+end
+
+ExtensionSystemBase.has_update_function = function (self, unit, update_function_name)
+	local extension = self._unit_to_extension_map[unit]
+	local extension_name = extension.__class_name
+
 	return self._update_list[extension_name][update_function_name][unit] ~= nil
 end
 

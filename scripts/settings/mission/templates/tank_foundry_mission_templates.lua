@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	lm_cooling = {
-		coordinates = "loc_mission_coordinates_lm_cooling",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/tank_foundry/missions/mission_lm_cooling",
@@ -57,9 +56,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	dm_forge = {
-		coordinates = "loc_mission_coordinates_dm_forge",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/tank_foundry/missions/mission_dm_forge",
@@ -132,9 +133,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	fm_cargo = {
-		coordinates = "loc_mission_coordinates_fm_cargo",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/tank_foundry/missions/mission_fm_cargo",
@@ -173,7 +176,7 @@ local mission_templates = {
 		},
 		health_station = {},
 		mission_brief_vo = {
-			vo_profile = "sergeant_a",
+			vo_profile = "contract_vendor_a",
 			wwise_route_key = 1,
 			mission_giver_packs = {
 				explicator_a = {
@@ -194,6 +197,15 @@ local mission_templates = {
 					"tech_priest",
 					"interrogator",
 				},
+				contract_vendor_a = {
+					"contract_vendor",
+					"tertium_noble",
+					briefing_voice_order = {
+						"interrogator_a",
+						"interrogator_a",
+						"interrogator_a",
+					},
+				},
 			},
 			vo_events = {
 				"mission_cargo_briefing_a",
@@ -208,6 +220,9 @@ local mission_templates = {
 		testify_flags = {},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

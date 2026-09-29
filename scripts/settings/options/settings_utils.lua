@@ -31,6 +31,12 @@ local function set_user_setting(location, key, value)
 end
 
 local function apply_user_settings()
+	if rawget(_G, "WINDOW_RECT_OVERRIDE") then
+		print_func("Skipping apply user settings due to --rect window override.")
+
+		return
+	end
+
 	local perf_counter = Application.query_performance_counter()
 
 	Application.apply_user_settings()

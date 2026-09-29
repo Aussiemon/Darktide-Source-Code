@@ -214,6 +214,7 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	self._next_player_level_check = 0
 	self._next_local_events_queue_process = 0
 	self._next_audible_check = 0
+	self._heard_speak_disabled = true
 end
 
 DialogueSystem.playing_dialogues_array = function (self)
@@ -787,14 +788,18 @@ DialogueSystem.force_stop_all = function (self)
 	if vo_rule_queue then
 		table.clear(vo_rule_queue)
 	end
+
+	self._heard_speak_disabled = true
 end
 
 DialogueSystem._is_calm = function (self)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
-	local alive_monsters = side:alive_units_by_tag("enemy", "monster")
-	local num_alive_monsters = alive_monsters.size
-	local is_calm = self.global_context.team_threat_level ~= "high" and num_alive_monsters == 0
+	local alive_captains = side:alive_units_by_tag("allied", "captain")
+	local alive_cultist_captains = side:alive_units_by_tag("allied", "cultist_captain")
+	local alive_monsters = side:alive_units_by_tag("allied", "monster")
+	local num_alive_bosses = alive_captains.size + alive_cultist_captains.size + alive_monsters.size
+	local is_calm = self.global_context.team_threat_level ~= "high" and num_alive_bosses == 0
 
 	return is_calm
 end
@@ -1023,6 +1028,10 @@ DialogueSystem._is_playable_dialogue_category = function (self, dialogue_categor
 		end
 	end
 
+	if dialogue_category == "conversations_prio_1" and not self:mission_dialogue_setting("story_ticker_enabled") then
+		is_playable = false
+	end
+
 	return is_playable
 end
 
@@ -1155,6 +1164,18 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		return
 	end
 
+	local rule = self._tagquery_database:get_rule(dialogue_rule_index)
+
+	if rule and self._heard_speak_disabled then
+		local concept = rule.criterias[1][4]
+
+		if concept == "heard_speak" then
+			return
+		else
+			self._heard_speak_disabled = false
+		end
+	end
+
 	local is_currently_playing_dialogue = extension:is_currently_playing_dialogue()
 
 	if is_currently_playing_dialogue then
@@ -1162,8 +1183,6 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	end
 
 	local sound_event, subtitles_event, sound_event_duration = extension:get_dialogue_event(dialogue_name, dialogue_index)
-	local rule = self._tagquery_database:get_rule(dialogue_rule_index)
-	local is_sequence
 
 	if sound_event then
 		extension:set_last_query_sound_event(sound_event)
@@ -1190,6 +1209,8 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		wwise_route_key = 59
 	end
 
+	local is_sequence = false
+
 	if not DEDICATED_SERVER then
 		local wwise_route = self._wwise_route_default
 
@@ -1213,7 +1234,6 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 			}
 
 			dialogue.currently_playing_event_id = extension:play_event(vo_event)
-			is_sequence = false
 		end
 
 		local concurrent_wwise_event = rule and rule.concurrent_wwise_event

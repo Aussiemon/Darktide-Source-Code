@@ -276,7 +276,7 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 			local buff_data = active_buffs_data[i]
 			local buff_category = buff_data.buff_category or buff_categories.generic
 
-			if buff_data.show and not buff_data.is_negative then
+			if buff_data.show and buff_data.widget and not buff_data.is_negative then
 				_number_of_buffs_per_category[buff_category] = (_number_of_buffs_per_category[buff_category] or 0) + 1
 			end
 		end
@@ -421,7 +421,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 					end
 
 					if is_negative then
-						if self._old_active_negative_buffs >= QUATER_MAX_BUFF then
+						if self._old_active_negative_buffs >= QUATER_MAX_BUFF or self._active_negative_buffs >= QUATER_MAX_BUFF then
 							break
 						end
 
@@ -433,7 +433,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 						self._active_negative_buffs = self._active_negative_buffs + 1
 					else
-						if self._old_active_positive_buffs >= THREE_QUATER_MAX_BUFF then
+						if self._old_active_positive_buffs >= THREE_QUATER_MAX_BUFF or self._active_positive_buffs >= THREE_QUATER_MAX_BUFF then
 							break
 						end
 

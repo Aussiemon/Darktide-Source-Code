@@ -63,7 +63,7 @@ local function _collect_forcesword_wind_slash_hits(template_data, template_conte
 		local position = start_position + slash_direction * range
 		local player = template_context.player
 		local is_local_unit = not player.remote
-		local rewind_ms = LagCompensation.rewind_ms(true, is_local_unit, player)
+		local rewind_ms = LagCompensation.rewind_miliseconds(true, is_local_unit, player)
 		local world = template_context.world
 		local physics_world = World.physics_world(world)
 		local hit_actors, num_hit_actors = PhysicsWorld.immediate_overlap(physics_world, "shape", "sphere", "position", position, "size", slice_radius, "collision_filter", "filter_player_character_shooting_raycast_dynamics", "rewind_ms", rewind_ms)

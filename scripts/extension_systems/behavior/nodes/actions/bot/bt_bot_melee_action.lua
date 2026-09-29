@@ -255,7 +255,7 @@ BtBotMeleeAction._aim_position = function (self, target_unit, target_breed)
 
 	local aim_position
 
-	if Unit.has_node(target_unit, aim_node_name) then
+	if aim_node_name and Unit.has_node(target_unit, aim_node_name) then
 		local aim_node = Unit.node(target_unit, aim_node_name)
 
 		aim_position = Unit.world_position(target_unit, aim_node)

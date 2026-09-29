@@ -10,6 +10,12 @@ local end_view_settings = {
 	max_duration = 120,
 	min_delay_before_summary = 2,
 	overlay_draw_layer = 300,
+	rate_match_negative_button = "rate_match_negative",
+	rate_match_positive_button = "rate_match_positive",
+	rate_match_title_text = "loc_eor_rate_match_title",
+	session_stats_collapse_text = "loc_end_view_leaderboard_collapse",
+	session_stats_expand_text = "loc_end_view_leaderboard_expand",
+	session_stats_toggle_button = "cycle_list_primary",
 	skip_grace_time = 0.5,
 	stay_in_party_vote_button = "hotkey_menu_special_1",
 	stay_in_party_vote_text = "loc_eor_stay_in_party_vote_text",
@@ -92,6 +98,9 @@ local end_view_settings = {
 		story_nomansland_01 = "debriefing_nml_01",
 		story_nomansland_02 = "debriefing_nml_02",
 		story_nomansland_03 = "debriefing_nml_03",
+		story_spillway_01 = "debriefing_spillway_01",
+		story_spillway_02 = "debriefing_spillway_02",
+		story_spillway_03 = "debriefing_spillway_03",
 	},
 }
 

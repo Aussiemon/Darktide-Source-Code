@@ -87,6 +87,14 @@ local zones = {
 			mission_vote = "content/ui/textures/icons/zones/zone_void",
 		},
 	},
+	depths = {
+		name = "loc_zone_depths",
+		name_short = "loc_zone_name_depths_short",
+		images = {
+			default = "content/ui/textures/icons/zones/zone_depths",
+			mission_vote = "content/ui/textures/icons/zones/zone_depths",
+		},
+	},
 	horde = {
 		name = "loc_horde_mission_breifing_zone",
 		name_short = "loc_horde_mission_breifing_zone",

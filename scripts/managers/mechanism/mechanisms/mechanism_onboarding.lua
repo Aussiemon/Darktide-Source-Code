@@ -7,16 +7,12 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local StateGameplay = require("scripts/game_states/game/state_gameplay")
 local StateLoading = require("scripts/game_states/game/state_loading")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
-local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local MechanismOnboarding = class("MechanismOnboarding", "MechanismBase")
 
 MechanismOnboarding.init = function (self, ...)
 	MechanismOnboarding.super.init(self, ...)
 
 	local context = self._context
-
-	self._singleplay_type = context.singleplay_type
-
 	local mission_name = context.mission_name
 	local mission_settings = Missions[mission_name]
 	local level_name = mission_settings.level
@@ -213,10 +209,6 @@ MechanismOnboarding.destroy = function (self)
 
 		self._retry_popup_id = nil
 	end
-end
-
-MechanismOnboarding.singleplay_type = function (self)
-	return self._singleplay_type
 end
 
 implements(MechanismOnboarding, MechanismBase.INTERFACE)

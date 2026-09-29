@@ -18,6 +18,7 @@ BootStateApplyPatches._state_update = function (self, dt)
 		"scripts/foundation/patches/scrub_dangerous_functions",
 		"scripts/foundation/patches/table_new_builtin",
 		"scripts/foundation/patches/user_settings_for_consoles",
+		"scripts/foundation/patches/lock_down_raycast",
 	}
 
 	for _, path in ipairs(patches_paths) do

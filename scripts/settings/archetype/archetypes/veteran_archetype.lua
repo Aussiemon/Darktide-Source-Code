@@ -15,7 +15,6 @@ local archetype_data = {
 	archetype_icon_selection_large = "content/ui/materials/icons/classes/veteran_terminal",
 	archetype_icon_selection_large_unselected = "content/ui/materials/icons/classes/veteran_terminal_shadow",
 	archetype_name = "loc_class_veteran_name",
-	archetype_selection_background = "content/ui/materials/backgrounds/info_panels/veteran",
 	archetype_selection_highlight_icon = "content/ui/textures/frames/class_selection/windows/veteran/class_selection_top_veteran",
 	archetype_selection_icon = "content/ui/textures/frames/class_selection/windows/veteran/class_selection_top_veteran_unselected",
 	archetype_selection_level = "content/levels/ui/class_selection/class_selection_veteran/class_selection_veteran",
@@ -28,7 +27,6 @@ local archetype_data = {
 	companion_breed = nil,
 	companion_name_input = nil,
 	deluxe_dlc = nil,
-	end_of_round_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/end_of_round/end_of_round_veteran",
 	health = 150,
 	inventory_state_machine = "content/characters/player/human/third_person/animations/menu/state_machines/inventory/inventory_veteran",
 	knocked_down_health = 1000,
@@ -39,6 +37,8 @@ local archetype_data = {
 	requires_dlc = nil,
 	requires_dlc_reconciliation = nil,
 	spawn_companions_from_talent_func = nil,
+	specialization_talent_layout_file_path = nil,
+	specialization_talent_package_path = nil,
 	talent_layout_file_path = "scripts/ui/views/talent_builder_view/layouts/veteran_tree",
 	talents_package_path = "packages/ui/views/talent_builder_view/veteran",
 	toughness = ArchetypeToughnessTemplates.veteran,
@@ -48,11 +48,29 @@ local archetype_data = {
 	warp_charge = ArchetypeWarpChargeTemplates.default,
 	talents = ArchetypeTalents.veteran,
 	base_talents = {
-		veteran_aura_gain_ammo_on_elite_kill = 1,
-		veteran_combat_ability_stance = 1,
-		veteran_cover_peeking = 1,
-		veteran_frag_grenade = 1,
-		veteran_supression_immunity = 1,
+		veteran_combat_ability_stance = {
+			target_slot = "slot_combat_ability",
+			tier = 1,
+		},
+		veteran_frag_grenade = {
+			target_slot = "slot_grenade_ability",
+			tier = 1,
+		},
+		veteran_aura_gain_ammo_on_elite_kill = {
+			tier = 1,
+		},
+		veteran_cover_peeking = {
+			tier = 1,
+		},
+		veteran_supression_immunity = {
+			tier = 1,
+		},
+		veteran_base_ranged_damage = {
+			tier = 1,
+		},
+		veteran_survivalist_passive = {
+			tier = 1,
+		},
 	},
 	main_menu_camera_offsets = {
 		x = 0,

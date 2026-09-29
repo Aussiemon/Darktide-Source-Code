@@ -5,6 +5,7 @@ local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equ
 local ImpactFxResourceDependencies = require("scripts/settings/damage/impact_fx_resource_dependencies")
 local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
@@ -345,9 +346,10 @@ PlayerHuskVisualLoadoutExtension._equip_item_to_slot = function (self, slot_name
 	local parent_unit_3p = self._unit
 	local parent_unit_1p = self._first_person_unit
 	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
+	local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-	if profile.gender == "female" then
-		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+	if profile_wrap_deform_override_item_name then
+		deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 	end
 
 	local unit_data_extension = ScriptUnit.extension(self._unit, "unit_data_system")

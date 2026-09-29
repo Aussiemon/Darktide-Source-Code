@@ -27,9 +27,10 @@ templates.weapon_trait_bespoke_powermaul_p3_block_has_chance_to_stun = {
 	predicted = false,
 	proc_events = {
 		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	add_child_proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	conditional_proc_func = function (template_data, template_context, t)
 		local stacks = template_context.buff_extension:current_stacks("powermaul_p3_block_has_chance_to_stun_child")
@@ -44,14 +45,16 @@ templates.weapon_trait_bespoke_powermaul_p3_block_has_chance_to_stun = {
 	check_proc_func = function (params, template_data, template_context)
 		return params.attack_type == "melee"
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacking_unit = params.attacking_unit
-		local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+	specific_proc_func = {
+		on_perfect_block = function (params, template_data, template_context, t)
+			local attacking_unit = params.attacking_unit
+			local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
 
-		if attacking_unit_buff_extension then
-			attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
-		end
-	end,
+			if attacking_unit_buff_extension then
+				attacking_unit_buff_extension:add_internally_controlled_buff("power_maul_stun", t, "owner_unit", template_context.unit)
+			end
+		end,
+	},
 }
 templates.powermaul_p3_block_has_chance_to_stun_child = {
 	class_name = "buff",
@@ -90,7 +93,7 @@ templates.weapon_trait_bespoke_powermaul_p3_staggering_hits_has_chance_to_stun =
 			local stick_to_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 			if stick_to_buff_extension then
-				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t)
+				stick_to_buff_extension:add_internally_controlled_buff("power_maul_stun", t, "owner_unit", template_context.unit)
 			end
 		end
 	end,

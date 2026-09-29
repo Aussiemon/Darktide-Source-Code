@@ -7,7 +7,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Explosion = require("scripts/utilities/attack/explosion")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
-local MinionState = require("scripts/utilities/minion_state")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
@@ -36,7 +35,7 @@ end
 ActionCrypticDischarge.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionCrypticDischarge.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	local ability_charges_used_at_start = self._ability_charges_used_at_start
+	local ability_charges_used_at_start = self._ability_cost_at_start
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
@@ -74,7 +73,7 @@ ActionCrypticDischarge.start = function (self, action_settings, t, time_scale, a
 
 	if param_table then
 		param_table.unit = player_unit
-		param_table.ability_charges_used = ability_charges_used_at_start
+		param_table.ability_cost = ability_charges_used_at_start
 		param_table.remaining_ability_charges_before_use = self._remaining_ability_charges_before_use_at_start
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
@@ -99,12 +98,16 @@ ActionCrypticDischarge.start = function (self, action_settings, t, time_scale, a
 
 		Explosion.create_explosion(self._world, self._physics_world, player_position, Quaternion.identity(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion, nil, true)
 
-		if target_num_ability_charges_effect >= discharge_ability_talent_settings.two_charge_bonus.num_charges_used_required and talent_extension:has_special_rule("cryptic_discharge_gives_attack_speed") then
-			buff_extension:add_internally_controlled_buff("cryptic_discharge_attack_speed_increase", t)
+		if talent_extension:has_special_rule("cryptic_discharge_gives_attack_speed") then
+			local attack_speed_buff_lerp = target_num_ability_charges_effect / discharge_ability_talent_settings.max_charges
+
+			buff_extension:add_internally_controlled_buff("cryptic_discharge_attack_speed_increase", t, "buff_lerp_value", attack_speed_buff_lerp)
 		end
 
 		if talent_extension:has_special_rule("cryptic_discharge_restores_toughness_on_use") then
-			Toughness.replenish_percentage(player_unit, discharge_ability_talent_settings.cryptic_discharge_toughness.toughness_percent_on_use, false, "ability_shout")
+			local toughness_to_restore = target_num_ability_charges_effect * discharge_ability_talent_settings.cryptic_discharge_toughness.toughness_percent_on_use
+
+			Toughness.replenish_percentage(player_unit, toughness_to_restore, false, "ability_shout")
 		end
 
 		if talent_extension:has_special_rule("cryptic_discharge_generates_arcs") then

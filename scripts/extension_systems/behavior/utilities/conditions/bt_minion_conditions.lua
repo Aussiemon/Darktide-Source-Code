@@ -63,6 +63,28 @@ conditions.is_aggroed = function (unit, blackboard, scratchpad, condition_args, 
 	return is_aggroed
 end
 
+conditions.boss_is_aggroed_and_allowed_to_use_bas_ability = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local has_target_unit = conditions.has_target_unit(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not has_target_unit then
+		return false
+	end
+
+	local abilites_component = blackboard.abilites
+	local t_to_next_base_attack = abilites_component.t_to_next_base_attack
+	local t = Managers.time:time("gameplay")
+	local base_ability_allowed
+
+	if t_to_next_base_attack and t_to_next_base_attack < t then
+		base_ability_allowed = true
+	end
+
+	local perception_component = blackboard.perception
+	local boss_is_aggroed_and_allowed_to_use_bas_ability = perception_component.aggro_state == "aggroed" and base_ability_allowed
+
+	return boss_is_aggroed_and_allowed_to_use_bas_ability
+end
+
 conditions.vortex_grabbed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local vortex_grabbed_component = blackboard.vortex_grabbed
 	local in_vortex = vortex_grabbed_component.in_vortex
@@ -213,6 +235,22 @@ conditions.at_jump_smart_object = function (unit, blackboard, scratchpad, condit
 	local is_smart_object_jump = smart_object_type == "jumps" or smart_object_type == "cover_vaults"
 
 	return is_smart_object_jump
+end
+
+conditions.allowed_to_teleport = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local should_teleport = blackboard.teleport.teleport_allowed
+
+	return should_teleport
+end
+
+conditions.boss_allowed_to_use_ability = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local current_ability = blackboard.abilites.current_ability
+
+	if current_ability == condition_args.ability then
+		return true
+	else
+		return false
+	end
 end
 
 conditions.at_smashable_obstacle_smart_object = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -693,6 +731,23 @@ conditions.mutator_daemonhost_wants_to_leave = function (unit, blackboard, scrat
 	return wants_to_leave
 end
 
+conditions.live_event_torment_daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	local behavior_component = blackboard.behavior
+	local t = Managers.time:time("gameplay")
+
+	if behavior_component.death_leave_cooldown - t > 0 then
+		return false
+	end
+
+	return true
+end
+
 conditions.daemonhost_is_passive = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local perception_component = blackboard.perception
 	local aggro_state = perception_component.aggro_state
@@ -718,6 +773,38 @@ conditions.daemonhost_can_warp_sweep = function (unit, blackboard, scratchpad, c
 	local num_broadphase_units = broadphase_component.num_units
 
 	return num_nearby_units_threshold <= num_broadphase_units
+end
+
+conditions.daemonhost_torment_is_spawning = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+
+	return not behavior_component.spawned_in
+end
+
+conditions.daemonhost_torment_can_warp_nova = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local behavior_component = blackboard.behavior
+	local t = Managers.time:time("gameplay")
+
+	if t < behavior_component.warp_nova_cooldown then
+		return false
+	end
+
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+	local current_health_percent = health_extension:current_health_percent()
+
+	if current_health_percent > action_data.health_percent_threshold then
+		return false
+	end
+
+	return true
 end
 
 conditions.target_changed_and_valid = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

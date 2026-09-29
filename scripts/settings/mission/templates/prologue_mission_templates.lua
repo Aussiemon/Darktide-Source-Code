@@ -45,6 +45,9 @@ local mission_templates = {
 				"cs_05_exterior",
 			},
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 }
 

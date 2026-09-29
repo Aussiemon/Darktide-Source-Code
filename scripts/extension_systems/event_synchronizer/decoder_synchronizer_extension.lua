@@ -44,7 +44,7 @@ DecoderSynchronizerExtension.setup_from_component = function (self, objective_na
 
 	local unit = self._unit
 
-	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, nil, unit)
+	self._group_id = self._mission_objective_system:register_objective_synchronizer(objective_name, unit)
 end
 
 DecoderSynchronizerExtension.destroy = function (self)

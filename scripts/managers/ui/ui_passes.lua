@@ -717,7 +717,7 @@ UIPasses.text = {
 			value_id = pass.value_id,
 		}
 	end,
-	destroy = function (pass, ui_renderer)
+	destroy = function (pass, ui_renderer, widget)
 		local pass_data = pass.data
 		local retained_ids = pass_data.retained_ids
 		local retained_mode = retained_ids ~= nil
@@ -739,7 +739,7 @@ UIPasses.text = {
 			pass_data.material = nil
 		end
 	end,
-	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
+	draw = function (pass, ui_renderer, ui_style, ui_content, position, size, clip_modified_uvs, widget)
 		local pass_data = pass.data
 		local retained_ids
 

@@ -34,10 +34,6 @@ BrokerBuffUtils.populate_stimm_field_syringe_buff_variants = function (buff_temp
 	table.merge(buff_templates, buffs_to_add)
 
 	buff_templates.syringe_heal_corruption_buff_stimm_field.single_application = true
-	buff_templates.syringe_broker_buff_stimm_field.single_application_buff_overrides = table.set({
-		"broker_stimm_durability_5b",
-		"broker_stimm_durability_4",
-	})
 
 	local start_func_super = buff_templates.syringe_broker_buff_stimm_field.start_func
 

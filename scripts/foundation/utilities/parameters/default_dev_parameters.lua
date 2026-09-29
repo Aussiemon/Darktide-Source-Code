@@ -6,6 +6,7 @@ local categories = {
 	"Action Input",
 	"Action",
 	"Animation",
+	"Async",
 	"Auspex",
 	"Auto Event",
 	"Backend",
@@ -13,6 +14,7 @@ local categories = {
 	"Blackboard",
 	"Boot",
 	"Bot Character",
+	"Boss_handler",
 	"Breed Picker",
 	"Breed",
 	"Buffs",
@@ -45,6 +47,7 @@ local categories = {
 	"Event",
 	"Expeditions",
 	"Explosion",
+	"Experimental",
 	"Feature Info",
 	"FGRL",
 	"Force Field",
@@ -102,6 +105,7 @@ local categories = {
 	"Pickups",
 	"Player Character",
 	"Presence",
+	"Procgen",
 	"Projectile Locomotion",
 	"Projectile",
 	"ProximitySystem",
@@ -130,6 +134,7 @@ local categories = {
 	"UI",
 	"Version Info",
 	"Visual Loadout",
+	"Vector Fields",
 	"Volume",
 	"Weapon Aim Assist",
 	"Weapon Effects",
@@ -326,6 +331,10 @@ params.debug_text_font = {
 	category = "Debug Print",
 	value = _debug_text_font_options[1],
 	options = _debug_text_font_options,
+}
+params.hide_all_debug_draws = {
+	category = "Debug Print",
+	value = false,
 }
 params.debug_auspex_scanning = {
 	category = "Auspex",
@@ -1533,7 +1542,11 @@ params.debug_smoke_fog = {
 	category = "Abilities",
 	value = false,
 }
-params.show_ability_cooldowns = {
+params.show_ability_resources = {
+	category = "Abilities",
+	value = false,
+}
+params.show_ability_resources_regen = {
 	category = "Abilities",
 	value = false,
 }
@@ -2571,6 +2584,78 @@ params.debug_area_suppression_falloff = {
 		end
 	end,
 }
+params.debug_psyker_boss = {
+	category = "Boss_handler",
+	value = false,
+}
+params.psyker_boss_phase_selector = {
+	category = "Boss_handler",
+	value = -1,
+	options_function = function ()
+		local BossHandlerTemplates = require("scripts/managers/pacing/bosses/boss_templates")
+		local phase_order = BossHandlerTemplates.psyker_boss.phase_order
+		local options = {
+			-1,
+		}
+
+		for i = 1, #phase_order do
+			options[#options + 1] = i
+		end
+
+		return options
+	end,
+	options_texts_function = function ()
+		local BossHandlerTemplates = require("scripts/managers/pacing/bosses/boss_templates")
+		local phase_order = BossHandlerTemplates.psyker_boss.phase_order
+		local texts = {
+			"disabled",
+		}
+
+		for i = 1, #phase_order do
+			local name = phase_order[i][1]
+			local entry_health_percentage = phase_order[i][2]
+
+			if entry_health_percentage then
+				texts[#texts + 1] = string.format("%d: %s (%d%%)", i, name, entry_health_percentage * 100)
+			else
+				texts[#texts + 1] = string.format("%d: %s", i, name)
+			end
+		end
+
+		return texts
+	end,
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		local is_server = Managers.state.game_session:is_server()
+
+		if not is_server then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_boss_handler_phase_override(channel, new_value)
+		else
+			Debug:select_boss_phase_override(new_value)
+		end
+	end,
+}
+params.debug_boss_handler = {
+	category = "Boss_handler",
+	value = false,
+}
+params.debug_boss_handler_repeat_current_phase = {
+	category = "Boss_handler",
+	value = false,
+}
+params.debug_boss_handler_skip_boss_dead_event = {
+	category = "Boss_handler",
+	value = false,
+}
+params.debug_boss_handler_skip_boss_phase_change_event = {
+	category = "Boss_handler",
+	value = false,
+}
 params.debug_minion_reuse_wounds = {
 	category = "Minions",
 	value = false,
@@ -3148,6 +3233,10 @@ params.grenadier_allowed = {
 	category = "Specials",
 	value = true,
 }
+params.renegade_wizard_allowed = {
+	category = "Specials",
+	value = true,
+}
 params.renegade_flamer_allowed = {
 	category = "Specials",
 	value = true,
@@ -3505,6 +3594,10 @@ params.equipped_weapon_scale = {
 	category = "Visual Loadout",
 	num_decimals = 2,
 	value = 1,
+}
+params.debug_vector_fields_system = {
+	category = "Vector Fields",
+	value = false,
 }
 params.render_feature_info = {
 	category = "Feature Info",
@@ -4107,6 +4200,15 @@ params.debug_players_invulnerable = {
 			RPC.rpc_debug_client_request_set_players_invulnerable(channel, new_value)
 		end
 	end,
+}
+params.debug_aura_kill_nearby = {
+	category = "Damage",
+	value = false,
+}
+params.debug_aura_kill_distance = {
+	category = "Damage",
+	name = "debug_aura_kill_distance (1-20m)",
+	value = 10,
 }
 params.disable_toughness_damage = {
 	category = "Damage",
@@ -4808,54 +4910,51 @@ params.packet_duplication = {
 		end
 	end,
 }
-
-local function set_pong_timeout(new_value, old_value)
-	if new_value ~= old_value then
-		Network.set_pong_timeout(new_value)
-	end
-end
-
 params.pong_timeout = {
 	category = "Network",
 	value = 10,
-	on_value_set = set_pong_timeout,
+	on_value_set = function (new_value, old_value)
+		if new_value ~= old_value then
+			Network.set_pong_timeout(new_value)
+		end
+	end,
 }
 
-local cached_network_functions
+local _cached_network_functions
 
-local function set_backend_delay(new_value)
+local function _set_backend_delay(new_value)
 	local Promise = require("scripts/foundation/utilities/promise")
-	local has_saved_values = cached_network_functions ~= nil
+	local has_saved_values = _cached_network_functions ~= nil
 
 	if not new_value and has_saved_values then
-		Managers.backend.title_request = cached_network_functions.title_request
-		Managers.backend.url_request = cached_network_functions.url_request
-		cached_network_functions = nil
+		Managers.backend.title_request = _cached_network_functions.title_request
+		Managers.backend.url_request = _cached_network_functions.url_request
+		_cached_network_functions = nil
 
 		return
 	end
 
 	if new_value then
 		if not has_saved_values then
-			cached_network_functions = {
+			_cached_network_functions = {
 				title_request = Managers.backend.title_request,
 				url_request = Managers.backend.url_request,
 			}
 		end
 
 		Managers.backend.title_request = function (...)
-			local f = callback(cached_network_functions.title_request, ...)
+			local func = callback(_cached_network_functions.title_request, ...)
 
 			return Promise.delay(new_value):next(function ()
-				return f()
+				return func()
 			end)
 		end
 
 		Managers.backend.url_request = function (...)
-			local f = callback(cached_network_functions.url_request, ...)
+			local func = callback(_cached_network_functions.url_request, ...)
 
 			return Promise.delay(new_value):next(function ()
-				return f()
+				return func()
 			end)
 		end
 	end
@@ -4870,7 +4969,7 @@ params.backend_delay = {
 		2,
 		8,
 	},
-	on_value_set = set_backend_delay,
+	on_value_set = _set_backend_delay,
 }
 params.reliable_rpc_send_count_debug = {
 	category = "Network",
@@ -4880,7 +4979,7 @@ params.debug_pass_EAC_check = {
 	category = "Network",
 	value = true,
 }
-params.debug_breed_resource_dependencies = {
+params.debug_load_wait_info = {
 	category = "Loading",
 	value = false,
 }
@@ -4917,7 +5016,15 @@ params.draw_package_loading = {
 	category = "Loading",
 	value = false,
 }
-params.debug_load_wait_info = {
+params.log_archetype_resource_dependencies = {
+	category = "Loading",
+	value = false,
+}
+params.log_breed_resource_dependencies = {
+	category = "Loading",
+	value = false,
+}
+params.log_weapon_template_resource_dependencies = {
 	category = "Loading",
 	value = false,
 }
@@ -5173,10 +5280,6 @@ params.infinite_ammo_reserve = {
 			RPC.rpc_debug_client_request_infinite_ammo_reserve(channel, new_value)
 		end
 	end,
-}
-params.log_weapon_template_resource_dependencies = {
-	category = "Weapon",
-	value = false,
 }
 params.debug_alternate_fire = {
 	category = "Weapon",
@@ -6135,6 +6238,14 @@ params.command_window_title_format = {
 params.matchmaking_configuration_name = {
 	value = "",
 }
+params.favored_IDE = {
+	category = "Experimental",
+	value = "cursor",
+	options = {
+		"cursor",
+		"code",
+	},
+}
 
 local function _set_build_override_parameter(parameter_name, value)
 	local old_value = params[parameter_name].value
@@ -6142,34 +6253,6 @@ local function _set_build_override_parameter(parameter_name, value)
 	params[parameter_name].value = value
 end
 
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
-_set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 _set_build_override_parameter("debug_change_time_scale", false)
 

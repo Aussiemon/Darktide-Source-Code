@@ -12,6 +12,8 @@ local BtMeleeFollowTargetAction = class("BtMeleeFollowTargetAction", "BtNode")
 BtMeleeFollowTargetAction.TIME_TO_FIRST_EVALUATE = 0.5
 BtMeleeFollowTargetAction.CONSECUTIVE_EVALUATE_INTERVAL = 0.25
 
+local UPDATE_RATE = 0
+
 BtMeleeFollowTargetAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
@@ -138,7 +140,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 
 		local evaluate = not scratchpad.running_stagger_block_evaluate and t > scratchpad.time_to_next_evaluate
 
-		return "running", evaluate
+		return "running", evaluate, UPDATE_RATE
 	end
 
 	local move_state = behavior_component.move_state
@@ -205,7 +207,7 @@ BtMeleeFollowTargetAction.run = function (self, unit, breed, blackboard, scratch
 		animation_extension:set_variable("anim_move_speed", scratchpad.modified_movement_speed)
 	end
 
-	return "running", should_evaluate
+	return "running", should_evaluate, UPDATE_RATE
 end
 
 BtMeleeFollowTargetAction._update_scaled_movementspeed = function (self, unit, breed, t, scratchpad, action_data)

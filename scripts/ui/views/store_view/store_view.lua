@@ -1540,8 +1540,6 @@ StoreView._handle_input = function (self, input_service)
 		if input_service:get("hotkey_menu_special_1") and not self._aquila_open and not self._widgets_by_name.aquila_button.content.hotspot.disabled then
 			self:_play_sound(UISoundEvents.default_click)
 			self._widgets_by_name.aquila_button.content.hotspot.pressed_callback()
-		elseif self._aquila_open then
-			-- Nothing
 		end
 	end
 end

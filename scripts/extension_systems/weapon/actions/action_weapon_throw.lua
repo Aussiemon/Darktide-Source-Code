@@ -1,5 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/weapon/actions/action_weapon_throw.lua
 
+local Ammo = require("scripts/utilities/ammo")
+
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local ActionWeaponThrow = class("ActionWeaponThrow", "ActionSpawnProjectile")

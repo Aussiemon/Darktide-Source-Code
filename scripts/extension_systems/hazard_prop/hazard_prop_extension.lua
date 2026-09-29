@@ -155,7 +155,7 @@ HazardPropExtension.set_current_state = function (self, state)
 
 			if self._is_server then
 				self:start_trigger_timer()
-				self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
+				self._owner_system:enable_update_function(self._unit, "update")
 
 				self._running_update = true
 
@@ -186,7 +186,7 @@ HazardPropExtension.set_current_state = function (self, state)
 
 		if self._is_server then
 			self:_trigger_hazard()
-			self._owner_system:disable_update_function(self.__class_name, "update", unit, self)
+			self._owner_system:disable_update_function(self._unit, "update")
 
 			self._running_update = false
 		end
@@ -203,7 +203,7 @@ HazardPropExtension.set_current_state = function (self, state)
 		end
 
 		if self._running_update then
-			self._owner_system:disable_update_function(self.__class_name, "update", unit, self)
+			self._owner_system:disable_update_function(self._unit, "update")
 
 			self._running_update = false
 		end

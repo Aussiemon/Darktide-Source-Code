@@ -16,6 +16,7 @@ local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub
 local GameplayInitStepNvidiaAiAgent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nvidia_ai_agent")
 local HordeManager = require("scripts/managers/horde/horde_manager")
 local LevelInstanceManager = require("scripts/foundation/managers/level_instance/level_instance_manager")
+local LevelObjectSetManager = require("scripts/managers/level_object_set/level_object_set_manager")
 local MinionDeathManager = require("scripts/managers/minion/minion_death_manager")
 local MinionSpawnManager = require("scripts/managers/minion/minion_spawn_manager")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
@@ -138,6 +139,7 @@ GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, 
 	Managers.state.unit_job = UnitJobManager:new(unit_spawner_manager)
 	Managers.state.unit_spawner = unit_spawner_manager
 	Managers.state.level_instance = LevelInstanceManager:new(world, extension_manager, is_server, UnitTemplates, game_session, level_name, network_event_delegate)
+	Managers.state.level_object_set = LevelObjectSetManager:new(world, level_name)
 end
 
 implements(GameplayInitStepManagers, GameplayInitStepInterface)

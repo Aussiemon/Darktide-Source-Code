@@ -402,9 +402,10 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 		else
 			Promise.all(self:_fetch_public_profiles(table.clone_instance(target_account_ids_array)), self:_fetch_profile_presences(table.clone_instance(target_account_ids_array))):next(function (result)
 				local public_profiles_by_account_id, presences_by_account_id = unpack(result)
-				local profiles = {}
+				local num_account_ids = #target_account_ids_array
+				local profiles = Script.new_array(num_account_ids)
 
-				for i = 1, #target_account_ids_array do
+				for i = 1, num_account_ids do
 					local account_id = target_account_ids_array[i]
 					local profile = public_profiles_by_account_id[account_id]
 					local presence = presences_by_account_id[account_id]
@@ -412,7 +413,7 @@ AccountManagerPSN._fetch_friends = function (self, num_to_fetch, offset, result_
 
 					table.merge_recursive(profile_data, presence)
 
-					profiles[#profiles + 1] = profile_data
+					profiles[i] = profile_data
 				end
 
 				result_promise:resolve(profiles)

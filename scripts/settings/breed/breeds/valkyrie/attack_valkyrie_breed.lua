@@ -10,6 +10,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local breed_name = "attack_valkyrie"
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local flee_types = FleeConstants.flee_types
@@ -52,7 +53,7 @@ local breed_data = {
 	armor_type = armor_types.armored,
 	blackboard_component_config = BreedBlackboardComponentTemplates.attack_valkyrie,
 	tags = {
-		minion = true,
+		[breed_tags.minion] = true,
 	},
 	size_variation_range = {
 		1.04,

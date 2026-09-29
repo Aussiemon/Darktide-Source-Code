@@ -349,6 +349,21 @@ AchievementMissionGroups.missions = {
 		},
 	},
 	{
+		local_variable = "loc_mission_name_spillway",
+		name = "spillway",
+		zone = "depths",
+		category = {
+			default = "endeavours_depths",
+			puzzle = "exploration_depths",
+		},
+		icon = {
+			challange = nil,
+			collectible = nil,
+			mission_default = path .. "mission_achievements/missions_achievement_spillway",
+			auric = path .. "mission_achievements/missions_achievement_spillway_hard",
+		},
+	},
+	{
 		local_variable = "loc_mission_name_psykhanium",
 		name = "psykhanium",
 		category = {
@@ -628,6 +643,15 @@ AchievementMissionGroups.zones = {
 		},
 	},
 	{
+		category = "exploration_depths",
+		local_variable = "loc_zone_name_depths_short",
+		name = "depths",
+		icon = {
+			zone_default = path .. "mission_achievements/missions_achievement_0001",
+			destructible = path .. "mission_achievements/missions_achievement_0002",
+		},
+	},
+	{
 		category = "exploration_operations",
 		local_variable = "loc_zone_name_operations_short",
 		name = "operations",
@@ -724,6 +748,13 @@ AchievementMissionGroups.zone_meta = {
 			"mission_zone_entertainment_destructible_3",
 			"mission_zone_entertainment_3",
 		},
+	},
+	{
+		category = "exploration_depths",
+		icon = nil,
+		local_variable = "loc_zone_name_depths_short",
+		name = "depths",
+		achievements = {},
 	},
 	{
 		category = "exploration_operations",

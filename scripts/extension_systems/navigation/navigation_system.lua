@@ -54,4 +54,8 @@ NavigationSystem._update_position = function (self)
 	end
 end
 
+NavigationSystem.get_nav_world = function (self)
+	return self._nav_world
+end
+
 return NavigationSystem

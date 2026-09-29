@@ -29,8 +29,6 @@ BrokerStimmBuilderView.init = function (self, settings, context)
 
 	BrokerStimmBuilderView.super.init(self, broker_stimm_builder_view_definitions, settings, context)
 
-	self._save_talent_changes = false
-
 	local resolution_scale = RESOLUTION_LOOKUP.scale
 	local resolution_width = RESOLUTION_LOOKUP.width
 
@@ -65,9 +63,6 @@ BrokerStimmBuilderView.on_enter = function (self)
 
 		if profile_preset then
 			self._active_profile_preset_id = profile_preset_id
-
-			local profile_preset_talents_version = profile_preset.talents_version
-
 			talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", context and context.current_profile_equipped_specialization_talents or profile_preset.talents) or {}
 		else
 			local current_profile_equipped_specialization_talents = context and context.current_profile_equipped_specialization_talents
@@ -80,10 +75,10 @@ BrokerStimmBuilderView.on_enter = function (self)
 				for i = 1, #nodes do
 					local node = nodes[i]
 					local widget_name = node.widget_name
-					local talent_tier = profile.selected_nodes[widget_name]
+					local selection_data = profile.selected_nodes[widget_name]
 
-					if talent_tier then
-						talents[widget_name] = talent_tier
+					if selection_data then
+						talents[widget_name] = selection_data
 					end
 				end
 			end
@@ -95,10 +90,10 @@ BrokerStimmBuilderView.on_enter = function (self)
 
 		self._node_widget_tiers = table.clone_instance(talents)
 
-		for widget_name, value in pairs(self._node_widget_tiers) do
+		for widget_name, selection_data in pairs(self._node_widget_tiers) do
 			local node = self:_node_by_name(widget_name)
 
-			if not node or type(value) ~= "number" then
+			if not node or type(selection_data) ~= "number" then
 				self._node_widget_tiers[widget_name] = nil
 
 				if profile_preset_id then
@@ -112,10 +107,10 @@ BrokerStimmBuilderView.on_enter = function (self)
 		for i = 1, #nodes do
 			local node = nodes[i]
 			local widget_name = node.widget_name
-			local tier = profile.selected_nodes[widget_name]
+			local selection_data = profile.selected_nodes[widget_name]
 
-			if tier then
-				widget_tiers[widget_name] = tier
+			if selection_data then
+				widget_tiers[widget_name] = selection_data
 			end
 		end
 	end
@@ -169,7 +164,6 @@ BrokerStimmBuilderView.event_on_profile_preset_changed = function (self, profile
 		talents = profile_preset and TalentLayoutParser.filter_layout_talents(profile, "specialization_talent_layout_file_path", profile_preset.talents) or {}
 	else
 		talents = table.clone_instance(self._node_widget_tiers)
-		self._save_talent_changes = true
 	end
 
 	local active_layout = self._active_layout
@@ -210,6 +204,8 @@ BrokerStimmBuilderView.event_on_profile_preset_changed = function (self, profile
 	self:_refresh_all_nodes()
 
 	self._active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+	Managers.event:trigger("event_player_specialization_talent_node_updated", self._node_widget_tiers)
 end
 
 BrokerStimmBuilderView.on_exit = function (self)
@@ -219,22 +215,38 @@ BrokerStimmBuilderView.on_exit = function (self)
 		return
 	end
 
+	local talents = self._node_widget_tiers
+	local active_layout = self._active_layout
+
+	TalentLayoutParser.validate_talent_layouts(talents, {
+		active_layout,
+	}, true)
+
+	for widget_name in pairs(self._node_widget_tiers) do
+		local node = self:_node_by_name(widget_name)
+
+		if not node then
+			self._node_widget_tiers[widget_name] = nil
+
+			if self._active_profile_preset_id then
+				ProfileUtils.save_talent_node_for_profile_preset(self._active_profile_preset_id, widget_name, nil)
+			end
+		end
+	end
+
+	Managers.event:trigger("event_player_specialization_talent_node_updated", self._node_widget_tiers)
 	BrokerStimmBuilderView.super.on_exit(self)
 end
 
 BrokerStimmBuilderView._remove_node_point_on_widget = function (self, widget)
 	BrokerStimmBuilderView.super._remove_node_point_on_widget(self, widget)
 	Managers.event:trigger("event_player_specialization_talent_node_updated", self._node_widget_tiers)
-
-	self._save_talent_changes = true
 end
 
-BrokerStimmBuilderView._add_node_point_on_widget = function (self, widget, amount_to_add)
-	local success = BrokerStimmBuilderView.super._add_node_point_on_widget(self, widget, amount_to_add)
+BrokerStimmBuilderView._add_node_point_on_widget = function (self, widget, amount_to_add, optional_choice)
+	local success = BrokerStimmBuilderView.super._add_node_point_on_widget(self, widget, amount_to_add, optional_choice)
 
 	if success then
-		self._save_talent_changes = true
-
 		local parent_line_anim_data = widget.content.parent_line_anim_data
 
 		if parent_line_anim_data then
@@ -317,12 +329,6 @@ BrokerStimmBuilderView.clear_node_points = function (self)
 	end
 
 	Managers.event:trigger("event_player_specialization_talent_node_updated", self._node_widget_tiers)
-
-	self._save_talent_changes = true
-end
-
-BrokerStimmBuilderView._setup_node_connection_widget = function (self)
-	self._node_connection_widgets = {}
 end
 
 BrokerStimmBuilderView._node_connection_widget_by_index = function (self, index)
@@ -409,7 +415,7 @@ BrokerStimmBuilderView._update_start_node_color = function (self, lerp_p)
 
 	local from, to = content.center_texture_disabled_color, content.center_texture_original_color
 
-	if self:_points_available() == self:_max_node_points() then
+	if self:_points_available() == self:_max_layout_points() then
 		from, to = to, from
 	end
 
@@ -461,8 +467,8 @@ BrokerStimmBuilderView._draw_connection_between_widgets = function (self, ui_ren
 	local parent_node_widget = widgets_by_name[parent_node_name]
 	local parent_node_requirements = parent_node.requirements
 	local children_unlock_points = parent_node_requirements and parent_node_requirements.children_unlock_points or 0
-	local parent_tier = node_widget_tiers[parent_node_name]
-	local points_spent_on_parent = (parent_tier or 0) * parent_node.cost
+	local parent_selection_data = node_widget_tiers[parent_node_name]
+	local points_spent_on_parent = (parent_selection_data or 0) * parent_node.cost
 	local child_status = self:_node_availability_status(child_node) or BrokerStimmBuilderView.NODE_STATUS.available
 	local child_node_name = child_node.widget_name
 	local child_widget = widgets_by_name[child_node_name]
@@ -479,7 +485,7 @@ BrokerStimmBuilderView._draw_connection_between_widgets = function (self, ui_ren
 		elseif points_available > 0 then
 			color_status = "unlocked"
 		end
-	elseif child_status == BrokerStimmBuilderView.NODE_STATUS.locked or child_status == BrokerStimmBuilderView.NODE_STATUS.unavailable or not parent_tier or points_spent_on_parent < children_unlock_points then
+	elseif child_status == BrokerStimmBuilderView.NODE_STATUS.locked or child_status == BrokerStimmBuilderView.NODE_STATUS.unavailable or not parent_selection_data or points_spent_on_parent < children_unlock_points then
 		color_status = "locked"
 	elseif child_unlocked then
 		color_status = "chosen"
@@ -530,7 +536,7 @@ BrokerStimmBuilderView._draw_connection_between_widgets = function (self, ui_ren
 
 	local fill_distance = math.ease_in_out_sine(anim_line_progress)
 
-	self:_apply_node_connection_line_colors(color_status, connection_index)
+	self:_apply_node_connection_line_colors(color_status, 1, connection_index)
 
 	local node_connection_style = node_connection_widget.style
 
@@ -591,7 +597,7 @@ BrokerStimmBuilderView._apply_node_connection_anims = function (self, node_conne
 	return
 end
 
-BrokerStimmBuilderView._apply_node_connection_line_colors = function (self, color_status, index)
+BrokerStimmBuilderView._apply_node_connection_line_colors = function (self, color_status, alpha_multiplier, index)
 	local node_connection_widget = self:_node_connection_widget_by_index(index)
 	local alpha = 255
 
@@ -604,7 +610,7 @@ BrokerStimmBuilderView._apply_node_connection_line_colors = function (self, colo
 	local node_connection_style = node_connection_widget.style
 	local line_available_color = node_connection_style.line_available.color
 
-	line_available_color[1] = alpha
+	line_available_color[1] = alpha * alpha_multiplier
 end
 
 BrokerStimmBuilderView._setup_layouts = function (self)
@@ -667,7 +673,7 @@ BrokerStimmBuilderView.update = function (self, dt, t, input_service)
 	local pass_input, pass_draw = BrokerStimmBuilderView.super.update(self, dt, t, input_service)
 	local widgets_by_name = self._widgets_by_name
 
-	widgets_by_name.specialization_talents_resource.content.text = string.format("%s/%s", self:_points_available(), self:_max_node_points())
+	widgets_by_name.specialization_talents_resource.content.text = string.format("%s/%s", self:_points_available(), self:_max_layout_points())
 
 	local selected_node = self._selected_node
 	local selected_node_widget = selected_node and self._widgets_by_name[selected_node.widget_name]
@@ -830,9 +836,9 @@ BrokerStimmBuilderView._handle_input = function (self, input_service, dt, t)
 
 				if input_service:get("confirm_pressed") then
 					local node_widget_tiers = self._node_widget_tiers
-					local tier = node_widget_tiers[widget_name]
+					local selection_data = node_widget_tiers[widget_name]
 
-					if self:_can_remove_point_in_node(selected_node) and tier then
+					if selection_data and self:_can_remove_point_in_node(selected_node) then
 						self:_on_node_widget_right_pressed(widget)
 
 						self._input_handled_current_frame = true
@@ -1011,7 +1017,7 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 end
 
 BrokerStimmBuilderView._update_center_progress = function (self, dt, t)
-	local max_points = self:_max_node_points()
+	local max_points = self:_max_layout_points()
 	local available_points = self:_points_available()
 	local target_fill = max_points == 0 and 0 or available_points / max_points
 	local start_node = self:start_node()
@@ -1057,9 +1063,9 @@ BrokerStimmBuilderView._update_center_progress = function (self, dt, t)
 			temp_profile.archetype = profile.archetype
 			temp_profile.expertise_points = profile.expertise_points
 
-			local cooldown = syringe_ability.cooldown_lerp_func(self._temp_profile, lerp_cooldown.min, lerp_cooldown.max, 1 - current_fill)
+			local resource_cost_per_charge = syringe_ability.resource_cost_per_charge_lerp_func(self._temp_profile, lerp_cooldown.min, lerp_cooldown.max, 1 - current_fill)
 
-			widgets_by_name.summary_header.content.cooldown_text = string.format("%ss", cooldown)
+			widgets_by_name.summary_header.content.cooldown_text = string.format("%ss", resource_cost_per_charge)
 		end
 	end
 
@@ -1199,14 +1205,14 @@ BrokerStimmBuilderView._get_relative_path = function (self)
 	return path:match("(.*/)")
 end
 
-BrokerStimmBuilderView._max_node_points = function (self)
+BrokerStimmBuilderView._max_layout_points = function (self)
 	if self._player_mode then
 		local player = self._preview_player
 		local profile = player:profile()
 
 		return profile.expertise_points
 	else
-		return BrokerStimmBuilderView.super._max_node_points(self)
+		return BrokerStimmBuilderView.super._max_layout_points(self)
 	end
 end
 
@@ -1279,7 +1285,7 @@ BrokerStimmBuilderView._update_node_widgets_blocked_symbol_state = function (sel
 
 		if node_incompatible then
 			local hovered_node_is_incompatible = hovered_incompatible_talent and node.talent == hovered_incompatible_talent
-			local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node_talent)
+			local incompatible_node_is_selected = self:_node_incompatible_with_talent_is_selected(node)
 			local should_be_blocked = incompatible_node_is_selected or hovered_node_is_incompatible
 
 			if should_be_blocked then
@@ -1294,7 +1300,7 @@ BrokerStimmBuilderView._update_node_widgets_blocked_symbol_state = function (sel
 
 		if incompatible_talent and incompatible_talent ~= "" then
 			local hovered_node_is_incompatible = hovered_node_is_incompatible_node and node.requirements.incompatible_talent == hovered_node_talent
-			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(incompatible_talent)
+			local incompatible_node_is_selected = self:_node_with_incompatible_talent_is_selected(node)
 			local should_be_blocked = hovered_node_is_incompatible or incompatible_node_is_selected
 
 			if should_be_blocked then
@@ -1380,7 +1386,8 @@ BrokerStimmBuilderView._setup_tooltip_info = function (self, node, instant_toolt
 
 		if talent then
 			local max_points = node.max_points or 0
-			local tier = is_base_talent_tooltip and 1 or self._node_widget_tiers[node.widget_name]
+			local selection_data = self._node_widget_tiers[node.widget_name]
+			local tier = is_base_talent_tooltip and 1 or selection_data
 			local points_spent = (tier or 0) * node.cost
 			local text_vertical_offset = 14
 

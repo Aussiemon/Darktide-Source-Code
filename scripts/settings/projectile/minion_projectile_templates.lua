@@ -290,6 +290,179 @@ projectile_templates.renegade_shocktrooper_frag_grenade = {
 		},
 	},
 }
+
+local function force_ball_attack_type_validation_func(unit, hit_actor, attack_type)
+	local destructible_ranged = Unit.actor(unit, "destructible_ranged")
+	local destructible = Unit.actor(unit, "destructible")
+
+	if destructible_ranged == hit_actor and attack_type ~= "ranged" then
+		return false
+	elseif destructible == hit_actor then
+		return false
+	end
+
+	return true
+end
+
+projectile_templates.renegade_wizard_force_ball_nurgle = {
+	always_hidden = true,
+	item_name = "content/items/weapons/minions/ranged/minion_psyker_projectile",
+	uses_script_components = true,
+	locomotion_template = ProjectileLocomotionTemplates.renegade_wizard_ball,
+	projectile_type = projectile_types.force_staff_ball,
+	sticks_to_armor_types = {},
+	states = {
+		thrown = {
+			explosion_template = ExplosionTemplates.renegade_wizard_projectile_nurgle,
+		},
+		rebounding = {
+			explosion_template = ExplosionTemplates.renegade_wizard_projectile_nurgle_rebounding,
+		},
+	},
+	damage = {
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.spillway_wizard_force_ball_impact,
+		},
+		fuse = {
+			fuse_time = 20,
+		},
+	},
+	catapult_data = {
+		FORCE = 8,
+		RADIUS = 5,
+		Z_FORCE = 4,
+		CATEGORIES = {
+			"heroes",
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_nurgle",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/minions/play_enemy_psyker_nurgle_projectile",
+				looping_stop_event_name = "wwise/events/minions/stop_enemy_psyker_nurgle_projectile",
+			},
+		},
+		on_sweep_hit = {
+			client_latency_window = 0.2,
+			prioritize_client_instantiation = true,
+			sfx = {
+				event_name = "wwise/events/minions/play_enemy_psyker_projectile_deflected",
+			},
+			vfx = {
+				link = true,
+				orphaned_policy = "destroy",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_nurgle_dissipate",
+			},
+		},
+		on_killed = {
+			sfx = {
+				event_name = "wwise/events/minions/play_enemy_psyker_nurgle_projectile_destroyed",
+			},
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_nurgle_dissipate",
+			},
+		},
+	},
+	health_component_data = {
+		create_game_object = false,
+		difficulty_scaling = 1,
+		has_health_bar = false,
+		hit_mass = 1,
+		invulnerable = false,
+		max_health = 10,
+		regenerate_health = false,
+		speed_on_hit = 5,
+		unkillable = false,
+		breed_white_list = {},
+		ignored_colliders = {},
+		attack_type_validation_func = force_ball_attack_type_validation_func,
+	},
+}
+projectile_templates.renegade_wizard_force_ball_warp = {
+	always_hidden = true,
+	apply_buff_on_player_impact = true,
+	apply_stagger_on_enemy_impact = true,
+	buff_name = "spillway_wizard_warp_lightning",
+	item_name = "content/items/weapons/minions/ranged/minion_psyker_projectile",
+	uses_script_components = true,
+	locomotion_template = ProjectileLocomotionTemplates.renegade_wizard_ball,
+	projectile_type = projectile_types.force_staff_ball,
+	sticks_to_armor_types = {},
+	states = {
+		thrown = {
+			explosion_template = ExplosionTemplates.renegade_wizard_projectile_warp,
+		},
+		rebounding = {
+			explosion_template = ExplosionTemplates.renegade_wizard_projectile_warp_rebounding,
+		},
+	},
+	damage = {
+		impact = {
+			delete_on_hit_mass = true,
+			damage_profile = DamageProfileTemplates.spillway_wizard_force_ball_impact,
+		},
+		fuse = {
+			fuse_time = 20,
+		},
+	},
+	effects = {
+		spawn = {
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_warp",
+			},
+			sfx = {
+				looping_event_name = "wwise/events/minions/play_enemy_psyker_warp_projectile",
+				looping_stop_event_name = "wwise/events/minions/stop_enemy_psyker_warp_projectile",
+			},
+		},
+		on_sweep_hit = {
+			client_latency_window = 0.2,
+			prioritize_client_instantiation = true,
+			sfx = {
+				event_name = "wwise/events/minions/play_enemy_psyker_projectile_deflected",
+			},
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_warp_dissipate",
+			},
+		},
+		on_killed = {
+			sfx = {
+				event_name = "wwise/events/minions/play_enemy_psyker_warp_projectile_destroyed",
+			},
+			vfx = {
+				link = true,
+				orphaned_policy = "stop",
+				particle_name = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_projectile_warp_dissipate",
+			},
+		},
+	},
+	health_component_data = {
+		create_game_object = false,
+		difficulty_scaling = 1,
+		has_health_bar = false,
+		hit_mass = 1,
+		invulnerable = false,
+		max_health = 10,
+		regenerate_health = false,
+		speed_on_hit = 5,
+		unkillable = false,
+		breed_white_list = {},
+		ignored_colliders = {},
+		attack_type_validation_func = force_ball_attack_type_validation_func,
+	},
+}
 projectile_templates.mutator_pestilent_bauble_projectile = {
 	item_name = "content/items/weapons/minions/ranged/twin_grenade",
 	spawn_flow_event = "grenade_thrown",

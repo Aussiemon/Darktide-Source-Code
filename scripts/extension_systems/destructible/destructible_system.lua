@@ -50,6 +50,16 @@ DestructibleSystem.clear_unit_ids_from_removed_level_list = function (self, unit
 	end
 end
 
+DestructibleSystem.clear_removed_level_unit_ids_in_range = function (self, first_index, end_index)
+	local removed_level_unit_ids = self._removed_level_unit_ids
+
+	for unit_id in pairs(removed_level_unit_ids) do
+		if first_index <= unit_id and unit_id < end_index then
+			removed_level_unit_ids[unit_id] = nil
+		end
+	end
+end
+
 DestructibleSystem.hot_join_sync = function (self, sender, channel)
 	for level_unit_id in pairs(self._removed_level_unit_ids) do
 		RPC.rpc_destructible_mark_for_deletion(channel, level_unit_id)

@@ -357,8 +357,8 @@ spread_templates.thumper_m3_aim = {
 				yaw = 0.05,
 			},
 			idle = {
-				pitch = 1,
-				yaw = 1,
+				pitch = 2.5,
+				yaw = 2.5,
 			},
 		},
 		continuous_spread = {
@@ -388,11 +388,11 @@ spread_templates.thumper_m3_aim = {
 			shooting = {
 				{
 					pitch = {
-						lerp_basic = 4,
+						lerp_basic = 3,
 						lerp_perfect = 1.25,
 					},
 					yaw = {
-						lerp_basic = 4,
+						lerp_basic = 3,
 						lerp_perfect = 1.25,
 					},
 				},
@@ -410,8 +410,8 @@ spread_templates.thumper_m3_aim = {
 				lerp_perfect = 1,
 			},
 			min_yaw = {
-				lerp_basic = 2,
-				lerp_perfect = 1.5,
+				lerp_basic = 1.5,
+				lerp_perfect = 1,
 			},
 		},
 	},
@@ -423,10 +423,10 @@ spread_templates.thumper_m3_aim = {
 		continuous_spread = {
 			min_pitch = {
 				lerp_basic = 1,
-				lerp_perfect = 0.1,
+				lerp_perfect = 0.4,
 			},
 			min_yaw = {
-				lerp_basic = 1.5,
+				lerp_basic = 1,
 				lerp_perfect = 0.4,
 			},
 		},
@@ -441,14 +441,14 @@ spread_templates.thumper_m3_aim = {
 spread_templates.thumper_m3_hip = {
 	still = {
 		max_spread = {
-			pitch = 5,
-			yaw = 5,
+			pitch = 3,
+			yaw = 3,
 		},
 		randomized_spread = {
 			first_shot_min_ratio = 0.3,
 			first_shot_random_ratio = 0.5,
-			min_ratio = 0.25,
-			random_ratio = 0.75,
+			min_ratio = 0.15,
+			random_ratio = 0.25,
 		},
 		decay = {
 			from_shooting_grace_time = 0.3,
@@ -463,11 +463,11 @@ spread_templates.thumper_m3_hip = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 2.3,
+				lerp_basic = 2.2,
 				lerp_perfect = 1.4,
 			},
 			min_yaw = {
-				lerp_basic = 2.3,
+				lerp_basic = 2.2,
 				lerp_perfect = 1.4,
 			},
 		},
@@ -481,11 +481,11 @@ spread_templates.thumper_m3_hip = {
 			shooting = {
 				{
 					pitch = {
-						lerp_basic = 4,
+						lerp_basic = 2.5,
 						lerp_perfect = 1.25,
 					},
 					yaw = {
-						lerp_basic = 4,
+						lerp_basic = 2.5,
 						lerp_perfect = 1.25,
 					},
 				},
@@ -498,49 +498,49 @@ spread_templates.thumper_m3_hip = {
 	},
 	moving = {
 		inherits = {
-			"thumper_m3_aim",
+			"thumper_m3_hip",
 			"still",
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 3.5,
-				lerp_perfect = 2,
+				lerp_basic = 2.3,
+				lerp_perfect = 1.8,
 			},
 			min_yaw = {
-				lerp_basic = 3.5,
-				lerp_perfect = 2,
+				lerp_basic = 2.3,
+				lerp_perfect = 1.8,
 			},
 		},
 	},
 	crouch_still = {
 		inherits = {
-			"thumper_m3_aim",
+			"thumper_m3_hip",
 			"still",
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 1.6,
+				lerp_basic = 1.4,
 				lerp_perfect = 1.25,
 			},
 			min_yaw = {
-				lerp_basic = 1.6,
+				lerp_basic = 1.4,
 				lerp_perfect = 1.25,
 			},
 		},
 	},
 	crouch_moving = {
 		inherits = {
-			"thumper_m3_aim",
+			"thumper_m3_hip",
 			"still",
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_basic = 3,
-				lerp_perfect = 2.1,
+				lerp_basic = 2.1,
+				lerp_perfect = 1.7,
 			},
 			min_yaw = {
-				lerp_basic = 3,
-				lerp_perfect = 2.1,
+				lerp_basic = 2.1,
+				lerp_perfect = 1.7,
 			},
 		},
 	},

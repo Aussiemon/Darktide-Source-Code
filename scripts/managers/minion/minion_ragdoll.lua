@@ -35,6 +35,22 @@ MinionRagdoll.cleanup_ragdolls = function (self)
 	end
 end
 
+MinionRagdoll.get_ragdolls = function (self)
+	return self._ragdolls
+end
+
+MinionRagdoll.remove_ragdolls_except = function (self, ragdoll_exceptions)
+	local ragdolls = self._ragdolls
+
+	for i = #ragdolls, 1, -1 do
+		local ragdoll_unit = ragdolls[i]
+
+		if not ragdoll_exceptions[ragdoll_unit] then
+			self:_remove_ragdoll(ragdoll_unit)
+		end
+	end
+end
+
 local POSITION_NODE_NAME = "j_hips"
 
 MinionRagdoll.update = function (self, soft_cap_out_of_bounds_units)

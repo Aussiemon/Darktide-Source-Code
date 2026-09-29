@@ -422,10 +422,12 @@ ViewElementWeaponInfo._scale_value_by_type = function (self, value, display_type
 	return value
 end
 
-ViewElementWeaponInfo._value_to_text = function (self, value, is_signed)
+ViewElementWeaponInfo._value_to_text = function (self, value, is_signed, is_inverted)
 	if value >= math.huge then
 		return Localize("loc_weapon_stats_display_unlimited")
 	end
+
+	value = is_inverted and -value or value
 
 	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
@@ -439,15 +441,16 @@ ViewElementWeaponInfo._get_stats_text = function (self, stat)
 	local type_data = stat.type_data
 	local display_type = override_data.display_type or type_data.display_type
 	local is_signed = type_data.signed
+	local is_inverted = type_data.inverted
 	local value = self:_scale_value_by_type(stat.value, display_type)
-	local value_text = self:_value_to_text(value, is_signed)
+	local value_text = self:_value_to_text(value, is_signed, is_inverted)
 	local range = ""
 	local min, max = stat.min, stat.max
 
 	if min and max then
 		min = self:_scale_value_by_type(min, display_type)
 		max = self:_scale_value_by_type(max, display_type)
-		range = string.format("{#color(90,90,90)}[%s | %s]", self:_value_to_text(min, is_signed), self:_value_to_text(max, is_signed))
+		range = string.format("{#color(90,90,90)}[%s | %s]", self:_value_to_text(min, is_signed, is_inverted), self:_value_to_text(max, is_signed, is_inverted))
 	end
 
 	local name = Localize(override_data.display_name or type_data.display_name)

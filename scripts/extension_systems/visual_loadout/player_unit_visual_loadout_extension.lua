@@ -8,6 +8,7 @@ local Luggable = require("scripts/utilities/luggable")
 local MasterItems = require("scripts/backend/master_items")
 local MispredictPackageHandler = require("scripts/extension_systems/visual_loadout/mispredict_package_handler")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterDecals = require("scripts/settings/decal/player_character_decals")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
@@ -440,7 +441,7 @@ PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, fra
 			local current_state = character_state_component.state_name
 			local previous_state = character_state_component.previous_state_name
 
-			Crashify.print_exception("PlayerUnitVisualLoadoutExtension", "Luggable dropped through fail-safe means.")
+			Log.error("PlayerUnitVisualLoadoutExtension", "Luggable dropped through fail-safe means. From %s to %s", previous_state, current_state)
 			Luggable.drop_luggable(t, unit, inventory_component, self, true)
 		end
 	end
@@ -449,6 +450,7 @@ end
 local deferred_unequippable_slot_types = {
 	"pocketable",
 	"weapon",
+	"ability",
 }
 
 PlayerUnitVisualLoadoutExtension.update_delayed_unequipped_slots = function (self, unit, dt, t, frame)
@@ -696,9 +698,10 @@ PlayerUnitVisualLoadoutExtension._equip_item_to_slot = function (self, item, slo
 	local parent_unit_1p = self._first_person_unit
 	local deform_override_items = item.deform_override_items and table.clone(item.deform_override_items) or {}
 	local profile = self._player:profile()
+	local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-	if profile.gender == "female" then
-		deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+	if profile_wrap_deform_override_item_name then
+		deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 	end
 
 	local breed = self._unit_data_extension:breed()

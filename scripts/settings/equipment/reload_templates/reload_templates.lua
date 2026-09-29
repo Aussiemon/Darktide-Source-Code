@@ -24,6 +24,7 @@ _create_reload_template_entry("scripts/settings/equipment/reload_templates/galva
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/heavy_stubber_twin_linked_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_elysian_reload_template")
+_create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_p2_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/lasgun_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/laspistol_reload_template")
 _create_reload_template_entry("scripts/settings/equipment/reload_templates/needlepistol_reload_template")

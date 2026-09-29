@@ -44,6 +44,10 @@ local function get_shape_scale(radius)
 end
 
 local function toggle_slots(visual_loadout_extension, slots, show_slots, breed)
+	if not visual_loadout_extension:is_server() then
+		return
+	end
+
 	for slot_name, _ in pairs(slots) do
 		local has_equipped_slot = visual_loadout_extension:can_unequip_slot(slot_name)
 		local should_toggle = has_equipped_slot and show_slots ~= visual_loadout_extension:is_slot_visible(slot_name)
@@ -55,7 +59,7 @@ local function toggle_slots(visual_loadout_extension, slots, show_slots, breed)
 	end
 end
 
-MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
+MinionDissolveUtility.start_dissolve = function (unit, t, reverted, optional_color_and_brightness)
 	local dissolve_data = {}
 	local duration = 1.15
 	local wounds_extension = ScriptUnit.extension(unit, "wounds_system")
@@ -71,7 +75,7 @@ MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
 	local start_radius = reverted and max_dissolve_radius or MIN_DISSOLVE_RADIUS
 	local wound = wounds_data[WOUND_INDEX]
 
-	wound.color_brightness_value:store(Vector3(0.6, 1, 0))
+	wound.color_brightness_value:store(optional_color_and_brightness or Vector3(0.6, 1, 0))
 	wound.hit_shader_vector:store(Vector3(0, 0, dissolve_height))
 
 	wound.radii[WOUND_INDEX] = start_radius
@@ -90,7 +94,9 @@ MinionDissolveUtility.start_dissolve = function (unit, t, reverted)
 
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
-	WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
+	if not DEDICATED_SERVER then
+		WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
+	end
 
 	local show_slots = not reverted
 
@@ -136,13 +142,16 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 	local wounds_data = dissolve_data.wounds_data
 	local visual_loadout_extension = dissolve_data.visual_loadout_extension
 
-	WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
+	if not DEDICATED_SERVER then
+		WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
+	end
 
+	local is_server = visual_loadout_extension:is_server()
 	local flesh_is_visible = visual_loadout_extension:is_slot_visible("slot_flesh")
 
 	dissolve_data.show_flesh = reverted and (dissolve_data.show_flesh or flesh_is_visible)
 
-	if flesh_is_visible then
+	if is_server and flesh_is_visible then
 		visual_loadout_extension:set_slot_visibility("slot_flesh", false)
 	end
 
@@ -162,7 +171,7 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 
 			local toggle_t = dissolve_data.start_t + dissolve_data.duration * toggle_percentage_t
 
-			if toggle_t < t then
+			if is_server and toggle_t < t then
 				local has_equipped_slot = visual_loadout_extension:can_unequip_slot(slot_name)
 				local is_not_toggled = has_equipped_slot and show_slots ~= visual_loadout_extension:is_slot_visible(slot_name)
 
@@ -174,7 +183,7 @@ MinionDissolveUtility.update_dissolve = function (unit, dissolve_data, t)
 	end
 
 	if t > dissolve_data.done_t then
-		if dissolve_data.show_flesh then
+		if is_server and dissolve_data.show_flesh then
 			local flesh_is_visible = visual_loadout_extension:is_slot_visible("slot_flesh")
 
 			if not flesh_is_visible then
@@ -200,6 +209,44 @@ MinionDissolveUtility.inherit_progress = function (old_dissolve_data, new_dissol
 
 	new_dissolve_data.start_t = new_dissolve_data.start_t - duration * new_percentage_done
 	new_dissolve_data.done_t = new_dissolve_data.done_t - duration * new_percentage_done
+end
+
+MinionDissolveUtility.restore_solid = function (unit, dissolve_data)
+	if not dissolve_data then
+		return
+	end
+
+	local wound = dissolve_data.wound
+
+	wound.radii[WOUND_INDEX] = MIN_DISSOLVE_RADIUS
+	wound.shape_scales[WOUND_INDEX] = get_shape_scale(MIN_DISSOLVE_RADIUS)
+
+	local wounds_data = dissolve_data.wounds_data
+	local visual_loadout_extension = dissolve_data.visual_loadout_extension
+
+	if not DEDICATED_SERVER then
+		WoundMaterials.apply(unit, wounds_data, WOUND_INDEX, visual_loadout_extension:slot_items())
+	end
+
+	if not visual_loadout_extension:is_server() then
+		return
+	end
+
+	local breed = dissolve_data.breed
+
+	toggle_slots(visual_loadout_extension, hide_on_dissolve_slots, true, breed)
+
+	local breed_hide_slots = breed_hide_on_dissolve_slots[breed.name]
+
+	if breed_hide_slots then
+		toggle_slots(visual_loadout_extension, breed_hide_slots, true, breed)
+	end
+
+	local flesh_is_visible = visual_loadout_extension:is_slot_visible("slot_flesh")
+
+	if not flesh_is_visible then
+		visual_loadout_extension:set_slot_visibility("slot_flesh", true)
+	end
 end
 
 MinionDissolveUtility.add_ignore_toggle_slots = function (breed_name, slot_name)

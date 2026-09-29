@@ -5,6 +5,7 @@ local MasterItems = require("scripts/backend/master_items")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local UnitTemplate = require("scripts/extension_systems/unit_templates/utilities/unit_template")
+local Breed = require("scripts/utilities/breed")
 local GAME_OBJECT_TYPE = "item_deployable_side_relation_projectile"
 local item_deployable_side_relation_projectile_unit_template = {
 	local_unit = function (unit_name, position, rotation, material, item)
@@ -62,13 +63,16 @@ local item_deployable_side_relation_projectile_unit_template = {
 				})
 			end
 
+			local unit_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local breed = unit_data_extension and unit_data_extension:breed()
+			local is_player_breed = breed and Breed.is_player(breed)
 			local owner_buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 
-			if owner_buff_extension then
+			if is_player_breed and owner_buff_extension then
 				local stat_buffs = owner_buff_extension:stat_buffs()
 				local keywords = owner_buff_extension:keywords()
 
-				config:add("ProjectileUnitBuffExtension", {
+				config:add("PlayerProjectileUnitBuffExtension", {
 					stat_buffs = table.shallow_copy(stat_buffs),
 					keywords = table.shallow_copy(keywords),
 				})

@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	psykhanium = {
-		coordinates = "loc_mission_coordinates_psykhanium",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "survival",
 		level = "content/levels/horde/missions/mission_psykhanium",
@@ -64,6 +63,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "tg_shooting_range",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

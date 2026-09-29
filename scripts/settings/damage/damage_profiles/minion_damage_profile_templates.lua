@@ -1506,6 +1506,16 @@ damage_templates.poxwalker_explosion = {
 					},
 				},
 			},
+			power_distribution_ranged = {
+				attack = {
+					far = 25,
+					near = 125,
+				},
+				impact = {
+					far = 20,
+					near = 20,
+				},
+			},
 			power_distribution = {
 				attack = 0.5,
 				impact = 20,
@@ -1875,7 +1885,7 @@ damage_templates.sniper_bullet = {
 	disorientation_type = "sniper",
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "sniper",
-	on_depleted_toughness_function_override_name = "all_damage_spill_over",
+	on_depleted_toughness_function_override_name = "half_damage_spill_over",
 	ragdoll_push_force = 2000,
 	stagger_category = "ranged",
 	suppression_value = 5,
@@ -2578,7 +2588,7 @@ damage_templates.chaos_ogryn_executor_cleave = {
 	ogryn_disorientation_type = "ogryn_executor_heavy",
 	on_depleted_toughness_function_override_name = "spill_over",
 	stagger_category = "melee",
-	toughness_factor_spillover_modifier = 0.75,
+	toughness_factor_spillover_modifier = 1,
 	unblockable = true,
 	armor_damage_modifier = {
 		attack = default_armor_mod,
@@ -2765,6 +2775,40 @@ damage_templates.daemonhost_melee_combo = {
 	},
 }
 damage_templates.daemonhost_warp_sweep = {
+	disorientation_type = "heavy",
+	ignore_stagger_reduction = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_heavy",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	unblockable = true,
+	armor_damage_modifier = {
+		attack = flat_one_armor_mod,
+		impact = flat_one_armor_mod,
+	},
+	power_distribution = {
+		attack = 0.15,
+		impact = 40,
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25,
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.daemonhost,
+	ragdoll_push_force = {
+		500,
+		800,
+	},
+	gibbing_power = gibbing_power.heavy,
+	gibbing_type = gibbing_types.sawing,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+		},
+	},
+}
+damage_templates.daemonhost_torment_nova = {
 	disorientation_type = "heavy",
 	ignore_stagger_reduction = true,
 	interrupt_alternate_fire = true,

@@ -3,10 +3,8 @@
 local ScannerDisplayViewExpeditionMapSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_expedition_map_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local Colors = require("scripts/utilities/ui/colors")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local MinigameExpeditionMapView = class("MinigameExpeditionMapView")
-local PLAYER_SLOT_COLORS = UISettings.player_slot_colors
 local PLAYER_SLOT_COLORS_BRIGHT = UISettings.player_bright_slot_colors
 
 MinigameExpeditionMapView.init = function (self, context, ui_renderer)
@@ -74,16 +72,22 @@ MinigameExpeditionMapView.draw_widgets = function (self, dt, t, input_service, u
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	for _, widget in pairs(self._exit_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._exit_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
-	for _, widget in pairs(self._extraction_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._extraction_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
-	for _, widget in pairs(self._opportunity_widgets) do
-		UIWidget.draw(widget, ui_renderer)
+	for level_index, widget in pairs(self._opportunity_widgets) do
+		if self._navigation_handler:is_level_visible(level_index) then
+			UIWidget.draw(widget, ui_renderer)
+		end
 	end
 
 	for unit, widget in pairs(self._pickup_loot_widgets) do

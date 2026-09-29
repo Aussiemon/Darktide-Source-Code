@@ -1369,6 +1369,13 @@ local CameraEffectSettings = {
 			octaves = 6,
 			persistance = 1,
 		},
+		renegade_wizard_shockwave = {
+			amplitude = 1.5,
+			duration = 0.3,
+			fade_out = 0.15,
+			octaves = 6,
+			persistance = 0.9,
+		},
 	},
 }
 local swing_impact_shake = {

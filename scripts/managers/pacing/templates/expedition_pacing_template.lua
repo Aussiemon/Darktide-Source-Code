@@ -609,22 +609,6 @@ local EXTRACTION_WAIT_TIMINGS = {
 		},
 	},
 }
-local ROAMER_MINIMUM_SETTINGS = {
-	multiplier_per_stage = {
-		alert = 1.5,
-		detected = 1.25,
-		max = 1,
-		none = 1,
-		undetected = 1.25,
-	},
-	base_value = {
-		20,
-		25,
-		30,
-		33,
-		38,
-	},
-}
 
 local function _get_threshold(index, split_max_heat)
 	local threshold = 0
@@ -899,7 +883,6 @@ local pacing_template = {
 			none = 1,
 			undetected = 2,
 		},
-		roamer_minimum_settings = ROAMER_MINIMUM_SETTINGS,
 	},
 	state_settings = {
 		{

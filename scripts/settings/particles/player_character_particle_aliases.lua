@@ -427,6 +427,10 @@ local particles = {
 				charges_available = "content/fx/particles/weapons/hammers/thunder_hammer_activate_linger",
 				on_cooldown = "content/fx/particles/weapons/power_maul/power_maul_ogryn_special_sparks_smoke",
 			},
+			powermaul_2h_p1_m2 = {
+				charges_available = "content/fx/particles/weapons/power_maul/2h_power_maul_activated_linger",
+				on_cooldown = "content/fx/particles/weapons/power_maul/power_maul_ogryn_special_sparks_smoke",
+			},
 		},
 	},
 	weapon_special_loop = {
@@ -514,6 +518,7 @@ local particles = {
 		},
 		particles = {
 			ogryn_powermaul_p1_m1 = "content/fx/particles/weapons/power_maul/power_maul_ogryn_cooldown_ready_01",
+			powermaul_2h_p1_m2 = "content/fx/particles/weapons/power_maul/2h_power_maul_cooldown_ready",
 		},
 	},
 	chain_lightning_hand = {

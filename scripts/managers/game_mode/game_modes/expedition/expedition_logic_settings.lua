@@ -13,6 +13,7 @@ local CLIENT_RPCS = {
 	"rpc_expedition_on_location_setup",
 	"rpc_client_expedition_on_purchase_performed",
 	"rpc_expedition_navigation_complete_level",
+	"rpc_expedition_navigation_show_level",
 	"rpc_expedition_navigation_set_slot_mark",
 	"rpc_expedition_navigation_clear_slot_mark",
 	"rpc_expedition_timer_set_active",

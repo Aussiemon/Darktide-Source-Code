@@ -88,6 +88,7 @@ PerformanceTestCases.memory_tree = function (mission_name)
 
 		Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, memory_tree)
 		TestifySnippets.send_telemetry_batch()
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -109,6 +110,7 @@ PerformanceTestCases.performance_memory_usage = function (mission_key)
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait_for_mission_intro()
 		TestifySnippets.send_telemetry_batch()
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -164,6 +166,7 @@ PerformanceTestCases.performance_milliseconds_per_frame = function (mission_key,
 
 		Testify:make_request("deactivate_testify_camera")
 		TestifySnippets.send_telemetry_batch()
+		TestifySnippets.exit_to_main_menu_and_wait()
 	end)
 end
 
@@ -199,6 +202,7 @@ PerformanceTestCases.performance_milliseconds_per_frame_mission_server = functio
 			end
 
 			Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, camera, performance_measurements)
+			Testify:make_request("create_telemetry_event", "memory_usage", camera.name)
 		end
 
 		Testify:make_request("deactivate_testify_camera")

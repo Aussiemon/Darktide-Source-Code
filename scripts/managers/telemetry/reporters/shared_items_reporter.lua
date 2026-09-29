@@ -7,10 +7,6 @@ SharedItemsReporter.init = function (self)
 	self._reports = {}
 end
 
-SharedItemsReporter.update = function (self, dt, t)
-	return
-end
-
 SharedItemsReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

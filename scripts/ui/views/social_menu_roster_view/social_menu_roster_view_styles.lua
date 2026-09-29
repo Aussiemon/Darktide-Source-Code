@@ -287,14 +287,7 @@ player_plaque_platform_online_style.background = {
 	default_color = Color.black(255, true),
 	hover_color = Color.terminal_frame_hover(255, true),
 }
-player_plaque_platform_online_style.portrait = {
-	size = social_menu_roster_view_styles.portrait_size,
-	offset = {
-		0,
-		0,
-		1,
-	},
-}
+player_plaque_platform_online_style.portrait = table.clone(player_plaque_style.portrait)
 player_plaque_platform_online_style.portrait_overlay = {
 	size = social_menu_roster_view_styles.portrait_size,
 	offset = {
@@ -349,6 +342,7 @@ player_plaque_offline_style.icon_background = {
 	},
 	color = Color.black(255, true),
 }
+player_plaque_offline_style.portrait = table.clone(player_plaque_style.portrait)
 player_plaque_offline_style.account_name = table.clone(UIFontSettings.body)
 
 local offline_account_name_style = player_plaque_offline_style.account_name

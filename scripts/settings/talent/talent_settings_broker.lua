@@ -4,6 +4,7 @@ local Text = require("scripts/utilities/ui/text")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local STIMM_ICON_BY_GROUP = {}
 local STAT_NAME_ALIAS = {
+	combat_ability_resource_regen_modifier = "combat_ability_cooldown_regen_modifier",
 	power_level_modifier = "power_level",
 }
 local talent_settings = {}
@@ -157,7 +158,7 @@ talent_settings.broker = {
 			rage_duration_max_upgrade = 40,
 			rage_fov_multiplier = 1.1,
 			rage_melee_attack_speed = 0.2,
-			rage_melee_power_level_modifier = 0.5,
+			rage_melee_power_level_modifier = 0.35,
 			rage_toughness_replenished = 0.1,
 			shout_radius = 4.5,
 			stacking_melee_power = 0.025,
@@ -428,8 +429,8 @@ talent_settings.broker = {
 		duration = 7,
 	},
 	broker_passive_stimm_cd_on_kill = {
-		restore = 0.01,
-		restore_toxined = 0.02,
+		restore = 0.5,
+		restore_toxined = 1,
 	},
 	broker_passive_crit_grants_damage = {
 		critical_chance = 0.01,
@@ -545,7 +546,7 @@ _generate_stimm_talent("broker_stimm_celerity_5a", "loc_talent_broker_stimm_cele
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.04,
-}).keyword("loc_string", "+", "stun_immune", 1, nil, "loc_string", "+", "slowdown_immune", 1, nil)
+}).keyword("loc_string", "+", "stun_immune", 1, nil, "loc_string", "+", "slowdown_immune", 1, nil).buff("broker_syringe_slow_and_stun_immune", {}, nil, nil, nil)
 _generate_stimm_talent("broker_stimm_celerity_5b", "loc_talent_broker_stimm_celerity_b", nil, nil, stimm_icons.celerity_b).stat("reload_speed", {
 	format_type = "percentage",
 	prefix = "+",
@@ -729,27 +730,27 @@ _generate_stimm_talent("broker_stimm_durability_5b", "loc_talent_broker_stimm_du
 	format_type = "number",
 	value = 1,
 })
-_generate_stimm_talent("broker_stimm_concentration_1", "loc_talent_broker_stimm_concentration_a", 1, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
+_generate_stimm_talent("broker_stimm_concentration_1", "loc_talent_broker_stimm_concentration_a", 1, nil, stimm_icons.concentration_a).stat("combat_ability_resource_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_2", "loc_talent_broker_stimm_concentration_a", 2, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
+_generate_stimm_talent("broker_stimm_concentration_2", "loc_talent_broker_stimm_concentration_a", 2, nil, stimm_icons.concentration_a).stat("combat_ability_resource_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_3", "loc_talent_broker_stimm_concentration_a", 3, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
+_generate_stimm_talent("broker_stimm_concentration_3", "loc_talent_broker_stimm_concentration_a", 3, nil, stimm_icons.concentration_a).stat("combat_ability_resource_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_4", "loc_talent_broker_stimm_concentration_a", 4, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
+_generate_stimm_talent("broker_stimm_concentration_4", "loc_talent_broker_stimm_concentration_a", 4, nil, stimm_icons.concentration_a).stat("combat_ability_resource_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.0625,
 })
-_generate_stimm_talent("broker_stimm_concentration_5a", "loc_talent_broker_stimm_concentration_a", 5, nil, stimm_icons.concentration_a).stat("combat_ability_cooldown_regen_modifier", {
+_generate_stimm_talent("broker_stimm_concentration_5a", "loc_talent_broker_stimm_concentration_a", 5, nil, stimm_icons.concentration_a).stat("combat_ability_resource_regen_modifier", {
 	format_type = "percentage",
 	prefix = "+",
 	value = 0.25,

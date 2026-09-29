@@ -3,6 +3,7 @@
 local AimPlacement = require("scripts/extension_systems/weapon/actions/utilities/aim_placement")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -11,11 +12,12 @@ local ExplosionTemplates = require("scripts/settings/damage/explosion_templates"
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileSettings = require("scripts/settings/projectile/projectile_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ValkyrieAid = require("scripts/utilities/valkyrie_aid")
 local Vo = require("scripts/utilities/vo")
 local damage_types = DamageSettings.damage_types
+local breed_tags = BreedSettings.tags
 local armor_types = ArmorSettings.types
 local projectile_types = ProjectileSettings.projectile_types
 local special_rules = SpecialRulesSettings.special_rules
@@ -65,8 +67,8 @@ projectile_templates.ogryn_thumper_grenade_hip_fire = {
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_thumper_grenade,
 	projectile_type = projectile_types.weapon_grenade,
 	sticks_to_tags = {
-		monster = true,
-		ogryn = true,
+		[breed_tags.monster] = true,
+		[breed_tags.ogryn] = true,
 	},
 	sticks_to_func = _ogryn_thumper_sticks_to_check,
 	damage = {
@@ -107,8 +109,8 @@ projectile_templates.ogryn_thumper_grenade_aim = {
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_thumper_grenade_aimed,
 	projectile_type = projectile_types.weapon_grenade,
 	sticks_to_tags = {
-		monster = true,
-		ogryn = true,
+		[breed_tags.monster] = true,
+		[breed_tags.ogryn] = true,
 	},
 	sticks_to_func = _ogryn_thumper_sticks_to_check,
 	damage = {
@@ -1109,9 +1111,11 @@ projectile_templates.shock_mine = {
 	deployable = {
 		relation_init_data = {
 			enemy = {
-				proximity_radius = 3,
 				stickiness_limit = 5,
 				stickiness_time = 1,
+				proximity_check_params = {
+					proximity_radius = 3,
+				},
 				logic = {
 					{
 						class_name = "ProximityShockMine",
@@ -1170,12 +1174,22 @@ projectile_templates.area_buff_drone = {
 			},
 		},
 	},
+	follow_owner = {
+		height_offset = 2,
+		near_responsiveness = 0.4,
+		responsiveness = 0.8,
+		rotation_responsiveness = 3,
+		slowdown_distance = 10,
+		stop_distance = 2,
+	},
 	deployable = {
 		relation_init_data = {
 			allied = {
 				stickiness_limit = 5,
 				stickiness_time = 1,
-				proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				proximity_check_params = {
+					proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				},
 				logic = {
 					{
 						class_name = "ProximityAreaBuffDrone",
@@ -1193,7 +1207,9 @@ projectile_templates.area_buff_drone = {
 			enemy = {
 				stickiness_limit = 5,
 				stickiness_time = 1,
-				proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				proximity_check_params = {
+					proximity_radius = adamant_talent_settings.blitz_ability.drone.range,
+				},
 				logic = {
 					{
 						class_name = "ProximityAreaBuffDrone",
@@ -1208,11 +1224,17 @@ projectile_templates.area_buff_drone = {
 				},
 			},
 		},
-		deploy_func = function (world, physics_world, unit, is_server)
+		deploy_func = function (world, physics_world, unit, is_server, owner_unit, locomotion_extension)
 			if is_server then
 				local job_class = ScriptUnit.extension(unit, "proximity_system")
 
 				Managers.state.unit_job:register_job(unit, job_class, true)
+
+				local follow_owner = locomotion_extension and locomotion_extension:follows_owner()
+
+				if follow_owner then
+					return
+				end
 
 				local can_place, _, _, placed_on_unit = AimPlacement.from_unit(physics_world, unit)
 

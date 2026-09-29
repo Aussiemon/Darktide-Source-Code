@@ -1,11 +1,11 @@
 ﻿-- chunkname: @scripts/settings/talent/talent_settings.lua
 
+local TalentSettingsShared = require("scripts/settings/talent/talent_settings_shared")
 local TalentSettingsAdamant = require("scripts/settings/talent/talent_settings_adamant")
 local TalentSettingsBroker = require("scripts/settings/talent/talent_settings_broker")
 local TalentSettingsCryptic = require("scripts/settings/talent/talent_settings_cryptic")
 local TalentSettingsOgryn = require("scripts/settings/talent/talent_settings_ogryn")
 local TalentSettingsPsyker = require("scripts/settings/talent/talent_settings_psyker")
-local TalentSettingsShared = require("scripts/settings/talent/talent_settings_shared")
 local TalentSettingsVeteran = require("scripts/settings/talent/talent_settings_veteran")
 local TalentSettingsZealot = require("scripts/settings/talent/talent_settings_zealot")
 local talent_settings = {}

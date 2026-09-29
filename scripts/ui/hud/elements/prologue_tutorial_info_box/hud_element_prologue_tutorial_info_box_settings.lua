@@ -122,10 +122,6 @@ local hud_element_prologue_tutorial_info_box_settings = {
 			50,
 		},
 	},
-	devices = {
-		"keyboard",
-		"mouse",
-	},
 	events = {
 		{
 			"event_player_display_prologue_tutorial_info_box",
@@ -134,6 +130,14 @@ local hud_element_prologue_tutorial_info_box_settings = {
 		{
 			"event_player_hide_prologue_tutorial_info_box",
 			"event_player_hide_prologue_tutorial_info_box",
+		},
+		{
+			"event_on_active_input_changed",
+			"event_on_input_changed",
+		},
+		{
+			"event_on_input_settings_changed",
+			"event_on_input_changed",
 		},
 		{
 			"event_player_add_objective_tracker",

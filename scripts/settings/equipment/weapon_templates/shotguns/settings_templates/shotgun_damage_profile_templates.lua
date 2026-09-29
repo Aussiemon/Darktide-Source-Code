@@ -479,6 +479,229 @@ overrides.shotgun_assault_p2_special_high_gibbing = {
 		},
 	},
 }
+damage_templates.shotgun_single_p2_m3 = {
+	ignore_stagger_reduction = true,
+	ragdoll_only = false,
+	stagger_category = "ranged",
+	cleave_distribution = light_cleave,
+	ranges = {
+		min = {
+			5,
+			9,
+		},
+		max = {
+			13,
+			22,
+		},
+	},
+	herding_template = HerdingTemplates.shotgun,
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
+				[armor_types.armored] = damage_lerp_values.lerp_0_9,
+				[armor_types.resistant] = damage_lerp_values.lerp_1_1,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_33,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1_1,
+				[armor_types.armored] = damage_lerp_values.lerp_1_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_1_25,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_4,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_65,
+				[armor_types.player] = damage_lerp_values.lerp_0_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_4,
+				[armor_types.super_armor] = damage_lerp_values.no_damage,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_3,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+				[armor_types.armored] = damage_lerp_values.lerp_0_75,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.player] = damage_lerp_values.no_damage,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_65,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			},
+		},
+	},
+	critical_strike = {
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
+	},
+	power_distribution = {
+		attack = {
+			450,
+			975,
+		},
+		impact = {
+			20,
+			80,
+		},
+	},
+	damage_type = damage_types.pellet,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
+	suppression_value = {
+		0.6,
+		1.6,
+	},
+	wounds_template = WoundsTemplates.shotgun_small,
+	on_kill_area_suppression = {
+		suppression_value = {
+			1,
+			3.5,
+		},
+		distance = {
+			2.5,
+			5,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 0.6,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.75,
+				[armor_types.player] = 0.5,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.4,
+				[armor_types.disgustingly_resilient] = 0.1,
+				[armor_types.void_shield] = 0.5,
+			},
+			boost_curve_multiplier_finesse = {
+				0.6,
+				1.4,
+			},
+		},
+	},
+	ragdoll_push_force = {
+		750,
+		850,
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
+}
+overrides.shotgun_double_p2_m3 = {
+	parent_template_name = "shotgun_single_p2_m3",
+	overrides = {
+		{
+			"power_distribution",
+			"attack",
+			{
+				980,
+				2200,
+			},
+		},
+		{
+			"power_distribution",
+			"impact",
+			{
+				50,
+				150,
+			},
+		},
+		{
+			"cleave_distribution",
+			medium_cleave,
+		},
+		{
+			"ranges",
+			"min",
+			{
+				4,
+				6,
+			},
+		},
+		{
+			"ranges",
+			"max",
+			{
+				8,
+				14,
+			},
+		},
+		{
+			"ragdoll_push_force",
+			{
+				600,
+				900,
+			},
+		},
+		{
+			"gibbing_power",
+			gibbing_power.medium,
+		},
+	},
+}
+overrides.shotgun_double_p2_m3_high_gibbing = {
+	parent_template_name = "shotgun_single_p2_m3",
+	overrides = {
+		{
+			"power_distribution",
+			"attack",
+			{
+				980,
+				2200,
+			},
+		},
+		{
+			"power_distribution",
+			"impact",
+			{
+				50,
+				150,
+			},
+		},
+		{
+			"cleave_distribution",
+			medium_cleave,
+		},
+		{
+			"ranges",
+			"min",
+			{
+				4,
+				6,
+			},
+		},
+		{
+			"ranges",
+			"max",
+			{
+				8,
+				14,
+			},
+		},
+		{
+			"ragdoll_push_force",
+			{
+				600,
+				900,
+			},
+		},
+		{
+			"gibbing_power",
+			gibbing_power.impossible,
+		},
+	},
+}
 damage_templates.shotgun_cleaving_special = {
 	ignore_stagger_reduction = true,
 	ragdoll_only = false,
@@ -1324,6 +1547,127 @@ damage_templates.shotgun_p1_m3_killshot = {
 		150,
 	},
 	gib_push_force = GibbingSettings.gib_push_force.ranged_medium,
+}
+damage_templates.shotgun_p3_m1 = {
+	ignore_stagger_reduction = true,
+	ragdoll_only = false,
+	stagger_category = "melee",
+	cleave_distribution = {
+		attack = {
+			3.5,
+			5,
+		},
+		impact = {
+			4,
+			4,
+		},
+	},
+	ranges = {
+		min = {
+			18,
+			22,
+		},
+		max = {
+			23,
+			40,
+		},
+	},
+	herding_template = HerdingTemplates.shotgun,
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_15,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_2,
+			},
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
+				[armor_types.armored] = damage_lerp_values.lerp_0_6,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.player] = damage_lerp_values.lerp_0_6,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_7,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_3,
+			},
+			impact = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_75,
+				[armor_types.armored] = damage_lerp_values.lerp_0_75,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.player] = damage_lerp_values.no_damage,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
+			},
+		},
+	},
+	critical_strike = {
+		gibbing_power = gibbing_power.heavy,
+		gibbing_type = gibbing_types.ballistic,
+	},
+	power_distribution = {
+		attack = {
+			565,
+			1110,
+		},
+		impact = {
+			20,
+			42,
+		},
+	},
+	damage_type = damage_types.pellet,
+	gibbing_power = gibbing_power.medium,
+	gibbing_type = gibbing_types.ballistic,
+	suppression_value = {
+		0.75,
+		1.5,
+	},
+	wounds_template = WoundsTemplates.shotgun_small,
+	on_kill_area_suppression = {
+		suppression_value = {
+			5,
+			5.5,
+		},
+		distance = {
+			3.5,
+			4.5,
+		},
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.unarmored] = 0.75,
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1,
+			},
+		},
+	},
+	ragdoll_push_force = {
+		300,
+		300,
+	},
+	gib_push_force = GibbingSettings.gib_push_force.ranged_heavy,
 }
 damage_templates.shotgun_p4_m1 = {
 	ignore_stagger_reduction = true,

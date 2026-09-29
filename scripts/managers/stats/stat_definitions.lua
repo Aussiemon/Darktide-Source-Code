@@ -5,7 +5,6 @@ local AchievementTweakData = require("scripts/managers/achievements/achievement_
 local AchievementWeaponGroups = require("scripts/settings/achievements/achievement_weapon_groups")
 local ArchetypeSettings = require("scripts/settings/archetype/archetype_settings")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local StatConfigMacros = require("scripts/managers/stats/utility/stat_config_macros")
 local Breeds = require("scripts/settings/breed/breeds")
@@ -39,7 +38,6 @@ local stat_definitions = setmetatable({}, {
 		value.index, value.id = _stat_count, key
 	end,
 })
-local stagger_results = AttackSettings.stagger_results
 
 local function _sorted(t)
 	table.sort(t)
@@ -107,6 +105,10 @@ end)))
 local elite_breed_lookup = table.set(table.keys(table.conditional_copy(Breeds, function (_, breed)
 	return breed.tags.elite
 end)))
+local special_breed_lookup = table.set(table.keys(table.conditional_copy(Breeds, function (_, breed)
+	return breed.tags.special
+end)))
+local boss_breed_lookup = table.set(boss_breeds)
 local special_and_elite_breed_lookup = table.set(table.keys(table.conditional_copy(Breeds, function (_, breed)
 	local tags = breed.tags
 
@@ -364,11 +366,74 @@ stat_definitions.hook_ability_charges_gained = {
 		StatFlags.hook,
 	},
 }
-stat_definitions.hook_ability_charges_used_from_action = {
+stat_definitions.hook_ability_charges_consumed_from_ability_use = {
 	flags = {
 		StatFlags.hook,
 	},
 }
+stat_definitions.hook_ability_used = {
+	flags = {
+		StatFlags.hook,
+	},
+}
+
+do
+	local function increment_on_ability_type(wanted_ability_type)
+		return function (self, stat_data, ability_type)
+			if ability_type == wanted_ability_type then
+				return increment(self, stat_data)
+			end
+		end
+	end
+
+	stat_definitions.session_blitzes_used = {
+		flags = {
+			StatFlags.no_sync,
+		},
+		triggers = {
+			{
+				id = "hook_ability_used",
+				trigger = increment_on_ability_type("grenade_ability"),
+			},
+		},
+	}
+	stat_definitions.session_team_blitzes_used = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		triggers = {
+			{
+				id = "hook_ability_used",
+				trigger = increment_on_ability_type("grenade_ability"),
+			},
+		},
+	}
+	stat_definitions.session_abilities_used = {
+		flags = {
+			StatFlags.no_sync,
+		},
+		triggers = {
+			{
+				id = "hook_ability_used",
+				trigger = increment_on_ability_type("combat_ability"),
+			},
+		},
+	}
+	stat_definitions.session_team_abilities_used = {
+		flags = {
+			StatFlags.team,
+			StatFlags.no_sync,
+		},
+		triggers = {
+			{
+				id = "hook_ability_used",
+				trigger = increment_on_ability_type("combat_ability"),
+			},
+		},
+	}
+end
+
 stat_definitions.hook_projectile_hit = {
 	flags = {
 		StatFlags.hook,
@@ -456,6 +521,62 @@ stat_definitions.session_team_kills = {
 		},
 	},
 }
+stat_definitions.session_kills = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_kill",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+
+do
+	local function kills_by_breed(breed_lookup)
+		return {
+			flags = {
+				StatFlags.no_sync,
+			},
+			data = {
+				breed_lookup = breed_lookup,
+			},
+			triggers = {
+				{
+					id = "hook_kill",
+					trigger = function (self, stat_data, attack_data)
+						if self.data.breed_lookup[attack_data.target_breed_name] then
+							return increment(self, stat_data)
+						end
+					end,
+				},
+			},
+		}
+	end
+
+	local function to_team_stat(from_stat_name)
+		return {
+			flags = {
+				StatFlags.team,
+				StatFlags.no_sync,
+			},
+			triggers = {
+				{
+					id = from_stat_name,
+					trigger = StatMacros.increment,
+				},
+			},
+		}
+	end
+
+	stat_definitions.session_special_kills = kills_by_breed(special_breed_lookup)
+	stat_definitions.session_team_special_kills = to_team_stat("session_special_kills")
+	stat_definitions.session_elite_kills = kills_by_breed(elite_breed_lookup)
+	stat_definitions.session_team_elite_kills = to_team_stat("session_elite_kills")
+	stat_definitions.session_private_boss_kills = kills_by_breed(boss_breed_lookup)
+end
+
 stat_definitions.local_team_kills = {
 	flags = {},
 	triggers = {
@@ -742,7 +863,21 @@ stat_definitions.non_head_shot_kill = {
 	},
 }
 stat_definitions.session_weakspot_kills = {
-	flags = {},
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "weakspot_kill",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+stat_definitions.session_team_weakspot_kills = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
 	triggers = {
 		{
 			id = "team_weakspot_kill",
@@ -900,9 +1035,110 @@ stat_definitions.session_boss_kills = {
 		},
 	},
 }
+stat_definitions.session_team_boss_kills = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_boss_died",
+			trigger = StatMacros.increment,
+		},
+	},
+}
 stat_definitions.hook_damage_dealt = {
 	flags = {
 		StatFlags.hook,
+	},
+}
+stat_definitions.session_damage_dealt = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				return increment_by(self, stat_data, attack_data.damage_dealt)
+			end,
+		},
+	},
+}
+stat_definitions.session_team_damage_dealt = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				return increment_by(self, stat_data, attack_data.damage_dealt)
+			end,
+		},
+	},
+}
+stat_definitions.session_boss_damage_dealt = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				if boss_breed_lookup[attack_data.target_breed_name] then
+					return increment_by(self, stat_data, attack_data.damage_dealt)
+				end
+			end,
+		},
+	},
+}
+stat_definitions.session_team_boss_damage_dealt = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				if boss_breed_lookup[attack_data.target_breed_name] then
+					return increment_by(self, stat_data, attack_data.damage_dealt)
+				end
+			end,
+		},
+	},
+}
+stat_definitions.session_enemies_staggered = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				if attack_data.stagger_result == "stagger" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+	},
+}
+stat_definitions.session_team_enemies_staggered = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_damage_dealt",
+			trigger = function (self, stat_data, attack_data)
+				if attack_data.stagger_result == "stagger" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
 	},
 }
 stat_definitions.hook_explosion = {
@@ -1015,6 +1251,29 @@ stat_definitions.hook_dodged_attack = {
 		StatFlags.hook,
 	},
 }
+stat_definitions.session_attacks_dodged = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_dodged_attack",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+stat_definitions.session_team_attacks_dodged = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_dodged_attack",
+			trigger = StatMacros.increment,
+		},
+	},
+}
 stat_definitions.dodges_in_a_row = {
 	flags = {
 		StatFlags.no_recover,
@@ -1124,6 +1383,29 @@ stat_definitions.session_team_blocked_damage = {
 			trigger = function (self, stat_data, weapon_template_name, damage_blocked)
 				return increment_by(self, stat_data, damage_blocked)
 			end,
+		},
+	},
+}
+stat_definitions.session_attacks_blocked = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_blocked_damage",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+stat_definitions.session_team_attacks_blocked = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_blocked_damage",
+			trigger = StatMacros.increment,
 		},
 	},
 }
@@ -3394,6 +3676,64 @@ stat_definitions.total_player_assists = {
 					return increment(self, stat_data)
 				end
 			end,
+		},
+	},
+}
+stat_definitions.session_revives = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_assist_ally",
+			trigger = function (self, stat_data, target_id, assistance_type)
+				if assistance_type == "revive" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+	},
+}
+stat_definitions.session_team_revives = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "session_revives",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+stat_definitions.session_saves = {
+	flags = {
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "hook_assist_ally",
+			trigger = function (self, stat_data, target_id, assistance_type)
+				if assistance_type ~= "revive" then
+					return increment(self, stat_data)
+				end
+			end,
+		},
+		{
+			id = "hook_rescue_ally",
+			trigger = StatMacros.increment,
+		},
+	},
+}
+stat_definitions.session_team_saves = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "session_saves",
+			trigger = StatMacros.increment,
 		},
 	},
 }
@@ -7116,8 +7456,9 @@ do
 					local target_breed_name = attack_data.target_breed_name
 					local target_breed = target_breed_name and Breeds[target_breed_name]
 					local target_breed_tags = target_breed and target_breed.tags
+					local chordclaw_weapon_template_name = "transonic_claw_p1_m1"
 
-					if attack_data.weapon_template_name == "transonic_claw_p1_m1" and target_breed_tags and target_breed_tags.elite then
+					if attack_data.weapon_template_name == chordclaw_weapon_template_name and target_breed_tags and target_breed_tags.elite then
 						return self.id, attack_data
 					end
 				end,
@@ -7275,7 +7616,7 @@ do
 				id = "hook_buff",
 				trigger = function (self, stat_data, breed_name, template_name, stack_count, weapon_template_name, source_player_buff_keywords)
 					local buff_template = BuffTemplates[template_name]
-					local buff_template_keywords = buff_template and buff_template.keywords
+					local buff_template_keywords = buff_template.keywords
 
 					if buff_template_keywords then
 						local has_electrocuted_keyword = false
@@ -7343,7 +7684,7 @@ do
 		data = {},
 		triggers = {
 			{
-				id = "hook_ability_charges_used_from_action",
+				id = "hook_ability_charges_consumed_from_ability_use",
 				trigger = function (self, stat_data, ability_type, ability_charges_used)
 					if ability_type == "combat_ability" and ability_charges_used == 1 then
 						return increment(self, stat_data)
@@ -7360,7 +7701,7 @@ do
 		data = {},
 		triggers = {
 			{
-				id = "hook_ability_charges_used_from_action",
+				id = "hook_ability_charges_consumed_from_ability_use",
 				trigger = function (self, stat_data, ability_type, ability_charges_used)
 					if ability_type == "combat_ability" and ability_charges_used >= 2 then
 						return increment(self, stat_data)
@@ -7772,8 +8113,8 @@ do
 
 	for _, weapon in ipairs(weapons) do
 		local stat_name = string.format("mastery_track_reached_20_%s", weapon.pattern)
-		local weapon_pattern_ui_setings = UiWeaponPatternSettings[weapon.pattern]
-		local stat_loc_string = weapon_pattern_ui_setings and weapon_pattern_ui_setings.display_name or nil
+		local weapon_pattern_ui_settings = UiWeaponPatternSettings[weapon.pattern]
+		local stat_loc_string = weapon_pattern_ui_settings and weapon_pattern_ui_settings.display_name or nil
 
 		stat_definitions[stat_name] = {
 			flags = {
@@ -9127,6 +9468,155 @@ stat_definitions.live_event_endless_hordes_mission_won = {
 	},
 	include_condition = function (self, config)
 		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_torment_witch_kills = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		stat_override = "live_event_torment",
+	},
+	triggers = {
+		{
+			id = "chaos_daemonhost_killed",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.hook_live_event_torment_daemonhost_damage_dealt = {
+	flags = {
+		StatFlags.hook,
+		StatFlags.team,
+	},
+	data = {
+		stat_override = "live_event_torment",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_torment_witch_damage_dealt = {
+	flags = {
+		StatFlags.team,
+		StatFlags.never_log,
+		StatFlags.no_sync,
+	},
+	data = {
+		stat_override = "live_event_torment",
+	},
+	triggers = {
+		{
+			id = "hook_live_event_torment_daemonhost_damage_dealt",
+			trigger = function (self, stat_data, amount)
+				local breed_name = "chaos_daemonhost_torment"
+
+				return increment_by(self, stat_data, amount)
+			end,
+		},
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_play_spillway_mission_01_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		return config.circumstance_name == "story_spillway_01"
+	end,
+}
+stat_definitions.live_event_play_spillway_mission_02_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		return config.circumstance_name == "story_spillway_02"
+	end,
+}
+stat_definitions.live_event_play_spillway_mission_03_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		return config.circumstance_name == "story_spillway_03"
+	end,
+}
+stat_definitions.live_event_play_spillway_mission_any = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	data = {
+		stat_override = "live_event_spillway",
+	},
+	include_condition = function (self, config)
+		return StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override)
+	end,
+}
+stat_definitions.live_event_nurgle_explosion_2026_won = {
+	flags = {
+		StatFlags.team,
+		StatFlags.no_sync,
+	},
+	data = {
+		stat_override = "live_event_nurgle_explosion_2026",
+		circumstances = {
+			nurgle_explosion_2026 = true,
+			nurgle_explosion_2026_darkness = true,
+			nurgle_explosion_2026_gas = true,
+			nurgle_explosion_2026_hunt_grou = true,
+			nurgle_explosion_2026_more_res = true,
+			nurgle_explosion_2026_ventilation = true,
+			nurgle_explosion_2026_waves_spec = true,
+		},
+	},
+	triggers = {
+		{
+			id = "mission_won",
+			trigger = StatMacros.increment,
+		},
+	},
+	include_condition = function (self, config)
+		if StatConfigMacros.circumstance_has_stat_override(config, self.data.stat_override) then
+			return true
+		end
+
+		local circumstance_name = config.circumstance_name
+
+		return self.data.circumstances[circumstance_name]
 	end,
 }
 stat_definitions = _stat_data

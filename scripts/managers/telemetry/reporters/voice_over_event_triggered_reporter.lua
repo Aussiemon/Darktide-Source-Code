@@ -8,10 +8,6 @@ VoiceOverEventTriggeredReporter.init = function (self)
 	self._vo_name_to_index = {}
 end
 
-VoiceOverEventTriggeredReporter.update = function (self, dt, t)
-	return
-end
-
 VoiceOverEventTriggeredReporter.report = function (self)
 	if table.is_empty(self._report) then
 		return

@@ -1,12 +1,9 @@
 ﻿-- chunkname: @scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list.lua
 
 local Definitions = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_definitions")
-local Styles = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_styles")
 local Settings = require("scripts/ui/view_elements/view_element_campaign_mission_list/view_element_campaign_mission_list_settings")
 local Blueprints = require("scripts/ui/view_content_blueprints/mission_tile_blueprints/mission_tile_blueprints")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
-local MissionTypes = require("scripts/settings/mission/mission_types")
-local PlayerVOStoryStage = require("scripts/utilities/player_vo_story_stage")
 local Zones = require("scripts/settings/zones/zones")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local DangerSettings = require("scripts/settings/difficulty/danger_settings")
@@ -15,10 +12,10 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local InputUtils = require("scripts/managers/input/input_utils")
 local InputDevice = require("scripts/managers/input/input_device")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementCampaignMissionList = class("ViewElementCampaignMissionList", "ViewElementBase")
+local DANGER_LEVELS = DangerSettings.danger_levels
 local DEFAULT_FILTERS = {
 	required_category = {
 		"story",
@@ -762,7 +759,7 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local mission = self:_get_mission_by_key(mission_data.mission)
 
 	if not mission then
-		return
+		return idx
 	end
 
 	local mission_template = MissionTemplates[mission.map]
@@ -771,10 +768,10 @@ ViewElementCampaignMissionList._recursive_mission_placement = function (self, gr
 	local texture = mission_template.texture_small
 	local parent = self:parent()
 	local theme = parent:_get_ui_theme()
-	local is_locked = parent.is_mission_locked and parent:is_mission_locked(mission)
+	local is_locked = parent.is_mission_locked and parent:is_mission_locked(mission, mission_data.campaign)
 	local cell_data = {}
 	local display_order = self:_get_mission_display_order(mission_data.mission, mission_data.category, mission_data.campaign) or 1
-	local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission_data.mission, mission_data.category)
+	local unlock_data = parent.get_mission_unlock_data and parent:get_mission_unlock_data(mission_data.mission, mission_data.category, mission_data.campaign)
 	local is_story_mission = parent.is_campaign_mission and parent:is_campaign_mission(mission)
 	local creation_context = {
 		skip_background_frame = true,
@@ -848,9 +845,9 @@ ViewElementCampaignMissionList._populate_mission_grid = function (self, campaign
 			local parents = mission_data.parents
 
 			if parents and #parents > 1 then
-				local child = self:_get_cell_by_name(mission_data.mission)
-				local parent_1 = self:_get_cell_by_name(parents[1].mission)
-				local parent_2 = self:_get_cell_by_name(parents[2].mission)
+				local child = self:_get_cell_by_name(mission_data.mission, mission_head.campaign)
+				local parent_1 = self:_get_cell_by_name(parents[1].mission, mission_head.campaign)
+				local parent_2 = self:_get_cell_by_name(parents[2].mission, mission_head.campaign)
 
 				if child and parent_1 and parent_2 then
 					local new_child_col = child.col or 1
@@ -908,11 +905,13 @@ ViewElementCampaignMissionList._populate_mission_grid = function (self, campaign
 
 		if mission_data and mission_data and mission_data.children and #mission_data.children > 0 then
 			for _, child in ipairs(mission_data.children) do
-				local start_cell = self:_get_cell_by_name(mission_data.mission)
-				local end_cell = self:_get_cell_by_name(child.mission)
+				if child.campaign == mission_data.campaign then
+					local start_cell = self:_get_cell_by_name(mission_data.mission, mission_data.campaign)
+					local end_cell = self:_get_cell_by_name(child.mission, mission_data.campaign)
 
-				if start_cell and end_cell then
-					local widgets = self:_create_line_connection(grid, start_cell, end_cell)
+					if start_cell and end_cell then
+						local widgets = self:_create_line_connection(grid, start_cell, end_cell)
+					end
 				end
 			end
 		end
@@ -996,12 +995,12 @@ ViewElementCampaignMissionList._setup_mission_data = function (self, missions, o
 	return story_t
 end
 
-ViewElementCampaignMissionList._get_cell_by_name = function (self, map_name)
+ViewElementCampaignMissionList._get_cell_by_name = function (self, map_name, campaign)
 	local grid = self._mission_grid
 
 	for row, columns in pairs(grid) do
 		for col, cell_data in pairs(columns) do
-			if cell_data.name == "cell_" .. map_name then
+			if cell_data.name == "cell_" .. map_name and cell_data.data.campaign == campaign then
 				return cell_data
 			end
 		end
@@ -1046,6 +1045,25 @@ ViewElementCampaignMissionList._get_selected_mission_id = function (self)
 	end
 
 	return nil
+end
+
+ViewElementCampaignMissionList.get_selected_cell = function (self)
+	local selected_row = self._selected_row
+	local selected_col = self._selected_col
+
+	if not selected_row or not selected_col then
+		return nil
+	end
+
+	local grid = self._mission_grid
+
+	if not grid then
+		return nil
+	end
+
+	local cell_data = grid[selected_row] and grid[selected_row][selected_col]
+
+	return cell_data
 end
 
 ViewElementCampaignMissionList._start_mission_list_entry_animation = function (self)
@@ -1157,20 +1175,34 @@ ViewElementCampaignMissionList._get_campaign_required_categories = function (sel
 end
 
 ViewElementCampaignMissionList._setup_panel_widgets = function (self)
-	local num_campaigns = table.size(self._campaigns_data)
-	local tab_width = self._ui_scenegraph.list_panel.size[1] / num_campaigns
 	local tab_height = self._ui_scenegraph.list_panel.size[2]
+	local total_panel_width = self._ui_scenegraph.list_panel.size[1]
 	local panel_button_widgets = {}
+	local titles = {}
+	local total_chars = 0
 
 	for i, campaign_data in pairs(self._campaigns_data) do
 		local campaign_id = campaign_data.id
+		local campaign_settings = CampaignSettings[campaign_id]
+		local display_name = campaign_settings and campaign_settings.display_name or campaign_id
+		local title = Utf8.upper(Localize(display_name))
+
+		titles[campaign_id] = title
+		total_chars = total_chars + Utf8.string_length(title)
+	end
+
+	local offset_x = 0
+
+	for i, campaign_data in pairs(self._campaigns_data) do
+		local campaign_id = campaign_data.id
+		local title = titles[campaign_id]
+		local char_count = Utf8.string_length(title)
+		local tab_width = math.max(60, math.floor(total_panel_width * char_count / math.max(total_chars, 1)))
 		local panel_button_definition = Definitions.create_list_panel_widget("list_panel")
 		local panel_button_widget = UIWidget.init("panel_button_" .. campaign_id, panel_button_definition)
 		local content = panel_button_widget.content
-		local campaign_settings = CampaignSettings[campaign_id]
-		local display_name = campaign_settings and campaign_settings.display_name or campaign_id
 
-		content.default_panel_button_campaign_title = Utf8.upper(Localize(display_name))
+		content.default_panel_button_campaign_title = title
 		content.size = {
 			tab_width,
 			tab_height,
@@ -1196,14 +1228,13 @@ ViewElementCampaignMissionList._setup_panel_widgets = function (self)
 				self._selected_panel_index = i
 			end
 		end
-	end
 
-	for i, widget in ipairs(panel_button_widgets) do
-		widget.offset = {
-			(i - 1) * tab_width,
+		panel_button_widget.offset = {
+			offset_x,
 			0,
 			1,
 		}
+		offset_x = offset_x + tab_width
 	end
 
 	self._panel_button_widgets = panel_button_widgets
@@ -1249,7 +1280,7 @@ end
 ViewElementCampaignMissionList.refresh_mission_list = function (self, optional_filters)
 	local parent = self:parent()
 	local page_index = parent.get_current_selected_difficulty and parent:get_current_selected_difficulty() or 1
-	local difficulty_data = DangerSettings[page_index]
+	local difficulty_data = DANGER_LEVELS[page_index]
 	local challenge = difficulty_data and difficulty_data.challenge
 	local resistance = difficulty_data and difficulty_data.resistance
 	local filter = {}

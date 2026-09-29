@@ -2,7 +2,7 @@
 
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local Expedition = require("scripts/utilities/expedition")
+local ExpeditionLevelTemplates = require("scripts/settings/expeditions/expedition_level_templates")
 local AsyncExpeditionLevelSpawner = require("scripts/loading/async_expedition_level_spawner")
 local ThemePackage = require("scripts/foundation/managers/package/utilities/theme_package")
 local ScriptTheme = require("scripts/foundation/utilities/script_theme")
@@ -55,7 +55,26 @@ ExpeditionSpawner.init = function (self, expedition_settings_template, section_s
 	self._main_path_level = nil
 	self._level_spawn_queue = {}
 	self._despawning_levels = {}
-	self.prop_health_game_objects = {}
+	self._prop_health_game_objects = {}
+end
+
+ExpeditionSpawner.defer_prop_health_game_object = function (self, game_object_id)
+	local queue = self._prop_health_game_objects
+
+	queue[#queue + 1] = game_object_id
+end
+
+ExpeditionSpawner.remove_deferred_prop_health_game_object = function (self, game_object_id)
+	local queue = self._prop_health_game_objects
+
+	for i = #queue, 1, -1 do
+		if queue[i] == game_object_id then
+			queue[i] = queue[#queue]
+			queue[#queue] = nil
+
+			break
+		end
+	end
 end
 
 ExpeditionSpawner.expedition = function (self)
@@ -157,7 +176,7 @@ ExpeditionSpawner._start_spawn_next_level = function (self, level_data)
 	local level_name = level_data.level_name
 	local position, rotation
 	local template_type = level_data.template_type
-	local template = Expedition.get_level_template_by_type(template_type)
+	local template = ExpeditionLevelTemplates[template_type]
 	local position_and_rotation_function = template.position_and_rotation_function
 
 	if position_and_rotation_function then
@@ -226,7 +245,7 @@ ExpeditionSpawner._complete_next_level_spawning = function (self, level_data, le
 	Level.set_data(level, "runtime_loaded_level", true)
 
 	local template_type = level_data.template_type
-	local template = Expedition.get_level_template_by_type(template_type)
+	local template = ExpeditionLevelTemplates[template_type]
 	local on_spawned_function = template.on_spawned_function
 
 	if on_spawned_function then
@@ -292,7 +311,7 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 	else
 		local unit_spawner = Managers.state.unit_spawner
 		local game_session = Managers.state.game_session:game_session()
-		local game_objects = self.prop_health_game_objects
+		local game_objects = self._prop_health_game_objects
 		local keep = {}
 
 		for i = 1, #game_objects do
@@ -313,7 +332,7 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 			end
 		end
 
-		self.prop_health_game_objects = keep
+		self._prop_health_game_objects = keep
 	end
 
 	Level.set_flow_variable(level, "expedition_location_index", location_index)
@@ -321,7 +340,7 @@ ExpeditionSpawner._register_level = function (self, level_data, wanted_level_id)
 	Level.set_data(level, "server_level_id", wanted_level_id)
 
 	local template_type = level_data.template_type
-	local template = Expedition.get_level_template_by_type(template_type)
+	local template = ExpeditionLevelTemplates[template_type]
 	local on_registered_function = template.on_registered_function
 
 	if on_registered_function then
@@ -448,7 +467,7 @@ ExpeditionSpawner.update = function (self, dt)
 		local num_despawn_budget = DevParameters.expedition_num_levels_despawned_by_frame
 
 		for level_data, section in pairs(despawning_levels) do
-			if not self:_despawn_level(level_data) then
+			if not self:_despawn_level(level_data, true) then
 				num_despawn_budget = 0
 
 				break
@@ -545,18 +564,14 @@ ExpeditionSpawner.register_spawned_levels_sliced = function (self)
 					num_register_budget = num_register_budget - 1
 
 					if num_register_budget <= 0 then
-						goto label_1_0
+						return false
 					end
 				end
 			end
 		end
 	end
 
-	::label_1_0::
-
-	if num_register_budget > 0 then
-		return true
-	end
+	return num_register_budget > 0
 end
 
 ExpeditionSpawner.has_spawned_levels = function (self)
@@ -677,7 +692,9 @@ ExpeditionSpawner._find_main_path_level = function (self)
 			local levels_data = section.levels_data
 
 			for _, level_data in ipairs(levels_data) do
-				if level_data.is_location and level_data.spawned then
+				local is_main_path_candidate = level_data.is_location and level_data.spawned
+
+				if is_main_path_candidate then
 					self._main_path_level = level_data.level_name
 
 					break
@@ -836,6 +853,12 @@ ExpeditionSpawner.start_despawning = function (self)
 end
 
 ExpeditionSpawner.despawn_levels_sync = function (self)
+	local extension_manager = Managers.state.extension
+
+	if extension_manager and extension_manager:has_system("mission_objective_system") then
+		extension_manager:system("mission_objective_system"):evaluate_location_objectives()
+	end
+
 	local expedition = self._expedition
 
 	for _, section in ipairs(expedition) do
@@ -845,9 +868,7 @@ ExpeditionSpawner.despawn_levels_sync = function (self)
 			local level_data = levels_data[i]
 
 			if level_data.spawned then
-				repeat
-					-- Nothing
-				until self:_despawn_level(level_data)
+				self:_despawn_level(level_data, false)
 
 				local reference_name = level_data.reference_name
 
@@ -863,7 +884,7 @@ ExpeditionSpawner.despawn_levels_sync = function (self)
 	end
 end
 
-ExpeditionSpawner._despawn_level = function (self, level_data)
+ExpeditionSpawner._despawn_level = function (self, level_data, async)
 	local level = level_data.level
 
 	if not level_data.despawning then
@@ -878,7 +899,7 @@ ExpeditionSpawner._despawn_level = function (self, level_data)
 	local level_units = Level.units(level, true)
 	local num_units = #level_units
 
-	if num_to_despawn < num_units and Managers.state.unit_spawner then
+	if async and num_to_despawn < num_units and Managers.state.unit_spawner then
 		local unit_spawner = Managers.state.unit_spawner
 
 		for i = 1, num_to_despawn do
@@ -897,7 +918,7 @@ ExpeditionSpawner._despawn_level = function (self, level_data)
 	end
 
 	local template_type = level_data.template_type
-	local template = Expedition.get_level_template_by_type(template_type)
+	local template = ExpeditionLevelTemplates[template_type]
 	local on_despawned_function = template.on_despawned_function
 
 	if on_despawned_function then

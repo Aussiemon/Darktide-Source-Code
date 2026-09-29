@@ -26,7 +26,7 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 	shared_state.side_mission = mechanism_data.side_mission
 	shared_state.mission_giver_vo = mechanism_data.mission_giver_vo_override or "none"
 	shared_state.physics_world = World.physics_world(world)
-	shared_state.level_seed = GameParameters.level_seed or Managers.connection:session_seed()
+	shared_state.level_seed = GameParameters.level_seed or params.mechanism_data.level_seed or Managers.connection:session_seed()
 	shared_state.vo_sources_cache = creation_context.vo_sources_cache
 
 	local tick_rate = Managers.connection:tick_rate()

@@ -16,6 +16,7 @@ local melee_attack_strengths = AttackSettings.melee_attack_strength
 local double_cleave = DamageProfileSettings.double_cleave
 local large_cleave = DamageProfileSettings.large_cleave
 local single_cleave = DamageProfileSettings.single_cleave
+local medium_cleave = DamageProfileSettings.medium_cleave
 local damage_templates = {}
 local overrides = {}
 
@@ -72,7 +73,7 @@ local hammer_tank_heavy_first_am = {
 		[armor_types.armored] = damage_lerp_values.lerp_0_9,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -82,7 +83,7 @@ local hammer_tank_heavy_first_am = {
 		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -126,7 +127,7 @@ local hammer_tank_heavy_am = {
 		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 		[armor_types.super_armor] = damage_lerp_values.lerp_1,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -157,9 +158,9 @@ damage_templates.thunderhammer_light = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_9,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.no_damage,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -194,8 +195,8 @@ damage_templates.thunderhammer_light = {
 				[armor_types.void_shield] = 0.3,
 			},
 			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5,
+				0.9,
+				1.8,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -247,7 +248,7 @@ damage_templates.thunderhammer_light_plus = {
 	ragdoll_only = true,
 	ragdoll_push_force = 500,
 	stagger_category = "melee",
-	cleave_distribution = single_cleave,
+	cleave_distribution = double_cleave,
 	damage_type = damage_types.blunt_thunder,
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
@@ -266,9 +267,9 @@ damage_templates.thunderhammer_light_plus = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_9,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.no_damage,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -288,7 +289,7 @@ damage_templates.thunderhammer_light_plus = {
 					380,
 				},
 				impact = {
-					8,
+					10,
 					22,
 				},
 			},
@@ -320,7 +321,7 @@ damage_templates.thunderhammer_light_plus = {
 				},
 				impact = {
 					9,
-					11,
+					16,
 				},
 			},
 		},
@@ -375,9 +376,9 @@ damage_templates.thunderhammer_light_linesman = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_9,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.no_damage,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 				},
 				impact = {
@@ -393,8 +394,8 @@ damage_templates.thunderhammer_light_linesman = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200,
+					125,
+					250,
 				},
 				impact = {
 					8,
@@ -430,6 +431,19 @@ damage_templates.thunderhammer_light_linesman = {
 				impact = {
 					9,
 					18,
+				},
+			},
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					40,
+					80,
+				},
+				impact = {
+					7,
+					14,
 				},
 			},
 		},
@@ -801,8 +815,8 @@ damage_templates.thunderhammer_heavy = {
 			armor_damage_modifier = hammer_tank_heavy_first_am,
 			power_distribution = {
 				attack = {
-					180,
-					350,
+					215,
+					430,
 				},
 				impact = {
 					25,
@@ -810,8 +824,8 @@ damage_templates.thunderhammer_heavy = {
 				},
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.75,
+				0.5,
+				1,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -822,8 +836,8 @@ damage_templates.thunderhammer_heavy = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					100,
-					200,
+					120,
+					240,
 				},
 				impact = {
 					20,
@@ -1198,7 +1212,6 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 	wounds_template = WoundsTemplates.energy_blunt,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = hammer_tank_heavy_first_active_am,
 			power_distribution = {
 				attack = {
@@ -1209,6 +1222,10 @@ damage_templates.thunderhammer_m2_heavy_active_strikedown = {
 					45,
 					55,
 				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -1252,7 +1269,7 @@ damage_templates.thunderhammer_heavy_smiter = {
 	ragdoll_push_force = 750,
 	stagger_category = "melee",
 	armor_damage_modifier = hammer_tank_heavy_am,
-	cleave_distribution = double_cleave,
+	cleave_distribution = medium_cleave,
 	damage_type = damage_types.blunt_thunder,
 	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.crushing,
@@ -1270,7 +1287,7 @@ damage_templates.thunderhammer_heavy_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.no_damage,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_9,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -1297,8 +1314,8 @@ damage_templates.thunderhammer_heavy_smiter = {
 				},
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.95,
+				0.7,
+				1.4,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -1464,7 +1481,6 @@ damage_templates.thunderhammer_m1_heavy_active = {
 	wounds_template = WoundsTemplates.energy_blunt,
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = hammer_tank_heavy_first_active_am,
 			power_distribution = {
 				attack = {
@@ -1475,6 +1491,10 @@ damage_templates.thunderhammer_m1_heavy_active = {
 					45,
 					55,
 				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1,
 			},
 			power_level_multiplier = {
 				0.75,
@@ -1505,7 +1525,6 @@ damage_templates.thunderhammer_m2_heavy_active = {
 	wounds_template = WoundsTemplates.energy_blunt,
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = hammer_tank_heavy_first_active_am,
 			power_distribution = {
 				attack = {
@@ -1516,6 +1535,10 @@ damage_templates.thunderhammer_m2_heavy_active = {
 					45,
 					55,
 				},
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				0.75,
 			},
 			power_level_multiplier = {
 				0.75,

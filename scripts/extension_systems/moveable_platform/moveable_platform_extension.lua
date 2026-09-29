@@ -673,6 +673,10 @@ MoveablePlatformExtension._teleport_companion_onboard = function (self, companio
 
 	companion_locomotion_extension:teleport_to(node_position)
 
+	local companion_behavior_extension = ScriptUnit.has_extension(companion_unit, "behavior_system")
+
+	companion_behavior_extension:prioritize_staggered_update()
+
 	self._teleport_node_index = node_index % self._teleport_node_count + 1
 end
 

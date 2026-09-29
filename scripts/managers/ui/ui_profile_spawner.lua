@@ -5,6 +5,7 @@ local EquipmentComponent = require("scripts/extension_systems/visual_loadout/equ
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemSlotUtils = require("scripts/utilities/item_slot_utils")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerCharacterBody = require("scripts/utilities/player_character_body")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
@@ -297,7 +298,9 @@ UIProfileSpawner.assign_animation_event = function (self, animation_event)
 		if animation_event then
 			local unit_3p = character_spawn_data.unit_3p
 
-			Unit.animation_event(unit_3p, animation_event)
+			if Unit.has_animation_event(unit_3p, animation_event) then
+				Unit.animation_event(unit_3p, animation_event)
+			end
 
 			self._pending_animation_event = nil
 		end
@@ -420,7 +423,7 @@ UIProfileSpawner.assign_companion_animation_event = function (self, animation_ev
 		if animation_event then
 			local unit_3p = character_spawn_data.companion_unit_3p
 
-			if unit_3p then
+			if unit_3p and Unit.has_animation_event(unit_3p, animation_event) then
 				Unit.animation_event(unit_3p, animation_event)
 			end
 
@@ -1005,11 +1008,11 @@ UIProfileSpawner._equip_item_for_spawned_character = function (self, slot_id, it
 			end
 		end
 
-		local gender = profile.gender
 		local deform_override_items = {}
+		local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-		if gender == "female" then
-			deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+		if profile_wrap_deform_override_item_name then
+			deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 		end
 
 		local parent_unit_3p = unit_3p
@@ -1192,11 +1195,11 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 			end
 
 			if not skip_slot then
-				local gender = profile.gender
 				local deform_override_items = {}
+				local profile_wrap_deform_override_item_name = PlayerCharacterBody.wrap_deform_item_name_from_profile(profile)
 
-				if gender == "female" then
-					deform_override_items[#deform_override_items + 1] = "content/items/material_overrides/player_wrap_deform/wrap_deform_human_body_female"
+				if profile_wrap_deform_override_item_name then
+					deform_override_items[#deform_override_items + 1] = profile_wrap_deform_override_item_name
 				end
 
 				local parent_unit_3p = unit_3p
@@ -1428,7 +1431,7 @@ UIProfileSpawner._update_items_visibility = function (self)
 	local equipment_component = spawn_data.equipment_component
 	local slots = spawn_data.slots
 	local wielded_slot = spawn_data.wielded_slot
-	local wielded_slot_name = wielded_slot.name
+	local wielded_slot_name = wielded_slot and wielded_slot.name or nil
 	local unit_3p = spawn_data.unit_3p
 	local companion_unit_3p = spawn_data.companion_unit_3p
 	local unit_1p = spawn_data.unit_1p

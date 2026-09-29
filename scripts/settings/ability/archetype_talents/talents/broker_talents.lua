@@ -27,7 +27,7 @@ local archetype_talents = {
 
 archetype_talents.talents = {
 	broker_passive_improved_sprint_dodge = {
-		description = "loc_talent_broker_iconic_improved_sprint_dodge_desc",
+		description = "loc_talent_broker_iconic_improved_dodges_desc",
 		display_name = "loc_talent_broker_passive_improved_sprint_dodge",
 		name = "",
 		format_values = {
@@ -40,15 +40,26 @@ archetype_talents.talents = {
 					return math_round(math.radians_to_degrees(value))
 				end,
 			},
+			dodge_count = {
+				format_type = "number",
+				prefix = "+",
+				value = talent_settings.broker_passive_increased_dodges.extra_consecutive_dodges,
+			},
 		},
 		passive = {
-			buff_template_name = "broker_passive_improved_sprint_dodge",
-			identifier = "broker_passive_improved_sprint_dodge",
+			identifier = {
+				"broker_passive_improved_sprint_dodge",
+				"broker_passive_increased_dodges",
+			},
+			buff_template_name = {
+				"broker_passive_improved_sprint_dodge",
+				"broker_passive_increased_dodges",
+			},
 		},
 	},
 	broker_passive_increased_dodges = {
 		description = "loc_talent_broker_iconic_increased_dodges_desc",
-		display_name = "",
+		display_name = "loc_talent_broker_passive_increased_ranged_dodges",
 		name = "",
 		format_values = {
 			dodge_count = {
@@ -87,7 +98,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "combat_ability",
 			ability = PlayerAbilities.broker_ability_focus,
 		},
 	},
@@ -128,7 +138,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "combat_ability",
 			ability = PlayerAbilities.broker_ability_focus_improved,
 		},
 		special_rule = {
@@ -316,7 +325,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "combat_ability",
 			ability = PlayerAbilities.broker_ability_punk_rage,
 		},
 	},
@@ -508,7 +516,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "combat_ability",
 			ability = PlayerAbilities.broker_ability_stimm_field,
 		},
 	},
@@ -585,7 +592,6 @@ archetype_talents.talents = {
 		description = string.format("*Wield a specialized stim."),
 		format_values = {},
 		player_ability = {
-			ability_type = "pocketable_ability",
 			ability = PlayerAbilities.broker_ability_syringe,
 		},
 	},
@@ -610,7 +616,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "grenade_ability",
 			ability = PlayerAbilities.broker_flash_grenade,
 		},
 		special_rule = {
@@ -657,7 +662,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "grenade_ability",
 			ability = PlayerAbilities.broker_flash_grenade_improved,
 		},
 	},
@@ -692,7 +696,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "grenade_ability",
 			ability = PlayerAbilities.broker_tox_grenade,
 		},
 		special_rule = {
@@ -725,7 +728,6 @@ archetype_talents.talents = {
 			},
 		},
 		player_ability = {
-			ability_type = "grenade_ability",
 			ability = PlayerAbilities.broker_missile_launcher,
 		},
 		special_rule = {
@@ -1916,7 +1918,7 @@ archetype_talents.talents = {
 		},
 	},
 	broker_passive_stimm_cd_on_kill = {
-		description = "loc_talent_broker_passive_stimm_cd_on_kill_desc",
+		description = "loc_talent_broker_passive_stimm_cd_seconds_on_kill_desc",
 		display_name = "loc_talent_broker_passive_stimm_cd_on_kill",
 		name = "broker_passive_stimm_cd_on_kill",
 		format_values = {
@@ -1929,7 +1931,7 @@ archetype_talents.talents = {
 				value = "loc_talent_broker_stimm",
 			},
 			restore = {
-				format_type = "percentage",
+				format_type = "number",
 				find_value = {
 					buff_template_name = "broker_passive_stimm_cd_on_kill",
 					find_value_type = "buff_template",
@@ -1939,7 +1941,7 @@ archetype_talents.talents = {
 				},
 			},
 			restore_toxined = {
-				format_type = "percentage",
+				format_type = "number",
 				find_value = {
 					buff_template_name = "broker_passive_stimm_cd_on_kill",
 					find_value_type = "buff_template",
@@ -2487,7 +2489,7 @@ archetype_talents.talents = {
 					find_value_type = "buff_template",
 					path = {
 						"stat_buffs",
-						stat_buffs.combat_ability_cooldown_regen_modifier,
+						stat_buffs.combat_ability_resource_regen_modifier,
 					},
 				},
 			},
@@ -3169,7 +3171,7 @@ archetype_talents.talents = {
 	},
 	broker_stimm_description_talent = {
 		description = "loc_talent_broker_stimm_desc",
-		display_name = "",
+		display_name = "loc_talent_broker_stimm",
 		name = "",
 		format_values = {
 			stimm_lab = {

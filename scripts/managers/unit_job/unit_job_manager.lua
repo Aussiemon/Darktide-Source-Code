@@ -50,4 +50,8 @@ UnitJobManager.update = function (self, dt, t)
 	end
 end
 
+UnitJobManager.start_registered_job = function (self, unit)
+	self._units[unit]:start_job()
+end
+
 return UnitJobManager

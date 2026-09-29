@@ -203,7 +203,7 @@ LobbyView._setup_havoc_info = function (self)
 		local description_height = self:_get_text_height(widget_content.circumstance_description, widget_style.circumstance_description, {
 			widget_style.circumstance_description.size[1],
 		})
-		local description_margin = 0
+		local description_margin = 10
 
 		widget_style.circumstance_description.offset[2] = title_height + description_margin
 
@@ -1340,6 +1340,11 @@ LobbyView._update_synced_slots = function (self)
 
 		slot.synced = false
 	end
+end
+
+LobbyView.draw_while_loading = function (self, dt, t)
+	Managers.ui:render_loading_icon()
+	Managers.ui:render_black_background()
 end
 
 LobbyView.draw = function (self, dt, t, input_service, layer)

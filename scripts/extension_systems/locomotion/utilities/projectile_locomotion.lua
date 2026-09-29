@@ -1,6 +1,7 @@
 ﻿-- chunkname: @scripts/extension_systems/locomotion/utilities/projectile_locomotion.lua
 
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
+local Health = require("scripts/utilities/health")
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local MIN_TRAVEL_DISTANCE_TO_INTEGRATE = ProjectileLocomotionSettings.MIN_TRAVEL_DISTANCE_TO_INTEGRATE
 local ProjectileLocomotion = {}
@@ -188,7 +189,7 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 					local hit_actor = hit.actor or hit[4]
 					local hit_unit = Actor.unit(hit_actor)
 
-					if ProjectileLocomotion.check_collision(hit_unit, hit_position, integration_data, bounce_unit) then
+					if Health.can_actor_collide_with_attack_type(hit_unit, hit_actor, "ranged") and ProjectileLocomotion.check_collision(hit_unit, hit_position, integration_data, bounce_unit) then
 						local hit_normal = hit.normal or hit[3]
 
 						hit_units_this_frame[hit_unit] = true
@@ -294,6 +295,16 @@ ProjectileLocomotion.impact_detection_and_resolution = function (integration_dat
 	until not bounced or times_ran >= 2
 
 	return new_position, new_velocity, hit_units_this_frame
+end
+
+ProjectileLocomotion.register_sweep_hit = function (hit_unit, attacker_unit, first_person_component, hit_direction, damage_profile, t)
+	local projectile_locomotion_ext = ScriptUnit.has_extension(hit_unit, "locomotion_system")
+
+	if not projectile_locomotion_ext or not projectile_locomotion_ext.register_sweep_hit then
+		return
+	end
+
+	projectile_locomotion_ext:register_sweep_hit(hit_unit, attacker_unit, first_person_component, hit_direction, damage_profile, t)
 end
 
 return ProjectileLocomotion

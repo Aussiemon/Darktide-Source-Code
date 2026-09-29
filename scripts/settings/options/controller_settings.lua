@@ -273,6 +273,37 @@ local function _response_curve_options()
 	return options
 end
 
+local function _motion_template_options()
+	local options = {
+		{
+			display_name = "loc_setting_controller_motion_template_all",
+			name = "all",
+		},
+		{
+			display_name = "loc_setting_controller_motion_template_ranged",
+			name = "ranged",
+		},
+		{
+			display_name = "loc_setting_controller_motion_template_ranged_alternate_fire",
+			name = "ranged_alternate_fire",
+		},
+		{
+			display_name = "loc_setting_controller_motion_template_melee",
+			name = "melee",
+		},
+		{
+			display_name = "loc_setting_controller_motion_template_melee_ranged_alternate_fire",
+			name = "melee_ranged_alternate_fire",
+		},
+		{
+			display_name = "loc_setting_controller_motion_template_none",
+			name = "none",
+		},
+	}
+
+	return options
+end
+
 local settings_definitions = {}
 
 settings_definitions[#settings_definitions + 1] = {
@@ -846,6 +877,165 @@ settings_definitions[#settings_definitions + 1] = {
 	step_size_value = 0.1,
 	widget_type = "value_slider",
 }
+
+if IS_PLAYSTATION or IS_WINDOWS then
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_menu_group_controller_motion",
+		group_name = "controller_aim_settings",
+		widget_type = "group_sub_header",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_enabled",
+		id = "controller_motion_enabled",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		widget_type = "boolean",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_template",
+		id = "controller_motion_template",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		tooltip_text = "loc_setting_controller_motion_mouseover_motion_template",
+		widget_type = "dropdown",
+		options = _motion_template_options(),
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_look_scale",
+		id = "controller_motion_look_scale",
+		is_sub_setting = true,
+		max_value = 20,
+		min_value = 1,
+		num_decimals = 1,
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_look_vertical_multiplier",
+		id = "controller_motion_look_vertical_multiplier",
+		is_sub_setting = true,
+		max_value = 1,
+		min_value = 0.1,
+		num_decimals = 1,
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_look_scale_ranged",
+		id = "controller_motion_look_ranged_multiplier",
+		is_sub_setting = true,
+		max_value = 1,
+		min_value = 0.1,
+		num_decimals = 1,
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_look_ranged_alternate_fire_multiplier",
+		id = "controller_motion_look_ranged_alternate_fire_multiplier",
+		is_sub_setting = true,
+		max_value = 1,
+		min_value = 0.1,
+		num_decimals = 1,
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_invert_look_y",
+		id = "controller_motion_invert_look_y",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		widget_type = "boolean",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_flick_stick",
+		id = "controller_motion_flick_stick",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		tooltip_text = "loc_setting_controller_motion_mouseover_flick_stick",
+		widget_type = "boolean",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_touchbar_disable_motion",
+		id = "controller_motion_touchbar_disable_motion",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		tooltip_text = "loc_setting_controller_motion_mouseover_touch_pad_disable_motion",
+		widget_type = "boolean",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_disabled_quick_turn_tilt",
+		id = "controller_motion_disabled_quick_turn_tilt",
+		is_sub_setting = true,
+		save_location = "input_settings",
+		tooltip_text = "loc_setting_controller_motion_mouseover_motion_inactive_quick_turn_tilt",
+		widget_type = "boolean",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_acceleration_fast_multiplier",
+		id = "controller_motion_acceleration_fast_multiplier",
+		is_sub_setting = true,
+		max_value = 10,
+		min_value = 1,
+		num_decimals = 1,
+		save_location = "input_settings",
+		step_size_value = 0.1,
+		tooltip_text = "loc_setting_controller_motion_mouseover_sensitivity_multiplier_acceleration",
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_acceleration_start_threshold",
+		id = "controller_motion_acceleration_start_threshold",
+		is_sub_setting = true,
+		max_value = 200,
+		min_value = 0,
+		num_decimals = 0,
+		save_location = "input_settings",
+		step_size_value = 1,
+		tooltip_text = "loc_setting_controller_motion_mouseover_acceleration_start_threshold",
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_acceleration_zone_size",
+		id = "controller_motion_acceleration_zone_size",
+		is_sub_setting = true,
+		max_value = 200,
+		min_value = 0,
+		num_decimals = 0,
+		save_location = "input_settings",
+		step_size_value = 1,
+		tooltip_text = "loc_setting_controller_motion_mouseover_acceleration_zone_size",
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_smoothing_threshold",
+		id = "controller_motion_smoothing_threshold",
+		is_sub_setting = true,
+		max_value = 50,
+		min_value = 0,
+		num_decimals = 0,
+		save_location = "input_settings",
+		step_size_value = 1,
+		tooltip_text = "loc_setting_controller_motion_mouseover_smoothing_threshold",
+		widget_type = "value_slider",
+	}
+	settings_definitions[#settings_definitions + 1] = {
+		display_name = "loc_setting_controller_motion_steadying_threshold",
+		id = "controller_motion_steadying_threshold",
+		is_sub_setting = true,
+		max_value = 50,
+		min_value = 0,
+		num_decimals = 0,
+		save_location = "input_settings",
+		step_size_value = 1,
+		tooltip_text = "loc_setting_controller_motion_mouseover_steadying_threshold",
+		widget_type = "value_slider",
+	}
+end
 
 local template_functions = {
 	group_header = nil,

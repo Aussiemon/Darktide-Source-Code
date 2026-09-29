@@ -125,6 +125,20 @@ templates.MinionOutlineExtension = {
 		},
 		visibility_check = _minion_alive_check,
 	},
+	live_story_spillway_void_shield = {
+		override_global_visibility = true,
+		priority = 2,
+		material_layers = {
+			"minion_outline",
+			"minion_outline_reversed_depth",
+		},
+		color = {
+			0.467,
+			0.38,
+			0.671,
+		},
+		visibility_check = _minion_alive_check,
+	},
 }
 templates.CompanionOutlineExtension = {
 	owned_companion = {

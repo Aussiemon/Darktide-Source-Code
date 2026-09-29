@@ -89,7 +89,7 @@ templates.weapon_trait_bespoke_powersword_p2_reduce_fixed_overheat_amount_parent
 	child_buff_template = "weapon_trait_bespoke_powersword_p2_reduce_fixed_overheat_amount_child",
 	child_duration = 3,
 	class_name = "weapon_trait_parent_proc_buff",
-	hud_always_never_stacks = true,
+	hud_never_show_stacks = true,
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
@@ -252,11 +252,12 @@ templates.weapon_trait_bespoke_bespoke_powersword_p2_regain_toughness_on_multipl
 }
 templates.weapon_trait_bespoke_powersword_p2_slower_heat_buildup_on_perfect_block = {
 	active_duration = 5,
+	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	cooldown_duration = 0,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	proc_stat_buffs = {
 		[stat_buffs.overheat_over_time_amount] = 0.8,
@@ -266,11 +267,12 @@ templates.weapon_trait_bespoke_powersword_p2_slower_heat_buildup_on_perfect_bloc
 }
 templates.weapon_trait_bespoke_powersword_p2_attack_speed_on_perfect_block = {
 	active_duration = 5,
+	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	cooldown_duration = 1,
 	predicted = false,
 	proc_events = {
-		[proc_events.on_perfect_block] = 1,
+		[proc_events.on_block] = 1,
 	},
 	proc_stat_buffs = {
 		[stat_buffs.melee_attack_speed] = 1.5,

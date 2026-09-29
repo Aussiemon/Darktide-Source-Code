@@ -345,6 +345,16 @@ damage_profile_settings.double_cleave = {
 		4,
 	},
 }
+damage_profile_settings.double_plus_cleave = {
+	attack = {
+		2,
+		5,
+	},
+	impact = {
+		2,
+		5,
+	},
+}
 damage_profile_settings.light_cleave = {
 	attack = {
 		3,

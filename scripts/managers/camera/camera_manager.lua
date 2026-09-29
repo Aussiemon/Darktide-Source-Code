@@ -28,6 +28,7 @@ require("scripts/managers/camera/transitions/camera_transition_rotation_lerp")
 
 local CameraEffectSettings = require("scripts/settings/camera/camera_effect_settings")
 local CameraSettings = require("scripts/settings/camera/camera_settings")
+local CameraTransitionTemplates = require("scripts/settings/camera/camera_transition_templates")
 local CameraShakeEvent = require("scripts/managers/camera/camera_shake_event")
 local EnvironmentBlend = require("scripts/managers/camera/environment_blend")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
@@ -352,7 +353,7 @@ CameraManager._update_level_particle_effects = function (self, viewport_name)
 	end
 end
 
-CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_name)
+CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_name, force_instant_transition)
 	local old_tree_id = self._current_trees[viewport_name]
 
 	self._current_trees[viewport_name] = tree_id
@@ -367,7 +368,9 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 	if current_node then
 		local transition_template
 
-		if old_tree_id ~= tree_id then
+		if force_instant_transition then
+			transition_template = CameraTransitionTemplates.instant_cut
+		elseif old_tree_id ~= tree_id then
 			local tree_transitions = current_node.node:tree_transitions()
 
 			transition_template = tree_transitions[tree_id] or tree_transitions.default

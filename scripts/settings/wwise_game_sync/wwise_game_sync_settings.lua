@@ -137,6 +137,11 @@ local wwise_game_sync_settings = {
 			none = DEFAULT_GROUP_STATE,
 		},
 	},
+	story_settings = {
+		spillway_outro_win_01 = {
+			delay_music_switch = 6,
+		},
+	},
 }
 
 return settings("WwiseGameSyncSettings", wwise_game_sync_settings)

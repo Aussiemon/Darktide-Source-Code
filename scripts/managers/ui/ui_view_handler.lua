@@ -839,8 +839,6 @@ UIViewHandler.register_view_world = function (self, view_name, world_name, layer
 	if current_view_layer and current_view_layer ~= layer then
 		self:_set_view_worlds_layer(view_name, current_view_layer)
 	end
-
-	self:_set_view_worlds_enabled(view_name, false)
 end
 
 UIViewHandler.unregister_world = function (self, world_name)

@@ -7,8 +7,12 @@ local _mouse_input, _gamepad_input
 
 Orientation.look_delta = function (main_dt, input, fov_sensitivity, mouse_scale, look_delta_context)
 	local mouse_input = _mouse_input(input, look_delta_context)
-	local gamepad_input, _ = _gamepad_input(input, look_delta_context)
+	local gamepad_input, motion_input = _gamepad_input(input, look_delta_context, fov_sensitivity)
 	local look_delta = (mouse_input * mouse_scale + gamepad_input) * fov_sensitivity
+
+	if motion_input then
+		look_delta = look_delta + motion_input
+	end
 
 	return look_delta
 end
@@ -70,7 +74,7 @@ function _mouse_input(input, look_delta_context)
 	return mouse_input
 end
 
-function _gamepad_input(input, look_delta_context)
+function _gamepad_input(input, look_delta_context, fov_sensitivity)
 	local using_gamepad = Managers.input:is_using_gamepad()
 
 	if not using_gamepad then
@@ -102,6 +106,29 @@ function _gamepad_input(input, look_delta_context)
 	input_filter_name = new_input_filter_method and (is_lunging and "look_controller_lunging" or use_ranged_filter and alternate_fire_is_active and "look_controller_ranged_alternate_fire_improved" or use_ranged_filter and "look_controller_ranged_improved" or "look_controller_improved") or is_lunging and "look_controller_lunging" or use_ranged_filter and alternate_fire_is_active and "look_controller_ranged_alternate_fire" or use_ranged_filter and "look_controller_ranged" or use_melee_filter and targets_within_range and (is_sticky and "look_controller_melee_sticky" or "look_controller_melee") or "look_controller"
 
 	local gamepad_input = input:get(input_filter_name)
+	local last_pressed_device = Managers.input:last_pressed_device()
+	local input_settings = Managers.save:account_data().input_settings
+	local motion_controls_enabled = last_pressed_device:type() == "ps4_controller" and input_settings.controller_motion_enabled
+
+	if motion_controls_enabled then
+		local motion_input_filter_name
+
+		motion_input_filter_name = use_ranged_filter and alternate_fire_is_active and "look_controller_angular_velocity_ranged_alternate_fire" or use_ranged_filter and "look_controller_angular_velocity_ranged" or use_melee_filter and "look_controller_angular_velocity_melee" or "look_controller_angular_velocity"
+
+		local motion_table = input:get(motion_input_filter_name)
+		local motion_input = motion_table.input
+		local gamepad_override = motion_table.override
+
+		if gamepad_override then
+			return Vector3.divide(motion_input, fov_sensitivity)
+		end
+
+		local active = motion_table.active
+
+		Managers.input:set_motion_active(active)
+
+		return gamepad_input, motion_input
+	end
 
 	return gamepad_input, nil
 end

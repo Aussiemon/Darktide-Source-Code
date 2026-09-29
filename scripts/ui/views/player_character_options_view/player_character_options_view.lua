@@ -230,6 +230,7 @@ PlayerCharacterOptionsView._on_invite_pressed = function (self)
 	local player_info = self._player_info
 
 	Managers.data_service.social:send_party_invite(player_info)
+	self:_on_close_pressed()
 end
 
 PlayerCharacterOptionsView._setup_buttons_interactions = function (self)

@@ -2,7 +2,6 @@
 
 local mission_templates = {
 	cm_habs = {
-		coordinates = "loc_mission_coordinates_cm_habs",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_cm_habs",
@@ -76,9 +75,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	lm_rails = {
-		coordinates = "loc_mission_coordinates_lm_rails",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_lm_rails",
@@ -132,9 +133,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	km_station = {
-		coordinates = "loc_mission_coordinates_km_station",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_km_station",
@@ -191,9 +194,11 @@ local mission_templates = {
 		spawn_settings = {
 			next_mission = "recent_mission",
 		},
+		controllable_object_set_prefixes = {
+			"flow",
+		},
 	},
 	dm_rise = {
-		coordinates = "loc_mission_coordinates_dm_rise",
 		face_state_machine_key = "state_machine_missions",
 		game_mode_name = "coop_complete_objective",
 		level = "content/levels/transit/missions/mission_dm_rise",
@@ -232,7 +237,7 @@ local mission_templates = {
 		health_station = {},
 		testify_flags = {},
 		mission_brief_vo = {
-			vo_profile = "purser_a",
+			vo_profile = "sergeant_a",
 			wwise_route_key = 1,
 			vo_events = {
 				"mission_rise_briefing_a_intro",
@@ -260,6 +265,9 @@ local mission_templates = {
 		},
 		spawn_settings = {
 			next_mission = "recent_mission",
+		},
+		controllable_object_set_prefixes = {
+			"flow",
 		},
 	},
 }

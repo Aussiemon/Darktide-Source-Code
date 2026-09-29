@@ -181,12 +181,12 @@ ExtensionManager.add_unit_extensions_from_template = function (self, world, unit
 	return extensions
 end
 
-ExtensionManager.add_unit_extensions_from_script_data = function (self, world, unit)
+ExtensionManager.add_unit_extensions_from_script_data = function (self, world, unit, ...)
 	local extension_config = ExtensionConfig:new()
 
 	extension_config:parse_unit(unit)
 
-	return self:add_unit_extensions(world, unit, extension_config, nil)
+	return self:add_unit_extensions(world, unit, extension_config, nil, ...)
 end
 
 ExtensionManager.add_unit_extensions = function (self, world, unit, extension_config, game_object_data_or_session, ...)

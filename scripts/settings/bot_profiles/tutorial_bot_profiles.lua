@@ -6,6 +6,7 @@ local behavior_gestalts = BotSettings.behavior_gestalts
 local function tutorial_bot_profiles(all_profiles)
 	all_profiles.tutorial_guide = {
 		archetype = "veteran",
+		character_height = 1,
 		current_level = 1,
 		display_name = "Zola",
 		gender = "female",
@@ -37,6 +38,7 @@ local function tutorial_bot_profiles(all_profiles)
 	}
 	all_profiles.tutorial_guide_zealot = {
 		archetype = "zealot",
+		character_height = 1,
 		current_level = 1,
 		display_name = "Jilande",
 		gender = "female",
@@ -68,6 +70,7 @@ local function tutorial_bot_profiles(all_profiles)
 	}
 	all_profiles.tutorial_guide_ogryn = {
 		archetype = "ogryn",
+		character_height = 1,
 		current_level = 1,
 		display_name = "Kreft",
 		gender = "male",

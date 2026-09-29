@@ -69,6 +69,13 @@ local action_data = {
 		evaluation_duration_without_firing = 3,
 		maximum_obstruction_reevaluation_time = 0.3,
 		minimum_obstruction_reevaluation_time = 0.2,
+		aim_speed = {
+			10,
+			10,
+			12,
+			20,
+			20,
+		},
 		gestalt_behaviors = {
 			none = {},
 			killshot = {

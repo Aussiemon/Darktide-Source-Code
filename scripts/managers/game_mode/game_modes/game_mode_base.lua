@@ -84,6 +84,10 @@ GameModeBase.can_player_enter_game = function (self)
 	return true
 end
 
+GameModeBase.is_ready_for_hot_join = function (self)
+	return true
+end
+
 GameModeBase.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
@@ -206,10 +210,6 @@ GameModeBase.hot_join_sync = function (self, sender, channel)
 	end
 end
 
-GameModeBase.on_client_left = function (self, removed_players_data)
-	self._loot_handler:on_client_left(removed_players_data)
-end
-
 GameModeBase._cinematic_active = function (self)
 	if Managers.state.cinematic:cinematic_active() then
 		return true
@@ -234,6 +234,12 @@ end
 
 GameModeBase.in_safe_zone = function (self)
 	return false
+end
+
+GameModeBase.get_additional_nav_group_points = function (self)
+	local prepend_nav_points, append_nav_points
+
+	return prepend_nav_points, append_nav_points
 end
 
 return GameModeBase

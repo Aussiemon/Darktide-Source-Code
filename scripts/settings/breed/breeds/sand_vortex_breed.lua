@@ -7,6 +7,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
 local breed_name = "sand_vortex"
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local breed_data = {
@@ -40,7 +41,7 @@ local breed_data = {
 	breed_type = breed_types.living_prop,
 	blackboard_component_config = BreedBlackboardComponentTemplates.sand_vortex,
 	tags = {
-		minion = true,
+		[breed_tags.minion] = true,
 	},
 	size_variation_range = {
 		1.04,

@@ -301,7 +301,7 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike 
 	format_values = {
 		heat_percentage = {
 			format_type = "percentage",
-			prefix = "+",
+			prefix = "-",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_critical_strike",
 				find_value_type = "trait_override",
@@ -344,6 +344,7 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire 
 	format_values = {
 		overheat_reduction = {
 			format_type = "percentage",
+			prefix = "-",
 			find_value = {
 				buff_template_name = "weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire",
 				find_value_type = "trait_override",
@@ -352,6 +353,9 @@ templates.weapon_trait_bespoke_plasmagun_p1_reduced_overheat_on_continuous_fire 
 					stat_buffs.overheat_amount,
 				},
 			},
+			value_manipulation = function (value)
+				return 100 - math.round(value * 100)
+			end,
 		},
 		stacks = {
 			format_type = "string",

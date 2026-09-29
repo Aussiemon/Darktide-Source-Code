@@ -3,9 +3,9 @@
 local ui_weapon_patterns_settings = {
 	chainaxe_p1 = {
 		display_name = "loc_weapon_family_chainaxe_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainaxe_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainaxe_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -21,9 +21,9 @@ local ui_weapon_patterns_settings = {
 	},
 	chainsword_2h_p1 = {
 		display_name = "loc_weapon_family_chainsword_2h_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/chainsword_2h_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -57,9 +57,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combataxe_p1 = {
 		display_name = "loc_weapon_family_combataxe_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -80,9 +80,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combataxe_p2 = {
 		display_name = "loc_weapon_family_combataxe_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -103,9 +103,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combataxe_p3 = {
 		display_name = "loc_weapon_family_combataxe_p3_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p3_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combataxe_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combataxe_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combataxe_p3_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -126,9 +126,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combatknife_p1 = {
 		display_name = "loc_weapon_family_combatknife_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatknife_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatknife_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatknife_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatknife_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -167,9 +167,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combatsword_p2 = {
 		display_name = "loc_weapon_family_combatsword_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -190,9 +190,9 @@ local ui_weapon_patterns_settings = {
 	},
 	combatsword_p3 = {
 		display_name = "loc_weapon_family_combatsword_p3_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p3_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/combatsword_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/combatsword_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/combatsword_p3_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -213,9 +213,9 @@ local ui_weapon_patterns_settings = {
 	},
 	crowbar_p1 = {
 		display_name = "loc_weapon_family_crowbar_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/crowbar_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/crowbar_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/crowbar_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/crowbar_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/crowbar_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/crowbar_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -226,9 +226,9 @@ local ui_weapon_patterns_settings = {
 	},
 	dual_shivs_p1 = {
 		display_name = "loc_weapon_family_dual_shivs_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_shivs_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -244,9 +244,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcesword_2h_p1 = {
 		display_name = "loc_weapon_family_forcesword_2h_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_2h_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -262,9 +262,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcesword_p1 = {
 		display_name = "loc_weapon_family_forcesword_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcesword_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcesword_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcesword_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -285,9 +285,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_club_p1 = {
 		display_name = "loc_weapon_family_ogryn_club_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = "",
@@ -307,9 +307,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_club_p2 = {
 		display_name = "loc_weapon_family_ogryn_club_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_m3_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_club_p2_complete_mask",
 		marks = {
 			{
 				item = "content/items/weapons/player/melee/ogryn_club_p2_m1",
@@ -327,9 +327,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_combatblade_p1 = {
 		display_name = "loc_weapon_family_ogryn_combatblade_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_combatblade_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -350,9 +350,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_pickaxe_2h_p1 = {
 		display_name = "loc_weapon_family_ogryn_pickaxe_2h_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_pickaxe_2h_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -373,9 +373,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_powermaul_p1 = {
 		display_name = "loc_weapon_family_ogryn_powermaul_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -386,27 +386,50 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_powermaul_slabshield_p1 = {
 		display_name = "loc_weapon_family_ogryn_powermaul_slabshield_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_powermaul_slabshield_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
 				item = "content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m1",
 				name = "ogryn_powermaul_slabshield_p1_m1",
 			},
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/ogryn_powermaul_slabshield_p1_m2",
+				name = "ogryn_powermaul_slabshield_p1_m2",
+			},
+		},
+	},
+	ogryn_hammer_2h_p1 = {
+		display_name = "loc_weapon_family_ogryn_hammer_2h_p1_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_hammer_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_hammer_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_hammer_2h_p1_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/ogryn_hammer_2h_p1_m1",
+				name = "ogryn_hammer_2h_p1_m1",
+			},
 		},
 	},
 	powermaul_2h_p1 = {
 		display_name = "loc_weapon_family_powermaul_2h_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_2h_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
 				item = "content/items/weapons/player/melee/powermaul_2h_p1_m1",
 				name = "powermaul_2h_p1_m1",
+			},
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/melee/powermaul_2h_p1_m2",
+				name = "powermaul_2h_p1_m2",
 			},
 		},
 	},
@@ -430,9 +453,9 @@ local ui_weapon_patterns_settings = {
 	},
 	powermaul_p2 = {
 		display_name = "loc_weapon_family_powermaul_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_p2_m1_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -456,9 +479,9 @@ local ui_weapon_patterns_settings = {
 	},
 	powermaul_shield_p1 = {
 		display_name = "loc_weapon_family_powermaul_shield_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shield_powermaul_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shield_powermaul_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shield_powermaul_p1_m1_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powermaul_shield_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powermaul_shield_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powermaul_shield_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -474,9 +497,9 @@ local ui_weapon_patterns_settings = {
 	},
 	powersword_2h_p1 = {
 		display_name = "loc_weapon_family_powersword_2h_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_2h_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -492,9 +515,9 @@ local ui_weapon_patterns_settings = {
 	},
 	powersword_p1 = {
 		display_name = "loc_weapon_family_powersword_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -510,9 +533,9 @@ local ui_weapon_patterns_settings = {
 	},
 	powersword_p2 = {
 		display_name = "loc_weapon_family_powersword_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/powersword_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/powersword_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/powersword_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -541,9 +564,9 @@ local ui_weapon_patterns_settings = {
 	},
 	saw_p1 = {
 		display_name = "loc_weapon_family_saw_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/saw_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/saw_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/saw_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/saw_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/saw_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/saw_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -567,19 +590,6 @@ local ui_weapon_patterns_settings = {
 				comparison_text = nil,
 				item = "content/items/weapons/player/melee/thunderhammer_2h_p1_m2",
 				name = "thunderhammer_2h_p1_m2",
-			},
-		},
-	},
-	transonic_claw_p1 = {
-		display_name = "loc_weapon_family_transonic_claw_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/transonic_claw_p1_complete_mask",
-		marks = {
-			{
-				comparison_text = nil,
-				item = "content/items/weapons/player/melee/transonic_claw_p1_m1",
-				name = "transonic_claw_p1_m1",
 			},
 		},
 	},
@@ -637,9 +647,9 @@ local ui_weapon_patterns_settings = {
 	},
 	autogun_p1 = {
 		display_name = "loc_weapon_family_autogun_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -660,9 +670,9 @@ local ui_weapon_patterns_settings = {
 	},
 	autogun_p2 = {
 		display_name = "loc_weapon_family_autogun_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -683,9 +693,9 @@ local ui_weapon_patterns_settings = {
 	},
 	autogun_p3 = {
 		display_name = "loc_weapon_family_autogun_p3_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p3_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/autogun_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/autogun_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/autogun_p3_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -737,9 +747,9 @@ local ui_weapon_patterns_settings = {
 	},
 	boltpistol_p1 = {
 		display_name = "loc_weapon_family_boltpistol_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/boltpistol_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/boltpistol_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -755,9 +765,9 @@ local ui_weapon_patterns_settings = {
 	},
 	dual_autopistols_p1 = {
 		display_name = "loc_weapon_family_dual_autopistols_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_autopistols_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -768,9 +778,9 @@ local ui_weapon_patterns_settings = {
 	},
 	dual_stubpistols_p1 = {
 		display_name = "loc_weapon_family_dual_stubpistols_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/dual_stubpistols_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -794,9 +804,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcestaff_p1 = {
 		display_name = "loc_weapon_family_forcestaff_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -807,9 +817,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcestaff_p2 = {
 		display_name = "loc_weapon_family_forcestaff_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -820,9 +830,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcestaff_p3 = {
 		display_name = "loc_weapon_family_forcestaff_p3_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p3_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -833,9 +843,9 @@ local ui_weapon_patterns_settings = {
 	},
 	forcestaff_p4 = {
 		display_name = "loc_weapon_family_forcestaff_p4_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/forcestaff_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/forcestaff_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -859,9 +869,9 @@ local ui_weapon_patterns_settings = {
 	},
 	lasgun_p1 = {
 		display_name = "loc_weapon_family_lasgun_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -881,9 +891,9 @@ local ui_weapon_patterns_settings = {
 	},
 	lasgun_p2 = {
 		display_name = "loc_weapon_family_lasgun_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p2_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -904,9 +914,9 @@ local ui_weapon_patterns_settings = {
 	},
 	lasgun_p3 = {
 		display_name = "loc_weapon_family_lasgun_p3_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p3_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/lasgun_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/lasgun_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/lasgun_p3_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -927,9 +937,9 @@ local ui_weapon_patterns_settings = {
 	},
 	laspistol_p1 = {
 		display_name = "loc_weapon_family_laspistol_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/laspistol_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/laspistol_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/laspistol_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/laspistol_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -950,9 +960,9 @@ local ui_weapon_patterns_settings = {
 	},
 	needlepistol_p1 = {
 		display_name = "loc_weapon_family_needlepistol_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/needlepistol_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/needlepistol_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/needlepistol_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/needlepistol_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/needlepistol_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/needlepistol_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -968,9 +978,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_heavystubber_p1 = {
 		display_name = "loc_weapon_family_ogryn_heavystubber_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -991,9 +1001,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_heavystubber_p2 = {
 		display_name = "loc_weapon_family_ogryn_heavystubber_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_heavystubber_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1014,9 +1024,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_gauntlet_p1 = {
 		display_name = "loc_weapon_family_ogryn_gauntlet_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_gauntlet_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1027,9 +1037,9 @@ local ui_weapon_patterns_settings = {
 	},
 	ogryn_rippergun_p1 = {
 		display_name = "loc_weapon_family_ogryn_rippergun_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/rippergun_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_rippergun_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_rippergun_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_rippergun_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1074,6 +1084,19 @@ local ui_weapon_patterns_settings = {
 			},
 		},
 	},
+	ogryn_thumper_p3 = {
+		display_name = "loc_weapon_family_ogryn_thumper_p1_m3",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/ogryn_thumper_p1_m3_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/ogryn_thumper_p1_m3",
+				name = "ogryn_thumper_p1_m3",
+			},
+		},
+	},
 	phosphor_pistol_p1 = {
 		display_name = "loc_weapon_family_phosphor_pistol_p1_m1",
 		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/phosphor_pistol_p1",
@@ -1089,9 +1112,9 @@ local ui_weapon_patterns_settings = {
 	},
 	plasmagun_p1 = {
 		display_name = "loc_weapon_family_plasmagun_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/plasmagun_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/plasmagun_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1107,9 +1130,9 @@ local ui_weapon_patterns_settings = {
 	},
 	shotgun_p1 = {
 		display_name = "loc_weapon_family_shotgun_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1130,22 +1153,40 @@ local ui_weapon_patterns_settings = {
 	},
 	shotgun_p2 = {
 		display_name = "loc_weapon_family_shotgun_p2_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p2_m1_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p2",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p2_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p2_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
 				item = "content/items/weapons/player/ranged/shotgun_p2_m1",
 				name = "shotgun_p2_m1",
 			},
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/shotgun_p2_m3",
+				name = "shotgun_p2_m3",
+			},
+		},
+	},
+	shotgun_p3 = {
+		display_name = "loc_weapon_family_shotgun_p3_m1",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p3",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p3_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p3_complete_mask",
+		marks = {
+			{
+				comparison_text = nil,
+				item = "content/items/weapons/player/ranged/shotgun_p3_m1",
+				name = "shotgun_p3_m1",
+			},
 		},
 	},
 	shotgun_p4 = {
 		display_name = "loc_weapon_family_shotgun_p4_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p4_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p4_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p4_m1_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotgun_p4",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotgun_p4_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotgun_p4_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1161,9 +1202,9 @@ local ui_weapon_patterns_settings = {
 	},
 	shotpistol_shield_p1 = {
 		display_name = "loc_weapon_family_shotpistol_shield_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shield_shotpistol_p1_m1",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shield_shotpistol_p1_m1_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shield_shotpistol_p1_m1_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/shotpistol_shield_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/shotpistol_shield_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/shotpistol_shield_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,
@@ -1174,9 +1215,9 @@ local ui_weapon_patterns_settings = {
 	},
 	stubrevolver_p1 = {
 		display_name = "loc_weapon_family_stubrevolver_p1_m1",
-		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2",
-		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2_complete",
-		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_m2_complete_mask",
+		overview_icon_texture = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1",
+		overview_icon_texture_complete = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_complete",
+		overview_icon_texture_mask = "content/ui/textures/icons/weapons/masteries/stubrevolver_p1_complete_mask",
 		marks = {
 			{
 				comparison_text = nil,

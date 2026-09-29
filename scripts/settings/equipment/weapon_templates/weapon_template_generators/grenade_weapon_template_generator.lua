@@ -157,16 +157,6 @@ local function generate_base_template(ability_type)
 				},
 			},
 		},
-		combat_ability = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					input = "combat_ability_pressed",
-					value = true,
-				},
-			},
-		},
 	}
 
 	table.add_missing(base_template.action_inputs, BaseTemplateSettings.action_inputs)
@@ -194,10 +184,6 @@ local function generate_base_template(ability_type)
 							input = "unwield_to_previous",
 							transition = "base",
 						},
-						{
-							input = "combat_ability",
-							transition = "base",
-						},
 					},
 				},
 				{
@@ -206,10 +192,6 @@ local function generate_base_template(ability_type)
 				},
 				{
 					input = "unwield_to_previous",
-					transition = "base",
-				},
-				{
-					input = "combat_ability",
 					transition = "base",
 				},
 			},
@@ -236,10 +218,6 @@ local function generate_base_template(ability_type)
 							input = "unwield_to_previous",
 							transition = "base",
 						},
-						{
-							input = "combat_ability",
-							transition = "base",
-						},
 					},
 				},
 				{
@@ -248,10 +226,6 @@ local function generate_base_template(ability_type)
 				},
 				{
 					input = "unwield_to_previous",
-					transition = "base",
-				},
-				{
-					input = "combat_ability",
 					transition = "base",
 				},
 			},
@@ -266,10 +240,6 @@ local function generate_base_template(ability_type)
 		},
 		{
 			input = "unwield_to_previous",
-			transition = "base",
-		},
-		{
-			input = "combat_ability",
 			transition = "base",
 		},
 		{
@@ -299,20 +269,11 @@ local function generate_base_template(ability_type)
 	ActionInputHierarchy.add_missing(base_template.action_input_hierarchy, BaseTemplateSettings.action_input_hierarchy)
 
 	base_template.actions = {
-		action_unwield = {
-			allowed_during_sprint = true,
-			kind = "unwield",
-			start_input = "wield",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
 		action_unwield_to_previous = {
 			allowed_during_sprint = true,
 			kind = "unwield_to_previous",
 			total_time = 0,
 			uninterruptible = true,
-			unwield_to_weapon = true,
 			allowed_chain_actions = {},
 		},
 		action_wield = {
@@ -323,13 +284,7 @@ local function generate_base_template(ability_type)
 			uninterruptible = true,
 			weapon_handling_template = "time_scale_1_5",
 			allowed_chain_actions = {
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 				aim_hold = {
 					action_name = "action_aim",
 					chain_time = 1.4,
@@ -361,23 +316,16 @@ local function generate_base_template(ability_type)
 				speed = 20,
 			},
 			allowed_chain_actions = {
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				aim_released = {
 					action_name = "action_throw_grenade",
 					chain_time = 0.1,
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
 			end,
 			arc_start_offset = Vector3Box(0.5, 1, 0.1),
-			ability_type = ability_type,
 		},
 		action_throw_grenade = {
 			allowed_during_sprint = false,
@@ -396,21 +344,14 @@ local function generate_base_template(ability_type)
 				},
 			},
 			allowed_chain_actions = {
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			arc_start_offset = Vector3Box(0.5, 1, 0.1),
-			use_ability_charge = ability_type ~= nil,
+			consume_ability_usage_cost = ability_type ~= nil,
 			remove_item_from_inventory = ability_type == nil,
-			ability_type = ability_type,
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				if ability_type then
 					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
@@ -442,23 +383,16 @@ local function generate_base_template(ability_type)
 				speed = 20,
 			},
 			allowed_chain_actions = {
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				short_hand_throw = {
 					action_name = "action_underhand_throw_grenade",
 					chain_time = 0.1,
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				return end_reason == "hold_input_released"
 			end,
 			arc_start_offset = Vector3Box(0.5, 0.1, -0.3),
-			ability_type = ability_type,
 		},
 		action_underhand_throw_grenade = {
 			allowed_during_sprint = false,
@@ -477,21 +411,14 @@ local function generate_base_template(ability_type)
 				},
 			},
 			allowed_chain_actions = {
-				combat_ability = {
-					action_name = "combat_ability",
-				},
-				grenade_ability = BaseTemplateSettings.generate_grenade_ability_chain_actions(),
 				unwield_to_previous = {
 					action_name = "action_unwield_to_previous",
 				},
-				wield = {
-					action_name = "action_unwield",
-				},
+				wield = BaseTemplateSettings.generate_wield_chain_actions(),
 			},
 			arc_start_offset = Vector3Box(0.5, 0.1, -0.3),
-			use_ability_charge = ability_type ~= nil,
+			consume_ability_usage_cost = ability_type ~= nil,
 			remove_item_from_inventory = ability_type == nil,
-			ability_type = ability_type,
 			anim_end_event_condition_func = function (unit, data, end_reason)
 				if ability_type then
 					local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
@@ -502,64 +429,8 @@ local function generate_base_template(ability_type)
 				return true
 			end,
 		},
-		action_inspect_3p = {
-			action_prevents_jump = true,
-			block_first_person_rotation = true,
-			can_crouch = false,
-			can_jump = false,
-			force_look = true,
-			kind = "inspect_3p",
-			lock_view = false,
-			skip_3p_anims = false,
-			stop_input = "inspect_stop",
-			total_time = math.huge,
-			anim_end_event_condition_func = function (unit, data, end_reason)
-				return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-			end,
-			crosshair = {
-				crosshair_type = "inspect",
-			},
-			allowed_chain_actions = {
-				inspect_3p_stop = {
-					action_name = "action_inspect",
-					chain_time = 1.1,
-				},
-			},
-			action_movement_curve = {
-				{
-					modifier = 0,
-					t = 0,
-				},
-				start_modifier = 0,
-			},
-		},
-		action_inspect = {
-			anim_end_event = "inspect_end",
-			anim_event = "inspect_start",
-			kind = "inspect",
-			lock_view = true,
-			skip_3p_anims = false,
-			start_input = "inspect_start",
-			stop_input = "inspect_stop",
-			total_time = math.huge,
-			crosshair = {
-				crosshair_type = "inspect",
-			},
-			allowed_chain_actions = {
-				inspect_3p_start = {
-					action_name = "action_inspect_3p",
-					chain_time = 0.75,
-				},
-			},
-		},
-		combat_ability = {
-			kind = "unwield_to_specific",
-			slot_to_wield = "slot_combat_ability",
-			start_input = "combat_ability",
-			total_time = 0,
-			uninterruptible = true,
-			allowed_chain_actions = {},
-		},
+		action_inspect = BaseTemplateSettings.generate_inspect_action(),
+		action_inspect_3p = BaseTemplateSettings.generate_inspect_3p_action(),
 	}
 
 	table.add_missing(base_template.actions, BaseTemplateSettings.actions)

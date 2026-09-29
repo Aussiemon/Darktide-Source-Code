@@ -8,7 +8,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local VoQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
-local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req, _is_old_archetype
+local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_current_mission_giver_unit, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event, _get_player_level, _can_interact, _get_interaction_level_req, _is_old_archetype
 local DEFAULT_OPINION = "dislikes_character"
 local INTERACTIONS = {
 	health_station = function (dialogue_extension)
@@ -1351,6 +1351,23 @@ Vo.play_local_vo_events = function (dialogue_system, vo_rules, voice_profile, ww
 	end
 end
 
+Vo.add_to_local_rule_queue = function (dialogue_system, rule_name, voice_profile, wwise_route_key, on_play_callback, seed, is_opinion_vo, specific_line)
+	local vo_unit, dialogue_extension
+	local unit_to_extension_map = dialogue_system:unit_to_extension_map()
+
+	for unit, extension in pairs(unit_to_extension_map) do
+		if extension._vo_profile_name == voice_profile then
+			vo_unit, dialogue_extension = unit, extension
+
+			break
+		end
+	end
+
+	if dialogue_extension:add_to_local_rule_queue(rule_name, wwise_route_key, on_play_callback, seed, specific_line) then
+		return vo_unit
+	end
+end
+
 Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_opinion_vo, optional_use_radio_pre, optional_use_radio_post)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
@@ -1465,14 +1482,18 @@ Vo.set_ignore_server_play_requests = function (value)
 end
 
 Vo.set_unit_vo_memory = function (unit, memory_type, memory_id, value)
-	if value == "timeset" then
-		value = Managers.time:time("gameplay") + 900
-	end
+	unit = unit or _get_current_mission_giver_unit()
 
-	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+	if unit then
+		if value == "timeset" then
+			value = Managers.time:time("gameplay") + 900
+		end
 
-	if dialogue_extension then
-		dialogue_extension:store_in_memory(memory_type, memory_id, value)
+		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+		if dialogue_extension then
+			dialogue_extension:store_in_memory(memory_type, memory_id, value)
+		end
 	end
 end
 
@@ -1489,21 +1510,34 @@ Vo.set_npc_faction_memory = function (memory_id, value)
 	end
 end
 
-Vo.is_currently_playing_dialogue = function (unit)
-	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+Vo.is_currently_playing_dialogue = function (optional_unit)
+	local is_playing
 
-	if dialogue_extension then
-		local is_playing = dialogue_extension:is_currently_playing_dialogue()
+	if optional_unit then
+		local dialogue_extension = ScriptUnit.has_extension(optional_unit, "dialogue_system")
 
-		return is_playing
+		if dialogue_extension then
+			is_playing = dialogue_extension:is_currently_playing_dialogue()
+		end
+	else
+		local dialogue_system = Managers.state.extension:system_by_extension("DialogueExtension")
+
+		if dialogue_system then
+			is_playing = dialogue_system:is_mission_giver_dialogue_playing()
+		end
 	end
+
+	return is_playing
 end
 
 Vo.spawn_2d_unit = function (breed_name)
 	local voice_over_spawn_manager = Managers.state.voice_over_spawn
-	local dialogue_breed_setting = DialogueBreedSettings[breed_name]
 
-	voice_over_spawn_manager:create_units(dialogue_breed_setting)
+	if voice_over_spawn_manager then
+		local dialogue_breed_setting = DialogueBreedSettings[breed_name]
+
+		voice_over_spawn_manager:create_units(dialogue_breed_setting)
+	end
 end
 
 Vo.spawn_3d_unit = function (breed_name, voice_profile, position)
@@ -1705,6 +1739,18 @@ function _is_old_archetype(archetype)
 		return true
 	else
 		return false
+	end
+end
+
+function _get_current_mission_giver_unit()
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local voice_over_spawn_manager = Managers.state.voice_over_spawn
+		local mission_giver_profile = voice_over_spawn_manager:current_voice_profile()
+		local unit = _get_mission_giver_unit(mission_giver_profile)
+
+		return unit
 	end
 end
 

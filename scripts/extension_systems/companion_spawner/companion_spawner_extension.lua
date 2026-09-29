@@ -332,24 +332,6 @@ CompanionSpawnerExtension.should_have_companion = function (self)
 	return true
 end
 
-CompanionSpawnerExtension.companion_can_tag_order = function (self)
-	local should_have_companion = self:should_have_companion()
-
-	if not should_have_companion then
-		return false
-	end
-
-	if not self:has_any_spawned_companions() then
-		return false
-	end
-
-	local archetype = self._archetype
-	local companion_breed_name = archetype.companion_breed
-	local breed_settings = Breeds[companion_breed_name]
-
-	return breed_settings.can_tag_order
-end
-
 CompanionSpawnerExtension.add_spawned_unit_lookup = function (self, special_rule, unit)
 	self._special_rule_to_unit_lookup[special_rule] = unit
 end

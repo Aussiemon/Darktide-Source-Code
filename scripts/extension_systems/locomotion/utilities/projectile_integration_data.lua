@@ -17,6 +17,7 @@ local integration_data_interface = {
 	"owner_unit",
 	"projectile_unit",
 	"rotate_towards_direction",
+	"flat_look_rotation",
 	"damage_extension",
 	"fx_extension",
 	"suppression_settings",
@@ -49,6 +50,8 @@ local integration_data_interface = {
 	"missile_lingering",
 	"min_slow_down",
 	"number_of_bounces",
+	"collision_scratchpad",
+	"is_target_below_owner",
 	"store_data",
 	"previous_position_box",
 	"position_box",
@@ -87,8 +90,11 @@ ProjectileIntegrationData.allocate_integration_data = function (store_data)
 	integration_data.have_bounced = nil
 	integration_data.bounced_this_frame = false
 	integration_data.rotate_towards_direction = nil
+	integration_data.flat_look_rotation = nil
 	integration_data.hit_zone_priority = nil
 	integration_data.number_of_bounces = 0
+	integration_data.collision_scratchpad = {}
+	integration_data.is_target_below_owner = nil
 	integration_data.last_hit_detection_position = nil
 	integration_data.integrator_parameters = nil
 	integration_data.true_flight_template = nil
@@ -135,6 +141,7 @@ ProjectileIntegrationData.fill_integration_data = function (integration_data, ow
 	local collision_filter = integrator_parameters.collision_filter
 	local use_generous_bouncing = integrator_parameters.use_generous_bouncing
 	local rotate_towards_direction = integrator_parameters.rotate_towards_direction
+	local flat_look_rotation = integrator_parameters.flat_look_rotation
 	local hit_zone_priority = integrator_parameters.hit_zone_priority
 	local air_drag = drag_coefficient and 0.5 * drag_coefficient * (math.pi * radius * radius) * air_density / mass or 0
 	local velocity = speed * direction
@@ -161,6 +168,7 @@ ProjectileIntegrationData.fill_integration_data = function (integration_data, ow
 	integration_data.use_generous_bouncing = use_generous_bouncing
 	integration_data.have_bounced = nil
 	integration_data.rotate_towards_direction = rotate_towards_direction
+	integration_data.flat_look_rotation = flat_look_rotation
 	integration_data.hit_zone_priority = hit_zone_priority
 	integration_data.last_hit_detection_position = position
 	integration_data.integrator_parameters = integrator_parameters

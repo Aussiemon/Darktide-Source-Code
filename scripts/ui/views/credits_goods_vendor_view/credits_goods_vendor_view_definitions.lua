@@ -1,9 +1,9 @@
 ﻿-- chunkname: @scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_definitions.lua
 
-local UIWidget = require("scripts/managers/ui/ui_widget")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local edge_padding = 44
 local grid_width = 640
 local grid_height = 950
@@ -337,7 +337,7 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture",
-			value = "content/ui/materials/icons/weapons/hud/combat_blade_01",
+			value = "content/ui/materials/icons/weapons/hud/debug_primary",
 			value_id = "icon",
 			style = {
 				horizontal_alignment = "center",

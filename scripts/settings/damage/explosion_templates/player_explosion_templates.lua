@@ -3,7 +3,7 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local TalentSettings = require("scripts/settings/talent/talent_settings")
-local overload_keystone_talent_settings = TalentSettings.cryptic.overload
+local cryptic_overload_keystone_talent_settings = TalentSettings.cryptic.overload
 local damage_types = DamageSettings.damage_types
 local explosion_templates = {
 	warp_charge_overload = {
@@ -121,6 +121,23 @@ local explosion_templates = {
 		close_damage_profile = DamageProfileTemplates.ogryn_charge_finish,
 		close_damage_type = damage_types.ogryn_physical,
 		damage_profile = DamageProfileTemplates.ogryn_charge_finish,
+		damage_type = damage_types.ogryn_physical,
+		broadphase_explosion_filter = {
+			"heroes",
+			"villains",
+		},
+	},
+	zealot_resist_death_stagger = {
+		close_radius = 1.5,
+		collision_filter = "filter_player_character_lunge",
+		min_close_radius = 1.5,
+		min_radius = 1.9,
+		override_friendly_fire = false,
+		radius = 3.5,
+		static_power_level = 1000,
+		close_damage_profile = DamageProfileTemplates.no_damage_knock,
+		close_damage_type = damage_types.ogryn_physical,
+		damage_profile = DamageProfileTemplates.no_damage_knock,
 		damage_type = damage_types.ogryn_physical,
 		broadphase_explosion_filter = {
 			"heroes",
@@ -283,8 +300,8 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		on_hit_buff_template_name = "cryptic_overload_keystone_increase_damage_taken_debuff",
 		skip_ragdoll_interaction = true,
-		radius = overload_keystone_talent_settings.aoe_radius,
-		min_radius = overload_keystone_talent_settings.aoe_radius,
+		radius = cryptic_overload_keystone_talent_settings.aoe_radius,
+		min_radius = cryptic_overload_keystone_talent_settings.aoe_radius,
 		damage_profile = DamageProfileTemplates.cryptic_overload_keystone_debuff_explosion,
 		damage_type = damage_types.buff,
 		broadphase_explosion_filter = {

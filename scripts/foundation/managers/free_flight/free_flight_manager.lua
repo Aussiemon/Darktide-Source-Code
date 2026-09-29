@@ -14,7 +14,7 @@ FreeFlightManager.STD_ACCELERATION = 10
 FreeFlightManager.STD_ROTATION_SPEED = 0.003
 FreeFlightManager.STD_SPEED_CHANGE = 0.5
 FreeFlightManager.STD_MINIMUM_SPEED = 0.001
-FreeFlightManager.STD_MAXIMUM_SPEED = 50
+FreeFlightManager.STD_MAXIMUM_SPEED = 250
 FreeFlightManager.STD_ORTHOGRAPHIC_SIZE = 100
 FreeFlightManager.STD_ORTHOGRAPHIC_SPEED = 250
 FreeFlightManager.STD_FOCAL_DISTANCE = 10
@@ -310,7 +310,7 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 
 	Camera.set_projection_type(cam, camera_data.projection_type)
 
-	local target_speed_change = speed_change
+	local target_speed_change = math.clamp(speed_change, -1, 1)
 
 	if camera_speed_up then
 		target_speed_change = 1

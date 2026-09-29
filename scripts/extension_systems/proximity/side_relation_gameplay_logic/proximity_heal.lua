@@ -93,7 +93,6 @@ ProximityHeal.update = function (self, dt, t)
 	local heal_percentage = dt * heal_rate_percentage
 	local amount_healed_this_tick = 0
 	local players_have_improved_keyword = self._players_have_improved_keyword
-	local optional_buff = self._med_kit_settings.optional_buff
 	local knock_down_player_heal_speed_multiplier = self._knock_down_player_heal_speed_multiplier
 	local knock_down_player_heal_cost_multiplier = self._knock_down_player_heal_cost_multiplier
 
@@ -135,18 +134,6 @@ ProximityHeal.update = function (self, dt, t)
 				local health_added = Health.add(unit, heal_amount, heal_type)
 
 				amount_healed_this_tick = amount_healed_this_tick + health_added * cost_multiplier
-
-				if optional_buff then
-					local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-					local stat_buffs = buff_extension and buff_extension:stat_buffs()
-					local heal_modifier = stat_buffs and stat_buffs[optional_buff] or 1
-					local extra_heal_percentage = heal_percentage * heal_modifier - heal_percentage
-
-					if extra_heal_percentage > 0 then
-						local extra_heal_amount = max_health * extra_heal_percentage
-						local extra_health_added = Health.add(unit, extra_heal_amount, heal_type)
-					end
-				end
 
 				if players_have_improved_keyword then
 					health_extension:reduce_permanent_damage(heal_amount * improved_medical_crate_settings.permanent_damage_multiplier)

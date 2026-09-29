@@ -531,7 +531,21 @@ MissionIntroView._play_mission_brief_vo = function (self, mission_name, mission_
 	end
 
 	local specific_lines = MissionIntroViewSettings.story_briefing_lines[circumstance_name]
-	local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed, nil, specific_lines)
+	local mission_giver_pack = mission_brief_vo.mission_giver_packs and mission_brief_vo.mission_giver_packs[voice_profile]
+	local briefing_voice_order = mission_giver_pack and mission_giver_pack.briefing_voice_order
+	local vo_unit
+
+	if briefing_voice_order then
+		for i = 1, #briefing_voice_order do
+			voice_profile = briefing_voice_order[i]
+
+			local specific_line = specific_lines and specific_lines[i]
+
+			vo_unit = Vo.add_to_local_rule_queue(dialogue_system, events[i], voice_profile, wwise_route_key, callback, seed, nil, specific_line)
+		end
+	else
+		vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, seed, nil, specific_lines)
+	end
 
 	if vo_unit then
 		self._vo_unit = vo_unit

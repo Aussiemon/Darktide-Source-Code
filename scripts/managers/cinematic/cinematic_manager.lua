@@ -145,7 +145,10 @@ CinematicManager.hot_join_sync = function (self, sender, channel)
 	local intro_played = self:_mission_intro_played()
 
 	if intro_played then
-		RPC.rpc_cinematic_intro_played(channel)
+		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
+		local scene_unit_origin_level_id, scene_unit_destination_level_id = cinematic_scene_system:intro_played_unit_ids()
+
+		RPC.rpc_cinematic_intro_played(channel, scene_unit_origin_level_id, scene_unit_destination_level_id)
 	end
 
 	if self._active_story then
@@ -171,9 +174,8 @@ CinematicManager._mission_intro_played = function (self)
 	end
 
 	local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
-	local intro_played = cinematic_scene_system:intro_played()
 
-	return intro_played
+	return cinematic_scene_system:intro_played()
 end
 
 CinematicManager.update = function (self, dt, t)
@@ -868,7 +870,19 @@ CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
 	end
 end
 
+CinematicManager.active_story_name = function (self)
+	if self._active_story then
+		local story_name = self._active_story.name
+
+		return story_name
+	end
+end
+
 CinematicManager.mission_intro_played = function (self)
+	if self:is_loading_cinematic_levels() then
+		return false
+	end
+
 	return self:_mission_intro_played()
 end
 

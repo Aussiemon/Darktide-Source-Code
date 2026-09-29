@@ -7,10 +7,6 @@ PlayerDealtDamageReporter.init = function (self)
 	self._reports = {}
 end
 
-PlayerDealtDamageReporter.update = function (self, dt, t)
-	return
-end
-
 PlayerDealtDamageReporter.report = function (self)
 	if table.is_empty(self._reports) then
 		return

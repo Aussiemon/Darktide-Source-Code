@@ -528,7 +528,7 @@ local havoc_mutator_local_settings = {
 		class = "scripts/managers/mutator/mutators/mutator_spawner",
 		force_horde_on_spawn = true,
 		trigger_distance = 55,
-		spawn_locations = MutatorSpawnerLocationSources.prebaked_mission_locations(),
+		spawn_locations = MutatorSpawnerLocationSources.mission_provided_gizmo(),
 		num_to_spawn_per_mission = {
 			cm_archives = 5,
 			cm_habs = 3,
@@ -550,6 +550,7 @@ local havoc_mutator_local_settings = {
 			lm_cooling = 5,
 			lm_rails = 5,
 			lm_scavenge = 5,
+			spillway = 5,
 		},
 		spawners = {
 			{

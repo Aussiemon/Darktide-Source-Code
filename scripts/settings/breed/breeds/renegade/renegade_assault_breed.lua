@@ -17,6 +17,7 @@ local TargetSelectionTemplates = require("scripts/extension_systems/perception/t
 local TargetSelectionWeights = require("scripts/settings/minion_target_selection/minion_target_selection_weights")
 local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_types = ArmorSettings.types
+local breed_tags = BreedSettings.tags
 local breed_types = BreedSettings.types
 local hit_zone_names = HitZone.hit_zone_names
 local stagger_types = StaggerSettings.stagger_types
@@ -60,9 +61,9 @@ local breed_data = {
 		ranged = "renegade_assault_shot",
 	},
 	tags = {
-		close = true,
-		minion = true,
-		roamer = true,
+		[breed_tags.roamer] = true,
+		[breed_tags.close] = true,
+		[breed_tags.minion] = true,
 	},
 	vortex_settings = {
 		die_on_vortex_land = false,

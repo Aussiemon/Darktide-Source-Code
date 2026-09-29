@@ -99,5 +99,8 @@ state_machine_settings["content/characters/player/human/first_person/animations/
 state_machine_settings["content/characters/player/human/first_person/animations/transonic_claw"] = {
 	blend_time = DEFAULT_BLEND_TIME,
 }
+state_machine_settings["content/characters/player/ogryn/first_person/animations/2h_hammer"] = {
+	blend_time = DEFAULT_BLEND_TIME,
+}
 
 return state_machine_settings

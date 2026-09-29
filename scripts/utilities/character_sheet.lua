@@ -11,51 +11,18 @@ local function _info_print(mute_log, ...)
 end
 
 local BASE_TALENT_STEP_COUNT = -1
+local NON_NODE_TALENT_STEP_COUNT = 0
 local _fill_combat_ability_or_grenade_ability_or_coherency, _add_modifier
 local talent_layouts = {
 	"talent_layout_file_path",
 	"specialization_talent_layout_file_path",
 }
-local ALLOWED_MULTIPLE_OF = table.set({
-	"stat",
-	"default",
-	"broker_stimm",
-})
-
-local function _nodes_by_talents(out_nodes, archetype)
-	for layout_i = 1, #talent_layouts do
-		local talent_layout_file_path = archetype[talent_layouts[layout_i]]
-
-		if talent_layout_file_path then
-			local talent_layout = require(talent_layout_file_path)
-			local nodes = talent_layout.nodes
-
-			for node_i = 1, #nodes do
-				local node = nodes[node_i]
-				local talent = node.talent
-
-				if talent then
-					local node_group_data = out_nodes[talent] or {
-						node_type = nil,
-					}
-
-					out_nodes[talent] = node_group_data
-
-					local node_type = node.type
-
-					node_group_data.node_type = node_type
-					node_group_data.icon = node.icon
-				end
-			end
-		end
-	end
-end
 
 local function _filter_non_base_talents(selected_talents, base_talents, out_selected_talents)
 	local i = 0
 
-	for talent_name, tier in pairs(selected_talents) do
-		if not base_talents[talent_name] then
+	for talent_name, selection_data in pairs(selected_talents) do
+		if selection_data.node_name or not base_talents[talent_name] then
 			i = i + 1
 			out_selected_talents[i] = talent_name
 		end
@@ -70,32 +37,49 @@ local function _handle_buff_tier(buff_tiers, selected_talents, talent_name, buff
 	if not handled_node_groups[talent_name] then
 		handled_node_groups[talent_name] = true
 
-		local talent_tier = selected_talents[talent_name]
+		local talent_data = selected_talents[talent_name]
 
-		buff_tiers[buff_template_name] = (buff_tiers[buff_template_name] or 0) + talent_tier
+		buff_tiers[buff_template_name] = (buff_tiers[buff_template_name] or 0) + talent_data.tier
 	end
 end
 
-local function _by_furthest_from_start(previous_talent, current_talent, talent_name, value, archetype, mute_log)
-	local previous_step_count = previous_talent and previous_talent.step_count or BASE_TALENT_STEP_COUNT
-	local found, step_count, is_unique
-
+local function _node_by_name(archetype, node_name)
 	for layout_i = 1, #talent_layouts do
 		local talent_layout_file_path = archetype[talent_layouts[layout_i]]
 
 		if talent_layout_file_path then
 			local talent_layout = require(talent_layout_file_path)
+			local node = NodeLayout.node_by_name(talent_layout, node_name)
 
-			found, step_count, is_unique = NodeLayout.num_steps_to_start_recursive(talent_layout, talent_name)
+			if node then
+				return node
+			end
+		end
+	end
+end
 
-			if found then
-				break
+local function _by_furthest_from_start(previous_talent, current_talent, talent_name, selected_talent_data, value, archetype, mute_log)
+	local previous_step_count = previous_talent and previous_talent.step_count or BASE_TALENT_STEP_COUNT
+	local found, step_count
+
+	if selected_talent_data.node_name then
+		for layout_i = 1, #talent_layouts do
+			local talent_layout_file_path = archetype[talent_layouts[layout_i]]
+
+			if talent_layout_file_path then
+				local talent_layout = require(talent_layout_file_path)
+
+				found, step_count = NodeLayout.num_steps_to_start_recursive(talent_layout, selected_talent_data.node_name)
+
+				if found then
+					break
+				end
 			end
 		end
 	end
 
 	if not found then
-		step_count = BASE_TALENT_STEP_COUNT + 1
+		step_count = NON_NODE_TALENT_STEP_COUNT
 	end
 
 	if previous_step_count ~= BASE_TALENT_STEP_COUNT and step_count < previous_step_count then
@@ -121,7 +105,7 @@ local function _by_furthest_from_start(previous_talent, current_talent, talent_n
 		talent_name = talent_name,
 		value = value,
 		step_count = step_count,
-		is_unique = is_unique,
+		node_name = selected_talent_data.node_name,
 	}
 end
 
@@ -205,12 +189,13 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 	for i = 1, #base_talent_names do
 		local talent_name = base_talent_names[i]
+		local data = base_talents[talent_name]
 		local talent = archetype_talents[talent_name]
 
 		do
 			local player_ability = talent.player_ability
 
-			if player_ability and player_ability.ability_type == "combat_ability" then
+			if data.target_slot == "slot_combat_ability" then
 				if found_base_combat_ability then
 					Log.error("CharacterSheet", "Found multiple combat abilities in base_talents, one will be chosen at random.")
 				else
@@ -220,33 +205,35 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 					combat_ability = player_ability.ability
 				end
-			elseif player_ability and player_ability.ability_type == "grenade_ability" then
+			elseif data.target_slot == "slot_grenade_ability" then
 				if found_base_grenade_ability then
 					Log.error("CharacterSheet", "Found multiple grenade abilities in base_talents, one will be chosen at random.")
 				else
 					found_base_grenade_ability = true
 
-					_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, talent.icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(blitz, talent, talent.large_icon or talent.icon)
 
 					grenade_ability = player_ability.ability
 				end
-			elseif player_ability and player_ability.ability_type == "pocketable_ability" then
+			elseif data.target_slot == "slot_pocketable_small" then
 				if found_base_pocketable_ability then
 					Log.error("CharacterSheet", "Found multiple pocketable abilities in base_talents, one will be chosen at random.")
 				else
 					found_base_pocketable_ability = true
 
-					_fill_combat_ability_or_grenade_ability_or_coherency(pocketable, talent, talent.icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(pocketable, talent, talent.large_icon or talent.icon)
 
 					pocketable_ability = player_ability.ability
 				end
+			elseif data.target_slot then
+				-- Nothing
 			elseif talent.coherency then
 				if found_base_coherency_talent then
 					Log.error("CharacterSheet", "Found multiple talents with coherency in base_talents, one will be chosen as aura at random.")
 				else
 					found_base_coherency_talent = true
 
-					_fill_combat_ability_or_grenade_ability_or_coherency(aura, talent, talent.icon)
+					_fill_combat_ability_or_grenade_ability_or_coherency(aura, talent, talent.large_icon or talent.icon)
 				end
 			elseif iconics then
 				iconics[#iconics + 1] = talent
@@ -333,12 +320,11 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 	end
 
 	if optional_selected_talents and not force_base_talents then
-		_nodes_by_talents(NODES_BY_TALENT, archetype)
-
 		local num_talents = _filter_non_base_talents(optional_selected_talents, base_talents, NON_BASE_TALENTS)
 
 		for i = 1, num_talents do
 			local talent_name = NON_BASE_TALENTS[i]
+			local selected_talent_data = optional_selected_talents[talent_name]
 			local talent = archetype_talents[talent_name]
 
 			if talent then
@@ -356,13 +342,13 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
+								PASSIVE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, selected_talent_data, buff_template_name, archetype, mute_log)
 							end
 						else
 							local buff_template_name = passive.buff_template_name
 							local prev_best_identifier = PASSIVE_IDENTIFIERS_FOUND[identifier]
 
-							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
+							PASSIVE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, selected_talent_data, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -377,7 +363,7 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 							local identifier = coherency.identifier
 							local prev_best_identifier = COHERENCY_IDENTIFIERS_FOUND[identifier]
 
-							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, buff_template_name, archetype, mute_log)
+							COHERENCY_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, selected_talent_data, buff_template_name, archetype, mute_log)
 						end
 					end
 				end
@@ -395,12 +381,12 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 								local sub_identifier = identifier[jj]
 								local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier]
 
-								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, sub_special_rule_name, archetype, mute_log)
+								SPECIAL_RULE_IDENTIFIERS_FOUND[sub_identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, selected_talent_data, sub_special_rule_name, archetype, mute_log)
 							end
 						else
 							local prev_best_identifier = SPECIAL_RULE_IDENTIFIERS_FOUND[identifier]
 
-							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, special_rule_name, archetype, mute_log)
+							SPECIAL_RULE_IDENTIFIERS_FOUND[identifier] = _by_furthest_from_start(prev_best_identifier, talent, talent_name, selected_talent_data, special_rule_name, archetype, mute_log)
 						end
 					end
 				end
@@ -410,17 +396,21 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 				if player_ability then
 					local is_main_ability = talent.is_main_ability
 
-					if player_ability.ability_type == "combat_ability" then
+					if selected_talent_data.target_slot == "slot_combat_ability" then
 						local previous_ability = ABILITIES_FOUND.ability
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, selected_talent_data, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.ability = chosen_ability
 						combat_ability = chosen_ability.value.player_ability.ability
 
-						_add_modifier(modifiers, "ability", chosen_ability.value)
-					elseif player_ability.ability_type == "grenade_ability" then
+						if combat_ability ~= player_ability and is_main_ability == true then
+							_add_modifier(modifiers, "ability", talent)
+						else
+							_add_modifier(modifiers, "ability", chosen_ability.value)
+						end
+					elseif selected_talent_data.target_slot == "slot_grenade_ability" then
 						local previous_ability = ABILITIES_FOUND.blitz
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, selected_talent_data, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.blitz = chosen_ability
 						grenade_ability = chosen_ability.value.player_ability.ability
@@ -430,19 +420,19 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 						else
 							_add_modifier(modifiers, "blitz", chosen_ability.value)
 						end
-					elseif player_ability.ability_type == "pocketable_ability" then
+					elseif selected_talent_data.target_slot == "slot_pocketable_small" then
 						local previous_ability = ABILITIES_FOUND.pocketable
-						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, talent, archetype, mute_log)
+						local chosen_ability = _by_furthest_from_start(previous_ability, talent, talent_name, selected_talent_data, talent, archetype, mute_log)
 
 						ABILITIES_FOUND.pocketable = chosen_ability
 						pocketable_ability = chosen_ability.value.player_ability.ability
 
 						_add_modifier(modifiers, "pocketable", chosen_ability.value)
 					else
-						Log.error("CharacterSheet", "ability_type(%q) can't handle it.", player_ability.ability_type)
+						Log.error("CharacterSheet", "Unhandled target slot %q", selected_talent_data.target_slot)
 					end
 				elseif talent.coherency then
-					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent, talent_name, talent, archetype, mute_log)
+					ABILITIES_FOUND.aura = _by_furthest_from_start(ABILITIES_FOUND.aura, talent, talent_name, selected_talent_data, talent, archetype, mute_log)
 				end
 			end
 		end
@@ -492,10 +482,10 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 
 		if ability_data then
 			local talent = ability_data.value
-			local talent_name = ability_data.talent_name
-			local node_data = NODES_BY_TALENT[talent_name]
+			local node_name = ability_data.node_name
+			local node_data = node_name and _node_by_name(archetype, node_name)
 
-			_fill_combat_ability_or_grenade_ability_or_coherency(write_out_data, talent, node_data.icon or talent.icon)
+			_fill_combat_ability_or_grenade_ability_or_coherency(write_out_data, talent, node_data and node_data.icon or talent.large_icon or talent.icon)
 		end
 	end
 
@@ -510,19 +500,19 @@ CharacterSheet.class_loadout = function (profile, destination, force_base_talent
 			while current_index <= #talents_data do
 				local talent_data = talents_data[current_index]
 
-				for f = current_index + 1, #talents_data do
+				for f = #talents_data, current_index + 1, -1 do
 					local checked_talent_data = talents_data[f]
 
-					if talent_data.display_name == checked_talent_data then
+					if talent_data.display_name == checked_talent_data.display_name then
 						table.remove(talents_data, f)
 					end
 				end
 
 				if talent_data.display_name == destination[talent_type].talent.display_name then
 					table.remove(talents_data, current_index)
+				else
+					current_index = current_index + 1
 				end
-
-				current_index = current_index + 1
 			end
 		end
 	end
@@ -541,9 +531,24 @@ CharacterSheet.convert_selected_nodes_to_selected_talents = function (archetype,
 			for node_i = 1, #nodes do
 				local node = nodes[node_i]
 				local widget_name = node.widget_name
+				local selection_data = selected_nodes[widget_name]
 
-				if selected_nodes[widget_name] and node.talent then
-					out_talents[node.talent] = (out_talents[node.talent] or 0) + selected_nodes[widget_name]
+				if selection_data and node.talent then
+					local talent_data = out_talents[node.talent] or {
+						tier = 0,
+					}
+
+					talent_data.tier = talent_data.tier + selection_data
+
+					local node_slot = node.target_slot
+
+					if talent_data.target_slot then
+						-- Nothing
+					end
+
+					talent_data.target_slot = node_slot
+					talent_data.node_name = node.widget_name
+					out_talents[node.talent] = talent_data
 				end
 			end
 		end
