@@ -198,7 +198,7 @@ TrainingGroundsOptionsView._setup_info = function (self)
 
 	local show_difficulty_stepper = self.training_grounds_settings == "shooting_range"
 	local save_data = Managers.save:character_data()
-	local danger = save_data and save_data.training_grounds_danger or 3
+	local danger = save_data and DANGER_LEVELS[save_data.training_grounds_danger] and save_data.training_grounds_danger or 3
 
 	if show_difficulty_stepper then
 		local difficulty_selector = self:_element("difficulty_selector")

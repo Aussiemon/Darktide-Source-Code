@@ -6,7 +6,7 @@ local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinemat
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local HordeMissionBuffsManager = require("scripts/managers/mission_buffs/horde_mission_buffs_manager")
 local HordesModeSettings = require("scripts/settings/hordes_mode_settings")
-local PickupSettings = require("scripts/settings/pickup/pickup_settings")
+local PickupPools = require("scripts/settings/pickup/pickup_pools")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
@@ -1289,7 +1289,7 @@ end
 
 GameModeSurvival.get_additional_pickups = function (self)
 	if self._islands_completed > 0 then
-		return PickupSettings.horde_distribution_pool
+		return PickupPools.horde_distribution_pool
 	else
 		return
 	end

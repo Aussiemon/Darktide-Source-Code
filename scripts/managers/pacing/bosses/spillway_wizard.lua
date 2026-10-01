@@ -799,7 +799,7 @@ boss_template.phases = {
 				},
 				{
 					0.1,
-					0.03,
+					0.05,
 				},
 			},
 			burst_events = {
@@ -1131,7 +1131,7 @@ boss_template.phases = {
 				},
 				{
 					0.1,
-					0.03,
+					0.08,
 				},
 			},
 			burst_events = {

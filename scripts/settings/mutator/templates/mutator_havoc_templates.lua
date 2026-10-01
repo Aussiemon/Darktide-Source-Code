@@ -25,6 +25,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_corrupted_enemies = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		ui = {
 			category_name = "loc_expedition_map_heretic_intel",
@@ -71,6 +72,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_bolstering_minions = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
@@ -81,6 +83,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_tough_skin_enemies = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
@@ -144,6 +147,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_havoc_enraged = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
@@ -153,6 +157,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_encroaching_garden = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
@@ -162,6 +167,7 @@ local mutator_templates = {
 		},
 	},
 	mutator_havoc_no_stagger_ritualist = {
+		activate_on_load = true,
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
 		random_spawn_buff_templates = {
 			buffs = {
