@@ -11,12 +11,12 @@ local MIN_RAISED_TEETH = {
 	4,
 	3,
 	3,
-	2,
+	3,
 }
 local MAX_RAISED_TEETH = {
 	6,
 	5,
-	3,
+	4,
 	3,
 	3,
 }
