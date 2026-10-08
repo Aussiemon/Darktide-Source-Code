@@ -55,6 +55,7 @@ local function _apply_all_weapon_modifiers(local_player, weapon_template)
 	weapon_system:debug_set_weapon_overrides(local_player, new_modifiers)
 end
 
+local wait_for_action_completed_last_stuck
 local PlayerManagerFixedTestify = {
 	apply_weapon_progression_to_current_weapon_template = function (_, _, data)
 		local player = data.player
@@ -102,23 +103,35 @@ local PlayerManagerFixedTestify = {
 
 		animation_extension:anim_event(animation_event)
 	end,
-	wait_for_action_completed = function (_, _, data)
+	wait_for_action_completed = function (_, t, data)
 		local player = data.player
 		local player_unit = player.player_unit
 		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		local queue = weapon_action_component.__data
-		local queue_is_empty = true
+		local stuck_actions = {}
 
 		for i = 1, #queue do
-			if queue[i].current_action_name ~= "none" then
-				queue_is_empty = false
+			local action_name = queue[i].current_action_name
+
+			if action_name ~= "none" then
+				stuck_actions[#stuck_actions + 1] = action_name
 			end
 		end
 
-		if not queue_is_empty then
+		if #stuck_actions > 0 then
+			local stuck_key = table.concat(stuck_actions, ",")
+
+			if stuck_key ~= wait_for_action_completed_last_stuck then
+				wait_for_action_completed_last_stuck = stuck_key
+
+				Log.info("Testify", "wait_for_action_completed waiting on: %s", stuck_key)
+			end
+
 			return Testify.RETRY
 		end
+
+		wait_for_action_completed_last_stuck = nil
 	end,
 	wield_slot = function (_, t, data)
 		local player_unit = data.player.player_unit

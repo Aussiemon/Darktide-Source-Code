@@ -2,15 +2,13 @@
 
 local EndViewTestify = {
 	fast_forward_end_of_round = function (end_view)
-		if end_view:can_skip() and not (end_view:skip_grace_time() > 0) then
-			Managers.event:trigger("event_trigger_current_end_presentation_skip")
+		if not end_view._testify_leave_requested then
+			end_view:_trigger_current_presentation_skip()
 
-			return Testify.RETRY
-		else
-			Managers.multiplayer_session:leave("skip_end_of_round")
-
-			return
+			end_view._testify_leave_requested = Managers.multiplayer_session:is_leaving()
 		end
+
+		return Testify.RETRY
 	end,
 	rate_match = function (end_view, rating)
 		end_view:rate_match(rating)

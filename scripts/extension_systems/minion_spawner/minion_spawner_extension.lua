@@ -288,6 +288,7 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 	param_table.optional_group_id = spawn_data.group_id
 	param_table.optional_attack_selection_template_name = spawn_data.attack_selection_template_name
 	param_table.optional_mission_objective_id = mission_objective_id
+	param_table.optional_health_modifier = spawn_data.max_health_modifier
 	param_table.optional_spawner_spawn_index = self._randomized_index
 	param_table.optional_init_toughness = spawn_data.optional_init_toughness
 	param_table.optional_owning_auto_event_id = spawn_data.optional_owning_auto_event_id

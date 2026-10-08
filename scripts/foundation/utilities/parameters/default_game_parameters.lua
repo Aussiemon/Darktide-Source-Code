@@ -127,5 +127,9 @@ DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
+DefaultGameParameters.prod_like_backend = true
+DefaultGameParameters.backend_fetch_master_items = true
 
 return DefaultGameParameters

@@ -119,6 +119,34 @@ MainPathQueries.is_main_path_registered = function ()
 	return EngineOptimized.is_main_path_registered()
 end
 
+MainPathQueries.closest_crossroad_road = function (path_markers, position)
+	if not path_markers then
+		return nil
+	end
+
+	local closest_crossroads_id, closest_road_id
+	local closest_distance_sq = math.huge
+	local px, py, pz = position.x, position.y, position.z
+
+	for i = 1, #path_markers do
+		local path_marker = path_markers[i]
+		local crossroads_id = path_marker.crossroads_id
+
+		if crossroads_id then
+			local marker_position = path_marker.position:unbox()
+			local dx, dy, dz = marker_position.x - px, marker_position.y - py, marker_position.z - pz
+			local distance_sq = dx * dx + dy * dy + dz * dz
+
+			if distance_sq < closest_distance_sq then
+				closest_distance_sq = distance_sq
+				closest_crossroads_id, closest_road_id = crossroads_id, path_marker.road_id
+			end
+		end
+	end
+
+	return closest_crossroads_id, closest_road_id
+end
+
 MainPathQueries.generate_unified_main_path = function (main_path_segments)
 	local unified_path, unified_travel_distances, breaks, breaks_order, segment_lookup = {}, {}, {}, {}, {}
 	local k = 1

@@ -211,6 +211,10 @@ MainPathManager.is_crossroad_segment_available = function (self, crossroads_id, 
 	return is_available
 end
 
+MainPathManager.crossroad_road_for_position = function (self, position)
+	return MainPathQueries.closest_crossroad_road(self._path_markers, position)
+end
+
 MainPathManager.is_main_path_available = function (self)
 	return self._main_path_version ~= nil
 end

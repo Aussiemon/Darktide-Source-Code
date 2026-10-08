@@ -30,8 +30,8 @@ end
 
 local VIEW_CHECK_MIN_DISTANCE = 3
 local VIEW_CHECK_MIN_DOT = 0.75
-local AIM_CHECK_FILTER = "filter_player_ping_target_selection"
-local AIM_CHECK_MAX_HITS = 64
+local AIM_CHECK_FILTER = "filter_player_ping_target_validation"
+local AIM_CHECK_MAX_HITS = 128
 local AIM_CHECK_MIN_RADIUS = 1
 local AIM_CHECK_RADIUS_PER_METER = 0.052
 

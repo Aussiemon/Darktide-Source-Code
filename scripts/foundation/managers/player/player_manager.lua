@@ -377,6 +377,10 @@ PlayerManager.remove_player = function (self, peer_id, local_player_id)
 
 	self._num_players = self._num_players - 1
 
+	if Managers.event then
+		Managers.event:trigger("player_removed", player)
+	end
+
 	local owned_units = player.owned_units
 
 	player:delete()

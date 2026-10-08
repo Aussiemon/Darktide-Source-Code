@@ -26,7 +26,6 @@ WorldTestCases.load_mission = function (case_settings)
 		end
 
 		if num_peers == 0 then
-			TestifySnippets.skip_main_menu()
 			TestifySnippets.load_mission(mission_key)
 		end
 
@@ -184,7 +183,6 @@ WorldTestCases.load_procgen_exp_missions = function (case_settings)
 			return output
 		end
 
-		TestifySnippets.skip_main_menu()
 		TestifySnippets.load_mission(mission_key)
 		Testify:make_request("expedition_wait_until_location_ready")
 		TestifySnippets.wait(5)

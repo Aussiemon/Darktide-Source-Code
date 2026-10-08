@@ -364,7 +364,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 		scratchpad.current_follow_direction = Vector3Box(velocity_normalized)
 	else
 		current_follow_direction = scratchpad.current_follow_direction:unbox()
-		current_follow_direction = Vector3.lerp(current_follow_direction, velocity_normalized, dt * LERP_FOLLOW_DIRECTION_SPEED)
+		current_follow_direction = Vector3.lerp(current_follow_direction, velocity_normalized, math.min(dt * LERP_FOLLOW_DIRECTION_SPEED, 1))
 
 		scratchpad.current_follow_direction:store(current_follow_direction)
 	end
@@ -442,7 +442,7 @@ BtPatrolAction._update_patrolling = function (self, unit, breed, blackboard, scr
 	end
 
 	local previous_speed = scratchpad.previous_speed
-	local wanted_speed = math.lerp(previous_speed, new_speed, dt * SPEED_LERP_SPEED)
+	local wanted_speed = math.lerp(previous_speed, new_speed, math.min(dt * SPEED_LERP_SPEED, 1))
 
 	navigation_extension:set_max_speed(wanted_speed)
 

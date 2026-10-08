@@ -156,7 +156,7 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 
 	local move_speed_var_id = animation_extension:anim_variable_id(self._move_speed_variable)
 	local old_speed = Unit.animation_get_variable(unit, move_speed_var_id)
-	local anim_move_speed = math.lerp(old_speed, move_speed, dt * 10)
+	local anim_move_speed = math.lerp(old_speed, move_speed, math.min(dt * 10, 1))
 	local clamped_anim_move_speed = math.clamp(anim_move_speed, 0, 19.9)
 
 	Unit.animation_set_variable(unit, move_speed_var_id, clamped_anim_move_speed)
@@ -179,7 +179,7 @@ PlayerHuskLocomotionExtension.post_update = function (self, unit, dt, t)
 
 		if active_stop_anim_var_id then
 			local old_anim_var_value = Unit.animation_get_variable(unit, active_stop_anim_var_id)
-			local active_stop = math.clamp(math.lerp(old_anim_var_value, current_active_stop, dt * 20), 0, 1)
+			local active_stop = math.clamp(math.lerp(old_anim_var_value, current_active_stop, math.min(dt * 20, 1)), 0, 1)
 
 			Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
 		end

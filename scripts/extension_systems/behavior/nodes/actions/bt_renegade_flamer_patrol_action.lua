@@ -456,7 +456,7 @@ BtRenegadeFlamerPatrolAction._update_patrolling = function (self, unit, breed, b
 		scratchpad.current_follow_direction = Vector3Box(velocity_normalized)
 	else
 		current_follow_direction = scratchpad.current_follow_direction:unbox()
-		current_follow_direction = Vector3.lerp(current_follow_direction, velocity_normalized, dt * LERP_FOLLOW_DIRECTION_SPEED)
+		current_follow_direction = Vector3.lerp(current_follow_direction, velocity_normalized, math.min(dt * LERP_FOLLOW_DIRECTION_SPEED, 1))
 
 		scratchpad.current_follow_direction:store(current_follow_direction)
 	end
@@ -529,7 +529,7 @@ BtRenegadeFlamerPatrolAction._update_patrolling = function (self, unit, breed, b
 	end
 
 	local previous_speed = scratchpad.previous_speed
-	local wanted_speed = math.lerp(previous_speed, new_speed, dt * SPEED_LERP_SPEED)
+	local wanted_speed = math.lerp(previous_speed, new_speed, math.min(dt * SPEED_LERP_SPEED, 1))
 
 	navigation_extension:set_max_speed(wanted_speed)
 
@@ -853,8 +853,8 @@ BtRenegadeFlamerPatrolAction._calculate_control_points = function (self, scratch
 		scratchpad.control_points[3] = Vector3Box(last)
 	else
 		control_points[1]:store(mid_1)
-		control_points[2]:store(Vector3.lerp(control_points[2]:unbox(), mid_2, dt * 5))
-		control_points[3]:store(Vector3.lerp(control_points[3]:unbox(), last, dt * 4))
+		control_points[2]:store(Vector3.lerp(control_points[2]:unbox(), mid_2, math.min(dt * 5, 1)))
+		control_points[3]:store(Vector3.lerp(control_points[3]:unbox(), last, math.min(dt * 4)))
 	end
 
 	return scratchpad.control_points

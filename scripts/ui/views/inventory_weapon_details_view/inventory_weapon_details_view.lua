@@ -464,7 +464,7 @@ InventoryWeaponDetailsView._handle_input = function (self, input_service, dt, t)
 		self._weapon_zoom_target = math.clamp(self._weapon_zoom_target + scroll * scroll_speed, self._min_zoom, self._max_zoom)
 
 		if math.abs(self._weapon_zoom_target - self._weapon_zoom_fraction) > 0.01 then
-			local weapon_zoom_fraction = math.lerp(self._weapon_zoom_fraction, self._weapon_zoom_target, dt * 2)
+			local weapon_zoom_fraction = math.lerp(self._weapon_zoom_fraction, self._weapon_zoom_target, math.min(dt * 2, 1))
 
 			self:_set_weapon_zoom(weapon_zoom_fraction)
 		end

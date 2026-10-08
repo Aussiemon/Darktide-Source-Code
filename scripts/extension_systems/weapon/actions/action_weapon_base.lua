@@ -131,18 +131,35 @@ ActionWeaponBase._set_haptic_trigger_template = function (self, action_settings,
 		return
 	end
 
-	if self._is_local_unit and self._is_human_controlled then
-		local inventory_component = self._inventory_component
-		local wielded_slot = inventory_component.wielded_slot
-		local condition_func_params = wielded_slot ~= "none" and self._weapon_extension:condition_func_params(wielded_slot)
+	if not self._is_local_unit or not self._is_human_controlled then
+		return
+	end
 
-		Managers.input.haptic_trigger_effects:set_haptic_trigger_template(action_settings, weapon_template, condition_func_params)
+	local inventory_component = self._inventory_component
+	local haptic_trigger_effects = Managers.input.haptic_trigger_effects
+	local wielded_slot = inventory_component.wielded_slot
+
+	if wielded_slot == self._wielded_slot then
+		local condition_func_params = self._weapon_extension:condition_func_params(wielded_slot)
+
+		haptic_trigger_effects:set_haptic_trigger_template(action_settings, weapon_template, condition_func_params)
+
+		return
+	end
+
+	if wielded_slot == "none" then
+		haptic_trigger_effects:set_haptic_trigger_template(nil, nil, nil)
+
+		return
 	end
 end
 
-ActionWeaponBase.server_correction_occurred = function (self, ...)
-	ActionWeaponBase.super.server_correction_occurred(self, ...)
-	self:_set_haptic_trigger_template(self._action_settings, self._weapon_template)
+ActionWeaponBase.server_correction_occurred = function (self, unit, from_frame, to_frame, correction_method, ...)
+	ActionWeaponBase.super.server_correction_occurred(self, unit, from_frame, to_frame, correction_method, ...)
+
+	local action_settings = correction_method ~= "leave_action" and self._action_settings or nil
+
+	self:_set_haptic_trigger_template(action_settings, self._weapon_template)
 end
 
 ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_ranged, action_auto_crit, should_crit)

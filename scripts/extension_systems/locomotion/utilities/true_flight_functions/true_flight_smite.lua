@@ -53,7 +53,7 @@ TrueFlightSmite.smite_update_towards_position = function (target_position, physi
 	if min_adjustment_speed and not is_aligned then
 		local diff = math.abs(Vector3.angle(new_direction, current_direction) / (math.pi * 2))
 
-		new_speed = math.lerp(new_speed, min_adjustment_speed, (dt + diff) * 12)
+		new_speed = math.lerp(new_speed, min_adjustment_speed, math.min((dt + diff) * 12, 1))
 	end
 
 	local travel_distance = (speed + new_speed) * dt * 0.5

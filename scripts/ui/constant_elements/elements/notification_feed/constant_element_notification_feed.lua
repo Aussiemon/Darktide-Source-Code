@@ -1672,9 +1672,9 @@ ConstantElementNotificationFeed._align_notification_widgets = function (self, dt
 			local widget_height = widget.size[2]
 
 			if offset_y > widget_offset[2] then
-				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 6)
+				widget_offset[2] = math.lerp(widget_offset[2], offset_y, math.min(dt * 6, 1))
 			else
-				widget_offset[2] = math.lerp(widget_offset[2], offset_y, dt * 2)
+				widget_offset[2] = math.lerp(widget_offset[2], offset_y, math.min(dt * 2, 1))
 			end
 
 			offset_y = offset_y + widget_height + ENTRY_SPACING

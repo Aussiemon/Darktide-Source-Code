@@ -330,7 +330,7 @@ function _update_frost_screen_space(template_data, template_context, stage, dt)
 		if frost_effect_id then
 			local frost_settings = AMBIENCE_SETTINGS.screen_effect_frost
 
-			template_data.screen_frost_intensity = math.lerp(template_data.screen_frost_intensity, 0, dt * frost_settings.waking_up_lerp_speed)
+			template_data.screen_frost_intensity = math.lerp(template_data.screen_frost_intensity, 0, math.min(dt * frost_settings.waking_up_lerp_speed, 1))
 
 			local cloud_name, variable_name = "frost", "distance_scalar"
 

@@ -19,6 +19,15 @@ local MainPathManagerTestify = {
 
 		return MainPathQueries.total_path_distance()
 	end,
+	crossroad_road_for_position = function (main_path_manager, position)
+		return main_path_manager:crossroad_road_for_position(position:unbox())
+	end,
+	crossroad_road_id = function (main_path_manager, crossroads_id)
+		return main_path_manager:crossroad_road_id(crossroads_id)
+	end,
+	is_crossroad_segment_available = function (main_path_manager, crossroads_id, road_id)
+		return main_path_manager:is_crossroad_segment_available(crossroads_id, road_id)
+	end,
 	check_isolated_islands = function (main_path_manager)
 		if not MainPathQueries.is_main_path_registered() then
 			if not main_path_manager:has_main_path_resource() then

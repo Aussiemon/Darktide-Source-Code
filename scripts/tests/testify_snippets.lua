@@ -77,6 +77,7 @@ TestifySnippets.wait_for_main_menu = function ()
 end
 
 TestifySnippets.load_mission = function (mission_name, challenge, resistance, circumstance_name, side_mission)
+	TestifySnippets.skip_main_menu()
 	Testify:make_request("wait_for_state_gameplay_reached")
 
 	local mission_context = {

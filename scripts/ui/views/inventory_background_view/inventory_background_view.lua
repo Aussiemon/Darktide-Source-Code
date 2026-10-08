@@ -102,16 +102,24 @@ InventoryBackgroundView.init = function (self, settings, context)
 	self._pass_draw = false
 end
 
+InventoryBackgroundView._on_player_removed = function (self, player)
+	if self._preview_player == player then
+		self:_handle_back_pressed(true)
+	end
+end
+
 InventoryBackgroundView.on_enter = function (self)
 	InventoryBackgroundView.super.on_enter(self)
 
 	local player = self._preview_player
 
 	if not player or player.__deleted then
-		self:_handle_back_pressed()
+		self:_handle_back_pressed(false)
 
 		return
 	end
+
+	Managers.event:register(self, "player_removed", "_on_player_removed")
 
 	local profile = player:profile()
 	local player_unit = player.player_unit
@@ -181,7 +189,23 @@ InventoryBackgroundView._valid_slot_for_archetype = function (self, slot_name)
 end
 
 InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id)
-	Managers.data_service.mastery:switch_mark(gear_id, mark_id):next(function (data)
+	local weapon_trinket_item, trinket_attach_point
+	local current_item = self:_get_inventory_item_by_id(gear_id)
+	local weapon_trinket_name = Items.get_current_equipped_trinket(current_item)
+
+	if weapon_trinket_name then
+		local inventory_items = self._inventory_items
+
+		for _, item in pairs(inventory_items) do
+			if item.name == weapon_trinket_name and math.is_uuid(item.gear_id) then
+				weapon_trinket_item = self:_get_inventory_item_by_id(item.gear_id)
+
+				break
+			end
+		end
+	end
+
+	return Managers.data_service.mastery:switch_mark(gear_id, mark_id):next(function (data)
 		if self._destroyed then
 			return
 		end
@@ -192,28 +216,88 @@ InventoryBackgroundView.event_switch_mark = function (self, gear_id, mark_id)
 			Managers.data_service.gear:invalidate_gear_cache()
 
 			local weapon_mark_item = MasterItems.get_item_instance(gear, gear_id)
+			local weapon_skin = weapon_mark_item.slot_weapon_skin
+			local skin_item = weapon_skin and MasterItems.get_item(weapon_skin)
+			local skin_promise = Promise.resolved(weapon_mark_item)
 
-			self._inventory_items[gear_id] = weapon_mark_item
+			if skin_item then
+				local selected_item_weapon_template = weapon_mark_item.weapon_template
+				local weapon_template_restriction = skin_item.weapon_template_restriction
 
-			local slot = weapon_mark_item.slots[1]
+				if not weapon_template_restriction or not table.contains(weapon_template_restriction, selected_item_weapon_template) then
+					skin_promise = Items.equip_weapon_skin(weapon_mark_item):next(function (skin_equip_result)
+						if self._destroyed then
+							return
+						end
 
-			if self._current_profile_equipped_items[slot].gear_id == gear_id then
-				self._current_profile_equipped_items[slot] = weapon_mark_item
+						if skin_equip_result and skin_equip_result.item then
+							weapon_mark_item = MasterItems.get_item_instance(skin_equip_result.item, gear_id)
+
+							Log.info("InventoryBackgroundView", "Removed weapon skin on mark switch due to incompability")
+
+							return weapon_mark_item
+						end
+
+						Log.warning("InventoryBackgroundView", "Weapon skin removal on mark switch returned no item")
+
+						local mark_master_item = MasterItems.get_item(weapon_mark_item.name)
+
+						trinket_attach_point = mark_master_item and Items.get_trinket_attach_point(mark_master_item)
+
+						return weapon_mark_item
+					end)
+				end
 			end
 
-			if self._preview_profile_equipped_items[slot].gear_id == gear_id then
-				self._preview_profile_equipped_items[slot] = weapon_mark_item
-			end
-
-			local profile = self._presentation_profile
-			local loadout = profile and profile.loadout
-
-			if loadout and loadout[slot] and loadout[slot].gear_id == gear_id then
-				loadout[slot] = weapon_mark_item
-			end
-
-			Managers.event:trigger("event_switch_mark_complete", weapon_mark_item)
+			return skin_promise
 		end
+	end):next(function (weapon_mark_item)
+		if self._destroyed or not weapon_mark_item then
+			return
+		end
+
+		local mark_trinket_promise = Promise.resolved(weapon_mark_item)
+
+		if weapon_trinket_item then
+			mark_trinket_promise = Items.equip_weapon_trinket(weapon_mark_item, weapon_trinket_item, trinket_attach_point):next(function (trinket_equip_result)
+				if self._destroyed then
+					return
+				end
+
+				if trinket_equip_result and trinket_equip_result.item then
+					weapon_mark_item = MasterItems.get_item_instance(trinket_equip_result.item, gear_id)
+				end
+
+				return weapon_mark_item
+			end)
+		end
+
+		return mark_trinket_promise
+	end):next(function (weapon_mark_item)
+		if self._destroyed or not weapon_mark_item then
+			return
+		end
+
+		self._inventory_items[gear_id] = weapon_mark_item
+
+		local slot = weapon_mark_item.slots[1]
+
+		if self._current_profile_equipped_items[slot].gear_id == gear_id then
+			self._current_profile_equipped_items[slot] = weapon_mark_item
+		end
+
+		if self._preview_profile_equipped_items[slot].gear_id == gear_id then
+			self._preview_profile_equipped_items[slot] = weapon_mark_item
+		end
+
+		local profile = self._presentation_profile
+		local loadout = profile and profile.loadout
+
+		if loadout and loadout[slot] and loadout[slot].gear_id == gear_id then
+			loadout[slot] = weapon_mark_item
+		end
+
+		Managers.event:trigger("event_switch_mark_complete", weapon_mark_item)
 	end)
 end
 
@@ -867,14 +951,13 @@ InventoryBackgroundView._equip_local_changes = function (self)
 	end
 end
 
-InventoryBackgroundView._handle_back_pressed = function (self)
-	self:_switch_active_view(nil)
-	Managers.ui:close_view(self.view_name)
+InventoryBackgroundView._handle_back_pressed = function (self, force_close)
+	Managers.ui:close_view(self.view_name, force_close)
 end
 
 InventoryBackgroundView.cb_on_close_pressed = function (self)
 	if self:can_exit() then
-		self:_handle_back_pressed()
+		self:_handle_back_pressed(false)
 	end
 end
 
@@ -2527,6 +2610,10 @@ InventoryBackgroundView.on_exit = function (self)
 	self:_unload_portrait_frame(self._ui_renderer)
 	self:_unload_insignia(self._ui_renderer)
 	Managers.data_service.talents:release_icons(self._talent_icons_package_ids)
+
+	self._preview_player = nil
+
+	Managers.event:unregister(self, "player_removed")
 	InventoryBackgroundView.super.on_exit(self)
 end
 
@@ -2808,7 +2895,7 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 	self._stored_input = nil
 
 	if not self._preview_player or self._preview_player.__deleted then
-		self:_handle_back_pressed()
+		self:_handle_back_pressed(true)
 
 		return
 	end

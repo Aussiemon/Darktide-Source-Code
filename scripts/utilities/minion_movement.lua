@@ -244,7 +244,7 @@ MinionMovement.get_lean_animation_variable_value = function (unit, scratchpad, a
 		if lean_speed then
 			local current_lean_variable = scratchpad.current_lean_variable or default_lean_value
 
-			lean_variable = math.lerp(current_lean_variable, lean_variable, dt * lean_speed)
+			lean_variable = math.lerp(current_lean_variable, lean_variable, math.min(dt * lean_speed, 1))
 			scratchpad.current_lean_variable = lean_variable
 		end
 

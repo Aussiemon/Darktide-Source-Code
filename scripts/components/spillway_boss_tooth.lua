@@ -43,7 +43,6 @@ SpillwayBossTooth.init = function (self, unit, is_server, nav_world)
 	local init_position = POSITION_LOOKUP[unit]
 
 	self._init_position = Vector3Box(init_position)
-	self._to_position = Vector3Box(init_position + Vector3(0, 0, RAISED_Z_OFFSET))
 
 	local from_position = init_position + Vector3(0, 0, LOWERED_Z_OFFSET)
 
@@ -73,10 +72,7 @@ SpillwayBossTooth.init = function (self, unit, is_server, nav_world)
 	self._is_raised = false
 	self._is_moving = false
 	self._queued_raise = false
-
-	local should_raise = true
-
-	self:_start_move(should_raise)
+	self._pending_should_raise = true
 
 	if not is_server then
 		local network_event_delegate = Managers.connection:network_event_delegate()
@@ -137,7 +133,7 @@ SpillwayBossTooth.hot_join_sync = function (self, joining_client, joining_channe
 		return
 	end
 
-	local is_raised = self._is_raised or self._queued_raise
+	local is_raised = self:is_raised() or self._pending_should_raise or false
 
 	RPC.rpc_spillway_boss_tooth_hot_join_sync(joining_channel, game_object_id, is_raised)
 end
@@ -177,20 +173,7 @@ SpillwayBossTooth._start_move = function (self, should_raise)
 end
 
 SpillwayBossTooth.rpc_spillway_boss_tooth_hot_join_sync = function (self, channel_id, game_object_id, is_raised)
-	local unit = self._unit
-
-	self._is_moving = false
-	self._is_raised = is_raised
-
-	if is_raised then
-		Unit.set_local_position(unit, 1, self._to_position:unbox())
-		Unit.animation_event(unit, ANIM_SPAWN)
-		self:_set_collision_enabled(true)
-	else
-		Unit.set_local_position(unit, 1, self._from_position:unbox())
-		Unit.animation_event(unit, ANIM_DESPAWN)
-		self:_set_collision_enabled(false)
-	end
+	self._pending_should_raise = is_raised
 end
 
 SpillwayBossTooth.enable_nav_cost = function (self)
@@ -236,6 +219,14 @@ SpillwayBossTooth.update = function (self, unit, dt, t)
 		return
 	end
 
+	local pending_should_raise = self._pending_should_raise
+
+	if pending_should_raise ~= nil then
+		self._pending_should_raise = nil
+
+		self:_start_move(pending_should_raise)
+	end
+
 	if self._queued_raise and t >= self._queued_raise_t then
 		self._queued_raise = false
 		self._queued_raise_t = nil
@@ -271,6 +262,14 @@ SpillwayBossTooth.rpc_spillway_boss_tooth_set_raised = function (self, channel_i
 end
 
 SpillwayBossTooth._apply_raised_state = function (self, raised)
+	if not Managers.time:has_timer("gameplay") then
+		self._pending_should_raise = raised
+
+		return
+	end
+
+	self._pending_should_raise = nil
+
 	if raised then
 		if self._is_raised or self._queued_raise then
 			return

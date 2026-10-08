@@ -784,10 +784,13 @@ PlayerUnitAbilityExtension._update_ability_resources = function (self, t, dt)
 		local uses_charges = usage_cost_type == "charges"
 		local uses_resource = usage_cost_type == "resource"
 		local max_ability_resource = self:max_ability_resource(ability_type)
+		local previous_num_max_ability_resource = self._previous_num_max_ability_resource[ability_type] or max_ability_resource
+		local num_max_resource_dif = max_ability_resource - previous_num_max_ability_resource
 
 		if uses_charges then
 			local max_ability_charges = self:max_ability_charges(ability_type)
 			local remaining_ability_charges = self:remaining_ability_charges(ability_type)
+			local remaining_ability_resource = self:remaining_ability_resource(ability_type)
 			local previous_num_max_charges = self._previous_num_max_charges[ability_type] or max_ability_charges
 			local num_max_charges_dif = max_ability_charges - previous_num_max_charges
 
@@ -797,14 +800,17 @@ PlayerUnitAbilityExtension._update_ability_resources = function (self, t, dt)
 				self:restore_ability_charge(ability_type, num_max_charges_dif, skip_restored_proc_event)
 			elseif num_max_charges_dif < 0 and max_ability_charges <= remaining_ability_charges then
 				self:set_ability_charges(ability_type, max_ability_charges)
+			elseif num_max_resource_dif ~= 0 then
+				local previous_percentage_ability_resource = math.clamp01(remaining_ability_resource / previous_num_max_ability_resource)
+				local new_ability_resource_value = max_ability_resource * previous_percentage_ability_resource
+
+				self:set_ability_resource(ability_type, new_ability_resource_value)
 			end
 
 			self._skip_giving_extra_max_charges_player_respawn[ability_type] = false
 			self._previous_num_max_charges[ability_type] = max_ability_charges
 		elseif uses_resource then
 			local remaining_ability_resource = self:remaining_ability_resource(ability_type)
-			local previous_num_max_ability_resource = self._previous_num_max_ability_resource[ability_type] or max_ability_resource
-			local num_max_resource_dif = max_ability_resource - previous_num_max_ability_resource
 
 			if num_max_resource_dif > 0 and not self._skip_giving_extra_max_charges_player_respawn[ability_type] then
 				local ignore_stat_buffs = true
@@ -816,8 +822,9 @@ PlayerUnitAbilityExtension._update_ability_resources = function (self, t, dt)
 			end
 
 			self._skip_giving_extra_max_charges_player_respawn[ability_type] = false
-			self._previous_num_max_ability_resource[ability_type] = max_ability_resource
 		end
+
+		self._previous_num_max_ability_resource[ability_type] = max_ability_resource
 
 		if self:missing_ability_resource(ability_type) < 0 then
 			self:set_ability_resource(ability_type, max_ability_resource)

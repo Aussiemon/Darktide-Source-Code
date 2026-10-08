@@ -488,7 +488,7 @@ end
 LiveEventsView._handle_page_scroll = function (self, dt, t)
 	local target_x = Settings.default_entry_width * (self._selected_entry_page - 1) * -1
 	local current_x = self._ui_scenegraph.entries.local_position[1]
-	local new_x = math.lerp(current_x, target_x, dt * 10)
+	local new_x = math.lerp(current_x, target_x, math.min(dt * 10, 1))
 
 	self._ui_scenegraph.entries.local_position[1] = new_x
 	self._ui_scenegraph.rewards_anchor.local_position[1] = new_x

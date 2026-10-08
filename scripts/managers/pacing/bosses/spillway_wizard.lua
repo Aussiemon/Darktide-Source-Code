@@ -92,7 +92,7 @@ end
 local HAVOC_TWIN_CHANCE = 1
 local HAVOC_TWIN_BREED_NAME = "renegade_twin_captain_two"
 local HAVOC_TWIN_SPAWNER_GROUP = "spawner_spillway_boss_event_all"
-local HAVOC_DANCE_SPECIALS_BONUS_MULTIPLIER = 0.35
+local HAVOC_DANCE_SPECIALS_BONUS_MULTIPLIER = 0
 
 boss_template.setup = function (self)
 	if Managers.event then
@@ -711,6 +711,13 @@ boss_template.phases = {
 			use_time = true,
 			wait_t = 10,
 			wait_timings_until_force_phase_change = 45,
+			special_breed_override = {
+				cultist_flamer = "chaos_hound",
+				cultist_grenadier = "chaos_poxwalker_bomber",
+				cultist_mutant = "renegade_netgunner",
+				renegade_flamer = "renegade_sniper",
+				renegade_grenadier = "chaos_hound",
+			},
 		},
 		init = function (scratchpad, current_phase_settings, phase_data, t)
 			_start_music_objective()
@@ -724,6 +731,14 @@ boss_template.phases = {
 			local rotation = Quaternion.look(look_direction, Vector3.up())
 
 			Managers.state.unit_spawner:spawn_network_unit(prop_settings.unit_name, "level_prop", spawn_position, rotation, nil, prop_settings)
+
+			local minion_spawn_manager = Managers.state.minion_spawn
+
+			minion_spawn_manager:inject_replacement_breeds(current_phase_settings.special_breed_override)
+
+			if _is_havoc() then
+				Managers.state.pacing:set_specials_max_alive_bonus_multiplier(HAVOC_DANCE_SPECIALS_BONUS_MULTIPLIER)
+			end
 		end,
 		update = function (scratchpad, current_phase_settings, phase_data, t)
 			if not phase_data.default_look_at_position_setup then
@@ -808,26 +823,11 @@ boss_template.phases = {
 				"spillway_wizard_retreat_burst_elite|spillway_wizard_retreat_burst_elite_ogryn_melee",
 				5,
 			},
-			special_breed_override = {
-				cultist_flamer = "chaos_hound",
-				cultist_grenadier = "chaos_poxwalker_bomber",
-				cultist_mutant = "renegade_netgunner",
-				renegade_flamer = "renegade_sniper",
-				renegade_grenadier = "chaos_hound",
-			},
 		},
 		init = function (scratchpad, current_phase_settings, phase_data, t)
 			phase_data.state = current_phase_settings.inital_state
 			phase_data.indexed_escape_times = _index_against_challenge(current_phase_settings.dance_escape_step)
 			phase_data.t_til_switch = t + current_phase_settings.t_for_each_loop[1]
-
-			local minion_spawn_manager = Managers.state.minion_spawn
-
-			minion_spawn_manager:inject_replacement_breeds(current_phase_settings.special_breed_override)
-
-			if _is_havoc() then
-				Managers.state.pacing:set_specials_max_alive_bonus_multiplier(HAVOC_DANCE_SPECIALS_BONUS_MULTIPLIER)
-			end
 		end,
 		update = function (scratchpad, current_phase_settings, phase_data, t)
 			local indexed_escape_times = phase_data.indexed_escape_times
@@ -905,14 +905,6 @@ boss_template.phases = {
 		end,
 		exit = function (scratchpad, current_phase_settings, t)
 			DanceStageHazard.exit(scratchpad)
-
-			local minion_spawn_manager = Managers.state.minion_spawn
-
-			minion_spawn_manager:remove_injected_breeds(current_phase_settings.special_breed_override)
-
-			if _is_havoc() then
-				Managers.state.pacing:set_specials_max_alive_bonus_multiplier(1)
-			end
 		end,
 		on_phase_event_triggered = function (scratchpad, event_name)
 			DanceStageHazard.on_phase_event_triggered(scratchpad, event_name)
@@ -1145,26 +1137,11 @@ boss_template.phases = {
 				"set_new_zone",
 				"spawn_dance_walls",
 			},
-			special_breed_override = {
-				cultist_flamer = "chaos_hound",
-				cultist_grenadier = "chaos_poxwalker_bomber",
-				cultist_mutant = "renegade_netgunner",
-				renegade_flamer = "renegade_sniper",
-				renegade_grenadier = "chaos_hound",
-			},
 		},
 		init = function (scratchpad, current_phase_settings, phase_data, t)
 			phase_data.state = current_phase_settings.inital_state
 			phase_data.indexed_escape_times = _index_against_challenge(current_phase_settings.dance_escape_step)
 			phase_data.t_til_switch = t + current_phase_settings.t_for_each_loop[1]
-
-			local minion_spawn_manager = Managers.state.minion_spawn
-
-			minion_spawn_manager:inject_replacement_breeds(current_phase_settings.special_breed_override)
-
-			if _is_havoc() then
-				Managers.state.pacing:set_specials_max_alive_bonus_multiplier(HAVOC_DANCE_SPECIALS_BONUS_MULTIPLIER)
-			end
 
 			local health_extension = ScriptUnit.has_extension(scratchpad.boss_unit, "health_system")
 
@@ -1292,14 +1269,6 @@ boss_template.phases = {
 		end,
 		exit = function (scratchpad, current_phase_settings, t)
 			DanceStageHazard.exit(scratchpad)
-
-			local minion_spawn_manager = Managers.state.minion_spawn
-
-			minion_spawn_manager:remove_injected_breeds(current_phase_settings.special_breed_override)
-
-			if _is_havoc() then
-				Managers.state.pacing:set_specials_max_alive_bonus_multiplier(1)
-			end
 		end,
 		on_phase_event_triggered = function (scratchpad, event_name)
 			DanceStageHazard.on_phase_event_triggered(scratchpad, event_name)

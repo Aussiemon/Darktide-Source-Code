@@ -143,7 +143,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 		end
 
 		if num_peers == 0 then
-			TestifySnippets.skip_main_menu()
 			TestifySnippets.load_mission(mission_key)
 		end
 
@@ -296,8 +295,36 @@ CombatTestCases.validate_minion_pathing_on_mission = function (case_settings)
 		end
 
 		local num_minion_breeds = #minion_breeds
-		local start_positions = table.values(minion_multi_teleporter_positions)
+		local start_positions, num_skipped_teleporters = {}, 0
+
+		for i = 1, #minion_multi_teleporter_units do
+			local teleporter_unit = minion_multi_teleporter_units[i]
+			local position = minion_multi_teleporter_positions[teleporter_unit]
+
+			if position then
+				local crossroads_id, road_id = Testify:make_request("crossroad_road_for_position", position)
+
+				if crossroads_id and not Testify:make_request("is_crossroad_segment_available", crossroads_id, road_id) then
+					local chosen_road_id = Testify:make_request("crossroad_road_id", crossroads_id)
+
+					num_skipped_teleporters = num_skipped_teleporters + 1
+
+					Log.info("Testify", "Skipping minion teleporter %s on removed crossroad road (crossroad %s road %s, chosen road %s).", tostring(teleporter_unit), tostring(crossroads_id), tostring(road_id), tostring(chosen_road_id))
+				else
+					start_positions[#start_positions + 1] = position
+				end
+			end
+		end
+
 		local num_start_positions = #start_positions
+
+		if num_start_positions == 0 and num_skipped_teleporters > 0 then
+			Log.info("Testify", "No minion teleporters left on the chosen main path - skipping pathing validation.")
+			TestifySnippets.exit_to_main_menu_and_wait()
+
+			return
+		end
+
 		local spawn_position = start_positions[1]
 		local minion_pathing_data, total_path_queries = Script.new_array(num_minion_breeds), 0
 		local minion_spawn_data = {

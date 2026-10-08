@@ -87,7 +87,7 @@ HudElementOvercharge._update_warp_charge = function (self, dt)
 	end
 
 	if warp_charge_level < self._warp_charge_level - EPSILON then
-		warp_charge_level = math.lerp(self._warp_charge_level, warp_charge_level, dt * 2)
+		warp_charge_level = math.lerp(self._warp_charge_level, warp_charge_level, math.min(dt * 2, 1))
 	end
 
 	local previous_anim_progress = widget.content.anim_progress

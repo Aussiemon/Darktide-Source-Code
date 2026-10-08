@@ -1544,8 +1544,8 @@ local leftover_choice_page = {
 				if (target_stat_a or target_stat_b) and (target_stat_a ~= display_stat_a or target_stat_b ~= display_stat_b) then
 					local bar_style_a = style.tug_of_war_bar_fill_a
 					local bar_style_b = style.tug_of_war_bar_fill_b
-					local lerped_a = target_stat_a and math.lerp(display_stat_a, target_stat_a, dt * 5) or display_stat_a
-					local lerped_b = target_stat_b and math.lerp(display_stat_b, target_stat_b, dt * 5) or display_stat_b
+					local lerped_a = target_stat_a and math.lerp(display_stat_a, target_stat_a, math.min(dt * 5, 1)) or display_stat_a
+					local lerped_b = target_stat_b and math.lerp(display_stat_b, target_stat_b, math.min(dt * 5, 1)) or display_stat_b
 					local lerped_tot = lerped_a + lerped_b
 					local pct_a = lerped_tot > 0 and lerped_a / lerped_tot or 0.5
 					local pct_b = lerped_tot > 0 and lerped_b / lerped_tot or 0.5

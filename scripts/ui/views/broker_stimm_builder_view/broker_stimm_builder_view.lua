@@ -926,7 +926,7 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 			self._tooltip_alpha_multiplier = 0
 			self._tooltip_draw_delay = TalentBuilderViewSettings.tooltip_fade_delay
 		elseif t > self._gamepad_cursor_snap_delay then
-			pos = Vector3.lerp(gamepad_cursor_target_pos, pos, settings.snap_movement_rate^dt)
+			pos = Vector3.lerp(gamepad_cursor_target_pos, pos, math.min(settings.snap_movement_rate^dt, 1))
 		end
 
 		local drag_coefficient = 1
@@ -941,7 +941,7 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 			Vector3.set_xyz(vel, 0, 0, 0)
 		end
 
-		gamepad_cursor_average_vel = math.lerp(gamepad_cursor_average_vel, vel, settings.average_speed_smoothing^dt)
+		gamepad_cursor_average_vel = math.lerp(gamepad_cursor_average_vel, vel, math.min(settings.average_speed_smoothing^dt, 1))
 
 		local zoom_scale = self._current_zoom or 1
 		local inverse_zoom_scale = 1 / zoom_scale
@@ -1001,7 +1001,7 @@ BrokerStimmBuilderView._update_gamepad_cursor = function (self, dt, t, input_ser
 
 		self:_set_scenegraph_position("gamepad_cursor_pivot", x, y)
 
-		local width, height = Vector3.to_elements(math.lerp(wanted_size, cursor_size, settings.size_resize_rate^dt))
+		local width, height = Vector3.to_elements(math.lerp(wanted_size, cursor_size, math.min(settings.size_resize_rate^dt, 1)))
 		local max_side = math.max(width, height)
 
 		self:_set_scenegraph_size("gamepad_cursor", max_side, max_side)
@@ -1032,7 +1032,7 @@ BrokerStimmBuilderView._update_center_progress = function (self, dt, t)
 		local target_velocity = math.remap(0, 1, 0.01, 10, math.abs(diff)) * math.sign(diff)
 		local dt_multiplier = math.abs(target_velocity) < math.abs(content.velocity) and 40 or 2
 
-		content.velocity = math.lerp(content.velocity, target_velocity, dt * dt_multiplier)
+		content.velocity = math.lerp(content.velocity, target_velocity, math.min(dt * dt_multiplier, 1))
 
 		local step = content.velocity * dt
 

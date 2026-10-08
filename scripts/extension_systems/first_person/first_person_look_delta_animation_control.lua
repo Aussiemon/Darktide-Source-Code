@@ -136,8 +136,8 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t, rotation_ov
 	end
 
 	local wanted_look_delta_x, wanted_look_delta_y, lerp_constant_x, lerp_constant_y = LookDelta.look_delta_values(settings, yaw_delta, pitch_delta)
-	local look_delta_x = lerp and math.lerp(self._look_delta_x, wanted_look_delta_x, lerp_constant_x * 60 * dt) or wanted_look_delta_x
-	local look_delta_y = lerp and math.lerp(self._look_delta_y, wanted_look_delta_y, lerp_constant_y * 60 * dt) or wanted_look_delta_y
+	local look_delta_x = lerp and math.lerp(self._look_delta_x, wanted_look_delta_x, math.min(lerp_constant_x * 60 * dt, 1)) or wanted_look_delta_x
+	local look_delta_y = lerp and math.lerp(self._look_delta_y, wanted_look_delta_y, math.min(lerp_constant_y * 60 * dt, 1)) or wanted_look_delta_y
 	local world_look_delta_y = Vector3.dot(Vector3.normalize(Vector3.flat(Quaternion.forward(rotation))), Quaternion.up(rotation))
 	local clamp_look_delta = not settings.no_look_delta_clamp
 

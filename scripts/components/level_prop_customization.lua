@@ -9,6 +9,8 @@ LevelPropCustomization.init = function (self, unit)
 	self._chunk_lodding_registered = false
 	self._child_is_static = {}
 	self._editor_toggle_visibility_state = true
+	self._wants_visible = nil
+	self._is_visible = nil
 
 	self:_spawn_children()
 
@@ -25,23 +27,21 @@ LevelPropCustomization.init = function (self, unit)
 	return true
 end
 
+LevelPropCustomization.extensions_ready = function (self, world, unit)
+	self._component_extension = ScriptUnit.extension(unit, "component_system")
+end
+
 LevelPropCustomization.editor_validate = function (self, unit)
 	return true, ""
 end
 
 LevelPropCustomization.on_chunk_visibility_state_changed = function (self, is_visible)
-	local static_map = self._child_is_static
+	self._wants_visible = is_visible
 
-	for _, child_unit in ipairs(self._child_units) do
-		Unit.set_unit_visibility(child_unit, is_visible)
+	if not self._should_update then
+		self._should_update = true
 
-		if static_map[child_unit] then
-			if is_visible then
-				self:_create_actors(child_unit)
-			else
-				self:_destroy_actors(child_unit)
-			end
-		end
+		self._component_extension:enable_component_update(self.guid)
 	end
 end
 
@@ -202,16 +202,38 @@ LevelPropCustomization.update = function (self, unit, dt, t)
 		for entry, current_t in pairs(self._lerp_material_variables_data) do
 			local material = entry.material
 			local variable = entry.variable
-			local lerp_t = math.clamp01(current_t / entry.duration)
 
-			if lerp_t ~= 1 then
+			if current_t < entry.duration then
 				keep_update = true
 
+				local lerp_t = math.clamp01(current_t / entry.duration)
 				local value = not self._lerp_reverse and math.lerp(entry.scalar_from, entry.scalar_to, lerp_t) or math.lerp(entry.scalar_to, entry.scalar_from, lerp_t)
 
-				self._lerp_material_variables_data[entry] = current_t + dt
+				self._lerp_material_variables_data[entry] = math.min(current_t + dt, entry.duration)
 
 				Unit.set_scalar_for_material(unit, material, variable, value)
+			end
+		end
+
+		local wants_visible = self._wants_visible
+
+		if self._is_visible ~= wants_visible then
+			local was_visible = self._is_visible
+
+			self._is_visible = wants_visible
+
+			local static_map = self._child_is_static
+
+			for _, child_unit in ipairs(self._child_units) do
+				Unit.set_unit_visibility(child_unit, wants_visible)
+
+				if static_map[child_unit] then
+					if wants_visible then
+						self:_create_actors(child_unit)
+					else
+						self:_destroy_actors(child_unit)
+					end
+				end
 			end
 		end
 

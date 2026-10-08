@@ -444,57 +444,153 @@ Items.character_level = function (item)
 	return character_level
 end
 
-local _find_link_attachment_item_slot_path
-
-function _find_link_attachment_item_slot_path(target_table, slot_id, item, link_item, optional_path)
-	local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
-	local path = optional_path or nil
-
-	for k, t in pairs(target_table) do
-		if type(t) == "table" then
-			if k == slot_id then
-				if not t.item or t.item ~= unused_trinket_name then
-					path = path and path .. "." .. k or k
-
-					if link_item then
-						t.item = item
-					end
-
-					return path, t.item
-				else
-					return nil
-				end
-			else
-				local previous_path = path
-
-				path = path and path .. "." .. k or k
-
-				local alternative_path, path_item = _find_link_attachment_item_slot_path(t, slot_id, item, link_item, path)
-
-				if alternative_path then
-					return alternative_path, path_item
-				else
-					path = previous_path
-				end
-			end
-		end
-	end
-end
-
-local trinket_slot_order = {
+local UNUSED_TRINKET_NAME = "content/items/weapons/player/trinkets/unused_trinket"
+local EMPTY_TRINKET_NAME = "content/items/weapons/player/trinkets/empty_trinket"
+local TRINKET_SLOT_IDS = {
 	"slot_trinket_1",
 	"slot_trinket_2",
 }
 
-Items.get_current_equipped_trinket = function (item)
-	for i = 1, #trinket_slot_order do
-		local slot_id = trinket_slot_order[i]
-		local _, trinket_item = _find_link_attachment_item_slot_path(item, slot_id, nil, false)
+local function _item_name(item_or_name)
+	if type(item_or_name) == "table" then
+		return item_or_name.name
+	end
 
-		if type(trinket_item) == "table" then
-			return trinket_item, slot_id
+	return item_or_name
+end
+
+local _find_slot
+
+function _find_slot(attachments, slot_id, path)
+	for key, node in pairs(attachments) do
+		if type(node) == "table" then
+			path[#path + 1] = key
+
+			if key == slot_id then
+				return path, node
+			end
+
+			local is_other_item_slot = ItemSlotSettings[key] ~= nil
+
+			if not is_other_item_slot then
+				local found_path, found_node = _find_slot(node, slot_id, path)
+
+				if found_path then
+					return found_path, found_node
+				end
+			end
+
+			path[#path] = nil
 		end
 	end
+end
+
+local function _trinket_slots(attachments)
+	local slots = {}
+
+	if attachments then
+		for i = 1, #TRINKET_SLOT_IDS do
+			local slot_id = TRINKET_SLOT_IDS[i]
+			local path, node = _find_slot(attachments, slot_id, {})
+
+			if path then
+				slots[slot_id] = {
+					path = path,
+					node = node,
+				}
+			end
+		end
+	end
+
+	return slots
+end
+
+local function _create_node_at_path(root, path)
+	local node = root
+
+	for i = 1, #path do
+		local key = path[i]
+
+		if type(node[key]) ~= "table" then
+			node[key] = {}
+		end
+
+		node = node[key]
+	end
+
+	return node
+end
+
+local function _trinket_layout_item(weapon_master_item, optional_skin)
+	local skin = type(optional_skin) == "table" and optional_skin or MasterItems.get_item(optional_skin)
+	local skin_mark_item = skin and MasterItems.get_item(skin.preview_item)
+
+	return skin_mark_item or weapon_master_item
+end
+
+local function _live_trinket_slot_id(layout_item)
+	local slots = _trinket_slots(layout_item.attachments)
+
+	table.dump(slots, "slots", 4)
+
+	for i = 1, #TRINKET_SLOT_IDS do
+		local slot_id = TRINKET_SLOT_IDS[i]
+		local slot = slots[slot_id]
+
+		if slot and _item_name(slot.node.item) ~= UNUSED_TRINKET_NAME then
+			return slot_id
+		end
+	end
+
+	return nil
+end
+
+local function _live_trinket_slot_path(weapon_master_item, optional_skin)
+	local layout_item = _trinket_layout_item(weapon_master_item, optional_skin)
+	local slot_id = _live_trinket_slot_id(layout_item)
+	local master_item_slots = _trinket_slots(weapon_master_item.attachments)
+	local slot_data = slot_id and master_item_slots[slot_id]
+
+	return slot_data and slot_data.path
+end
+
+local function _set_preview_slot_item(weapon_item, path, item_or_name)
+	local node = _create_node_at_path(weapon_item.attachments, path)
+
+	node.item = item_or_name
+
+	local gear = weapon_item.__gear
+	local overrides = gear and gear.masterDataInstance and gear.masterDataInstance.overrides
+
+	if overrides then
+		overrides.attachments = overrides.attachments or {}
+
+		local override_node = _create_node_at_path(overrides.attachments, path)
+
+		override_node.item = _item_name(item_or_name)
+	end
+end
+
+Items.is_real_trinket = function (trinket)
+	local trinket_name = _item_name(trinket)
+
+	return trinket_name ~= nil and trinket_name ~= "" and trinket_name ~= UNUSED_TRINKET_NAME and trinket_name ~= EMPTY_TRINKET_NAME
+end
+
+Items.get_current_equipped_trinket = function (item)
+	local slots = _trinket_slots(item and item.attachments)
+
+	for i = 1, #TRINKET_SLOT_IDS do
+		local slot_id = TRINKET_SLOT_IDS[i]
+		local slot = slots[slot_id]
+		local trinket_name = slot and _item_name(slot.node.item)
+
+		if Items.is_real_trinket(trinket_name) then
+			return trinket_name, slot_id
+		end
+	end
+
+	return nil
 end
 
 Items.weapon_trinket_preview_item = function (item, optional_preview_item)
@@ -509,26 +605,32 @@ Items.weapon_trinket_preview_item = function (item, optional_preview_item)
 	if visual_item then
 		visual_item.gear_id = item.gear_id
 
-		for i = 1, #trinket_slot_order do
-			local slot_id = trinket_slot_order[i]
+		local slot_id = _live_trinket_slot_id(visual_item)
+		local slot = slot_id and _trinket_slots(visual_item.attachments)[slot_id]
 
-			if _find_link_attachment_item_slot_path(visual_item, slot_id, item, true) then
-				break
-			end
+		if slot then
+			slot.node.item = item
 		end
 	end
 
 	return visual_item
 end
 
-Items.add_weapon_trinket_on_preview_item = function (weapon_item, trinket_item)
-	for i = 1, #trinket_slot_order do
-		local slot_id = trinket_slot_order[i]
-		local alternative_path, _ = _find_link_attachment_item_slot_path(weapon_item.attachments, slot_id, trinket_item, true)
+Items.add_weapon_trinket_on_preview_item = function (weapon_item, optional_trinket, optional_skin)
+	local weapon_master_item = MasterItems.get_item(weapon_item.name)
 
-		if alternative_path then
-			break
-		end
+	if not weapon_master_item then
+		return
+	end
+
+	for _, master_slot in pairs(_trinket_slots(weapon_master_item.attachments)) do
+		_set_preview_slot_item(weapon_item, master_slot.path, _item_name(master_slot.node.item))
+	end
+
+	local live_slot_path = optional_trinket and _live_trinket_slot_path(weapon_master_item, optional_skin)
+
+	if live_slot_path then
+		_set_preview_slot_item(weapon_item, live_slot_path, optional_trinket)
 	end
 end
 
@@ -1092,64 +1194,26 @@ Items.equip_weapon_skin = function (weapon_item, skin_item)
 end
 
 Items.get_trinket_attach_point = function (weapon_item, trinket_item, optional_path)
-	local attach_point = optional_path
-
-	if not attach_point then
-		local link_attachment_item_to_slot
-		local unused_trinket_name = "content/items/weapons/player/trinkets/unused_trinket"
-
-		function link_attachment_item_to_slot(target_table, slot_id, item, optional_path)
-			if not target_table then
-				return
-			end
-
-			local path = optional_path or nil
-
-			for k, t in pairs(target_table) do
-				if type(t) == "table" then
-					local correct_path = k == slot_id
-
-					if correct_path and (not t.item or t.item ~= unused_trinket_name) then
-						t.item = item
-						path = path and path .. "." .. k or k
-
-						return path
-					else
-						local previous_path = path
-
-						path = path and path .. "." .. k or k
-
-						local alternative_path = link_attachment_item_to_slot(t, slot_id, item, path)
-
-						if alternative_path then
-							return alternative_path
-						else
-							path = previous_path
-						end
-					end
-				end
-			end
-		end
-
-		local master_item = weapon_item.__master_item or weapon_item
-
-		attach_point = link_attachment_item_to_slot(master_item, "slot_trinket_1", trinket_item)
-		attach_point = attach_point or link_attachment_item_to_slot(master_item, "slot_trinket_2", trinket_item)
+	if optional_path then
+		return optional_path
 	end
 
-	return attach_point
+	local weapon_master_item = MasterItems.get_item(weapon_item.name)
+	local live_slot_path = weapon_master_item and _live_trinket_slot_path(weapon_master_item, weapon_item.slot_weapon_skin)
+
+	return live_slot_path and "attachments." .. table.concat(live_slot_path, ".")
 end
 
 Items.equip_weapon_trinket = function (weapon_item, trinket_item, optional_path)
-	local weapon_gear_id = weapon_item.gear_id
-	local trinket_gear_id = trinket_item and trinket_item.gear_id
 	local attach_point = Items.get_trinket_attach_point(weapon_item, trinket_item, optional_path)
 
-	if attach_point then
-		return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
-	else
+	if not attach_point then
 		return Promise.rejected("no attach point found to apply the trinket")
 	end
+
+	local trinket_gear_id = trinket_item and trinket_item.gear_id
+
+	return Managers.data_service.gear:attach_item_as_override(weapon_item.gear_id, attach_point .. ".item", trinket_gear_id)
 end
 
 Items.unequip_slots = function (unequip_sots)
@@ -1158,7 +1222,6 @@ Items.unequip_slots = function (unequip_sots)
 	local player_manager = Managers.player
 	local player = player_manager:player(peer_id, local_player_id)
 	local character_id = player:character_id()
-	local ui_manager = Managers.ui
 
 	return Managers.data_service.profiles:unequip_slots(character_id, unequip_sots):next(function (v)
 		Log.debug("Items", "Unequipped loadout slots")

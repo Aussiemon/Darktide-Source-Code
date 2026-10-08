@@ -79,7 +79,7 @@ function _update_aim_offset(dt, t, first_person_unit, unit_data_extension, weapo
 	if aim_height_variable then
 		local current_value = Unit.animation_get_variable(first_person_unit, aim_height_variable)
 		local wanted_value = math.clamp(pitch, -1, 1)
-		local new_value = math.lerp(current_value, wanted_value, 20 * dt)
+		local new_value = math.lerp(current_value, wanted_value, math.min(20 * dt, 1))
 
 		new_value = math.clamp(new_value, -1, 1)
 

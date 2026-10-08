@@ -92,10 +92,10 @@ PlayerUnitAimExtension.update = function (self, unit, dt, t)
 
 			self._sticky_aim_position:store(sticky_aim_position)
 
-			sticky_aim_blend = math.lerp(sticky_aim_blend, 1, dt * 16)
+			sticky_aim_blend = math.lerp(sticky_aim_blend, 1, math.min(dt * 16, 1))
 		end
 	else
-		sticky_aim_blend = math.lerp(sticky_aim_blend, 0, dt * 5)
+		sticky_aim_blend = math.lerp(sticky_aim_blend, 0, math.min(dt * 5, 1))
 	end
 
 	self._sticky_aim_blend = sticky_aim_blend

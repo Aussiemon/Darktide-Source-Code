@@ -905,7 +905,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 		Profiler.record_statistics("move_y", self._locomotion_steering_component.local_move_y)
 	end
 
-	local anim_move_speed = math.lerp(old_speed, new_speed, dt * 10)
+	local anim_move_speed = math.lerp(old_speed, new_speed, math.min(dt * 10, 1))
 	local clamped_anim_move_speed = math.clamp(anim_move_speed, 0, 19.9)
 
 	Unit.animation_set_variable(unit, var, clamped_anim_move_speed)
@@ -933,7 +933,7 @@ PlayerUnitLocomotionExtension.update = function (self, unit, dt, t)
 		local current_active_stop = locomotion_steering_component.hub_active_stopping and 1 or 0
 		local active_stop_anim_var_id = Unit.animation_find_variable(unit, self._active_stop_anim_var)
 		local old_anim_var_id = Unit.animation_get_variable(unit, active_stop_anim_var_id)
-		local active_stop = math.clamp(math.lerp(old_anim_var_id, current_active_stop, dt * 5), 0, 1)
+		local active_stop = math.clamp(math.lerp(old_anim_var_id, current_active_stop, math.min(dt * 5, 1)), 0, 1)
 
 		Unit.animation_set_variable(unit, active_stop_anim_var_id, active_stop)
 		self._movement_direction_animation_control:update_direction_variables(dt, t)

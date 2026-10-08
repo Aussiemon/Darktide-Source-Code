@@ -130,6 +130,12 @@ ComponentExtension.enable_component = function (self, guid)
 	return self._num_updates
 end
 
+ComponentExtension.enable_component_update = function (self, guid)
+	local component = self._components[guid]
+
+	self:_enable_update(component)
+end
+
 ComponentExtension.disable_component = function (self, guid)
 	local component = self._components[guid]
 

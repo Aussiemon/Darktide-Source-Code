@@ -323,8 +323,8 @@ HudElementPlayerBuffs._update_buff_alignments = function (self, force_update, dt
 					offset[1] = target_x + horizontal_spacing
 					content.opacity = 0
 				else
-					offset[1] = math.lerp(old_horizontal_offset, target_x, dt * 6)
-					content.opacity = math.lerp(content.opacity, 1, dt * 4)
+					offset[1] = math.lerp(old_horizontal_offset, target_x, math.min(dt * 6, 1))
+					content.opacity = math.lerp(content.opacity, 1, math.min(dt * 4, 1))
 				end
 			end
 
