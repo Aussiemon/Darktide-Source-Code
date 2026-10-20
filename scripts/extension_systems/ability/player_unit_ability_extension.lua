@@ -432,14 +432,12 @@ PlayerUnitAbilityExtension._handle_sync = function (self)
 				self._ability_max_charges_sync_value[ability_type] = max_ability_charges
 			end
 
-			if self:uses_ability_charges(ability_type) then
-				local ability_charge_max_regen_time = self:max_regen_time_for_ability_charge(ability_type)
+			local ability_charge_max_regen_time = self:max_regen_time_for_ability_charge(ability_type)
 
-				if ability_charge_max_regen_time ~= self._ability_charge_max_regen_time_sync_value[ability_type] then
-					GameSession.set_game_object_field(self._game_session, self._game_object_id, ability_type .. "_charge_max_regen_time", ability_charge_max_regen_time)
+			if ability_charge_max_regen_time ~= self._ability_charge_max_regen_time_sync_value[ability_type] then
+				GameSession.set_game_object_field(self._game_session, self._game_object_id, ability_type .. "_charge_max_regen_time", ability_charge_max_regen_time)
 
-					self._ability_charge_max_regen_time_sync_value[ability_type] = ability_charge_max_regen_time
-				end
+				self._ability_charge_max_regen_time_sync_value[ability_type] = ability_charge_max_regen_time
 			end
 
 			local max_ability_resource = self:max_ability_resource(ability_type)
@@ -1309,22 +1307,20 @@ PlayerUnitAbilityExtension.max_regen_time_for_ability_charge = function (self, a
 		return 0
 	end
 
-	local uses_ability_charges = self:uses_ability_charges(ability_type)
-
-	if not uses_ability_charges then
-		return 0
-	end
-
 	local only_uses_charges = ability.only_uses_charges
 
 	if only_uses_charges then
 		return 0
 	end
 
-	local ability_resource_cost_per_charge = self:get_ability_resource_cost_per_charge(ability_type)
-	local base_resource_regen_per_second = ability.resource_regen_per_second or ability_resource_cost_per_charge * ability.resource_regen_percent_per_second
+	local target_ability_resource_pool = self:get_target_ability_resource_pool(ability_type)
+	local max_ability_resource = self:max_ability_resource(target_ability_resource_pool)
+	local ability_resource_cost_per_use = self:get_ability_resource_cost_per_use(ability_type)
+	local base_flat_regen_per_second = ability.resource_regen_per_second or 0
+	local base_percent_regen_per_second = max_ability_resource * (ability.resource_regen_percent_per_second or 0)
+	local base_resource_regen_per_second = base_flat_regen_per_second + base_percent_regen_per_second
 
-	return ability_resource_cost_per_charge / base_resource_regen_per_second
+	return ability_resource_cost_per_use / base_resource_regen_per_second
 end
 
 PlayerUnitAbilityExtension.max_ability_resource = function (self, ability_type)
@@ -1415,6 +1411,12 @@ PlayerUnitAbilityExtension.get_ability_resource_cost_per_use = function (self, a
 
 	if not ability then
 		return 0
+	end
+
+	local uses_ability_charges = self:uses_ability_charges(ability_type)
+
+	if uses_ability_charges then
+		return self:get_ability_resource_cost_per_charge(ability_type)
 	end
 
 	local target_resource_consumption = 0

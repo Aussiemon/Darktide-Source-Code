@@ -289,7 +289,7 @@ MissionBoardView._get_telemetry_name = function (self)
 	local page_index = self._page_index
 	local page_settings = self._mission_board_logic:get_current_page(page_index)
 	local difficulty_name = page_settings.name or "unknown"
-	local category = self:_has_replay_campaign_missions() and "_campaign" or ""
+	local category = self:_is_campaign_mission_list_visible() and "_campaign" or ""
 
 	return string.format("mission_board_view%s_%s", category, difficulty_name)
 end
@@ -1048,10 +1048,10 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 					Log.warning("MissionBoardView", "Unknown campaign '%s' in mission unlock requirements.", campaign_name)
 				end
 
-				requirement_text = requirement_text .. Localize("loc_mission_board_mission_locked_requirement", true, {
+				requirement_text = string.format("%s %s", requirement_text, Localize("loc_mission_board_mission_locked_requirement", true, {
 					campaign_name = Localize(campaign_display_name),
 					chapters = chapters_str,
-				}) .. (count < #required_data and "\n" or "")
+				})) .. (count < #required_data and "\n" or "")
 			end
 		end
 	end
@@ -1060,7 +1060,7 @@ MissionBoardView._get_mission_locked_issue_message = function (self)
 		requirement_text = Localize("loc_mission_board_locked_issue")
 	end
 
-	return requirement_text
+	return string.format("%s:\n%s", Localize("loc_mission_board_locked_issue"), requirement_text)
 end
 
 MissionBoardView._update_info_state = function (self, t)
@@ -1793,7 +1793,7 @@ MissionBoardView._set_next_sidebar_tab = function (self)
 	end
 end
 
-MissionBoardView._has_replay_campaign_missions = function (self)
+MissionBoardView._is_campaign_mission_list_visible = function (self)
 	local view_element_campaign_mission_list = self:_element("mission_list")
 
 	return view_element_campaign_mission_list and view_element_campaign_mission_list:visible()

@@ -18,6 +18,7 @@ local function construct_audio_settings_dropdown(template)
 	entry.tooltip_text = template.tooltip_text
 	entry.disable_rules = template.disable_rules
 	entry.apply_on_startup = template.apply_on_startup
+	entry.update = template.update
 	entry.id = id
 
 	entry.on_activated = function (new_value)
@@ -62,6 +63,7 @@ local function construct_audio_settings_boolean(template)
 	entry.tooltip_text = template.tooltip_text
 	entry.disable_rules = template.disable_rules
 	entry.apply_on_startup = template.apply_on_startup
+	entry.update = template.update
 	entry.id = id
 	entry.commit = template.commit
 
@@ -177,21 +179,26 @@ settings[#settings + 1] = {
 }
 
 local sound_device = {
-	default_value = 0,
+	default_value = "loc_setting_default_device",
 	display_name = "loc_setting_sound_device",
 	id = "sound_device",
 	save_location = "sound_settings",
-	options = {
-		{
-			display_name = "loc_setting_default_device",
-			id = 0,
-		},
-	},
+	options = {},
 	commit = function (value, template)
-		if value == 0 then
+		if value == template.default_value then
 			Wwise.set_active_device(0)
 		else
-			local option = template.options[value + 1]
+			local option
+
+			for i = 1, #template.options do
+				local template_option = template.options[i]
+
+				if template_option.display_name == value then
+					option = template_option
+
+					break
+				end
+			end
 
 			if option then
 				local device_id = option.device_id
@@ -206,26 +213,52 @@ local sound_device = {
 		return not IS_XBS and not not Wwise.get_device_list and not not Wwise.get_device_list()
 	end,
 	init = function (template)
+		template.update(template)
+	end,
+	update = function (template)
 		table.clear(template.options)
 
 		template.options[1] = {
 			display_name = "loc_setting_default_device",
-			id = 0,
+			id = "loc_setting_default_device",
 		}
-
-		for i, device in ipairs(Wwise.get_device_list()) do
-			template.options[#template.options + 1] = {
-				ignore_localization = true,
-				id = i,
-				display_name = device.device_name,
-				device_id = device.device_id,
-			}
-		end
 
 		local value = template.get_function()
 
-		if not template.options[value + 1] then
-			template.on_activated(template.default_value)
+		if type(value) == "number" then
+			for i, device in ipairs(Wwise.get_device_list()) do
+				template.options[#template.options + 1] = {
+					ignore_localization = true,
+					id = device.device_name,
+					display_name = device.device_name,
+					device_id = device.device_id,
+				}
+			end
+
+			local saved_option = template.options[value + 1] and template.options[value + 1].id
+
+			template.on_activated(saved_option or template.default_value)
+		else
+			local saved_option_found = template.options[1].display_name == value
+
+			for i, device in ipairs(Wwise.get_device_list()) do
+				local display_name = device.device_name
+
+				template.options[#template.options + 1] = {
+					ignore_localization = true,
+					id = display_name,
+					display_name = display_name,
+					device_id = device.device_id,
+				}
+
+				if not saved_option_found and value == display_name then
+					saved_option_found = true
+				end
+			end
+
+			if not saved_option_found then
+				template.on_activated(template.default_value)
+			end
 		end
 	end,
 }
@@ -565,6 +598,12 @@ capture_device = {
 		end
 	end,
 	init = function (template)
+		template.update(template)
+	end,
+	validation_function = function ()
+		return not not IS_WINDOWS and not not rawget(_G, "Managers") and not not Managers.chat and not not Managers.chat.get_capture_devices
+	end,
+	update = function (template)
 		table.clear(template.options)
 
 		template.options[1] = {
@@ -572,7 +611,14 @@ capture_device = {
 			id = "Default System Device",
 		}
 
+		local value = template.get_function()
+		local saved_option_found = false
+
 		for _, device in ipairs(Managers.chat:get_capture_devices()) do
+			if not saved_option_found and value == device.device then
+				saved_option_found = true
+			end
+
 			if device.device ~= "Default System Device" and device.device ~= "Default Communication Device" then
 				template.options[#template.options + 1] = {
 					ignore_localization = true,
@@ -582,26 +628,9 @@ capture_device = {
 			end
 		end
 
-		local value = template.get_function()
-		local found = false
-
-		for i = 1, #template.options do
-			local option = template.options[i]
-			local id = option.id
-
-			if id == value then
-				found = true
-
-				break
-			end
-		end
-
-		if not found then
+		if not saved_option_found then
 			template.on_activated(template.default_value)
 		end
-	end,
-	validation_function = function ()
-		return not not IS_WINDOWS and not not rawget(_G, "Managers") and not not Managers.chat and not not Managers.chat.get_capture_devices
 	end,
 }
 settings[#settings + 1] = construct_audio_settings_dropdown(capture_device)

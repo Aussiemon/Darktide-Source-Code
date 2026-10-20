@@ -989,7 +989,6 @@ OptionsView._update_settings_content_widgets = function (self, dt, t, input_serv
 			self:_set_selected_navigation_widget(focused_widget)
 		end
 
-		local handle_input = false
 		local selected_settings_widget = self._selected_settings_widget
 
 		for i = 1, #settings_content_widgets do

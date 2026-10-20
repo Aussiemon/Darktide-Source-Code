@@ -56,6 +56,7 @@ local power_generation_strength_keystone_talent_settings = talent_settings.power
 local redline_keystone_talent_settings = talent_settings.redline
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
+local EPSILON = 0.0001
 local BROADPHASE_RESULTS = {}
 local MAX_ABILITY_CHARGES_NETWORK_VALUE = 25
 local MAX_BUFF_STACK_COUNT = BuffSettings.max_stack_count
@@ -446,7 +447,7 @@ templates.cryptic_precision_stance_one_charge = {
 			Ammo.add_to_all_slots_flat(template_context.unit, ammo_gain)
 		end
 
-		local num_charges_used_during_ability = math.floor(template_data.cooldown_percent_used + precision_stance_talent_settings.cooldown_percent_cost_on_activation)
+		local num_charges_used_during_ability = math.floor(template_data.cooldown_percent_used + precision_stance_talent_settings.cooldown_percent_cost_on_activation + EPSILON)
 
 		if template_context.is_server and num_charges_used_during_ability > 0 then
 			if not extension_destroyed and template_data.has_gain_stacks_per_combat_ability_charge_used_talent then

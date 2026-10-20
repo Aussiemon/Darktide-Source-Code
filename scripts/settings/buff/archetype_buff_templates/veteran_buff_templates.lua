@@ -108,7 +108,7 @@ templates.veteran_combat_ability_stance_master = {
 		[stat_buffs.sway_modifier] = talent_settings_2.combat_ability.sway_modifier,
 	},
 	proc_events = {
-		[proc_events.on_hit] = 1,
+		[proc_events.on_kill] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -142,10 +142,6 @@ templates.veteran_combat_ability_stance_master = {
 		template_data.apply_outlines = true
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
-		if not CheckProcFunctions.on_kill(params, template_data, template_context, t) then
-			return false
-		end
-
 		_volley_fire_penance_proc(template_data, template_context)
 
 		if not template_data.outlined_kills_extends_duration then

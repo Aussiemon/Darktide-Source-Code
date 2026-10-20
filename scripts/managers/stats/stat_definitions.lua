@@ -7456,7 +7456,7 @@ do
 					local target_breed_name = attack_data.target_breed_name
 					local target_breed = target_breed_name and Breeds[target_breed_name]
 					local target_breed_tags = target_breed and target_breed.tags
-					local chordclaw_weapon_template_name = "transonic_claw_p1_m1"
+					local chordclaw_weapon_template_name = "cryptic_transonic_claw"
 
 					if attack_data.weapon_template_name == chordclaw_weapon_template_name and target_breed_tags and target_breed_tags.elite then
 						return self.id, attack_data

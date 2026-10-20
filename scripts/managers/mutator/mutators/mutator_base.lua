@@ -73,10 +73,6 @@ MutatorBase.is_loading = function (self)
 		end
 	end
 
-	if not self._is_loaded and self._template.activate_on_load then
-		self:activate()
-	end
-
 	self._is_loaded = true
 
 	return false

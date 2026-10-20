@@ -513,15 +513,6 @@ local legend_inputs = {
 	},
 	{
 		alignment = "right_alignment",
-		display_name = "loc_inventory_menu_profile_preset_add",
-		input_action = "hotkey_item_profile_preset_input_1",
-		on_pressed_callback = "cb_on_profile_preset_add",
-		visibility_function = function (parent)
-			return InputDevice.gamepad_active and parent:can_add_profile_preset() and not parent._is_readonly
-		end,
-	},
-	{
-		alignment = "right_alignment",
 		display_name = "loc_inventory_menu_profile_preset_customize",
 		input_action = "hotkey_item_profile_preset_input_1_hold",
 		on_pressed_callback = "cb_on_profile_preset_customize",

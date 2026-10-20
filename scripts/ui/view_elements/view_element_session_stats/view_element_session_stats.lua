@@ -4,6 +4,7 @@ local Definitions = require("scripts/ui/view_elements/view_element_session_stats
 local Settings = require("scripts/ui/view_elements/view_element_session_stats/view_element_session_stats_settings")
 local SessionStatsDisplay = require("scripts/settings/stats/session_stats_display")
 local Text = require("scripts/utilities/ui/text")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local StatDefinitions = require("scripts/managers/stats/stat_definitions")
 local ViewElementSessionStats = class("ViewElementSessionStats", "ViewElementBase")
@@ -25,26 +26,22 @@ end
 ViewElementSessionStats.init = function (self, parent, draw_layer, start_scale, context)
 	ViewElementSessionStats.super.init(self, parent, draw_layer, start_scale, Definitions)
 
-	local title_widget = self._widgets_by_name.title
-
-	title_widget.content.reveal_bottom = Settings.title_height
-
-	local context_time = context and context.session_time_seconds
-
-	self:set_mission_time(context_time)
-
 	local header_widget = self._widgets_by_name.column_headers
 	local header_content = header_widget.content
-
-	header_content.label = ""
-
 	local local_player = Managers.player:local_player(1)
+	local profile = local_player and local_player:profile()
+	local archetype_name = profile and profile.archetype.name
 
+	header_content.icon = archetype_name and UISettings.archetype_font_icon[archetype_name] or ""
+	header_content.time_label = Localize(Settings.time_label_loc_key)
 	header_content.own = local_player and local_player:name() or Localize(Settings.private_column_loc_key)
 	header_content.team = Localize(Settings.team_column_loc_key)
 	header_content.reveal_bottom = Settings.title_height + Settings.row_height
 
-	self:_populate_rows()
+	local context_time = context and context.session_time_seconds
+
+	self:set_mission_time(context_time)
+	self:_populate_rows(context and context.ui_renderer)
 
 	self._expanded = false
 	self._expand_progress = 0
@@ -57,19 +54,10 @@ ViewElementSessionStats.set_pivot_offset = function (self, x, y)
 end
 
 ViewElementSessionStats.set_mission_time = function (self, seconds)
-	local title_widget = self._widgets_by_name.title
+	local header_widget = self._widgets_by_name.column_headers
 
-	if seconds then
-		local minutes = math.floor(seconds / 60)
-		local remaining_seconds = math.floor(seconds % 60)
-
-		title_widget.content.text = Localize(Settings.total_time_loc_key, true, {
-			minutes = minutes,
-			seconds = remaining_seconds,
-		})
-	else
-		title_widget.content.text = ""
-	end
+	header_widget.content.time = seconds and Text.format_minutes_seconds_localized_medium(seconds) or ""
+	header_widget.style.time_label.visible = seconds ~= nil
 end
 
 ViewElementSessionStats._padding_prompt_widget = function (self)
@@ -137,7 +125,19 @@ ViewElementSessionStats._apply_expand_progress = function (self, progress)
 	end
 end
 
-ViewElementSessionStats._populate_rows = function (self)
+ViewElementSessionStats._align_own_column = function (self, ui_renderer, num_rows)
+	local widgets_by_name = self._widgets_by_name
+	local first_style = widgets_by_name.session_stat_row_1.style.own
+	local half_digit_width = Text.text_width(ui_renderer, "0", first_style, first_style.size) / 2
+
+	for i = 1, num_rows do
+		local own_style = widgets_by_name["session_stat_row_" .. i].style.own
+
+		own_style.offset[1] = own_style.offset[1] + half_digit_width
+	end
+end
+
+ViewElementSessionStats._populate_rows = function (self, ui_renderer)
 	local row_height = Settings.row_height
 	local rows_y = Settings.title_height + row_height
 	local unavailable_text = Localize(Settings.unavailable_loc_key)
@@ -177,6 +177,10 @@ ViewElementSessionStats._populate_rows = function (self)
 		end
 
 		widgets[#widgets + 1] = widget
+	end
+
+	if ui_renderer then
+		self:_align_own_column(ui_renderer, num_rows)
 	end
 
 	local num_padding_rows = Settings.num_padding_rows

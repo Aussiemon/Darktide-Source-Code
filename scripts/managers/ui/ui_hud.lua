@@ -529,7 +529,7 @@ UIHud._deactivate_mouse_cursor = function (self)
 end
 
 UIHud.tactical_overlay_active = function (self)
-	return self._tactical_overlay_active or false
+	return not not self._tactical_overlay_active
 end
 
 UIHud.event_set_tactical_overlay_state = function (self, active)
@@ -541,7 +541,7 @@ UIHud.event_set_communication_wheel_state = function (self, state)
 end
 
 UIHud.communication_wheel_active = function (self)
-	return self._communication_wheel_state == "active"
+	return not not self._communication_wheel_state
 end
 
 UIHud.communication_wheel_wants_camera_control = function (self)
@@ -551,7 +551,7 @@ UIHud.communication_wheel_wants_camera_control = function (self)
 end
 
 UIHud.emote_wheel_active = function (self)
-	return self._emote_wheel_state == "active"
+	return not not self._emote_wheel_state
 end
 
 UIHud.emote_wheel_wants_camera_control = function (self)

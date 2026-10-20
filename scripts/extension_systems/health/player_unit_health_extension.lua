@@ -129,6 +129,13 @@ PlayerUnitHealthExtension.current_health = function (self)
 	return max_health - damage_taken
 end
 
+PlayerUnitHealthExtension.current_health_permanent = function (self)
+	local max_health = self:max_health()
+	local damage_taken = self:permanent_damage_taken()
+
+	return max_health - damage_taken
+end
+
 PlayerUnitHealthExtension.current_health_percent = function (self)
 	local max_health = self:max_health()
 	local damage_taken = self:damage_taken()

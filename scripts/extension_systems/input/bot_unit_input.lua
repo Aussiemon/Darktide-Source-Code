@@ -145,6 +145,12 @@ local STUCK_JUMP_SPEED_THRESHOLD_SQ = STUCK_JUMP_SPEED_THRESHOLD^2
 local STUCK_CROUCH_SPEED_THRESHOLD_SQ = STUCK_CROUCH_SPEED_THRESHOLD^2
 local JUMP_DOT_USE_WANTED_DIR_EPS_SQ = 1e-06
 local MIN_JUMP_DIRECTION_DOT = math.cos(math.pi / 16)
+local PRIORITY_AID_NEED_TYPES = {
+	hogtied = true,
+	knocked_down = true,
+	ledge = true,
+	netted = true,
+}
 
 BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local navigation_extension = self._navigation_extension
@@ -250,6 +256,9 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 	local threat_data = bot_group_data.aoe_threat
 	local hover_target_data = bot_group_data.hover_target
 	local move = self._move
+	local perception_component = bot_group_data.perception_component
+	local target_ally_need_type = perception_component.target_ally_need_type
+	local is_rescuing_ally = perception_component.target_ally_needs_aid and PRIORITY_AID_NEED_TYPES[target_ally_need_type]
 
 	if on_ladder then
 		if current_goal then
@@ -260,7 +269,7 @@ BotUnitInput._update_movement = function (self, unit, input, dt, t)
 			move.x = 0
 			move.y = 0
 		end
-	elseif t < hover_target_data.expires then
+	elseif t < hover_target_data.expires and not is_rescuing_ally then
 		self._is_hovering_position = true
 
 		local hover_target_pos = hover_target_data.hover_target_pos:unbox()

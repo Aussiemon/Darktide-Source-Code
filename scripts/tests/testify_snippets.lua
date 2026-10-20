@@ -3,6 +3,8 @@
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TestifySnippets = {}
 
+TestifySnippets.MIN_MISSION_DIFFICULTY = 2
+
 TestifySnippets.create_new_character = function ()
 	Testify:make_request("wait_for_view_to_close", "main_menu_background_view")
 	Testify:make_request("create_new_character")
@@ -92,8 +94,8 @@ TestifySnippets.load_mission = function (mission_name, challenge, resistance, ci
 end
 
 TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, resistance, circumstance_name, side_mission, peer_id)
-	challenge = challenge or 1
-	resistance = resistance or 1
+	challenge = challenge or TestifySnippets.MIN_MISSION_DIFFICULTY
+	resistance = resistance or TestifySnippets.MIN_MISSION_DIFFICULTY
 	circumstance_name = circumstance_name or "default"
 	side_mission = side_mission or "default"
 

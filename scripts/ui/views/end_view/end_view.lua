@@ -115,6 +115,7 @@ EndView.on_enter = function (self)
 	local team_session_report = self._session_report and self._session_report.team
 	local session_stats_context = {
 		session_time_seconds = team_session_report and (team_session_report.game_mode_completion_time_seconds or team_session_report.play_time_seconds),
+		ui_renderer = self._ui_renderer,
 	}
 	local session_stats_element = self:_add_element(ViewElementSessionStats, "session_stats", 1, session_stats_context, "session_stats_pivot")
 

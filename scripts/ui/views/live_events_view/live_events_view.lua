@@ -213,9 +213,9 @@ LiveEventsView.draw = function (self, dt, t, input_service, layer)
 end
 
 LiveEventsView.update = function (self, dt, t, input_service)
-	self:_update_reward_tooltip(dt, t, input_service)
 	self:_handle_gamepad_input(dt, t, input_service)
 	self:_handle_page_scroll(dt, t)
+	self:_update_reward_tooltip(dt, t, input_service)
 	self:_update_button_list_widget_states()
 	self:_update_entries(dt, t, input_service)
 
@@ -605,11 +605,18 @@ LiveEventsView._update_reward_tooltip = function (self, dt, t, input_service, ui
 	local reward_widgets = entry_reward_widgets and entry_reward_widgets.rewards
 
 	if reward_widgets then
+		local reward_size_x = Styles.sizes.reward_size[1]
+		local reward_size_y = Styles.sizes.reward_size[2]
+		local cursor_name = "cursor"
+		local cursor_position = input_service:get(cursor_name)
+		local mouse_x, mouse_y = Vector3.to_elements(cursor_position)
+		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+
 		for i = 1, #reward_widgets do
 			local reward_widget = reward_widgets[i]
 			local hotspot = reward_widget.content.hotspot
 
-			if hotspot and (hotspot.is_hover or InputDevice.gamepad_active and hotspot.is_selected and self._show_reward_tooltip) then
+			if hotspot and (hotspot.is_hover and self:_is_within_mask_boundaries(mouse_x * inverse_scale, mouse_y * inverse_scale) or InputDevice.gamepad_active and hotspot.is_selected and self._show_reward_tooltip and self:_is_reward_within_mask(reward_widget, reward_size_x, reward_size_y)) then
 				local reward = reward_widget.content.reward
 
 				if reward then
@@ -970,20 +977,25 @@ LiveEventsView._scroll_reward_into_view = function (self, reward_widget)
 
 	local region_height = self._entries_region_height or Styles.sizes.entry_height
 	local tile_height = Styles.sizes.reward_size[2]
+	local padding = Settings.reward_scroll_padding or 0
 	local viewport_top = viewport_node.world_position[2]
-	local tile_top = rewards_node.world_position[2] + reward_widget.offset[2] - tile_height
+	local tile_top = rewards_node.world_position[2] + reward_widget.offset[2]
 	local overflow = 0
 
-	if tile_top < viewport_top then
-		overflow = tile_top - viewport_top
-	elseif tile_top + tile_height > viewport_top + region_height then
-		overflow = tile_top + tile_height - (viewport_top + region_height)
+	if viewport_top > tile_top - padding then
+		overflow = tile_top - padding - viewport_top
+	elseif tile_top + tile_height + padding > viewport_top + region_height then
+		overflow = tile_top + tile_height + padding - (viewport_top + region_height)
 	end
 
 	if overflow ~= 0 then
 		local content = scrollbar_widget.content
+		local new_value = math.clamp((content.value or 0) + overflow / scroll_length, 0, 1)
 
-		content.value = math.clamp((content.value or 0) + overflow / scroll_length, 0, 1)
+		content.value = new_value
+		content.scroll_value = new_value
+		content.scroll_add = nil
+		content.current_scroll_direction = nil
 	end
 end
 
@@ -1021,6 +1033,22 @@ LiveEventsView._destroy_offscreen_renderer = function (self)
 
 		self._offscreen_world = nil
 	end
+end
+
+LiveEventsView._is_within_mask_boundaries = function (self, x, y, size_x, size_y)
+	local mask_width, mask_height = self:_scenegraph_size("entries_mask")
+	local mask_position = self:_scenegraph_world_position("entries_mask")
+	local min_x, min_y = mask_position[1], mask_position[2]
+	local width, height = size_x or 0, size_y or 0
+
+	return min_x <= x and min_y <= y and x + width <= min_x + mask_width and y + height <= min_y + mask_height
+end
+
+LiveEventsView._is_reward_within_mask = function (self, reward_widget, size_x, size_y)
+	local node_position = self:_scenegraph_world_position(reward_widget.scenegraph_id)
+	local offset = reward_widget.offset
+
+	return self:_is_within_mask_boundaries(node_position[1] + offset[1], node_position[2] + offset[2], size_x, size_y)
 end
 
 return LiveEventsView

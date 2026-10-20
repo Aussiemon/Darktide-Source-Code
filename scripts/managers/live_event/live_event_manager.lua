@@ -45,12 +45,14 @@ LiveEventManager.destroy = function (self)
 end
 
 LiveEventManager.add_player = function (self, id, account_id, is_local)
-	self._players[id] = {
+	local player_data = {
 		id = id,
 		account_id = account_id,
 		is_local = is_local,
 		progress = {},
 	}
+
+	self._players[id] = player_data
 end
 
 LiveEventManager.has_player = function (self, id)
@@ -58,32 +60,40 @@ LiveEventManager.has_player = function (self, id)
 end
 
 LiveEventManager.remove_player = function (self, id)
-	local promises = {}
-	local promise = Promise.resolved()
 	local player_data = self._players[id]
 	local active_events = self:get_active_events()
+	local promises = self:_register_player_progress(player_data, active_events)
+
+	self._players[id] = nil
+
+	return promises
+end
+
+LiveEventManager._register_player_progress = function (self, player_data, active_events)
+	local promises = {}
 
 	if not player_data or table.is_empty(active_events) then
-		self._players[id] = nil
-
-		table.insert(promises, promise)
-
 		return promises
 	end
 
 	local account_id = player_data.account_id
-	local is_host = self._is_host
+
+	if not self._is_host or not account_id then
+		return promises
+	end
+
+	local id = player_data.id
 
 	for event_id, _ in pairs(active_events) do
 		local has_data = player_data.progress[event_id] ~= nil
 
-		if is_host and event_id and account_id and has_data then
+		if event_id and has_data then
 			self:_update_player_xp(id, event_id)
 
 			local event_xp = table.nested_get(player_data, "progress", event_id, "xp")
 
 			if event_xp and event_xp ~= 0 then
-				promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, event_xp):catch(function (error)
+				local promise = Managers.backend.interfaces.tracks:modify_track_account_state(account_id, event_id, event_xp):catch(function (error)
 					if type(error) == "string" then
 						Log.error("LiveEventManager", "Failed to modify track account state:\n%s\n-------", error)
 					else
@@ -96,21 +106,37 @@ LiveEventManager.remove_player = function (self, id)
 		end
 	end
 
-	self._players[id] = nil
-
 	return promises
 end
 
-LiveEventManager.remove_all = function (self)
-	local promises = {}
+LiveEventManager._player_in_session = function (self, id)
+	for _, player in pairs(Managers.player:players()) do
+		local player_id = player.remote and player.stat_id or player:local_player_id()
 
-	for id, _ in pairs(self._players) do
-		local remove_promises = self:remove_player(id)
-
-		if remove_promises and #remove_promises > 0 then
-			promises = table.append(promises, remove_promises)
+		if player_id == id then
+			return true
 		end
 	end
+
+	return false
+end
+
+LiveEventManager.remove_all = function (self)
+	local active_events = self:get_active_events()
+	local players = self._players
+	local promises = {}
+
+	for id, player_data in pairs(players) do
+		if self:_player_in_session(id) then
+			local register_promises = self:_register_player_progress(player_data, active_events)
+
+			if #register_promises > 0 then
+				promises = table.append(promises, register_promises)
+			end
+		end
+	end
+
+	table.clear(players)
 
 	if #promises == 0 then
 		return Promise.resolved()
@@ -418,7 +444,9 @@ LiveEventManager.update = function (self, dt, t)
 	end
 
 	for id, _ in pairs(self._players) do
-		self:_update_player(dt, id)
+		if self:_player_in_session(id) then
+			self:_update_player(dt, id)
+		end
 	end
 
 	self:_update_events(dt, t)

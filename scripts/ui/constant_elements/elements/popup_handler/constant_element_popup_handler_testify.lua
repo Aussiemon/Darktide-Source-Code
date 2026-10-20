@@ -42,6 +42,22 @@ local ConstantElementPopupHandlerTestify = {
 
 		constant_element_popup_handler:trigger_widget_callback(widget)
 	end,
+	wait_for_popup_displayed = function (constant_element_popup_handler, popup_id)
+		local active_popup = constant_element_popup_handler:active_popup()
+
+		if not active_popup or active_popup.id ~= popup_id then
+			return Testify.RETRY
+		end
+
+		if constant_element_popup_handler._on_enter_anim_id or constant_element_popup_handler._blur_duration then
+			return Testify.RETRY
+		end
+	end,
+	wait_for_no_active_popup = function (constant_element_popup_handler)
+		if constant_element_popup_handler:active_popup() or constant_element_popup_handler._on_exit_anim_id then
+			return Testify.RETRY
+		end
+	end,
 }
 
 return ConstantElementPopupHandlerTestify

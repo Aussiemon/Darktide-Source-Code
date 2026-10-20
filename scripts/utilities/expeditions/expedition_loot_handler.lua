@@ -33,7 +33,7 @@ ExpeditionLootHandler.init = function (self, expedition_template, is_server, net
 	self._loot_calculations_dirty = false
 	self._picked_up_heavy_loot_units = {}
 	self._rescue_loot_amount_per_peer_id = {}
-	self._stored_rescue_loot_amount_per_account_id = {}
+	self._rescue_loot_pickup = {}
 	self._team_loot_collected = {}
 
 	local types = expedition_template.loot_settings.types
@@ -89,16 +89,27 @@ end
 
 ExpeditionLootHandler._event_client_connected = function (self, peer_id, player)
 	local account_id = _player_account_id(player)
-	local stored_bounty = self._stored_rescue_loot_amount_per_account_id[account_id]
+	local bounty_pickup = self._rescue_loot_pickup[account_id]
 
-	if stored_bounty then
-		self._stored_rescue_loot_amount_per_account_id[account_id] = nil
-		self._rescue_loot_amount_per_peer_id[peer_id] = stored_bounty
+	if bounty_pickup then
+		local stored_bounty = self._dropped_loot_by_pickup_unit[bounty_pickup]
 
-		local total_team_rescue_amount = self:_total_rescue_loot_amount()
+		self._dropped_loot_by_pickup_unit[bounty_pickup] = nil
+		self._dropped_reason_by_pickup_unit[bounty_pickup] = nil
 
-		self:_update_player_rescue_objective(total_team_rescue_amount)
-		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+		if stored_bounty then
+			self._rescue_loot_amount_per_peer_id[peer_id] = stored_bounty
+		end
+
+		if ALIVE[bounty_pickup] and not Managers.state.unit_spawner:is_marked_for_deletion(bounty_pickup) then
+			local objective_system = Managers.state.extension:system("mission_objective_system")
+
+			objective_system:remove_marker(RESCUE_OBJECTIVE_NAME, nil, bounty_pickup)
+
+			local pickup_system = Managers.state.extension:system("pickup_system")
+
+			pickup_system:despawn_pickup(bounty_pickup)
+		end
 	end
 end
 
@@ -114,15 +125,63 @@ ExpeditionLootHandler._event_client_disconnected = function (self, removed_playe
 
 		if self._is_server and peer_rescue_amount and peer_rescue_amount > 0 then
 			self._rescue_loot_amount_per_peer_id[peer_id] = nil
-			self._stored_rescue_loot_amount_per_account_id[player_data.account_id] = peer_rescue_amount
 
-			local total_team_rescue_amount = self:_total_rescue_loot_amount()
+			local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
+			local spawn_slots = respawn_beacon_system:get_most_relevant_spawn_slots()
+			local pickup_unit
 
-			Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+			if spawn_slots then
+				local slot
+
+				for j = #spawn_slots, 1, -1 do
+					if not spawn_slots[j].occupied_unit or not ALIVE[spawn_slots[j].occupied_unit] then
+						slot = spawn_slots[j]
+
+						break
+					end
+				end
+
+				if slot then
+					local spawn_position = slot.position:unbox()
+
+					pickup_unit = self:_spawn_drop_pickup(peer_rescue_amount, spawn_position, "disconnected_bounty")
+
+					local objective_system = Managers.state.extension:system("mission_objective_system")
+
+					objective_system:add_marker(RESCUE_OBJECTIVE_NAME, nil, pickup_unit)
+
+					self._rescue_loot_pickup[player_data.account_id] = pickup_unit
+				end
+			end
+
+			if not pickup_unit then
+				Log.warning("ExpeditionLootHandler", "failed to spawn replacement pickup for disconnected hogtied player")
+
+				local total_team_rescue_amount = self:_total_rescue_loot_amount()
+
+				Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+			end
 		end
 
 		self._telemetry_tracking_loot_by_player[peer_id] = nil
 	end
+end
+
+ExpeditionLootHandler._spawn_drop_pickup = function (self, amount_to_drop, position, reason)
+	local pickup_name = "expedition_loot_player_drop"
+	local pickup_system = Managers.state.extension:system("pickup_system")
+	local pickup_unit, _ = pickup_system:spawn_pickup(pickup_name, position, Quaternion.identity(), nil, nil, nil, nil)
+
+	self._dropped_loot_by_pickup_unit[pickup_unit] = amount_to_drop
+	self._dropped_reason_by_pickup_unit[pickup_unit] = reason or "death"
+
+	if amount_to_drop >= 100 then
+		self:mark_loot_unit(pickup_unit, "default")
+	end
+
+	pickup_system:dropped(pickup_unit)
+
+	return pickup_unit
 end
 
 ExpeditionLootHandler.loot_type_settings = function (self, loot_type)
@@ -266,6 +325,22 @@ ExpeditionLootHandler.event_expedition_player_loot_collected = function (self, i
 		self._dropped_reason_by_pickup_unit[pickup_unit] = nil
 
 		Managers.event:trigger("event_expedition_loot_collected", interactor_unit, "small", nil, amount)
+
+		local rescue_loot_pickup = self._rescue_loot_pickup
+		local rescue_account_id = table.find(rescue_loot_pickup, pickup_unit)
+
+		if rescue_account_id then
+			local objective_system = Managers.state.extension:system("mission_objective_system")
+
+			objective_system:remove_marker(RESCUE_OBJECTIVE_NAME, nil, rescue_loot_pickup[rescue_account_id])
+
+			rescue_loot_pickup[rescue_account_id] = nil
+
+			local total_team_rescue_amount = self:_total_rescue_loot_amount()
+
+			self:_update_player_rescue_objective(total_team_rescue_amount)
+			Managers.state.game_session:send_rpc_clients("rpc_client_expedition_update_player_rescue_objective", total_team_rescue_amount)
+		end
 
 		local player = Managers.state.player_unit_spawn:owner(interactor_unit)
 
@@ -628,20 +703,7 @@ ExpeditionLootHandler.server_drop_player_loot_on_death = function (self, player)
 				local amount_to_drop_by_increment = math.round_to_closest_multiple_toward_zero(amount_to_drop, player_penalty_increment)
 
 				if amount_to_drop_by_increment > 0 then
-					local pickup_name = "expedition_loot_player_drop"
-					local extension_manager = Managers.state.extension
-					local pickup_system = extension_manager:system("pickup_system")
-					local pickup_unit, _ = pickup_system:spawn_pickup(pickup_name, drop_position, Quaternion.identity(), nil, nil, nil, nil)
-
-					self._dropped_loot_by_pickup_unit[pickup_unit] = amount_to_drop_by_increment
-
-					if amount_to_drop_by_increment >= 100 then
-						self:mark_loot_unit(pickup_unit, "default")
-					end
-
-					self._dropped_reason_by_pickup_unit[pickup_unit] = "death"
-
-					pickup_system:dropped(pickup_unit)
+					self:_spawn_drop_pickup(amount_to_drop_by_increment, drop_position)
 
 					local remaining_amount_of_lost_share = amount_to_deduct - amount_to_drop_by_increment
 
@@ -670,14 +732,18 @@ ExpeditionLootHandler.server_clear_rescue = function (self)
 		rescue_loot_amount_per_peer_id[peer_id] = rescue_loot_amount - amount_to_deduct_by_increment
 	end
 
-	local stored_rescue_loot_amount_per_account_id = self._stored_rescue_loot_amount_per_account_id
+	local rescue_loot_pickup = self._rescue_loot_pickup
 
-	for account_id, rescue_loot_amount in pairs(stored_rescue_loot_amount_per_account_id) do
-		local amount_to_deduct = math.round_down_with_precision(rescue_loot_amount * player_hogtied_safe_zone_relocation_penalty_multiplier)
-		local amount_to_deduct_by_increment = math.round_to_closest_multiple_toward_zero(amount_to_deduct, player_penalty_increment)
+	for account_id, pickup_unit in pairs(rescue_loot_pickup) do
+		local objective_system = Managers.state.extension:system("mission_objective_system")
 
-		stored_rescue_loot_amount_per_account_id[account_id] = rescue_loot_amount - amount_to_deduct_by_increment
+		objective_system:remove_marker(RESCUE_OBJECTIVE_NAME, nil, pickup_unit)
+
+		self._dropped_loot_by_pickup_unit[pickup_unit] = nil
+		self._dropped_reason_by_pickup_unit[pickup_unit] = nil
 	end
+
+	table.clear(rescue_loot_pickup)
 
 	local total_team_rescue_amount = self:_total_rescue_loot_amount()
 
@@ -691,6 +757,15 @@ ExpeditionLootHandler._total_rescue_loot_amount = function (self)
 
 	for peer_id, amount in pairs(rescue_loot_amount_per_peer_id) do
 		total_amount = total_amount + amount
+	end
+
+	local rescue_loot_pickup = self._rescue_loot_pickup
+	local dropped_loot_by_pickup_unit = self._dropped_loot_by_pickup_unit
+
+	for account_id, pickup_unit in pairs(rescue_loot_pickup) do
+		local amount = dropped_loot_by_pickup_unit[pickup_unit]
+
+		total_amount = total_amount + (amount or 0)
 	end
 
 	return total_amount
@@ -712,6 +787,7 @@ ExpeditionLootHandler.destroy = function (self)
 	local event_manager = Managers.event
 
 	if self._is_server then
+		event_manager:unregister(self, "event_hogtied_player_rescued")
 		event_manager:unregister(self, "event_player_died")
 		event_manager:unregister(self, "event_expedition_loot_collected")
 		event_manager:unregister(self, "event_expedition_pocketable_collected")

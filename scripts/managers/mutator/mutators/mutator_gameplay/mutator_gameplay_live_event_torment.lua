@@ -188,10 +188,6 @@ MutatorGameplayLiveEventTorment._on_torment_daemonhost_should_spawn = function (
 
 	if spawn_position then
 		self._torment_spawn_position = Vector3Box(spawn_position)
-
-		local fx_system = Managers.state.extension:system("fx_system")
-
-		self._spawn_indicator_effect_id = fx_system:start_template_effect(EffectTemplates.chaos_daemonhost_torment_spawn_indicator, nil, nil, spawn_position)
 	end
 end
 

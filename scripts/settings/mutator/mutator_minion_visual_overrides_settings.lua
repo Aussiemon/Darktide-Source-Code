@@ -212,6 +212,27 @@ MutatorMinionVisualOverrideSettings.head_parasite = {
 			},
 		},
 	},
+	renegade_executor = {
+		item_slot_data = {
+			slot_hair = {
+				items = {
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
+				},
+			},
+			slot_head = {
+				items = {
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02",
+				},
+			},
+		},
+	},
 	renegade_grenadier = {
 		item_slot_data = {
 			slot_hair = {
@@ -222,6 +243,27 @@ MutatorMinionVisualOverrideSettings.head_parasite = {
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
 					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
+				},
+			},
+		},
+	},
+	renegade_gunner = {
+		item_slot_data = {
+			slot_hair = {
+				items = {
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03_skin_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_02",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/tentacle_head_03",
+				},
+			},
+			slot_head = {
+				items = {
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_01",
+					"content/items/characters/minions/chaos_traitor_guard/attachments_base/face_01_b_tattoo_02",
 				},
 			},
 		},

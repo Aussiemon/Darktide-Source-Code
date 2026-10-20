@@ -155,6 +155,11 @@ local function _bolstering_stop_function(template_context, template_data)
 	end
 
 	local unit = template_context.unit
+
+	if not ALIVE[unit] then
+		return
+	end
+
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
 	local target_side_names = side:relation_side_names("allied")
@@ -324,6 +329,11 @@ local CORRUPTION_FALLBACK_RANKS_PER_CHALLENGE = {
 
 local function _corruption_stop_function(template_context, template_data)
 	local unit = template_context.unit
+
+	if not ALIVE[unit] then
+		return
+	end
+
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name("villains")
 	local target_side_names = side:relation_side_names("allied")
@@ -633,6 +643,11 @@ local rotten_armor_data = rotten_armor_config_settings
 
 local function _on_rotten_armor_death(template_data, template_context)
 	local unit = template_context.unit
+
+	if not ALIVE[unit] then
+		return
+	end
+
 	local nav_world = template_data.nav_world
 	local position = _position(unit)
 

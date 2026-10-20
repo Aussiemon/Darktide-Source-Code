@@ -170,6 +170,48 @@ EffectTemplatesHandler.stop_template_effect = function (self, template_context, 
 	table.swap_delete(running_template_effects, index_to_remove)
 end
 
+EffectTemplatesHandler.release_ownership = function (self, template_context, global_effect_id)
+	local template_effects = self._template_effects
+	local buffer_index = global_effect_id % self._max_num_template_effects + 1
+	local template_effect = template_effects[buffer_index]
+
+	if template_effect.global_effect_id ~= global_effect_id then
+		return
+	end
+
+	local template = template_effect.template
+	local player_owner_unit = template_effect.optional_player_owner_unit
+	local is_player_effect = player_owner_unit ~= nil
+
+	if template.exiting then
+		template_effect.template_data.is_exiting = true
+
+		Managers.state.game_session:send_rpc_clients("rpc_release_template_effect_ownership", buffer_index, is_player_effect)
+	else
+		self:stop_template_effect(template_context, template_effect, template)
+
+		template_effect.global_effect_id = nil
+
+		Managers.state.game_session:send_rpc_clients("rpc_stop_template_effect", buffer_index, is_player_effect)
+	end
+end
+
+EffectTemplatesHandler.release_ownership_from_rpc = function (self, template_context, buffer_index)
+	local template_effects = self._template_effects
+	local template_effect = template_effects[buffer_index]
+	local template = template_effect.template
+
+	if not template then
+		return
+	end
+
+	if template.exiting then
+		template_effect.template_data.is_exiting = true
+	else
+		self:stop_template_effect(template_context, template_effect, template)
+	end
+end
+
 local _effects_to_stop = {}
 
 EffectTemplatesHandler.update = function (self, template_context, dt, t)
@@ -182,9 +224,18 @@ EffectTemplatesHandler.update = function (self, template_context, dt, t)
 		local template_effect = running_template_effects[i]
 		local template = template_effect.template
 		local template_data = template_effect.template_data
-		local stop_effect = template.update(template_data, template_context, dt, t)
+		local is_exiting = template_data.is_exiting
+		local stop_effect
 
-		if template_context.is_server and allow_template_effects_life_time and stop_effect then
+		if is_exiting then
+			stop_effect = template.exiting(template_data, template_context, dt, t)
+		else
+			stop_effect = template.update(template_data, template_context, dt, t)
+		end
+
+		local should_stop = stop_effect and (allow_template_effects_life_time or is_exiting)
+
+		if template_context.is_server and should_stop then
 			table.insert(_effects_to_stop, template_effect.global_effect_id)
 		end
 	end
@@ -213,6 +264,10 @@ EffectTemplatesHandler.hot_join_sync = function (self, sender, channel)
 		local optional_position = Vector3.is_valid(position) and position or nil
 
 		RPC.rpc_start_template_effect(channel, buffer_index, template_id, optional_unit_id, optional_node, optional_position, optional_player_owner_unit_id)
+
+		if template_effect.template_data.is_exiting then
+			RPC.rpc_release_template_effect_ownership(channel, buffer_index, optional_player_owner_unit ~= nil)
+		end
 	end
 end
 

@@ -104,10 +104,6 @@ TormentLightFlicker._tick = function (self, step)
 				break
 			end
 
-			if extension:is_flicker_enabled() then
-				break
-			end
-
 			local lx, ly, lz = Vector3.to_elements(Unit.world_position(unit, 1))
 			local depth = self:_depth_at(lx, ly, lz, player_positions)
 
@@ -120,7 +116,7 @@ TormentLightFlicker._tick = function (self, step)
 			local entry = affected[unit]
 
 			if not entry then
-				entry = self:_capture(unit)
+				entry = self:_capture(unit, extension)
 				affected[unit] = entry
 			end
 
@@ -215,7 +211,7 @@ TormentLightFlicker._tick_local_player_lights = function (self, value, seen, aff
 	self:_apply(entry, value, 1)
 end
 
-TormentLightFlicker._capture = function (self, unit)
+TormentLightFlicker._capture = function (self, unit, optional_light_extension)
 	local lights = {}
 	local num_lights = Unit.num_lights(unit)
 
@@ -231,6 +227,7 @@ TormentLightFlicker._capture = function (self, unit)
 	return {
 		unit = unit,
 		lights = lights,
+		light_extension = optional_light_extension,
 	}
 end
 
@@ -242,6 +239,10 @@ TormentLightFlicker._apply = function (self, entry, value, depth)
 		local light = lights[i]
 
 		Light.set_intensity(light.light, light.base * scale)
+	end
+
+	if entry.light_extension then
+		Unit.set_scalar_for_materials(entry.unit, "emissive_multiplier", scale, true)
 	end
 end
 
@@ -256,6 +257,14 @@ TormentLightFlicker._restore = function (self, entry)
 		local light = lights[i]
 
 		Light.set_intensity(light.light, light.base)
+	end
+
+	local light_extension = entry.light_extension
+
+	if light_extension then
+		local emissive = light_extension:is_enabled() and 1 or 0
+
+		Unit.set_scalar_for_materials(entry.unit, "emissive_multiplier", emissive, true)
 	end
 end
 

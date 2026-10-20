@@ -142,7 +142,7 @@ MoodHandler._update_active_moods = function (self, mood_data)
 		local old_status = current_moods_status[mood_type]
 
 		if current_status ~= old_status then
-			if current_status == mood_status.active and old_status == mood_status.inactive then
+			if current_status == mood_status.active and (old_status == mood_status.inactive or old_status == mood_status.removing) then
 				_added_moods[mood_type] = true
 			elseif current_status == mood_status.removing and old_status == mood_status.active then
 				_removing_moods[mood_type] = true

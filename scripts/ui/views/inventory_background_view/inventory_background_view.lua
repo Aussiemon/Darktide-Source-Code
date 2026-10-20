@@ -2774,6 +2774,10 @@ end
 
 InventoryBackgroundView._handle_input = function (self, input_service, dt, t)
 	if self._profile_presets_element then
+		if input_service:get("hotkey_item_profile_preset_input_1") then
+			self:cb_on_profile_preset_add()
+		end
+
 		self:_update_profile_preset_hold_input(input_service, dt)
 	end
 end

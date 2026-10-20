@@ -13,14 +13,31 @@ local value_width = Settings.value_column_width
 local label_width = Settings.label_column_width
 local content_width = panel_width - 2 * padding
 local label_x = 0
-local own_x = label_width + column_spacing - 75
+local own_x = (content_width - value_width) / 2
 local team_x = label_width + 2 * column_spacing + value_width
 local rows_y = Settings.title_height + row_height
+local header_y = Settings.header_top_padding
+local header_height = rows_y - header_y
+local header_icon_size = Settings.header_icon_size
+local time_x = header_icon_size + 10
 local terminal_color = {
 	255,
 	101,
 	145,
 	102,
+}
+local header_text_color = Color.terminal_text_body(255, true)
+local row_text_color = {
+	255,
+	177,
+	183,
+	168,
+}
+local stat_name_color = {
+	255,
+	152,
+	176,
+	155,
 }
 local background_color = {
 	64,
@@ -59,31 +76,17 @@ local scenegraph_definition = {
 			1,
 		},
 	},
-	title = {
-		horizontal_alignment = "left",
-		parent = "panel",
-		vertical_alignment = "top",
-		size = {
-			content_width,
-			Settings.title_height,
-		},
-		position = {
-			padding,
-			Settings.title_height - 5,
-			10,
-		},
-	},
 	column_headers = {
 		horizontal_alignment = "left",
 		parent = "panel",
 		vertical_alignment = "top",
 		size = {
 			content_width,
-			row_height,
+			header_height,
 		},
 		position = {
 			padding,
-			Settings.title_height,
+			header_y,
 			10,
 		},
 	},
@@ -127,23 +130,64 @@ local function _column_style(font_settings_name, horizontal_alignment, width, x,
 	return style
 end
 
-local title_style = table.clone(UIFontSettings.header_3)
+local function _header_style(horizontal_alignment, x)
+	local style = _column_style("body_small", horizontal_alignment, value_width, x, 10, header_text_color)
 
-title_style.text_horizontal_alignment = "left"
-title_style.text_vertical_alignment = "center"
+	style.size[2] = header_height
 
-local own_header_style = table.clone(UIFontSettings.body_small)
+	return style
+end
 
-own_header_style.font_size = own_header_style.font_size + 10
-own_header_style.text_horizontal_alignment = "right"
-own_header_style.text_vertical_alignment = "center"
-own_header_style.size = {
-	value_width,
-	row_height,
+local function _row_text_style(horizontal_alignment, width, x, color)
+	local style = _column_style("body", horizontal_alignment, width, x, nil, color or row_text_color)
+
+	style.drop_shadow = true
+
+	return style
+end
+
+local icon_style = table.clone(UIFontSettings.body)
+
+icon_style.font_size = header_icon_size
+icon_style.text_color = header_text_color
+icon_style.text_horizontal_alignment = "center"
+icon_style.text_vertical_alignment = "center"
+icon_style.size = {
+	header_icon_size + 10,
+	header_height,
 }
-own_header_style.offset = {
-	own_x,
-	0,
+icon_style.offset = {
+	label_x,
+	5,
+	1,
+}
+
+local time_label_style = table.clone(UIFontSettings.body_small)
+
+time_label_style.text_color = header_text_color
+time_label_style.text_horizontal_alignment = "left"
+time_label_style.text_vertical_alignment = "bottom"
+time_label_style.size = {
+	label_width - time_x,
+	header_height / 2,
+}
+time_label_style.offset = {
+	time_x,
+	2,
+	1,
+}
+
+local time_style = table.clone(UIFontSettings.header_3)
+
+time_style.text_horizontal_alignment = "left"
+time_style.text_vertical_alignment = "top"
+time_style.size = {
+	label_width - time_x,
+	header_height / 2,
+}
+time_style.offset = {
+	time_x,
+	header_height / 2,
 	1,
 }
 
@@ -282,36 +326,41 @@ local widget_definitions = {
 			},
 		},
 	}, "panel"),
-	title = UIWidget.create_definition({
-		{
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			value_id = "text",
-			style = title_style,
-		},
-	}, "title"),
 	column_headers = UIWidget.create_definition({
 		{
 			pass_type = "text",
-			style_id = "label",
+			style_id = "icon",
 			value = "",
-			value_id = "label",
-			style = _column_style("body_small", "left", label_width, label_x, 10),
+			value_id = "icon",
+			style = icon_style,
+		},
+		{
+			pass_type = "text",
+			style_id = "time_label",
+			value = "",
+			value_id = "time_label",
+			style = time_label_style,
+		},
+		{
+			pass_type = "text",
+			style_id = "time",
+			value = "",
+			value_id = "time",
+			style = time_style,
 		},
 		{
 			pass_type = "text",
 			style_id = "own",
 			value = "",
 			value_id = "own",
-			style = own_header_style,
+			style = _header_style("center", own_x),
 		},
 		{
 			pass_type = "text",
 			style_id = "team",
 			value = "",
 			value_id = "team",
-			style = _column_style("body_small", "right", value_width, team_x, 10),
+			style = _header_style("right", team_x),
 		},
 		{
 			pass_type = "texture",
@@ -360,21 +409,21 @@ local row_definition = UIWidget.create_definition({
 		style_id = "label",
 		value = "",
 		value_id = "label",
-		style = _column_style("body", "left", label_width, label_x, nil, terminal_color),
+		style = _row_text_style("left", label_width, label_x, stat_name_color),
 	},
 	{
 		pass_type = "text",
 		style_id = "own",
 		value = "",
 		value_id = "own",
-		style = _column_style("body", "right", value_width, own_x),
+		style = _row_text_style("right", value_width, own_x - value_width / 2),
 	},
 	{
 		pass_type = "text",
 		style_id = "team",
 		value = "",
 		value_id = "team",
-		style = _column_style("body", "right", value_width, team_x),
+		style = _row_text_style("right", value_width, team_x),
 	},
 }, "row")
 local num_padding_rows = Settings.num_padding_rows

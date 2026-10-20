@@ -318,7 +318,7 @@ MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stag
 		self._last_push_t = t
 	end
 
-	local is_charge_collision = attack_type == melee and damage_profile.is_push
+	local is_charge_collision = attack_type == melee and damage_profile.is_charge_impact
 
 	if (attack_type == shout or is_charge_collision) and template.charge_and_explosion_stagger_type then
 		return template.charge_and_explosion_stagger_type, 1, 1

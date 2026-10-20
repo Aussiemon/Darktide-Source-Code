@@ -18,6 +18,13 @@ local PartyImmateriumManagerTestify = {
 	immaterium_join_party = function (party_immaterium_manager, party_id)
 		party_immaterium_manager:join_party(party_id)
 	end,
+	wait_for_joinable_presence = function ()
+		local social_service = Managers.data_service.social
+
+		if not social_service:local_player_is_joinable() or not social_service:local_player_can_join_party() then
+			return Testify.RETRY
+		end
+	end,
 	immaterium_party_id = function (party_immaterium_manager)
 		return party_immaterium_manager:party_id()
 	end,

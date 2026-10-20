@@ -18,6 +18,7 @@ local LocomotionSystem = class("LocomotionSystem", "ExtensionSystemBase")
 LocomotionSystem.init = function (self, extension_system_creation_context, ...)
 	LocomotionSystem.super.init(self, extension_system_creation_context, ...)
 
+	self._spawned_projectiles = {}
 	self._spawned_deployables = {}
 	self._vector_fields_data = {}
 
@@ -30,12 +31,29 @@ LocomotionSystem.init = function (self, extension_system_creation_context, ...)
 	end
 end
 
+LocomotionSystem.delete_projectile_untis = function (self)
+	local spawned_projectiles = self._spawned_projectiles
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	for unit, extension in pairs(spawned_projectiles) do
+		unit_spawner_manager:mark_for_deletion(unit)
+	end
+end
+
 LocomotionSystem.destroy = function (self)
 	if self._is_server then
 		MinionLocomotion.destroy()
 	else
 		MinionHuskLocomotion.destroy()
 	end
+end
+
+LocomotionSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
+	if extension_name == "ProjectileUnitLocomotionExtension" then
+		self._spawned_projectiles[unit] = extension_name
+	end
+
+	return LocomotionSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
 end
 
 LocomotionSystem.on_remove_extension = function (self, unit, extension_name)
@@ -47,6 +65,10 @@ LocomotionSystem.on_remove_extension = function (self, unit, extension_name)
 				other_extension:unstick_from_unit()
 			end
 		end
+	end
+
+	if extension_name == "ProjectileUnitLocomotionExtension" then
+		self._spawned_projectiles[unit] = nil
 	end
 
 	LocomotionSystem.super.on_remove_extension(self, unit, extension_name)

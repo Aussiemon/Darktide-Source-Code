@@ -18,6 +18,7 @@ local DLCManager = require("scripts/managers/dlc/dlc_manager")
 local EACClientManager = require("scripts/managers/eac/eac_client_manager")
 local EACServerManager = require("scripts/managers/eac/eac_server_manager")
 local ErrorManager = require("scripts/managers/error/error_manager")
+local ErrorManagerTestify = GameParameters.testify and require("scripts/managers/error/error_manager_testify")
 local EventManager = require("scripts/managers/event/event_manager")
 local FrameRateManager = require("scripts/managers/frame_rate/frame_rate_manager")
 local FrameTableManager = require("scripts/foundation/managers/frame_table/frame_table_manager")
@@ -398,6 +399,7 @@ StateGame.update = function (self, dt)
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(StateGameTestify, self)
+		Testify:poll_requests_through_handler(ErrorManagerTestify, Managers.error)
 	end
 
 	if not self._imgui_init then

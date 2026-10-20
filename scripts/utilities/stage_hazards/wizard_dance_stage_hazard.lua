@@ -15,12 +15,22 @@ local ACTION_DATA = BreedActions.renegade_wizard.dance
 local attack_type = AttackSettings.attack_types
 local KNOCKBACK_SFX = "wwise/events/minions/play_enemy_psyker_push"
 local KNOCKBACK_COOLDOWN = 0.3
-local _init_floor_zones, _set_new_zone, _spawn_dance_walls, _damage, _update_distance_to_players, _update_attack, _zone_from_distance, _get_downed_target_zone, _knockback
+local CONSTANT_CENTER_ZONE_DAMAGE_ENABLED = true
+local ATTACK_TICK = 0.5
+local CONSTANT_CENTER_ZONE_DISTANCE = ACTION_DATA.circle_settings[1].inner_radius
+local DANCE_FADE_OUT_T = 0.5
+local _init_floor_zones, _set_new_zone, _spawn_dance_walls, _try_damage_players, _damage_player, _update_distance_to_players, _update_attack, _zone_from_distance, _get_downed_target_zone, _knockback, _set_is_stopping
 
 WizardDanceStageHazard.init = function (scratchpad, wants_walls)
 	if scratchpad.dance_hazard then
 		WizardDanceStageHazard.exit(scratchpad)
 	end
+
+	if scratchpad.dance_pending_stop then
+		WizardDanceStageHazard.update_pending_stop(scratchpad, math.huge)
+	end
+
+	_set_is_stopping(scratchpad, false)
 
 	scratchpad.dance_hazard = {}
 	scratchpad.dance_hazard.player_position_data = {}
@@ -96,21 +106,38 @@ WizardDanceStageHazard.exit = function (scratchpad)
 		bot_groups[i]:clear_hover_targets()
 	end
 
-	if dance_hazard.effect_template_id then
-		local fx_system = Managers.state.extension:system("fx_system")
+	_set_is_stopping(scratchpad, true)
 
-		for i = 1, #dance_hazard.effect_template_id do
-			local effect_id = dance_hazard.effect_template_id[i]
-
-			fx_system:stop_template_effect(effect_id)
-		end
-	end
+	scratchpad.dance_pending_stop = {
+		effect_template_ids = dance_hazard.effect_template_id,
+		stop_t = Managers.time:time("gameplay") + DANCE_FADE_OUT_T,
+	}
 
 	if dance_hazard.dance_walls_unit then
 		Managers.state.unit_spawner:mark_for_deletion(dance_hazard.dance_walls_unit)
 	end
 
 	scratchpad.dance_hazard = nil
+end
+
+WizardDanceStageHazard.update_pending_stop = function (scratchpad, t)
+	local pending = scratchpad.dance_pending_stop
+
+	if not pending or t < pending.stop_t then
+		return
+	end
+
+	local effect_template_ids = pending.effect_template_ids
+
+	if effect_template_ids then
+		local fx_system = Managers.state.extension:system("fx_system")
+
+		for i = 1, #effect_template_ids do
+			fx_system:release_template_effect_ownership(effect_template_ids[i])
+		end
+	end
+
+	scratchpad.dance_pending_stop = nil
 end
 
 WizardDanceStageHazard.on_phase_event_triggered = function (scratchpad, event_name)
@@ -133,6 +160,28 @@ WizardDanceStageHazard.on_phase_event_triggered = function (scratchpad, event_na
 	elseif event_name == "init_floor_zones" then
 		_init_floor_zones(unit, dance_hazard)
 	end
+end
+
+function _set_is_stopping(scratchpad, state)
+	local blackboard = scratchpad.blackboard
+
+	if not blackboard then
+		return
+	end
+
+	local spawn_component = blackboard.spawn
+
+	if not spawn_component then
+		return
+	end
+
+	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
+
+	if not game_session or not game_object_id or not GameSession.game_object_exists(game_session, game_object_id) then
+		return
+	end
+
+	GameSession.set_game_object_field(game_session, game_object_id, "dance_is_stopping", state)
 end
 
 function _init_floor_zones(unit, dance_hazard)
@@ -161,6 +210,8 @@ function _set_new_zone(unit, dance_hazard, blackboard, t)
 	dance_hazard.active = true
 	dance_hazard.is_damaging = true
 	dance_hazard.delay, dance_hazard.attack_timing, dance_hazard.attack_duration, dance_hazard.anim_duration = BossPhaseUtilities.get_spillway_psyker_dance_variables(ACTION_DATA, t)
+	dance_hazard.next_attack_tick = t
+	dance_hazard.pulse_started = false
 
 	local spawn_component = blackboard.spawn
 	local game_session, game_object_id = spawn_component.game_session, spawn_component.game_object_id
@@ -256,19 +307,37 @@ function _update_attack(unit, dance_hazard, blackboard, player_position_data, t)
 		_set_new_zone(unit, dance_hazard, blackboard, t)
 	end
 
-	if dance_hazard.attack_timing and t > dance_hazard.attack_timing then
-		_damage(unit, dance_hazard, ACTION_DATA, player_position_data)
-		GameSession.set_game_object_field(game_session, game_object_id, "should_play_damage_vfx", true)
+	local next_attack_tick = dance_hazard.next_attack_tick
+	local attack_tick_passed = next_attack_tick and next_attack_tick < t
+	local do_attack = dance_hazard.attack_timing and t > dance_hazard.attack_timing
 
-		dance_hazard.attack_timing = 0.5 + t
+	if do_attack and not dance_hazard.pulse_started then
+		attack_tick_passed = true
+	end
 
-		if dance_hazard.dance_walls_unit and not dance_hazard.start_wall_rotation then
-			dance_hazard.start_wall_rotation = true
+	if attack_tick_passed then
+		if do_attack then
+			dance_hazard.pulse_started = true
 
-			local dance_wall_components = Component.get_components_by_name(dance_hazard.dance_walls_unit, "WizardBossDanceWalls")
+			_try_damage_players(unit, dance_hazard, ACTION_DATA, player_position_data)
+			GameSession.set_game_object_field(game_session, game_object_id, "should_play_damage_vfx", true)
 
-			dance_wall_components[1]:start_rotation()
+			if dance_hazard.dance_walls_unit and not dance_hazard.start_wall_rotation then
+				dance_hazard.start_wall_rotation = true
+
+				local dance_wall_components = Component.get_components_by_name(dance_hazard.dance_walls_unit, "WizardBossDanceWalls")
+
+				dance_wall_components[1]:start_rotation()
+			end
+		elseif CONSTANT_CENTER_ZONE_DAMAGE_ENABLED then
+			for i = 1, #player_position_data do
+				if player_position_data[i].standing_in_center then
+					_damage_player(player_position_data[i])
+				end
+			end
 		end
+
+		dance_hazard.next_attack_tick = ATTACK_TICK + t
 	end
 
 	if dance_hazard.anim_duration and t > dance_hazard.anim_duration then
@@ -298,11 +367,13 @@ function _update_distance_to_players(unit, player_position_data, dance_hazard)
 		local player_unit = valid_enemy_player_units[i]
 		local player_position = POSITION_LOOKUP[player_unit]
 		local distance_from_target = Vector3.distance(position, player_position)
+		local standing_in_center = distance_from_target < CONSTANT_CENTER_ZONE_DISTANCE
 
 		player_position_data[#player_position_data + 1] = {
 			player_unit = player_unit,
 			distance = distance_from_target,
 			player_position = player_position,
+			standing_in_center = standing_in_center,
 		}
 	end
 end
@@ -354,7 +425,7 @@ function _get_downed_target_zone(dance_hazard, last_zone, disallowed_zone)
 	return downed_zone_candidates[math.random(1, num_candidates)]
 end
 
-function _damage(unit, dance_hazard, action_data, player_position_data)
+function _try_damage_players(unit, dance_hazard, action_data, player_position_data)
 	local current_zone = dance_hazard.current_zone
 	local current_safe_zone_range = action_data.circle_settings[current_zone]
 
@@ -362,21 +433,27 @@ function _damage(unit, dance_hazard, action_data, player_position_data)
 		local player_data = player_position_data[i]
 		local player_distance_from_boss = player_data.distance
 
-		if (player_distance_from_boss < current_safe_zone_range.inner_radius or player_distance_from_boss > current_safe_zone_range.outer_radius) and HEALTH_ALIVE[player_data.player_unit] then
-			local damage_template = DamageProfileTemplates.spillway_wizard_dance_floor_burn
-			local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
-			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
-			local optional_owner_unit
+		if player_distance_from_boss < current_safe_zone_range.inner_radius or player_distance_from_boss > current_safe_zone_range.outer_radius then
+			_damage_player(player_data)
+		end
+	end
+end
 
-			Attack.execute(player_data.player_unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
+function _damage_player(player_data)
+	if HEALTH_ALIVE[player_data.player_unit] then
+		local damage_template = DamageProfileTemplates.spillway_wizard_dance_floor_burn
+		local power_level_table = MinionDifficultySettings.power_level.chaos_engulfed_enemy_fire_attack
+		local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table)
+		local optional_owner_unit
 
-			local buff_extension = ScriptUnit.has_extension(player_data.player_unit, "buff_system")
+		Attack.execute(player_data.player_unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 
-			if buff_extension then
-				local t = Managers.time:time("gameplay")
+		local buff_extension = ScriptUnit.has_extension(player_data.player_unit, "buff_system")
 
-				buff_extension:add_internally_controlled_buff("spillway_wizard_toughness_reduction_stacking", t)
-			end
+		if buff_extension then
+			local t = Managers.time:time("gameplay")
+
+			buff_extension:add_internally_controlled_buff("spillway_wizard_toughness_reduction_stacking", t)
 		end
 	end
 end

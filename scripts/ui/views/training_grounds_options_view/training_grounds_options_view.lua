@@ -163,11 +163,12 @@ end
 
 TrainingGroundsOptionsView.on_exit = function (self)
 	local save_data = Managers.save:character_data()
-	local difficulty_stepper = self:_element("difficulty_selector")
+	local show_difficulty_stepper = self.training_grounds_settings == "shooting_range"
+	local difficulty_stepper = show_difficulty_stepper and self:_element("difficulty_selector")
 	local danger = difficulty_stepper and difficulty_stepper:get_current_selected_difficulty()
 
-	if danger then
-		save_data.training_grounds_danger = danger
+	if save_data and danger then
+		save_data.training_grounds_danger = math.clamp(danger, 1, #DANGER_LEVELS)
 
 		Managers.save:queue_save()
 	end

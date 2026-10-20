@@ -161,6 +161,28 @@ TextUtilities.format_time_span_long_form_localized = function (seconds)
 	return TextUtilities.format_time_span_localized(seconds)
 end
 
+TextUtilities.format_minutes_seconds_localized_short = function (seconds)
+	local minutes = Localize("loc_text_short_minute", true, {
+		number = math.floor(seconds / SECONDS_IN_A_MINUTE),
+	})
+	local remaining_seconds = Localize("loc_text_short_second", true, {
+		number = math.floor(seconds % SECONDS_IN_A_MINUTE),
+	})
+
+	return minutes .. " " .. remaining_seconds
+end
+
+TextUtilities.format_minutes_seconds_localized_medium = function (seconds)
+	local minutes = Localize("loc_text_medium_minute", true, {
+		number = math.floor(seconds / SECONDS_IN_A_MINUTE),
+	})
+	local remaining_seconds = Localize("loc_text_medium_second", true, {
+		number = math.floor(seconds % SECONDS_IN_A_MINUTE),
+	})
+
+	return minutes .. " " .. remaining_seconds
+end
+
 local _roman_number_array = {
 	1,
 	4,

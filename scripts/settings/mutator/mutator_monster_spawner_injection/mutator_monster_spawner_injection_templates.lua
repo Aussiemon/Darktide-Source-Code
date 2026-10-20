@@ -127,7 +127,6 @@ mutator_monster_spawner_injection_templates.torment_witch = {
 		local param_table = minion_spawn_manager:request_param_table()
 
 		param_table.optional_aggro_state = "passive"
-		param_table.optional_target_unit = ahead_target_unit
 		param_table.optional_health_modifier = Managers.state.difficulty:get_table_entry_by_challenge({
 			0.5,
 			0.5,

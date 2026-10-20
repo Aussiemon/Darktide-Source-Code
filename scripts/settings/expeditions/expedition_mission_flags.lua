@@ -106,6 +106,11 @@ local expedition_mission_flags = {
 			display_string = "loc_expeditions_modifier_simple_theme_dawn",
 		},
 	},
+	enemies_01 = {
+		ui = {
+			display_string = "loc_expeditions_circumstance_more_resistance_title",
+		},
+	},
 }
 
 return settings("ExpeditionMissionFlags", expedition_mission_flags)

@@ -399,8 +399,6 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 	wheel_context.instant_drew = nil
 	wheel_context.camera_still_on_tag = nil
 	wheel_context.simultaneous_press = nil
-
-	Managers.event:trigger("event_set_communication_wheel_state", "inactive")
 end
 
 HudElementSmartTagging._get_chat_channel_by_tag = function (self, channel_tag)
@@ -439,7 +437,7 @@ HudElementSmartTagging._handle_input = function (self, t, dt, ui_renderer, rende
 			self._close_delay = nil
 
 			self:_pop_cursor()
-			Managers.event:trigger("event_set_communication_wheel_state", "inactive")
+			Managers.event:trigger("event_set_communication_wheel_state", false)
 		end
 
 		return

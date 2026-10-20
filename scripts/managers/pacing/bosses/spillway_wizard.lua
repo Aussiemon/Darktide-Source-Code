@@ -270,6 +270,18 @@ boss_template.update = function (self, scratchpad, unit, dt, t)
 		TeethStageHazard.update(scratchpad, t)
 	end
 
+	if scratchpad.dance_pending_stop then
+		DanceStageHazard.update_pending_stop(scratchpad, t)
+	end
+
+	if scratchpad.shockwave_pending_plane_destroy then
+		ShockwaveStageHazard.update_pending_plane_destroy(scratchpad, t)
+	end
+
+	if scratchpad.shockwave_pending_stops then
+		ShockwaveStageHazard.update_pending_stops(scratchpad, t)
+	end
+
 	local current_phase_index = scratchpad.phase
 	local boss_unit = scratchpad.boss_unit
 	local phase_lookup = scratchpad.phase_lookup
@@ -576,6 +588,9 @@ function _clear_room()
 
 		pacing_manager:pause_spawn_type(pacing_type, true, "spillway_wizard")
 	end
+
+	pacing_manager:pause_special_surges(true)
+	pacing_manager:pause_monster_specials(true)
 
 	local minion_spawn_manager = Managers.state.minion_spawn
 

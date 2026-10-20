@@ -27,9 +27,11 @@ local SERVER_RPCS = {}
 local UI_WORLD_NAME = "shockwave_ui_world"
 local DECAL_SIZE_DURATION = 3
 local DECAL_OPACITY_DURATION = 1
+local DECAL_FADE_OUT_DURATION = WizardShockwaveStageHazard.plane_fade_out_duration
 local ANTICIPATION_CHARGE_DURATION = 5
 local DECAL_START_DELAY = 3.5
 local START_SHOCKWAVE_FIELD = "shockwave_started"
+local PLANE_FADE_OUT_FIELD = "shockwave_plane_fading"
 local BOSS_BREED_NAME = "renegade_wizard"
 
 WizardBossShockwave.init = function (self, unit)
@@ -107,6 +109,7 @@ WizardBossShockwave.update = function (self, unit, dt, t)
 
 			self._material_instance = material_instance
 			self._decal_size_start_t = t
+			self._current_opacity = 1
 			self._render_init = true
 		end
 	end
@@ -139,6 +142,26 @@ WizardBossShockwave._update_decal_animation = function (self, t)
 
 	Material.set_scalar(material_instance, "anticipation_charge", charge_progress)
 
+	if not self._fade_out_start_t then
+		if not self:_is_fade_out_requested() then
+			self._fade_request_armed = true
+		elseif self._fade_request_armed then
+			self._fade_out_start_t = t
+			self._fade_out_from = self._current_opacity or 1
+		end
+	end
+
+	if self._fade_out_start_t then
+		local fade_progress = math.min((t - self._fade_out_start_t) / DECAL_FADE_OUT_DURATION, 1)
+		local opacity = math.lerp(self._fade_out_from, 0, fade_progress)
+
+		self._current_opacity = opacity
+
+		Material.set_scalar(material_instance, "decal_opacity", opacity)
+
+		return
+	end
+
 	if not self._push_triggered and self:_is_push_triggered() then
 		self._push_triggered = true
 		self._decal_opacity_start_t = t
@@ -146,12 +169,15 @@ WizardBossShockwave._update_decal_animation = function (self, t)
 
 	if self._push_triggered then
 		local opacity_progress = math.min((t - self._decal_opacity_start_t) / DECAL_OPACITY_DURATION, 1)
+		local opacity = 1 - opacity_progress
 
-		Material.set_scalar(material_instance, "decal_opacity", 1 - opacity_progress)
+		self._current_opacity = opacity
+
+		Material.set_scalar(material_instance, "decal_opacity", opacity)
 	end
 end
 
-WizardBossShockwave._is_push_triggered = function (self)
+WizardBossShockwave._read_boss_field = function (self, field_name)
 	local boss_unit = self:_get_boss_unit()
 
 	if not boss_unit then
@@ -165,7 +191,15 @@ WizardBossShockwave._is_push_triggered = function (self)
 		return false
 	end
 
-	return GameSession.game_object_field(game_session, game_object_id, START_SHOCKWAVE_FIELD)
+	return GameSession.game_object_field(game_session, game_object_id, field_name)
+end
+
+WizardBossShockwave._is_push_triggered = function (self)
+	return self:_read_boss_field(START_SHOCKWAVE_FIELD)
+end
+
+WizardBossShockwave._is_fade_out_requested = function (self)
+	return self:_read_boss_field(PLANE_FADE_OUT_FIELD)
 end
 
 WizardBossShockwave._get_boss_unit = function (self)

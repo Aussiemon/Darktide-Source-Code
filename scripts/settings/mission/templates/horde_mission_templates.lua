@@ -20,7 +20,9 @@ local mission_templates = {
 		texture_small = "content/ui/textures/missions/psykhanium_small",
 		wwise_state = "horde_mode",
 		zone_id = "horde",
-		testify_flags = {},
+		testify_flags = {
+			validate_minion_pathing_on_mission = false,
+		},
 		cinematics = {
 			intro_abc = {
 				"c_cam",

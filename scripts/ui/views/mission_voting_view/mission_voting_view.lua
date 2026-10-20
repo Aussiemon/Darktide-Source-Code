@@ -135,6 +135,8 @@ MissionVotingView.on_enter = function (self)
 		Log.error("MissionVotingView", "Missing mission_data")
 		Managers.voting:cast_vote(self._voting_id, "no")
 
+		self._has_voted = true
+
 		if Managers.ui:view_active(self.view_name or "mission_voting_view") then
 			Managers.ui:close_view(self.view_name or "mission_voting_view")
 		end
@@ -178,7 +180,28 @@ MissionVotingView.on_exit = function (self)
 	end
 end
 
+MissionVotingView._decline_pending_vote = function (self)
+	if self._has_voted then
+		return
+	end
+
+	local voting_id = self._voting_id
+	local voting_manager = Managers.voting
+
+	if not voting_manager or not voting_manager:voting_exists(voting_id) or voting_manager:voting_result(voting_id) then
+		return
+	end
+
+	Log.info("MissionVotingView", "Closed with pending vote %s, declining", voting_id)
+
+	self._has_voted = true
+
+	voting_manager:cast_vote(voting_id, "no")
+end
+
 MissionVotingView.destroy = function (self)
+	self:_decline_pending_vote()
+
 	local havoc_promise = self._havoc_promise
 
 	if havoc_promise then

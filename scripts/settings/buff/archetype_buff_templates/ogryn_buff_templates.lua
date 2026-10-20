@@ -540,7 +540,8 @@ templates.ogryn_windup_reduces_damage_taken = {
 		local weapon_action_component = template_data.weapon_action_component
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 		local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
-		local is_windup = action_settings and action_settings.kind == "windup"
+		local action_kind = action_settings and action_settings.kind
+		local is_windup = action_kind == "windup" or action_kind == "block_windup"
 
 		return is_windup
 	end,
@@ -564,7 +565,8 @@ templates.ogryn_windup_is_uninterruptible = {
 		local weapon_action_component = template_data.weapon_action_component
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 		local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
-		local is_windup = action_settings and action_settings.kind == "windup"
+		local action_kind = action_settings and action_settings.kind
+		local is_windup = action_kind == "windup" or action_kind == "block_windup"
 
 		return is_windup
 	end,

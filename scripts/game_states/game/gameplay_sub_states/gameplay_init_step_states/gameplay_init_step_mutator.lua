@@ -11,7 +11,10 @@ GameplayInitStepMutator.on_enter = function (self, parent, params)
 
 	self._shared_state = shared_state
 
-	Managers.state.mutator:on_gameplay_post_init(level, themes)
+	local mutator_manager = Managers.state.mutator
+
+	mutator_manager:activate_on_load_mutators()
+	mutator_manager:on_gameplay_post_init(level, themes)
 end
 
 GameplayInitStepMutator.update = function (self, main_dt, main_t)

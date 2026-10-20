@@ -34,7 +34,11 @@ WizardShockwaveStageHazard.tooth_cover_settings = {
 }
 
 local TOOTH_COVER = WizardShockwaveStageHazard.tooth_cover_settings
-local _update_player_data, _update_shockwave, _update_player_hit_by_attack, _update_minion_stagger, _get_minion_stagger_and_duration, _is_protected_by_tooth, _catapult, _update_collision, _deal_push_damage, _deal_slam_damage, _query_enemy_units, _debug_draw_wave, _create_shockwave_plane_unit, _destroy_shockwave_plane_unit, _start_effect_template, _stop_effect_template, _update_shockwave_gameobject, _clear_bot_hover_targets
+
+WizardShockwaveStageHazard.plane_fade_out_duration = 0.5
+
+local PLANE_FADE_OUT_FIELD = "shockwave_plane_fading"
+local _update_player_data, _update_shockwave, _update_player_hit_by_attack, _update_minion_stagger, _get_minion_stagger_and_duration, _is_protected_by_tooth, _catapult, _update_collision, _deal_push_damage, _deal_slam_damage, _query_enemy_units, _debug_draw_wave, _create_shockwave_plane_unit, _destroy_shockwave_plane_unit, _start_effect_template, _stop_effect_template, _update_shockwave_gameobject, _clear_bot_hover_targets, _set_plane_fading
 
 WizardShockwaveStageHazard.init = function (scratchpad)
 	scratchpad.shockwave_hazard = {
@@ -85,7 +89,7 @@ WizardShockwaveStageHazard.respawn_plane = function (scratchpad)
 		return
 	end
 
-	_destroy_shockwave_plane_unit(scratchpad)
+	_destroy_shockwave_plane_unit(scratchpad, true)
 
 	local wave_data = hazard_data.wave_data
 
@@ -96,8 +100,8 @@ end
 
 WizardShockwaveStageHazard.exit = function (scratchpad)
 	if scratchpad.shockwave_hazard then
-		_stop_effect_template(scratchpad.shockwave_hazard)
-		_destroy_shockwave_plane_unit(scratchpad)
+		_stop_effect_template(scratchpad, scratchpad.shockwave_hazard)
+		_destroy_shockwave_plane_unit(scratchpad, false)
 		_clear_bot_hover_targets(scratchpad)
 		_update_shockwave_gameobject(scratchpad.boss_unit, false)
 
@@ -174,6 +178,47 @@ end
 
 WizardShockwaveStageHazard.is_initialized = function (scratchpad)
 	return scratchpad.shockwave_hazard ~= nil
+end
+
+WizardShockwaveStageHazard.update_pending_stops = function (scratchpad, t)
+	local pending = scratchpad.shockwave_pending_stops
+
+	if not pending then
+		return
+	end
+
+	local fx_system = Managers.state.extension:system("fx_system")
+
+	for i = #pending, 1, -1 do
+		if t >= pending[i].stop_t then
+			fx_system:stop_template_effect(pending[i].effect_id)
+			table.remove(pending, i)
+		end
+	end
+
+	if #pending == 0 then
+		scratchpad.shockwave_pending_stops = nil
+	end
+end
+
+WizardShockwaveStageHazard.update_pending_plane_destroy = function (scratchpad, t)
+	local pending = scratchpad.shockwave_pending_plane_destroy
+
+	if not pending then
+		return
+	end
+
+	t = t or Managers.time:time("gameplay")
+
+	if t < pending.destroy_t then
+		return
+	end
+
+	if ALIVE[pending.unit] then
+		Managers.state.unit_spawner:mark_for_deletion(pending.unit)
+	end
+
+	scratchpad.shockwave_pending_plane_destroy = nil
 end
 
 local TEMP = {}
@@ -488,19 +533,39 @@ function _start_effect_template(scratchpad, hazard_data, travel_time)
 		_update_shockwave_gameobject(unit, true)
 	end
 
-	_stop_effect_template(hazard_data)
+	_stop_effect_template(scratchpad, hazard_data, true)
 
 	hazard_data.effect_template_id = fx_system:start_template_effect(shockwave_effect_template, unit)
 
 	fx_system:trigger_wwise_event(sfx_name, unit_position)
 end
 
-function _stop_effect_template(hazard_data)
-	local fx_system = Managers.state.extension:system("fx_system")
+local EFFECT_FADE_OUT_T = 0.6
 
-	if hazard_data.effect_template_id then
-		fx_system:stop_template_effect(hazard_data.effect_template_id)
+function _stop_effect_template(scratchpad, hazard_data, immediate)
+	local effect_id = hazard_data.effect_template_id
+
+	if not effect_id then
+		return
 	end
+
+	hazard_data.effect_template_id = nil
+
+	if immediate then
+		local fx_system = Managers.state.extension:system("fx_system")
+
+		fx_system:stop_template_effect(effect_id)
+
+		return
+	end
+
+	local pending = scratchpad.shockwave_pending_stops or {}
+
+	scratchpad.shockwave_pending_stops = pending
+	pending[#pending + 1] = {
+		effect_id = effect_id,
+		stop_t = Managers.time:time("gameplay") + EFFECT_FADE_OUT_T,
+	}
 end
 
 local START_SHOCKWAVE = "shockwave_started"
@@ -516,7 +581,20 @@ function _update_shockwave_gameobject(unit, is_started)
 	GameSession.set_game_object_field(game_session, game_object_id, START_SHOCKWAVE, is_started)
 end
 
+function _set_plane_fading(boss_unit, is_fading)
+	local game_session = Managers.state.game_session:game_session()
+	local game_object_id = boss_unit and Managers.state.unit_spawner:game_object_id(boss_unit)
+
+	if not game_object_id or not GameSession.game_object_exists(game_session, game_object_id) then
+		return
+	end
+
+	GameSession.set_game_object_field(game_session, game_object_id, PLANE_FADE_OUT_FIELD, is_fading)
+end
+
 function _create_shockwave_plane_unit(scratchpad)
+	_set_plane_fading(scratchpad.boss_unit, false)
+
 	local position = scratchpad.positions.center:unbox() + Vector3(0, 0, 0.5)
 	local prop_settings = LevelProps.shockwave_plane
 	local name = prop_settings.unit_name
@@ -525,12 +603,39 @@ function _create_shockwave_plane_unit(scratchpad)
 	scratchpad.shockwave_plane_unit = unit
 end
 
-function _destroy_shockwave_plane_unit(scratchpad)
+function _destroy_shockwave_plane_unit(scratchpad, immediate)
 	local unit = scratchpad.shockwave_plane_unit
 
-	if unit and ALIVE[unit] then
-		Managers.state.unit_spawner:mark_for_deletion(unit)
+	if not unit or not ALIVE[unit] then
+		return
 	end
+
+	local pending = scratchpad.shockwave_pending_plane_destroy
+
+	if pending and pending.unit ~= unit then
+		if ALIVE[pending.unit] then
+			Managers.state.unit_spawner:mark_for_deletion(pending.unit)
+		end
+
+		scratchpad.shockwave_pending_plane_destroy = nil
+	end
+
+	if immediate then
+		Managers.state.unit_spawner:mark_for_deletion(unit)
+
+		return
+	end
+
+	if scratchpad.shockwave_pending_plane_destroy then
+		return
+	end
+
+	_set_plane_fading(scratchpad.boss_unit, true)
+
+	scratchpad.shockwave_pending_plane_destroy = {
+		unit = unit,
+		destroy_t = Managers.time:time("gameplay") + WizardShockwaveStageHazard.plane_fade_out_duration,
+	}
 end
 
 return WizardShockwaveStageHazard

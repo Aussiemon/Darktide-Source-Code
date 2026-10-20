@@ -1294,6 +1294,14 @@ PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._frozen_spawn_types.specials = enabled
 end
 
+PacingManager.pause_special_surges = function (self, should_pause)
+	self._specials_pacing:pause_surges(should_pause)
+end
+
+PacingManager.pause_monster_specials = function (self, should_pause)
+	self._specials_pacing:pause_monster_specials(should_pause)
+end
+
 PacingManager.set_auto_event_template = function (self, auto_event_template_name)
 	self._auto_event:swap_auto_event_template(auto_event_template_name)
 end

@@ -95,7 +95,7 @@ templates.hordes_buff_cryptic_dodge_costs_cooldown = {
 		[proc_events.on_dodge_start] = 1,
 	},
 	proc_func = function (params, template_data, template_context, t)
-		template_data.ability_extension:consume_ability_resource_percentage("combat_ability", dodges_cooldown_percent_cost)
+		template_data.ability_extension:consume_ability_charge_percentage("combat_ability", dodges_cooldown_percent_cost)
 	end,
 }
 

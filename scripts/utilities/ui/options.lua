@@ -35,6 +35,7 @@ Options.create_percent_slider_template = function (params)
 		id = params.id,
 		is_sub_setting = params.is_sub_setting,
 		commit = params.commit,
+		update = params.update,
 	}
 
 	return slider_template
@@ -90,6 +91,7 @@ Options.create_value_slider_template = function (params)
 		id = params.id,
 		is_sub_setting = params.is_sub_setting,
 		commit = params.commit,
+		update = params.update,
 	}
 
 	return slider_template

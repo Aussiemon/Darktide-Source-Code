@@ -67,7 +67,7 @@ ExpeditionCurrencyHandler._event_client_connected = function (self, peer_id, pla
 	if grant_currency then
 		self._currency_stored_by_account_id[account_id] = nil
 
-		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_currency_collected", peer_id, grant_currency, false)
+		Managers.state.game_session:send_rpc_clients("rpc_client_expedition_currency_set", peer_id, grant_currency, false)
 		self:_set_player_currency(peer_id, grant_currency)
 	end
 end
@@ -84,7 +84,7 @@ ExpeditionCurrencyHandler._event_client_disconnected = function (self, removed_p
 		local peer_id = player_data.peer_id
 		local currency_to_store = currency_by_peer[peer_id]
 
-		if currency_to_store and currency_to_store > 0 then
+		if currency_to_store then
 			self._currency_stored_by_account_id[player_data.account_id] = currency_to_store
 			currency_by_peer[peer_id] = nil
 			self._currency_calculations_dirty = true

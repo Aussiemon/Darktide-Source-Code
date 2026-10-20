@@ -21,6 +21,15 @@ SmokeFogSystem.hot_join_sync = function (self, sender, channel)
 	return
 end
 
+SmokeFogSystem.delete_units = function (self)
+	local spawned_units = self._unit_to_extension_map
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	for unit, extension in pairs(spawned_units) do
+		unit_spawner_manager:mark_for_deletion(unit)
+	end
+end
+
 SmokeFogSystem.destroy = function (self)
 	return
 end

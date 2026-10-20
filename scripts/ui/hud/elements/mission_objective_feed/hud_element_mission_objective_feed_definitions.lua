@@ -1155,7 +1155,6 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			drop_shadow = true,
 			font_size = 20,
 			horizontal_alignment = "left",
-			text_fit_with = true,
 			text_horizontal_alignment = "left",
 			text_vertical_alignment = "top",
 			vertical_alignment = "top",
@@ -1343,6 +1342,31 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 		self._stat_name = context.stat_name
 		self._stat_category = context.stat_category
 		self.content.title = Localize(context.title)
+
+		local title_style = self.style.title
+		local title_height = Text.text_height(ui_renderer, self.content.title, title_style, {
+			title_style.size[1],
+		})
+		local extra_height = math.max(0, title_height - title_style.size[2])
+
+		title_style.size[2] = title_style.size[2] + extra_height
+
+		for _, style_id in ipairs({
+			"bar_background",
+			"bar",
+			"progress_text",
+			"claim_prompt",
+		}) do
+			local style = self.style[style_id]
+
+			style.offset[2] = style.offset[2] + extra_height + 8
+
+			if style.default_offset then
+				style.default_offset[2] = style.default_offset[2] + extra_height + 8
+			end
+		end
+
+		self.content.size[2] = _global_reward_counter_default_height + extra_height + HudElementMissionObjectiveFeedSettings.live_event_height_buffer
 		self.content.progress_text = ""
 		self.content.has_currency_reward = false
 		self.content.currency_reward = ""

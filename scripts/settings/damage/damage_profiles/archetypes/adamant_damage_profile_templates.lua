@@ -97,6 +97,7 @@ damage_templates.adamant_shout_damage = {
 }
 damage_templates.adamant_charge_impact = {
 	ignore_stagger_reduction = true,
+	is_charge_impact = true,
 	is_push = true,
 	stagger_category = "hatchet",
 	stagger_override = "heavy",

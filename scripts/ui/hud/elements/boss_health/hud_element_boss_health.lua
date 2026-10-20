@@ -225,32 +225,35 @@ HudElementBossHealth.update = function (self, dt, t, ui_renderer, render_setting
 
 			widget_group.health.content.text = localized_display_name
 
-			local health_extension = target.health_extension
+			local health_extension = ScriptUnit.has_extension(unit, "health_system")
 			local health_bar_logic = target.health_bar_logic
-			local max_health_percentage = 1
-			local current_health_percentage = health_extension:current_health_percent()
 
-			health_bar_logic:update(dt, t, current_health_percentage, max_health_percentage)
+			if health_extension then
+				local max_health_percentage = 1
+				local current_health_percentage = health_extension:current_health_percent()
 
-			local health_fraction, health_ghost_fraction, health_max_fraction = health_bar_logic:animated_health_fractions()
+				health_bar_logic:update(dt, t, current_health_percentage, max_health_percentage)
 
-			if self._force_update then
-				health_fraction = health_fraction or current_health_percentage
-				health_ghost_fraction = health_ghost_fraction or current_health_percentage
-				health_max_fraction = health_max_fraction or max_health_percentage
-			end
+				local health_fraction, health_ghost_fraction, health_max_fraction = health_bar_logic:animated_health_fractions()
 
-			if health_fraction and health_ghost_fraction then
-				local widget = widget_group.health
-				local bar_size = widget_group_index == 1 and HudElementBossHealthSettings.size or HudElementBossHealthSettings.size_small
-				local bar_width = bar_size[1]
+				if self._force_update then
+					health_fraction = health_fraction or current_health_percentage
+					health_ghost_fraction = health_ghost_fraction or current_health_percentage
+					health_max_fraction = health_max_fraction or max_health_percentage
+				end
 
-				self:_apply_widget_bar_fractions(widget, bar_width, health_fraction, health_ghost_fraction, health_max_fraction)
+				if health_fraction and health_ghost_fraction then
+					local widget = widget_group.health
+					local bar_size = widget_group_index == 1 and HudElementBossHealthSettings.size or HudElementBossHealthSettings.size_small
+					local bar_width = bar_size[1]
+
+					self:_apply_widget_bar_fractions(widget, bar_width, health_fraction, health_ghost_fraction, health_max_fraction)
+				end
 			end
 
 			local boss_extension = target.boss_extension
 			local start_depleted = boss_extension and boss_extension:boss_is_depleted_interrupter()
-			local toughness_extension = target.toughness_extension
+			local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 
 			if toughness_extension and not start_depleted then
 				local toughness_bar_logic = target.toughness_bar_logic

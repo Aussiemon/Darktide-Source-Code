@@ -152,5 +152,6 @@ vfx_names["content/fx/particles/enemies/renegade_plasma_trooper/renegade_plasma_
 vfx_names["content/fx/particles/environment/valkyrie_takeoff_kickup_dust"] = true
 vfx_names["content/fx/particles/enemies/renegade_wizard/renegade_wizard_warp_forcepush_main"] = true
 vfx_names["content/fx/particles/enemies/renegade_wizard/wizard_head_explosion"] = true
+vfx_names["content/fx/particles/enemies/renegade_wizard/renegade_wizard_divebomb_land"] = true
 
 return vfx_names

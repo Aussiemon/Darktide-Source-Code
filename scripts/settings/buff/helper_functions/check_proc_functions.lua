@@ -654,9 +654,11 @@ CheckProcFunctions.would_die = function (params, template_data, template_context
 	end
 
 	local health_extension = ScriptUnit.extension(unit, "health_system")
-	local damage = params.damage_amount + params.permanent_damage
+	local damage = params.damage_amount
+	local permanent_damage = params.permanent_damage
 	local current_health = health_extension:current_health()
-	local is_going_to_die = params.will_die or current_health <= 1 and damage > 0
+	local current_health_permanent = health_extension:current_health_permanent()
+	local is_going_to_die = params.will_die or current_health <= 1 and (damage > 0 or current_health_permanent < permanent_damage)
 
 	return is_going_to_die
 end

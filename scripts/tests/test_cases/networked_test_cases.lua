@@ -30,6 +30,8 @@ NetworkedTestCases.join_mission_server = function (case_settings)
 		local store_mission_in_cache = settings.store_mission_in_cache == true or false
 		local circumstance = settings.circumstance or "default"
 		local side_mission = settings.side_mission or "default"
+		local challenge = settings.challenge
+		local resistance = settings.resistance
 		local flags = settings.flags or {}
 		local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
 
@@ -40,7 +42,7 @@ NetworkedTestCases.join_mission_server = function (case_settings)
 		TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		Testify:make_request("wait_for_state_gameplay_reached")
 		Testify:make_request("fail_on_not_authenticated")
-		TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, circumstance, side_mission)
+		TestifySnippets.load_mission_in_mission_board(mission_key, challenge, resistance, circumstance, side_mission)
 		Testify:make_request("accept_mission_board_vote")
 		Testify:make_request("wait_for_view", "lobby_view")
 		Testify:make_request("lobby_set_ready_status", true)
@@ -59,19 +61,29 @@ NetworkedTestCases.join_hub_on_hub_server = function ()
 	end)
 end
 
+local function join_all_clients_to_first_peer_party()
+	local first_peer = TestifySnippets.first_peer()
+
+	Testify:make_request_on_client(first_peer, "wait_for_joinable_presence", true)
+
+	local party_id = Testify:make_request_on_client(first_peer, "immaterium_party_id", true)
+	local peers_except_first = TestifySnippets.peers_except_first()
+
+	for _, peer_id in pairs(peers_except_first) do
+		Testify:make_request_on_client(peer_id, "wait_for_joinable_presence", true)
+		Testify:make_request_on_client(peer_id, "immaterium_join_party", true, party_id)
+		Testify:make_request_on_client(first_peer, "accept_join_party", true)
+		TestifySnippets.wait(1)
+	end
+
+	return first_peer, peers_except_first
+end
+
 NetworkedTestCases.create_party_and_join_mission_on_all_clients = function (mission_key)
 	Testify:run_case(function (dt, t)
-		local party_id = Testify:make_request_on_client(TestifySnippets.first_peer(), "immaterium_party_id", true)
-		local peers_except_first = TestifySnippets.peers_except_first()
-		local first_peer = TestifySnippets.first_peer()
+		local first_peer, peers_except_first = join_all_clients_to_first_peer_party()
 
-		for _, peer_id in pairs(peers_except_first) do
-			Testify:make_request_on_client(peer_id, "immaterium_join_party", true, party_id)
-			Testify:make_request_on_client(first_peer, "accept_join_party", true)
-			TestifySnippets.wait(1)
-		end
-
-		TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default", first_peer)
+		TestifySnippets.load_mission_in_mission_board(mission_key, nil, nil, "default", "default", first_peer)
 
 		for _, peer_id in pairs(peers_except_first) do
 			Testify:make_request_on_client(peer_id, "accept_mission_board_vote", true)
@@ -84,15 +96,7 @@ end
 
 NetworkedTestCases.create_party_with_all_clients = function ()
 	Testify:run_case(function (dt, t)
-		local party_id = Testify:make_request_on_client(TestifySnippets.first_peer(), "immaterium_party_id", true)
-		local peers_except_first = TestifySnippets.peers_except_first()
-		local first_peer = TestifySnippets.first_peer()
-
-		for _, peer_id in pairs(peers_except_first) do
-			Testify:make_request_on_client(peer_id, "immaterium_join_party", true, party_id)
-			Testify:make_request_on_client(first_peer, "accept_join_party", true)
-			TestifySnippets.wait(1)
-		end
+		join_all_clients_to_first_peer_party()
 	end)
 end
 

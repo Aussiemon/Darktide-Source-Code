@@ -914,6 +914,12 @@ local action_data = {
 			allow_refresh = true,
 			buff_template_name = "houndmaster_electrocution",
 		},
+		debuff_allowed_per_strike = {
+			attack_standing_combo = {
+				true,
+				false,
+			},
+		},
 	},
 	blocked = {
 		blocked_duration = 0.03333333333333333,

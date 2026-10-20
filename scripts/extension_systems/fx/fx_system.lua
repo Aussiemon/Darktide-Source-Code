@@ -24,6 +24,7 @@ local CLIENT_RPCS = {
 	"rpc_play_shotshell_surface_impact_fx",
 	"rpc_start_template_effect",
 	"rpc_stop_template_effect",
+	"rpc_release_template_effect_ownership",
 	"rpc_trigger_vfx",
 	"rpc_trigger_2d_wwise_event",
 	"rpc_trigger_wwise_event",
@@ -189,6 +190,10 @@ end
 
 FxSystem.stop_template_effect = function (self, global_effect_id)
 	self._effect_templates_handler:remove_template_effect(self._template_context, global_effect_id)
+end
+
+FxSystem.release_template_effect_ownership = function (self, global_effect_id)
+	self._effect_templates_handler:release_ownership(self._template_context, global_effect_id)
 end
 
 FxSystem.stop_player_template_effect = function (self, global_effect_id)
@@ -486,6 +491,13 @@ FxSystem.rpc_stop_template_effect = function (self, channel_id, buffer_index, is
 	local effect_templates_handler = not is_player_effect and self._effect_templates_handler or self._player_effect_templates_handler
 
 	effect_templates_handler:stop_template_effect_from_rpc(template_context, buffer_index)
+end
+
+FxSystem.rpc_release_template_effect_ownership = function (self, channel_id, buffer_index, is_player_effect)
+	local template_context = self._template_context
+	local effect_templates_handler = not is_player_effect and self._effect_templates_handler or self._player_effect_templates_handler
+
+	effect_templates_handler:release_ownership_from_rpc(template_context, buffer_index)
 end
 
 local SOURCE_PARAMETERS = {}

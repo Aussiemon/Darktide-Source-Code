@@ -9,7 +9,6 @@ local LoadedDice = require("scripts/utilities/loaded_dice")
 local MutatorSpawner = class("MutatorSpawner", "MutatorBase")
 local spawn_types = table.enum("proximity", "default")
 local TARGET_SIDE_ID = 1
-local PLAYER_POSITIONS = {}
 local vector3_distance = Vector3.distance
 local NAV_MESH_ABOVE, NAV_MESH_BELOW = 5, 5
 local MAX_TRAVEL_DISTANCE_Z_DIFF = 4
@@ -334,26 +333,16 @@ MutatorSpawner.update = function (self, dt, t)
 	if spawn_type == spawn_types.proximity then
 		local side_system = Managers.state.extension:system("side_system")
 		local player_side = side_system:get_side(TARGET_SIDE_ID)
-		local valid_player_positions = player_side.valid_player_units_positions
-
-		for i = 1, #valid_player_positions do
-			local player_position = valid_player_positions[i]
-
-			PLAYER_POSITIONS[#PLAYER_POSITIONS + 1] = player_position
-		end
-
+		local player_positions = self._template_data.proximity_include_disabled_players and player_side.player_unit_positions or player_side.valid_player_units_positions
 		local proximity_trigger_distance = self._template_data.proximity_trigger_distance
 		local locations = self._locations
 
 		for i = #locations, 1, -1 do
 			local location = locations[i]
-			local spawn_position = location.position
+			local spawn_position = location.position:unbox()
 
-			for ii = 1, #PLAYER_POSITIONS do
-				local player_pos = PLAYER_POSITIONS[ii]
-				local distance = vector3_distance(spawn_position:unbox(), player_pos)
-
-				if distance <= proximity_trigger_distance then
+			for j = 1, #player_positions do
+				if proximity_trigger_distance >= vector3_distance(spawn_position, player_positions[j]) then
 					self:_trigger_runtime_spawn(location)
 					table.remove(locations, i)
 
@@ -361,8 +350,6 @@ MutatorSpawner.update = function (self, dt, t)
 				end
 			end
 		end
-
-		table.clear(PLAYER_POSITIONS)
 	end
 end
 

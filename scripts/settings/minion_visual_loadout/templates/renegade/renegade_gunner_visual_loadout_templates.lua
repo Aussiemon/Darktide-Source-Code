@@ -32,6 +32,12 @@ local base_visual_loadout_template = {
 				"content/items/characters/minions/chaos_traitor_guard/attachments_gear/helmet_02_b_var_01",
 			},
 		},
+		slot_hair = {
+			use_outline = true,
+			items = {
+				"content/items/characters/minions/generic_items/empty_minion_item",
+			},
+		},
 		slot_upperbody = {
 			use_outline = true,
 			items = {

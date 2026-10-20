@@ -145,6 +145,7 @@ Settings.default_progress_bar_size = {
 	1200,
 	20,
 }
+Settings.reward_scroll_padding = 50
 Settings.live_events_history_limit = 5
 Settings.live_events_history_entries = {
 	"endless_hordes",

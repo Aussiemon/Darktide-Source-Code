@@ -2184,7 +2184,7 @@ templates.windup_increases_damage_on_sprint_parent = {
 			local action_settings = params.action_settings
 			local is_sprint_windup = action_settings.is_sprint_windup
 
-			return is_sprint_windup and ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and ConditionalFunctions.is_sprinting(template_data, template_context)
+			return is_sprint_windup and ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and (ConditionalFunctions.is_sprinting(template_data, template_context) or ConditionalFunctions.is_lunging(template_data, template_context))
 		end,
 		[buff_proc_events.on_action_start] = function (params, template_data, template_context)
 			local action_settings = params.action_settings

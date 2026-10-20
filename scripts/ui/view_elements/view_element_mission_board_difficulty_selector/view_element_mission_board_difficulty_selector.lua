@@ -119,7 +119,7 @@ ViewElementMissionBoardDifficultySelector.initialize_data = function (self, opti
 		self:_setup_threat_level_tooltip()
 	end
 
-	self._internal_selected_difficulty_index = optional_difficulty_index or 1
+	self._internal_selected_difficulty_index = self._widgets_by_name.difficulty_stepper.content.danger
 	self._initialized = true
 end
 
@@ -200,12 +200,18 @@ ViewElementMissionBoardDifficultySelector._update_difficulty_stepper = function 
 
 	local parent = self:parent()
 	local difficulty_settings = parent.get_difficulty_settings and parent:get_difficulty_settings() or DANGER_LEVELS
+
+	difficulty_index = math.clamp(difficulty_index, 1, #difficulty_settings)
+
 	local difficulty_setting = difficulty_settings and difficulty_settings[difficulty_index]
 	local difficulty_selector = self._widgets_by_name.difficulty_stepper
 	local content = difficulty_selector.content
 
 	content.danger = difficulty_index
-	content.difficulty_text = Text.localize_to_upper(difficulty_setting.loc_name or difficulty_setting.display_name)
+
+	local difficulty_text = difficulty_setting and (difficulty_setting.loc_name or difficulty_setting.display_name) or "loc_settings_option_unavailable"
+
+	content.difficulty_text = Text.localize_to_upper(difficulty_text)
 
 	local target_color = difficulty_setting and difficulty_setting.color or DANGER_LEVELS[difficulty_index].color
 

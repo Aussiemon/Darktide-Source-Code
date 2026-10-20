@@ -3619,6 +3619,7 @@ do
 			horde = true,
 		}
 		local excluded_zones_for_destructible = {
+			depths = true,
 			horde = true,
 			operations = true,
 		}

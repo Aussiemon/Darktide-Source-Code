@@ -536,6 +536,10 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 		result = attack_results.blocked
 	end
 
+	if target_breed_or_nil and result == attack_results.died and target_breed_or_nil.has_scripted_death_sequence then
+		result = attack_results.damaged
+	end
+
 	return result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt
 end
 

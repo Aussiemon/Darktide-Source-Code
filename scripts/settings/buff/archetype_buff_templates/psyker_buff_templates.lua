@@ -2646,7 +2646,7 @@ templates.psyker_cooldown_reduction_aura_tracking_buff = {
 	predicted = false,
 	unique_buff_id = "psyker_cooldown_reduction_aura_tracking_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_ability_used] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2655,12 +2655,19 @@ templates.psyker_cooldown_reduction_aura_tracking_buff = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 		template_data.last_num_in_coherency = 0
 	end,
+	check_proc_func = function (params, template_data, template_context)
+		local ability_type_used = params.ability_type
+		local uses_ability_charges = template_data.ability_extension:uses_ability_charges(ability_type_used)
+
+		return not uses_ability_charges or ability_type_used == "combat_ability"
+	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
 			return
 		end
 
-		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge("combat_ability")
+		local ability_type_used = params.ability_type
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge(ability_type_used)
 		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"
@@ -2693,7 +2700,7 @@ templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
 	predicted = false,
 	unique_buff_id = "psyker_improved_cooldown_reduction_aura_tracking_buff",
 	proc_events = {
-		[proc_events.on_combat_ability] = 1,
+		[proc_events.on_ability_used] = 1,
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -2702,12 +2709,19 @@ templates.psyker_improved_cooldown_reduction_aura_tracking_buff = {
 		template_data.ability_extension = ScriptUnit.extension(unit, "ability_system")
 		template_data.last_num_in_coherency = 0
 	end,
+	check_proc_func = function (params, template_data, template_context)
+		local ability_type_used = params.ability_type
+		local uses_ability_charges = template_data.ability_extension:uses_ability_charges(ability_type_used)
+
+		return not uses_ability_charges or ability_type_used == "combat_ability"
+	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
 			return
 		end
 
-		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge()
+		local ability_type_used = params.ability_type
+		local modified_charge_max_regen_time = template_data.ability_extension:max_regen_time_for_ability_charge(ability_type_used)
 		local default_cooldown_time = modified_charge_max_regen_time / (talent_settings_3.coherency.ability_cooldown_modifier_improved * -1 * 100 - 100) * 100 * -1
 		local saved_time = default_cooldown_time * talent_settings_3.coherency.ability_cooldown_modifier_improved * -1
 		local hook_name = "hook_psyker_team_cooldown_recovery_aura"

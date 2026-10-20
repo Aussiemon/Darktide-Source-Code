@@ -29,7 +29,7 @@ end
 
 MutatorGameplay.activate = function (self)
 	MutatorGameplay.super.activate(self)
-	self._network_event_delegate:register_connection_events(self, unpack(CLIENT_RPCS))
+	Managers.state.mutator:register_client_rpcs(self, unpack(CLIENT_RPCS))
 
 	local start_module_on_activate = self._template.gameplay_template.start_module_on_activate
 	local run_on_client = self._template.gameplay_template.run_on_client
@@ -57,7 +57,7 @@ MutatorGameplay.deactivate = function (self)
 	end
 
 	MutatorGameplay.super.deactivate(self)
-	self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	Managers.state.mutator:unregister_client_rpcs(self, unpack(CLIENT_RPCS))
 
 	if self._is_server then
 		Managers.event:unregister(self, "mutator_gameplay_start_module")

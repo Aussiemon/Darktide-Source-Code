@@ -406,7 +406,7 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/abilities/psyker_shield_block",
+							"content/fx/particles/enemies/renegade_wizard/renegade_wizard_shield_block",
 						},
 					},
 				},
@@ -414,7 +414,7 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/abilities/psyker_shield_block",
+							"content/fx/particles/enemies/renegade_wizard/renegade_wizard_shield_block",
 						},
 					},
 				},

@@ -329,6 +329,8 @@ MissionBoardViewLogic.get_bonus_range = function (self, category)
 end
 
 MissionBoardViewLogic.is_mission_locked = function (self, mission, campaign)
+	campaign = campaign or mission.campaign
+
 	local mission_key = mission.map
 	local mission_category = mission.category
 	local is_locked = true

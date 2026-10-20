@@ -74,6 +74,16 @@ SpillwayBossTooth.init = function (self, unit, is_server, nav_world)
 	self._queued_raise = false
 	self._pending_should_raise = true
 
+	local unit_spawner = Managers.state.unit_spawner
+	local is_hot_joining_client = not is_server and not unit_spawner:fully_hot_join_synced()
+
+	self._hidden_until_spawn = is_hot_joining_client
+
+	if is_hot_joining_client then
+		Unit.set_unit_visibility(unit, false, true)
+		self:_set_collision_enabled(false)
+	end
+
 	if not is_server then
 		local network_event_delegate = Managers.connection:network_event_delegate()
 
@@ -138,9 +148,37 @@ SpillwayBossTooth.hot_join_sync = function (self, joining_client, joining_channe
 	RPC.rpc_spillway_boss_tooth_hot_join_sync(joining_channel, game_object_id, is_raised)
 end
 
+SpillwayBossTooth.rpc_spillway_boss_tooth_hot_join_sync = function (self, channel_id, game_object_id, is_raised)
+	self._pending_should_raise = is_raised
+
+	if is_raised then
+		if self._hidden_until_spawn then
+			self:_set_collision_enabled(true)
+		end
+
+		return
+	end
+
+	if self._is_raised or self._is_moving then
+		return
+	end
+
+	self._hidden_until_spawn = true
+	self._pending_should_raise = nil
+	self._queued_raise = false
+	self._queued_raise_t = nil
+
+	Unit.set_unit_visibility(self._unit, false, true)
+	self:_set_collision_enabled(false)
+end
+
 SpillwayBossTooth._start_move = function (self, should_raise)
 	if not should_raise then
 		self:stop_pillar_vfx()
+	elseif self._hidden_until_spawn then
+		self._hidden_until_spawn = false
+
+		Unit.set_unit_visibility(self._unit, true, true)
 	end
 
 	if not self._is_moving and self._is_raised == should_raise then
@@ -170,10 +208,6 @@ SpillwayBossTooth._start_move = function (self, should_raise)
 	local fx_system = Managers.state.extension:system("fx_system")
 
 	fx_system:trigger_wwise_event(should_raise and SFX.raise or not should_raise and SFX.lower, nil, self._unit)
-end
-
-SpillwayBossTooth.rpc_spillway_boss_tooth_hot_join_sync = function (self, channel_id, game_object_id, is_raised)
-	self._pending_should_raise = is_raised
 end
 
 SpillwayBossTooth.enable_nav_cost = function (self)

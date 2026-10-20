@@ -260,8 +260,6 @@ HudElementEmoteWheel._on_wheel_stop = function (self, t, ui_renderer, render_set
 	wheel_context.instant_drew = nil
 	wheel_context.simultaneous_press = nil
 
-	Managers.event:trigger("event_set_emote_wheel_state", "inactive")
-
 	if self._wheel_active and UISoundEvents.emote_wheel_close then
 		Managers.ui:play_2d_sound(UISoundEvents.emote_wheel_close)
 	end
@@ -287,7 +285,7 @@ HudElementEmoteWheel._handle_input = function (self, t, dt, ui_renderer, render_
 			self._close_delay = nil
 
 			self:_pop_cursor()
-			Managers.event:trigger("event_set_emote_wheel_state", "inactive")
+			Managers.event:trigger("event_set_emote_wheel_state", false)
 
 			if self._event_to_play then
 				Managers.event:trigger("player_activate_emote", self._event_to_play)

@@ -3,6 +3,7 @@
 local ConnectionManagerTestify = GameParameters.testify and require("scripts/managers/multiplayer/connection_manager_testify")
 local NetworkTableCacheConfig = require("scripts/settings/network/network_table_cache_config")
 local QoSConfigs = require("scripts/settings/network/qos_configs")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local VotingNetworkInterface = require("scripts/managers/voting/voting_network_interface")
 local ConnectionManager = class("ConnectionManager")
 
@@ -451,6 +452,16 @@ ConnectionManager.kick_all = function (self, reason, option_details)
 end
 
 ConnectionManager._shutdown_connection_host = function (self, is_error, game_reason, engine_reason)
+	local world_manager = Managers.world
+
+	if world_manager and world_manager:has_world("level_world") then
+		local world = world_manager:world("level_world")
+
+		if ScriptWorld.is_physics_thread_locked(world) then
+			ScriptWorld.physics_fetch_queries(world)
+		end
+	end
+
 	for peer_id, _ in pairs(self._members) do
 		self:_remove_client(self:peer_to_channel(peer_id), peer_id, is_error, game_reason, engine_reason)
 	end

@@ -272,7 +272,7 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		value = "content/ui/materials/icons/generic/hourglass",
 		style = Styles.mission_area_info.timer.timer_icon,
 		visibility_function = function (content, style)
-			return not content.is_quickplay
+			return not content.is_persistent
 		end,
 	},
 	{
@@ -282,7 +282,7 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		value_id = "timer_text",
 		style = Styles.mission_area_info.timer.timer_text,
 		visibility_function = function (content, style)
-			return not content.is_quickplay
+			return not content.is_persistent
 		end,
 	},
 	{
@@ -291,7 +291,7 @@ widget_definitions.large_timer_bar = UIWidget.create_definition({
 		value = "content/ui/materials/symbols/infinite",
 		style = Styles.mission_area_info.timer.infinite_symbol,
 		visibility_function = function (content, style)
-			return content.is_quickplay
+			return content.is_persistent
 		end,
 	},
 }, "_mission_area_timer")

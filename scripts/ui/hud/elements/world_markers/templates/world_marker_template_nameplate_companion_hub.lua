@@ -195,7 +195,7 @@ end
 
 template.on_exit = function (widget, marker)
 	Managers.event:unregister(marker, "event_companion_nameplate_in_hub_setting_changed")
-	Managers.event:unregister(marker, "event_update_player_name")
+	Managers.event:unregister(marker, "event_player_profile_updated")
 end
 
 template.on_enter = function (widget, marker)
@@ -212,7 +212,7 @@ template.on_enter = function (widget, marker)
 	marker.cb_update_companion_name = _cb_update_companion_name
 
 	Managers.event:register(marker, "event_companion_nameplate_in_hub_setting_changed", "cb_companion_interface_settings_changed")
-	Managers.event:register(marker, "event_update_player_name", "cb_update_companion_name")
+	Managers.event:register(marker, "event_player_profile_updated", "cb_update_companion_name")
 
 	content.header_text = header_text
 	content.icon_text = color_string .. companion_glyph .. "{#reset()}"

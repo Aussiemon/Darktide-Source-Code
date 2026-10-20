@@ -75,7 +75,10 @@ local SFX = {
 	"wwise/events/minions/play_enemy_psyker_area_wave",
 }
 local GOOP_UNIT = {
-	default_value = 1.422,
+	default_value = 2.146,
+	fade_variable = "opacity_fade_progress",
+	material_name = "cauldron_01_spill_01",
+	reveal_variable = "opacity_reveal_progress",
 	target_value = 0,
 	unit_name = "cauldron_01_spill_01",
 	variable = "emissive",
@@ -106,28 +109,114 @@ local SFX_SOURCE_OFFSETS = {
 		-SFX_SOURCE_RADIUS,
 	},
 }
-local DMG_EFFECT_IDS = {}
-local DISSOLVE_T = 1.5
+local DISSOLVE_T = 3
+local FADE_OUT_T = 0.5
+
+local function _set_goop_opacity(goop_unit, reveal, fade)
+	if not goop_unit or not Unit.alive(goop_unit) then
+		return
+	end
+
+	local material_name = GOOP_UNIT.material_name
+
+	Unit.set_scalar_for_material(goop_unit, material_name, GOOP_UNIT.reveal_variable, reveal)
+	Unit.set_scalar_for_material(goop_unit, material_name, GOOP_UNIT.fade_variable, fade)
+end
+
+local function _update_goop(template_data, set_visible, t)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local goop_unit = template_data.goop_unit
+
+	if not goop_unit or not Unit.alive(goop_unit) then
+		return
+	end
+
+	local phase = template_data.goop_phase
+
+	if set_visible then
+		if phase == "visible" then
+			return
+		end
+
+		if phase ~= "showing" then
+			template_data.goop_phase = "showing"
+			template_data.goop_start_t = t
+
+			_set_goop_opacity(goop_unit, 0, 0)
+		end
+	else
+		if phase == "hidden" then
+			return
+		end
+
+		if phase ~= "hiding" then
+			template_data.goop_phase = "hiding"
+			template_data.goop_start_t = t
+		end
+	end
+
+	local alpha = math.clamp01((t - template_data.goop_start_t) / DISSOLVE_T)
+
+	if template_data.goop_phase == "hiding" then
+		_set_goop_opacity(goop_unit, 1, alpha)
+
+		if alpha >= 1 then
+			template_data.goop_phase = "hidden"
+		end
+	else
+		_set_goop_opacity(goop_unit, alpha, 0)
+
+		if alpha >= 1 then
+			template_data.goop_phase = "visible"
+		end
+	end
+end
+
+local function _reset_floor_goop(template_data)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	_set_goop_opacity(template_data.goop_unit, 1, 0)
+end
 
 local function _dissolve_floor_goop(template_data, reversed, dt)
+	local goop_unit = template_data.goop_unit
+
+	if not goop_unit or not Unit.alive(goop_unit) then
+		return
+	end
+
+	if not reversed then
+		local dissolve_t = math.clamp(template_data.dissolve_t + dt / DISSOLVE_T, 0, 1)
+		local scalar = math.lerp(GOOP_UNIT.default_value, GOOP_UNIT.target_value, dissolve_t)
+
+		template_data.dissolve_t = dissolve_t
+
+		Unit.set_scalar_for_materials(goop_unit, GOOP_UNIT.variable, scalar, true)
+	else
+		Unit.set_scalar_for_materials(goop_unit, GOOP_UNIT.variable, GOOP_UNIT.default_value, true)
+	end
+end
+
+local function _stop_damage_vfx(template_data)
+	local damage_effect_ids = template_data.damage_effect_ids
+
+	if not damage_effect_ids or #damage_effect_ids < 1 then
+		return
+	end
+
 	local circle_unit = template_data.circle_unit
 	local world = Unit.world(circle_unit)
 
-	if not template_data.goop_unit then
-		template_data.goop_unit = World.unit_by_name(world, GOOP_UNIT.unit_name)
-	elseif template_data.goop_unit then
-		if not reversed then
-			local direction = 1
-			local dissolve_t = math.clamp(template_data.dissolve_t + direction * dt / DISSOLVE_T, 0, 1)
-			local scalar = math.lerp(GOOP_UNIT.default_value, GOOP_UNIT.target_value, dissolve_t)
-
-			template_data.dissolve_t = dissolve_t
-
-			Unit.set_scalar_for_materials(template_data.goop_unit, GOOP_UNIT.variable, scalar, true)
-		else
-			Unit.set_scalar_for_materials(template_data.goop_unit, GOOP_UNIT.variable, GOOP_UNIT.default_value, true)
-		end
+	for i = 1, #damage_effect_ids do
+		World.stop_spawning_particles(world, damage_effect_ids[i])
 	end
+
+	table.clear(damage_effect_ids)
 end
 
 local function _update_ring_scalar(template_data, dt, t, safe_zone)
@@ -158,6 +247,8 @@ local function _update_ring_scalar(template_data, dt, t, safe_zone)
 
 		erode = math.lerp(RING_ERODE.on, RING_ERODE.off, ramp_out_t)
 	end
+
+	template_data.current_erode = erode
 
 	for i = 1, #ring_units do
 		local ring_unit = ring_units[i]
@@ -204,6 +295,53 @@ local function _update_static_ring(template_data, t)
 	Material.set_scalar(material, RING_ERODE.var_name, erode)
 end
 
+local function _start_fade_out(template_data, t)
+	if template_data.fade_out_start then
+		return
+	end
+
+	template_data.fade_out_start = t
+	template_data.fade_out_from = template_data.current_erode or RING_ERODE.on
+
+	local circle_unit = template_data.circle_unit
+	local world = Unit.world(circle_unit)
+	local static_ring_effect_id = template_data.static_ring_effect_id
+
+	if static_ring_effect_id then
+		World.stop_spawning_particles(world, static_ring_effect_id)
+	end
+
+	_stop_damage_vfx(template_data)
+end
+
+local function _update_fade_out(template_data, t)
+	local fade_out_start = template_data.fade_out_start
+
+	if not fade_out_start then
+		return
+	end
+
+	local progress = math.clamp((t - fade_out_start) / FADE_OUT_T, 0, 1)
+	local erode = math.lerp(template_data.fade_out_from, RING_ERODE.off, progress)
+	local ring_units = template_data.ring_units
+
+	if ring_units then
+		for i = 1, #ring_units do
+			local ring_unit = ring_units[i]
+
+			if Unit.alive(ring_unit) then
+				Unit.set_scalar_for_materials(ring_unit, RING_ERODE.var_name, erode, true)
+			end
+		end
+	end
+
+	local static_ring_material = template_data.static_ring_material
+
+	if static_ring_material then
+		Material.set_scalar(static_ring_material, RING_ERODE.var_name, erode)
+	end
+end
+
 local function _setup(template_data, template_context, safe_zone)
 	local circle_unit = template_data.circle_unit
 
@@ -222,19 +360,28 @@ local effect_template = {
 	start = function (template_data, template_context)
 		local unit = template_data.unit
 		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session = template_context.game_session
+		local center_position = GameSession.game_object_field(game_session, game_object_id, "center_position")
 
 		template_data.game_object_id = game_object_id
 
-		local game_session = template_context.game_session
-		local center_position = GameSession.game_object_field(game_session, game_object_id, "center_position")
 		local circle_unit = Managers.state.unit_spawner:spawn_unit("content/characters/enemy/shared/psyker_boss_circle/psyker_boss_circle", center_position + Vector3(0, 0, 5))
 
 		template_data.circle_unit = circle_unit
+
+		local world = Unit.world(circle_unit)
+		local goop_unit = World.unit_by_name(world, GOOP_UNIT.unit_name)
+
+		template_data.goop_unit = goop_unit
 		template_data.damage_vfx_played = false
+		template_data.goop_phase = "visible"
 		template_data.dissolve_t = 0
 
+		_set_goop_opacity(goop_unit, 1, 0)
+
+		template_data.damage_effect_ids = {}
+
 		if not DEDICATED_SERVER then
-			local world = Unit.world(circle_unit)
 			local ring_units = {}
 			local ring_position = center_position + Vector3(0, 0, RING_Z_OFFSET)
 
@@ -264,6 +411,17 @@ local effect_template = {
 		local game_object_id = template_data.game_object_id
 		local game_session = template_context.game_session
 		local safe_zone = GameSession.game_object_field(game_session, game_object_id, "safe_zone")
+		local is_stopping = GameSession.game_object_field(game_session, game_object_id, "dance_is_stopping")
+
+		if is_stopping and not DEDICATED_SERVER then
+			_start_fade_out(template_data, t)
+		end
+
+		if template_data.fade_out_start then
+			_update_fade_out(template_data, t)
+
+			return
+		end
 
 		if safe_zone > 0 and safe_zone <= #names and not template_data.setup_complete then
 			template_data.safe_zone = safe_zone
@@ -275,6 +433,7 @@ local effect_template = {
 		end
 
 		if not DEDICATED_SERVER then
+			_update_goop(template_data, false, t)
 			_dissolve_floor_goop(template_data, false, dt)
 			_update_ring_scalar(template_data, dt, t, safe_zone)
 			_update_static_ring(template_data, t)
@@ -294,6 +453,7 @@ local effect_template = {
 				local circle_unit = template_data.circle_unit
 				local world = Unit.world(circle_unit)
 				local center_position = GameSession.game_object_field(game_session, game_object_id, "center_position")
+				local damage_effect_ids = template_data.damage_effect_ids
 
 				for i = 1, #names do
 					if i ~= safe_zone then
@@ -303,7 +463,7 @@ local effect_template = {
 							local rotation = Quaternion.from_euler_angles_xyz(0, 0, SLICE_ANGLE * j)
 							local effect_id = World.create_particles(world, DAMAGE_VFX[i], unit_position, rotation)
 
-							DMG_EFFECT_IDS[#DMG_EFFECT_IDS + 1] = effect_id
+							damage_effect_ids[#damage_effect_ids + 1] = effect_id
 						end
 					end
 				end
@@ -318,53 +478,59 @@ local effect_template = {
 					WwiseWorld.trigger_resource_event(wwise_world, SFX[1], source_id)
 				end
 			end
-		elseif not should_play_damage_vfx and #DMG_EFFECT_IDS > 0 then
-			for i = 1, #DMG_EFFECT_IDS do
-				local effect_id = DMG_EFFECT_IDS[i]
-				local circle_unit = template_data.circle_unit
-				local world = Unit.world(circle_unit)
-
-				World.stop_spawning_particles(world, effect_id)
-			end
-
-			table.clear(DMG_EFFECT_IDS)
+		elseif not should_play_damage_vfx then
+			_stop_damage_vfx(template_data)
 		end
 
 		if template_data.setup_complete and template_data.safe_zone ~= safe_zone then
 			template_data.setup_complete = false
 		end
 	end,
-	stop = function (template_data, template_context)
-		_dissolve_floor_goop(template_data, true, nil)
+	exiting = function (template_data, template_context, dt, t)
+		if not template_data.goop_emissive_from then
+			local dissolve_t = template_data.dissolve_t or 1
 
-		if #DMG_EFFECT_IDS > 0 then
-			for i = 1, #DMG_EFFECT_IDS do
-				local effect_id = DMG_EFFECT_IDS[i]
-				local circle_unit = template_data.circle_unit
-				local world = Unit.world(circle_unit)
-
-				World.stop_spawning_particles(world, effect_id)
-			end
-
-			table.clear(DMG_EFFECT_IDS)
+			template_data.goop_emissive_from = math.lerp(GOOP_UNIT.default_value, GOOP_UNIT.target_value, dissolve_t)
+			template_data.goop_emissive_start_t = t
 		end
+
+		local goop_unit = template_data.goop_unit
+
+		if goop_unit and Unit.alive(goop_unit) then
+			local alpha = math.clamp((t - template_data.goop_emissive_start_t) / DISSOLVE_T, 0, 1)
+			local scalar = math.lerp(template_data.goop_emissive_from, GOOP_UNIT.default_value, alpha)
+
+			Unit.set_scalar_for_materials(goop_unit, GOOP_UNIT.variable, scalar, true)
+		end
+
+		_update_goop(template_data, true, t)
 
 		local circle_unit = template_data.circle_unit
 		local world = Unit.world(circle_unit)
 		local static_ring_effect_id = template_data.static_ring_effect_id
 
 		if static_ring_effect_id then
-			local static_ring_material = template_data.static_ring_material
-
-			if static_ring_material then
-				Material.set_scalar(static_ring_material, RING_ERODE.var_name, RING_ERODE.off)
-			end
-
 			World.stop_spawning_particles(world, static_ring_effect_id)
 
 			template_data.static_ring_effect_id = nil
 			template_data.static_ring_material = nil
 		end
+
+		if not template_data.exit_time then
+			template_data.exit_time = t + DISSOLVE_T
+		end
+
+		return t >= template_data.exit_time
+	end,
+	stop = function (template_data, template_context)
+		_reset_floor_goop(template_data)
+		_dissolve_floor_goop(template_data, true, nil)
+
+		local circle_unit = template_data.circle_unit
+		local world = Unit.world(circle_unit)
+
+		World.unlink_unit(world, circle_unit)
+		World.destroy_unit(world, circle_unit)
 
 		local ring_units = template_data.ring_units
 
@@ -379,9 +545,6 @@ local effect_template = {
 
 			template_data.ring_units = nil
 		end
-
-		World.unlink_unit(world, circle_unit)
-		World.destroy_unit(world, circle_unit)
 	end,
 }
 

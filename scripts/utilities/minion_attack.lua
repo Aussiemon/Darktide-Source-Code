@@ -1203,14 +1203,15 @@ end
 
 function _apply_debuff(action_data, result, target_unit, _result_per_unit, attack_type, scratchpad)
 	local should_apply_debuff = action_data.apply_buff_to_target_unit
-	local debuff_allowed_per_strike = action_data.debuff_allowed_per_strike
-	local allowed_for_current_strike
 
-	if debuff_allowed_per_strike then
-		allowed_for_current_strike = debuff_allowed_per_strike[scratchpad.attack_event][scratchpad.attack_index]
+	if not should_apply_debuff then
+		return
 	end
 
-	if not should_apply_debuff and (not debuff_allowed_per_strike or debuff_allowed_per_strike and allowed_for_current_strike) then
+	local debuff_allowed_per_strike = action_data.debuff_allowed_per_strike
+	local allowed_per_event = debuff_allowed_per_strike and scratchpad and debuff_allowed_per_strike[scratchpad.attack_event]
+
+	if allowed_per_event and allowed_per_event[scratchpad.attack_index or 1] == false then
 		return
 	end
 

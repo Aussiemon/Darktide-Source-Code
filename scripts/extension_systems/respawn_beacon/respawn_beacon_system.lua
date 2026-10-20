@@ -178,6 +178,25 @@ RespawnBeaconSystem.remove_respawn_beacon_priority = function (self)
 	self._priority_respawn_beacon = nil
 end
 
+RespawnBeaconSystem.get_most_relevant_spawn_slots = function (self)
+	local beacon_unit = self._priority_respawn_beacon or self._current_active_respawn_beacon
+
+	if not beacon_unit then
+		local side_system = Managers.state.extension:system("side_system")
+		local default_player_side_name = side_system:get_default_player_side_name()
+		local player_side = side_system:get_side_from_name(default_player_side_name)
+		local side_id = player_side.side_id
+
+		beacon_unit = self:_find_optimal_beacon(side_id)
+	end
+
+	if not beacon_unit then
+		return nil
+	end
+
+	return self._unit_to_extension_map[beacon_unit]:best_respawn_positions()
+end
+
 RespawnBeaconSystem.fixed_update = function (self, context, dt, t, frame)
 	RespawnBeaconSystem.super.fixed_update(self, context, dt, t, frame)
 
@@ -403,7 +422,7 @@ RespawnBeaconSystem._find_nearest_beacon_with_distance = function (self)
 	for ii = 1, num_alive_players do
 		local player = alive_players[ii]
 		local player_unit = player.player_unit
-		local position = POSITION_LOOKUP[player_unit]
+		local position = Unit.local_position(player_unit, 1)
 
 		midpoint_position = position + midpoint_position
 	end

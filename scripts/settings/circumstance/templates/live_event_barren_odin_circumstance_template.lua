@@ -5,6 +5,7 @@ local CircumstanceUtils = require("scripts/settings/circumstance/utilities/circu
 local MissionOverrides = require("scripts/settings/circumstance/mission_overrides")
 local core_mutators = {
 	"mutator_gameplay_barren_odin",
+	"mutator_live_event_barren_gameplay_lua",
 }
 local templates = table.clone(BaseLiveEventTemplate)
 

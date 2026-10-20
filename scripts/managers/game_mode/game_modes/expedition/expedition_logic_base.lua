@@ -696,7 +696,12 @@ ExpeditionLogicBase.rpc_client_expedition_on_purchase_performed = function (self
 		original_extra_description = nil
 	end
 
-	self:_reset_safe_zone_pickup_unit_presentation(pickup_unit, original_description, original_extra_description)
+	if not product_data.is_pickup then
+		self:_refresh_safe_zone_unit_store_data_presentation(product_data)
+	else
+		self:_reset_safe_zone_pickup_unit_presentation(pickup_unit, original_description, original_extra_description)
+	end
+
 	Managers.event:trigger("expedition_player_purchase_performed", player)
 
 	local local_player = Managers.player:local_player(local_player_id)

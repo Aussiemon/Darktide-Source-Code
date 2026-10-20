@@ -31,6 +31,8 @@ SpecialsPacing.init = function (self, nav_world)
 	self._specials_slots = {}
 	self._num_failed_attempts = 0
 	self._num_coordinated_surges = 0
+	self._surges_paused = false
+	self._monster_specials_paused = false
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
@@ -337,7 +339,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 		move_timer_override = true
 	end
 
-	if self._coordinated_surge_duration and t <= self._coordinated_surge_duration then
+	if not self._surges_paused and self._coordinated_surge_duration and t <= self._coordinated_surge_duration then
 		move_timer_override = true
 	end
 
@@ -1089,6 +1091,10 @@ SpecialsPacing._check_disabler_override = function (self, template, target_side_
 end
 
 SpecialsPacing._check_monster_override = function (self, template)
+	if self._monster_specials_paused then
+		return
+	end
+
 	local t = Managers.time:time("gameplay")
 
 	if self._max_monster_duration then
@@ -1194,7 +1200,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 	local specials_slots = self._specials_slots
 	local t = Managers.time:time("gameplay")
 
-	if self._coordinated_surge_duration and t <= self._coordinated_surge_duration then
+	if not self._surges_paused and self._coordinated_surge_duration and t <= self._coordinated_surge_duration then
 		local optional_coordinated_strike = true
 		local coordinated_surge_timer_range = template.coordinated_surge_timer_range
 		local min_timer_range, max_timer_range = coordinated_surge_timer_range[1], coordinated_surge_timer_range[2]
@@ -1256,7 +1262,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	Log.info("SpecialsPacing", "Coordinated strike in %.02f", coordinated_strike_timer)
 
-	if self._num_coordinated_surges and self._num_coordinated_surges > 0 then
+	if not self._surges_paused and self._num_coordinated_surges and self._num_coordinated_surges > 0 then
 		local is_coordinated_surge = math.random() <= template.coordinated_surge_chance
 
 		if is_coordinated_surge then
@@ -1598,6 +1604,22 @@ end
 
 SpecialsPacing.freeze = function (self, should_freeze)
 	self._frozen = should_freeze
+end
+
+SpecialsPacing.pause_surges = function (self, should_pause)
+	self._surges_paused = should_pause
+end
+
+SpecialsPacing.surges_paused = function (self)
+	return self._surges_paused
+end
+
+SpecialsPacing.pause_monster_specials = function (self, should_pause)
+	self._monster_specials_paused = should_pause
+end
+
+SpecialsPacing.monster_specials_paused = function (self)
+	return self._monster_specials_paused
 end
 
 SpecialsPacing.max_num_specials = function (self)

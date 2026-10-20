@@ -70,7 +70,7 @@ function _apply_buffs(movement_mod, weapon_action_component, buff_extension, spr
 	if movement_mod < 1 then
 		local is_venting = action_kind == "vent_warp_charge"
 		local is_shielding = action_kind == "shield"
-		local is_windup = action_kind == "windup"
+		local is_windup = action_kind == "windup" or action_kind == "block_windup"
 		local is_reload = action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special"
 
 		if is_venting then

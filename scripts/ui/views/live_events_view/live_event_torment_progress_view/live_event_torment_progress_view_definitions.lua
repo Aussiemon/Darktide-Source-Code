@@ -22,7 +22,11 @@ instruction_text_style.text_color = Color.terminal_text_body(255, true)
 instruction_text_style.text_horizontal_alignment = "center"
 instruction_text_style.text_vertical_alignment = "top"
 instruction_text_style.horizontal_alignment = "center"
-instruction_text_style.font_size = 24
+instruction_text_style.size = {
+	650,
+	50,
+}
+instruction_text_style.font_size = 22
 instruction_text_style.drop_shadow = true
 
 local entry_title_style = table.clone(UIFontSettings.body)

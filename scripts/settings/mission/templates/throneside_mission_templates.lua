@@ -101,6 +101,20 @@ local mission_templates = {
 			vo_profile = "boon_vendor_s",
 			wwise_route_key = 1,
 			mission_giver_packs = {
+				sergeant_a = {
+					"sergeant",
+					"pilot",
+				},
+				boon_vendor_a = {
+					"boon_vendor",
+					"pilot",
+					skip_voices = {
+						boon_vendor_s = true,
+					},
+				},
+				pilot_a = {
+					"pilot",
+				},
 				boon_vendor_s = {
 					"shipmistress",
 					"boon_vendor",

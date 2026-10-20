@@ -78,6 +78,12 @@ ability_action_data.action_kind_condition_funcs = {
 		return true
 	end,
 	servo_skull_order_target_finder = function (action_settings, condition_func_params, used_input, t, time_in_action)
+		local can_use_ability = _can_use_ability_check(action_settings, condition_func_params, used_input)
+
+		if not can_use_ability then
+			return false
+		end
+
 		return true
 	end,
 	veteran_combat_ability = _can_use_ability_check,

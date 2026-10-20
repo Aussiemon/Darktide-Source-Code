@@ -364,7 +364,7 @@ local views = {
 		package = "packages/ui/views/mission_intro_view/mission_intro_view",
 		path = "scripts/ui/views/mission_intro_view/mission_intro_view",
 		preload_in_hub = "always",
-		preload_in_mission = "not_ps5_nor_lockhart",
+		preload_in_mission = "always",
 		use_transition_ui = true,
 		enter_sound_events = {
 			UISoundEvents.mission_briefing_start,

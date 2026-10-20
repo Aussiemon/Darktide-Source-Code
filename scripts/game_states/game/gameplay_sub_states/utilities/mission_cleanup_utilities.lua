@@ -151,6 +151,10 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 			extension_manager:system("liquid_area_system"):delete_units()
 		end
 
+		if extension_manager:has_system("smoke_fog_system") then
+			extension_manager:system("smoke_fog_system"):delete_units()
+		end
+
 		if extension_manager:has_system("pickup_system") then
 			extension_manager:system("pickup_system"):delete_units()
 		end
@@ -161,6 +165,10 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 
 		if extension_manager:has_system("fx_system") then
 			extension_manager:system("fx_system"):delete_units()
+		end
+
+		if extension_manager:has_system("locomotion_system") then
+			extension_manager:system("locomotion_system"):delete_projectile_untis()
 		end
 	end
 

@@ -53,6 +53,7 @@ damage_templates.shout_stagger_ogryn_taunt = {
 }
 damage_templates.ogryn_charge_impact = {
 	ignore_stagger_reduction = true,
+	is_charge_impact = true,
 	is_push = true,
 	stagger_category = "explosion",
 	power_distribution = {
@@ -166,6 +167,7 @@ damage_templates.ogryn_charge_finish = {
 }
 damage_templates.ogryn_charge_impact_damage = {
 	ignore_stagger_reduction = true,
+	is_charge_impact = true,
 	is_push = true,
 	stagger_category = "explosion",
 	stagger_duration_modifier = 1.5,

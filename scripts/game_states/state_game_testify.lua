@@ -9,6 +9,7 @@ local MasterItems = require("scripts/backend/master_items")
 local MissionObjectives = require("scripts/settings/mission_objective/mission_objective_templates")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local application_console_command = Application.console_command
 local unit_actor = Unit.actor
@@ -275,6 +276,11 @@ local StateGameTestify = {
 
 		return current_state_name
 	end,
+	delete_directory = function (_, directory)
+		local windows_directory = string.gsub(directory, "/", "\\")
+
+		os.execute(string.format("if exist \"%s\" rmdir /s /q \"%s\"", windows_directory, windows_directory))
+	end,
 	display_and_graphics_presets_settings = function ()
 		local RenderSettings = require("scripts/settings/options/render_settings")
 		local settings, render_settings, i = RenderSettings.settings, {}, 0
@@ -379,6 +385,18 @@ local StateGameTestify = {
 	set_autoload_enabled = function (_, is_enabled)
 		Application.set_autoload_enabled(is_enabled)
 	end,
+	set_world_rendering = function (_, world_name, enabled)
+		local world = Managers.world:world(world_name)
+		local viewports = World.get_data(world, "viewports")
+
+		for _, viewport in pairs(viewports) do
+			if enabled then
+				ScriptWorld.activate_viewport(world, viewport)
+			else
+				ScriptWorld.deactivate_viewport(world, viewport)
+			end
+		end
+	end,
 	setting_on_activated = function (_, option_data)
 		Log.info("StateGameTestify", "Changing render settings for %s, old value: %s, new value: %s", option_data.setting.display_name, option_data.old_value, option_data.new_value)
 		option_data.setting.on_activated(option_data.new_value, option_data.setting)
@@ -425,11 +443,14 @@ local StateGameTestify = {
 		local save_depth = false
 		local output_dir = screenshot_settings.output_dir
 		local date_and_time = os.date("%y_%m_%d-%H%M")
-		local filename = screenshot_settings.filename .. "-" .. date_and_time
+		local filename = screenshot_settings.skip_timestamp and screenshot_settings.filename or screenshot_settings.filename .. "-" .. date_and_time
 		local filetype = screenshot_settings.filetype
 
 		os.execute("mkdir -p " .. "\"" .. output_dir .. "\"")
-		FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype, save_depth)
+
+		local frame_capture = FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype, save_depth)
+
+		return frame_capture
 	end,
 	time = function (_, name)
 		local time = Managers.time:time(name)
@@ -451,10 +472,20 @@ local StateGameTestify = {
 	unregister_timer = function (_, name)
 		Managers.time:unregister_timer(name)
 	end,
+	wait_for_localization_ready = function ()
+		if not Managers.localization:is_ready() or Managers.package:is_anything_loading_now() then
+			return Testify.RETRY
+		end
+	end,
 	wait_for_promise = function (_, promise)
 		local promise_state = promise.state
 
 		if promise_state == "pending" then
+			return Testify.RETRY
+		end
+	end,
+	wait_for_screenshot_completed = function (_, frame_capture)
+		if frame_capture and not FrameCapture.completed(frame_capture) then
 			return Testify.RETRY
 		end
 	end,

@@ -746,8 +746,9 @@ local template = {
 			},
 			{
 				"continue_when",
+				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 16
+					return TerrorEventQueries.num_alive_minions_in_level_excluding_tag("ritualist", "mutator") < 16
 				end,
 			},
 			{
@@ -760,8 +761,9 @@ local template = {
 			},
 			{
 				"continue_when",
+				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 11
+					return TerrorEventQueries.num_alive_minions_in_level_excluding_tag("ritualist", "mutator") < 11
 				end,
 			},
 			{
@@ -770,8 +772,9 @@ local template = {
 			},
 			{
 				"continue_when",
+				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 6
+					return TerrorEventQueries.num_alive_minions_in_level_excluding_tag("ritualist", "mutator") < 6
 				end,
 			},
 			{
@@ -780,8 +783,9 @@ local template = {
 			},
 			{
 				"continue_when",
+				duration = 120,
 				condition = function ()
-					return TerrorEventQueries.num_alive_minions_in_level("ritualist") < 1
+					return TerrorEventQueries.num_alive_minions_in_level_excluding_tag("ritualist", "mutator") < 1
 				end,
 			},
 			{

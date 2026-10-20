@@ -113,7 +113,11 @@ DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage
 	end
 
 	attack_result = attack_result or attack_results.damaged
-	remaining_damage = math.min(remaining_damage, NetworkConstants.health_large.max)
+
+	local biggest_health_constant
+
+	biggest_health_constant = NetworkConstants.health_huge.max
+	remaining_damage = math.min(remaining_damage, biggest_health_constant)
 
 	return attack_result, remaining_damage, remaining_permanent_damage, toughness_damage, damage_absorbed
 end
@@ -372,7 +376,7 @@ function _calculate_health_damage_player(damage_amount, damage_profile, damage_t
 	local permanent_damage = damage_amount * permanent_damage_ratio * buff_corruption_taken_multiplier * buff_corruption_taken_grimoire_multiplier
 	local health_damage = damage_amount * (1 - permanent_damage_ratio)
 
-	if max_health - (current_permanent_damage + permanent_damage) < 1 then
+	if is_grimoire_damage and max_health - (current_permanent_damage + permanent_damage) < 1 then
 		permanent_damage = math.max(0, max_health - current_permanent_damage - 1)
 	end
 

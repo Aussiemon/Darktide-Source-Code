@@ -11,6 +11,7 @@ MutatorManager.init = function (self, is_server, world, nav_world, network_event
 	self._world = world
 	self._nav_world = nav_world
 	self._level_seed = level_seed
+	self._client_rpc_callers = {}
 
 	self:_load_mutators(circumstance_name)
 
@@ -59,10 +60,6 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 			local mutator_instance = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world, self._world, self._level_seed)
 
 			mutators[mutator_name] = mutator_instance
-
-			if mutator_instance:is_loading_done() and mutator_template.activate_on_load then
-				self:activate_mutator(mutator_name)
-			end
 		end
 	end
 end
@@ -78,8 +75,9 @@ MutatorManager.is_loading = function (self)
 end
 
 MutatorManager.destroy = function (self)
-	for name, _ in pairs(self._mutators) do
+	for name, mutator in pairs(self._mutators) do
 		self:deactivate_mutator(name)
+		self:_unregister_all_client_rpcs(mutator)
 	end
 
 	if self._is_server then
@@ -125,6 +123,14 @@ MutatorManager.update = function (self, dt, t)
 	for _, mutator in pairs(mutators) do
 		if mutator:is_active() then
 			mutator:update(dt, t)
+		end
+	end
+end
+
+MutatorManager.activate_on_load_mutators = function (self)
+	for mutator_name, mutator in pairs(self._mutators) do
+		if MutatorTemplates[mutator_name].activate_on_load and not mutator:is_active() then
+			self:activate_mutator(mutator_name)
 		end
 	end
 end
@@ -177,6 +183,7 @@ MutatorManager.unload_mutator_from_name = function (self, mutator_name)
 		mutator:deactivate()
 	end
 
+	self:_unregister_all_client_rpcs(mutator)
 	mutator:delete()
 
 	self._mutators[mutator_name] = nil
@@ -244,6 +251,75 @@ MutatorManager._on_player_unit_despawned = function (self, player)
 
 	for _, mutator in pairs(mutators) do
 		mutator:_on_player_unit_despawned(player)
+	end
+end
+
+MutatorManager.register_client_rpcs = function (self, mutator_instance, ...)
+	local client_rpc_callers = self._client_rpc_callers
+
+	for i = 1, select("#", ...) do
+		local rpc = select(i, ...)
+		local callers = client_rpc_callers[rpc]
+
+		if not callers then
+			callers = {}
+			client_rpc_callers[rpc] = callers
+			self[rpc] = self:_create_client_rpc_receiver(rpc)
+
+			self._network_event_delegate:register_connection_events(self, rpc)
+		end
+
+		if not table.contains(callers, mutator_instance) then
+			callers[#callers + 1] = mutator_instance
+		end
+	end
+end
+
+MutatorManager.unregister_client_rpcs = function (self, mutator_instance, ...)
+	local client_rpc_callers = self._client_rpc_callers
+
+	for i = 1, select("#", ...) do
+		local rpc = select(i, ...)
+		local callers = client_rpc_callers[rpc]
+
+		if callers then
+			local index = table.index_of(callers, mutator_instance)
+
+			if index ~= -1 then
+				table.remove(callers, index)
+			end
+
+			if #callers == 0 then
+				self._network_event_delegate:unregister_events(rpc)
+
+				self[rpc] = nil
+				client_rpc_callers[rpc] = nil
+			end
+		end
+	end
+end
+
+MutatorManager._unregister_all_client_rpcs = function (self, mutator_instance)
+	for rpc, callers in pairs(self._client_rpc_callers) do
+		if table.contains(callers, mutator_instance) then
+			self:unregister_client_rpcs(mutator_instance, rpc)
+		end
+	end
+end
+
+MutatorManager._create_client_rpc_receiver = function (self, rpc)
+	return function (_, ...)
+		local callers = self._client_rpc_callers[rpc]
+
+		if not callers then
+			return
+		end
+
+		for i = 1, #callers do
+			local mutator = callers[i]
+
+			mutator[rpc](mutator, ...)
+		end
 	end
 end
 

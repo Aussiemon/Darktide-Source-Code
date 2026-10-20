@@ -431,11 +431,11 @@ function _catapult(unit, distance, to_vector, target_unit_data_extension, is_las
 end
 
 local ATTACK_RANGE = 10
-local vfx = "content/fx/particles/weapons/force_staff/force_staff_explosion"
+local vfx = "content/fx/particles/enemies/renegade_wizard/renegade_wizard_divebomb_land"
 
 function _execute_attack(unit, unit_position, player_units, scratchpad)
 	local player_position, distance, target_unit_data_extension, player_unit
-	local fx_position = unit_position + Vector3(0, 0, 2)
+	local fx_position = unit_position + Vector3(0, 0, 0)
 
 	scratchpad.fx_system:trigger_vfx(vfx, fx_position)
 	scratchpad.fx_system:trigger_wwise_event(KNOCKBACK_SFX, fx_position)

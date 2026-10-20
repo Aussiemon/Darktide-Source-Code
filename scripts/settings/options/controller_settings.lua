@@ -405,15 +405,12 @@ settings_definitions[#settings_definitions + 1] = {
 	widget_type = "controller_image",
 }
 settings_definitions[#settings_definitions + 1] = {
-	display_name = "loc_xbox_controller_chat_button_description",
+	display_name = "loc_setting_controller_chat_button_description",
 	shrink_to_fit = true,
 	widget_type = "description",
 	display_params = {
 		input = "+",
 	},
-	validation_function = function ()
-		return IS_XBS
-	end,
 }
 settings_definitions[#settings_definitions + 1] = {
 	display_name = "loc_settings_menu_group_controller_rumble_settings",

@@ -573,6 +573,12 @@ local default_view_input_settings = {
 			bindable = false,
 			description = "",
 		},
+		open_news = {
+			"xbox_controller_right_thumb",
+			"ps4_controller_r3",
+			bindable = false,
+			description = "",
+		},
 	},
 	settings = {
 		close_view = {
@@ -1133,6 +1139,10 @@ local default_view_input_settings = {
 		},
 		rate_match_negative = {
 			key_alias = "rate_match_negative",
+			type = "pressed",
+		},
+		open_news_pressed = {
+			key_alias = "open_news",
 			type = "pressed",
 		},
 	},

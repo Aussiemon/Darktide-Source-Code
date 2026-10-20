@@ -61,7 +61,7 @@ local action_data = {
 		},
 		circle_settings = {
 			{
-				inner_radius = 2.5,
+				inner_radius = 3,
 				outer_radius = 8,
 			},
 			{

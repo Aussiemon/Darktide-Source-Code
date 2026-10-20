@@ -1725,6 +1725,7 @@ local events = {
 			combatsword_p3_m2 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			combatsword_p3_m3 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			crowbar_p1_m1 = "wwise/events/weapon/play_crowbar_equip",
+			cryptic_transonic_claw = "wwise/events/weapon/play_chord_claw_equip",
 			default = "wwise/events/weapon/play_autopistol_equip",
 			deployable_force_field_pocketable = "wwise/events/player/play_stimm_field_cratre_equip",
 			dual_autopistols_p1_m1 = "wwise/events/weapon/play_dual_autopistols_equip",
@@ -1843,7 +1844,6 @@ local events = {
 			thunderhammer_2h_p1_m1 = "wwise/events/weapon/play_weapon_equip_thunder_hammer",
 			thunderhammer_2h_p1_m2 = "wwise/events/weapon/play_weapon_equip_thunder_hammer",
 			tome_pocketable = "wwise/events/player/play_foley_melee_equip_gen_short",
-			transonic_claw_p1_m1 = "wwise/events/weapon/play_chord_claw_equip",
 			transonic_sword_transonic_knife_p1_m1 = "wwise/events/weapon/play_transonic_blades_equip",
 			zealot_throwing_knives = "wwise/events/weapon/play_weapon_silence",
 		},
@@ -3098,6 +3098,7 @@ local events = {
 			combatsword_p3_m2 = "wwise/events/weapon/play_sword_swing_falchion",
 			combatsword_p3_m3 = "wwise/events/weapon/play_sword_swing_falchion",
 			crowbar_p1_m1 = "wwise/events/weapon/play_crowbar_swing",
+			cryptic_transonic_claw = "wwise/events/weapon/play_chord_claw_swing",
 			default = "wwise/events/player/play_swing_light_gen",
 			deployable_force_field_pocketable = "wwise/events/weapon/play_adamant_shockmine_foley_throw_light",
 			dual_shivs_p1_m1 = "wwise/events/weapon/play_shivs_1h_swing",
@@ -3150,7 +3151,6 @@ local events = {
 			thunderhammer_2h_p1_m1 = "wwise/events/weapon/play_thunder_hammer_swing",
 			thunderhammer_2h_p1_m2 = "wwise/events/weapon/play_thunder_hammer_swing",
 			tome_pocketable = "wwise/events/player/play_swing_light_gen",
-			transonic_claw_p1_m1 = "wwise/events/weapon/play_chord_claw_swing",
 			transonic_sword_transonic_knife_p1_m1 = "wwise/events/weapon/play_transonic_blades_swing_light",
 		},
 	},
@@ -3252,6 +3252,7 @@ local events = {
 			"wielded_weapon_template",
 		},
 		events = {
+			cryptic_transonic_claw = "wwise/events/weapon/play_chord_claw_swing_alt",
 			default = "wwise/events/player/play_swing_light_gen",
 			dual_shivs_p1_m1 = "wwise/events/weapon/play_shivs_1h_swing_special",
 			dual_shivs_p1_m2 = "wwise/events/weapon/play_shivs_1h_swing_special",
@@ -3261,7 +3262,6 @@ local events = {
 			ogryn_pickaxe_2h_p1_m3 = "wwise/events/weapon/play_pickaxe_2h_swing_special_hook",
 			powersword_p3_m1 = "wwise/events/weapon/play_power_sword_1h_p3_charge_max",
 			shotpistol_shield_p1_m1 = "wwise/events/weapon/play_adamant_shield_swing",
-			transonic_claw_p1_m1 = "wwise/events/weapon/play_chord_claw_swing_alt",
 			transonic_sword_transonic_knife_p1_m1 = "wwise/events/weapon/play_transonic_blades_swing_knife",
 		},
 	},
@@ -3326,7 +3326,7 @@ local events = {
 			["true"] = {
 				event = "wwise/events/weapon/play_indicator_crit_melee_swing",
 				conditional_func = function (switch_property, properties, optional_external_properties)
-					local chordclaw_weapon_template_name = "transonic_claw_p1_m1"
+					local chordclaw_weapon_template_name = "cryptic_transonic_claw"
 					local skip_sound = properties.wielded_weapon_template == chordclaw_weapon_template_name or false
 
 					return not skip_sound
@@ -4824,8 +4824,8 @@ local looping_events = {
 			"wielded_weapon_template",
 		},
 		events = {
+			cryptic_transonic_claw = "wwise/events/player/%s_chord_claw_charge_loop",
 			default = "wwise/events/weapon/%s_weapon_silence",
-			transonic_claw_p1_m1 = "wwise/events/player/%s_chord_claw_charge_loop",
 		},
 	},
 	ranged_charging = {

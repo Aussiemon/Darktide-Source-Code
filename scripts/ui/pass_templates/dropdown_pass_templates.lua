@@ -75,6 +75,13 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		return content.anim_exclusive_focus_progress > 0
 	end
 
+	local function slot_is_visible(content, slot_index)
+		local root_content = content.num_visible_options and content or content.parent
+		local num_visible = root_content and root_content.num_visible_options
+
+		return not num_visible or slot_index <= num_visible
+	end
+
 	local drowdown_button_passes = {
 		{
 			pass_type = "texture",
@@ -596,7 +603,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			style_id = hotspot_id,
 			style = hotspot_style,
 			visibility_function = function (content)
-				return content.parent.anim_exclusive_focus_progress > 0
+				return content.parent.anim_exclusive_focus_progress > 0 and slot_is_visible(content, i)
 			end,
 		}
 		options_passes[#options_passes + 1] = {
@@ -655,7 +662,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			visibility_function = function (content, style)
 				local hotspot = content[hotspot_id]
 
-				return content_visibility_function(content) and not hotspot.is_disabled
+				return content_visibility_function(content) and slot_is_visible(content, i) and not hotspot.is_disabled
 			end,
 		}
 		options_passes[#options_passes + 1] = {
@@ -697,7 +704,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 				ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, color, exclude_alpha)
 			end,
-			visibility_function = content_visibility_function,
+			visibility_function = function (content)
+				return content_visibility_function(content) and slot_is_visible(content, i)
+			end,
 		}
 		options_passes[#options_passes + 1] = {
 			pass_type = "text",
@@ -727,7 +736,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 					ColorUtilities.color_lerp(default_color, hover_color, highlight_progress, text_color, exclude_alpha)
 				end
 			end,
-			visibility_function = content_visibility_function,
+			visibility_function = function (content)
+				return content_visibility_function(content) and slot_is_visible(content, i)
+			end,
 		}
 	end
 

@@ -3,6 +3,7 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local Health = require("scripts/utilities/health")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
@@ -168,6 +169,13 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 	local damage_profile = buffer_data.damage_profile
 	local damage_efficiency = buffer_data.damage_efficiency
 	local is_critical_strike = buffer_data.is_critical_strike
+	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
+	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+
+	if breed_or_nil and Health.current_health_percent(attacked_unit) <= 0 and breed_or_nil.has_scripted_death_sequence then
+		return
+	end
+
 	local did_damage = damage > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacking_player = attacking_unit and player_unit_spawn_manager:owner(attacking_unit)
@@ -185,9 +193,6 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 		end
 	end
 
-	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
-	local breed_or_nil = unit_data_extension and unit_data_extension:breed()
-
 	if attacking_player then
 		local first_person_extension = ScriptUnit.has_extension(attacking_unit, "first_person_system")
 		local local_human = not attacking_player.remote and attacking_player:is_human_controlled()
@@ -195,13 +200,11 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 
 		_trigger_hit_events(local_human, is_in_first_person_mode, attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency, is_critical_strike, damage_profile)
 
-		if breed_or_nil and not breed_or_nil.skip_kill_feed_announcement then
-			local tags = breed_or_nil and breed_or_nil.tags
-			local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
+		local tags = breed_or_nil and breed_or_nil.tags
+		local allowed_breed = tags and (tags.monster or tags.special or tags.elite)
 
-			if allowed_breed and attack_result == attack_results.died then
-				Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
-			end
+		if allowed_breed and attack_result == attack_results.died then
+			Managers.event:trigger("event_combat_feed_kill", attacking_unit, attacked_unit)
 		end
 	end
 

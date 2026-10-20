@@ -120,14 +120,14 @@ ViewElementMissionBoardMissionLocation._update_mission_location = function (self
 
 	local timer_bar_content = mission_timer_bar.content
 
-	if mission_timer_bar and mission ~= "qp_mission_widget" then
-		timer_bar_content.is_quickplay = false
+	if mission_timer_bar and mission ~= "qp_mission_widget" and mission.category ~= "story" then
+		timer_bar_content.is_persistent = false
 		timer_bar_content.start_game_time = mission.start_game_time
 		timer_bar_content.expiry_game_time = mission.expiry_game_time
-	elseif mission_timer_bar and mission == "qp_mission_widget" then
+	elseif mission_timer_bar and mission == "qp_mission_widget" or mission.category == "story" then
 		timer_bar_content.start_game_time = nil
 		timer_bar_content.expiry_game_time = nil
-		timer_bar_content.is_quickplay = true
+		timer_bar_content.is_persistent = true
 		mission_timer_bar.style.timer_bar.material_values = {
 			progress = 1,
 		}

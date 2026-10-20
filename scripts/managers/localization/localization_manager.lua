@@ -328,4 +328,8 @@ LocalizationManager.language = function (self)
 	return self._language
 end
 
+LocalizationManager.is_ready = function (self)
+	return self._status == LOCALIZATION_MANAGER_STATUS.ready
+end
+
 return LocalizationManager

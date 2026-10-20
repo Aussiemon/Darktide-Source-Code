@@ -4,6 +4,7 @@ local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local hud_element_mission_objective_feed_settings = {
 	description_text_height_offset = 5,
 	entry_spacing = 0,
+	live_event_height_buffer = 10,
 	scan_delay = 0.25,
 	header_size = {
 		460,

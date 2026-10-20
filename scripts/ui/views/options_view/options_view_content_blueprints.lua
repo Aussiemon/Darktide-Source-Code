@@ -196,6 +196,11 @@ blueprints.checkbox = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
+
+		if entry.update then
+			entry.update(entry)
+		end
+
 		local value = entry.get_function(entry)
 		local on_activated = entry.on_activated
 		local pass_input = true
@@ -279,6 +284,11 @@ blueprints.percent_slider = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
+
+		if entry.update then
+			entry.update(entry)
+		end
+
 		local pass_input = true
 		local is_disabled = entry.disabled or false
 
@@ -375,6 +385,11 @@ blueprints.value_slider = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
+
+		if entry.update then
+			entry.update(entry)
+		end
+
 		local pass_input = true
 		local is_disabled = entry.disabled or false
 
@@ -497,6 +512,11 @@ blueprints.slider = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
+
+		if entry.update then
+			entry.update(entry)
+		end
+
 		local pass_input = true
 		local is_disabled = entry.disabled or false
 
@@ -584,6 +604,38 @@ blueprints.slider = {
 
 local max_visible_options = OptionsViewSettings.max_visible_dropdown_options or 5
 
+local function refresh_dropdown_options(content, style, row_height)
+	local options = content.options
+	local options_by_id = content.options_by_id
+
+	table.clear(options_by_id)
+
+	for i = 1, #options do
+		local option = options[i]
+
+		options_by_id[option.id] = option
+	end
+
+	local num_options = #options
+	local num_visible_options = math.min(num_options, max_visible_options)
+
+	content.num_visible_options = num_visible_options
+
+	local visible_height = row_height * num_visible_options
+
+	content.area_length = visible_height
+
+	local scroll_length = math.max(row_height * num_options - visible_height, 0)
+
+	content.scroll_length = scroll_length
+	content.scroll_amount = scroll_length > 0 and row_height / scroll_length or 0
+	content.thumb_disabled = scroll_length <= 0
+	style.dropdown_background.size[2] = visible_height
+	style.scrollbar_track.size[2] = visible_height
+
+	return num_options, num_visible_options
+end
+
 blueprints.dropdown = {
 	size_function = function (parent, entry)
 		return {
@@ -595,10 +647,8 @@ blueprints.dropdown = {
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local display_name = entry.display_name or "loc_settings_option_unavailable"
-		local options = entry.options_function and entry.options_function() or entry.options
-		local num_visible_options = math.min(#options, max_visible_options)
 
-		return DropdownPassTemplates.settings_dropdown(size[1], size[2], entry.value_width or settings_value_width, num_visible_options, true, entry.is_sub_setting)
+		return DropdownPassTemplates.settings_dropdown(size[1], size[2], entry.value_width or settings_value_width, max_visible_options, true, entry.is_sub_setting)
 	end,
 	init = function (parent, widget, entry, callback_name, changed_callback_name)
 		local content = widget.content
@@ -611,23 +661,11 @@ blueprints.dropdown = {
 		local has_options_function = entry.options_function ~= nil
 		local has_dynamic_contents = entry.has_dynamic_contents
 		local options = entry.options or entry.options_function and entry.options_function()
-		local num_options = #options
-		local num_visible_options = math.min(num_options, max_visible_options)
-
-		content.num_visible_options = num_visible_options
-
 		local optional_num_decimals = entry.optional_num_decimals
 		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
-		local options_by_id = {}
-
-		for index, option in pairs(options) do
-			local option_id = option.id
-
-			options_by_id[option_id] = option
-		end
 
 		content.number_format = number_format
-		content.options_by_id = options_by_id
+		content.options_by_id = {}
 		content.options = options
 
 		content.hotspot.pressed_callback = function ()
@@ -642,16 +680,7 @@ blueprints.dropdown = {
 
 		local size = entry.size
 
-		content.area_length = size[2] * num_visible_options
-
-		local scroll_length = math.max(size[2] * num_options - content.area_length, 0)
-
-		content.scroll_length = scroll_length
-
-		local spacing = 0
-		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
-
-		content.scroll_amount = scroll_amount
+		refresh_dropdown_options(content, widget.style, size[2])
 
 		entry.changed_callback = function (changed_value)
 			callback(parent, changed_callback_name, widget, entry, changed_value)()
@@ -660,6 +689,11 @@ blueprints.dropdown = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
+
+		if entry.update then
+			entry.update(entry)
+		end
+
 		local pass_input = true
 		local is_disabled = entry.disabled or false
 
@@ -670,8 +704,13 @@ blueprints.dropdown = {
 		local style = widget.style
 		local options = content.options
 		local options_by_id = content.options_by_id
-		local num_visible_options = content.num_visible_options
-		local num_options = #options
+		local size = entry.size
+		local num_options, num_visible_options = refresh_dropdown_options(content, style, size[2])
+
+		if content.selected_index and (num_options == 0 or num_options < content.selected_index) then
+			content.selected_index = num_options > 0 and num_options or nil
+		end
+
 		local focused = content.exclusive_focus and not is_disabled
 
 		if focused and parent:can_exit() then
@@ -715,7 +754,6 @@ blueprints.dropdown = {
 		style.text.offset = has_preview_icon and style.text.icon_offset or style.text.default_offset
 		style.icon.visible = has_preview_icon
 
-		local size = entry.size
 		local scroll_amount = parent:settings_scroll_amount()
 		local scroll_area_height = parent:settings_grid_length()
 		local dropdown_length = size[2] * (num_visible_options + 1)
@@ -728,7 +766,28 @@ blueprints.dropdown = {
 
 		content.grow_downwards = grow_downwards
 
-		if not selected_index or not focused then
+		local highlighted_option_id = content.highlighted_option_id
+		local highlighted_option_missing = false
+
+		if focused and selected_index and highlighted_option_id then
+			local current_option = options[selected_index]
+
+			if not current_option or current_option.id ~= highlighted_option_id then
+				selected_index = nil
+
+				for i = 1, #options do
+					if options[i].id == highlighted_option_id then
+						selected_index = i
+
+						break
+					end
+				end
+
+				highlighted_option_missing = selected_index == nil
+			end
+		end
+
+		if not selected_index or not focused or highlighted_option_missing then
 			for i = 1, #options do
 				local option = options[i]
 
@@ -810,7 +869,9 @@ blueprints.dropdown = {
 			end
 		end
 
-		if new_selection_index or not content.selected_index then
+		local selection_changed = selected_index ~= content.selected_index
+
+		if new_selection_index or not content.selected_index or selection_changed then
 			if new_selection_index then
 				selected_index = new_selection_index
 			end
@@ -828,10 +889,18 @@ blueprints.dropdown = {
 
 		local scroll_percentage = content.scroll_percentage
 
-		if scroll_percentage then
+		if scroll_percentage and num_visible_options < num_options then
 			local step_size = 1 / (num_options - (num_visible_options - 1))
 
 			content.start_index = math.max(1, math.ceil(scroll_percentage / step_size))
+		elseif num_options <= num_visible_options then
+			content.start_index = 1
+		end
+
+		local max_start_index = math.max(1, num_options - num_visible_options + 1)
+
+		if content.start_index and max_start_index < content.start_index then
+			content.start_index = max_start_index
 		end
 
 		local option_hovered = false
@@ -861,6 +930,7 @@ blueprints.dropdown = {
 			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed and not option_hotspot.is_disabled then
 				option_hotspot.on_pressed = nil
 				new_value = option.id
+				selected_index = actual_i
 				content.selected_index = actual_i
 			end
 
@@ -894,6 +964,10 @@ blueprints.dropdown = {
 
 			on_activated(new_value, entry)
 		end
+
+		local highlighted_option = selected_index and options[selected_index]
+
+		content.highlighted_option_id = highlighted_option and highlighted_option.id or nil
 
 		local scrollbar_hotspot = content.scrollbar_hotspot
 		local scrollbar_hovered = scrollbar_hotspot.is_hover

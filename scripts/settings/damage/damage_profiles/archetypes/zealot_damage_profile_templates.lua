@@ -63,6 +63,7 @@ damage_templates.zealot_channel_stagger = {
 }
 damage_templates.zealot_dash_impact = {
 	ignore_stagger_reduction = true,
+	is_charge_impact = true,
 	is_push = true,
 	stagger_category = "hatchet",
 	stagger_override = "killshot",
@@ -101,6 +102,7 @@ damage_templates.zealot_dash_impact = {
 	},
 }
 damage_templates.zealot_dash_health_to_damage_transfer = {
+	is_charge_impact = true,
 	is_push = true,
 	stagger_category = "explosion",
 	power_distribution = {

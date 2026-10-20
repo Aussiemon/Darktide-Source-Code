@@ -6,10 +6,6 @@ local function _tostring(value)
 	return tostring(value)
 end
 
-local function _format_time(seconds)
-	return TextUtilities.format_time_span_localized(seconds, true, true)
-end
-
 local session_stat_display_settings = {
 	{
 		best = "max",
@@ -94,7 +90,7 @@ local session_stat_display_settings = {
 		display_name = "loc_stat_display_time_in_coherency",
 		private = "session_time_coherency",
 		team = nil,
-		format_value = _format_time,
+		format_value = TextUtilities.format_minutes_seconds_localized_medium,
 	},
 }
 

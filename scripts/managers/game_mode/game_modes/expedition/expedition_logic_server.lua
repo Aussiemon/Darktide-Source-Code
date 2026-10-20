@@ -1099,7 +1099,7 @@ end
 ExpeditionLogicServer._on_player_unit_spawned = function (self, player)
 	local player_unit = player.player_unit
 
-	self._unit_untargetable_id[player_unit] = self._perception_system:set_untargetable(self, player_unit)
+	self._unit_untargetable_id[player_unit] = Managers.state.extension:system("perception_system"):set_untargetable(self, player_unit)
 end
 
 ExpeditionLogicServer.expedition_block_player_respawn = function (self)
@@ -2036,8 +2036,6 @@ ExpeditionLogicServer.event_expedition_validate_game_mode_completion = function 
 
 			player_extracted_count = player_extracted_count + 1
 		end
-
-		player_extracted_count = 4
 
 		local round_to_multiple_of = 5
 		local loot_bonus_multiplier = self:player_extraction_loot_bonus_multiplier(player_extracted_count)

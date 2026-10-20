@@ -2,6 +2,8 @@
 
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
+local InputDevice = require("scripts/managers/input/input_device")
 local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local Text = require("scripts/utilities/ui/text")
@@ -203,7 +205,33 @@ local widget_definitions = {
 				ColorUtilities.color_lerp(default_color, hover_color, hover_progress, color, ignore_alpha)
 			end,
 			visibility_function = function (content, style)
-				return not content.missing_content
+				return not content.missing_content and not InputDevice.gamepad_active
+			end,
+		},
+		{
+			pass_type = "text",
+			value = "",
+			value_id = "input_text",
+			style = {
+				font_size = 24,
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				text_color = Color.terminal_text_header(255, true),
+				offset = {
+					0,
+					-1,
+					1,
+				},
+			},
+			visibility_function = function (content, style)
+				return not content.missing_content and InputDevice.gamepad_active
+			end,
+			change_function = function (content, style)
+				local input_text = InputUtils.input_text_for_current_input_device("View", "hotkey_item_profile_preset_input_1")
+				local text = string.format("{#color(226,199,126)}%s{#reset()}", input_text)
+
+				content.input_text = text
 			end,
 		},
 		{
