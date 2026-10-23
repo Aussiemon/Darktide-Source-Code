@@ -1304,49 +1304,26 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			end
 		end,
 	},
-	{
-		pass_type = "text",
-		style_id = "claim_prompt",
-		value = "",
-		value_id = "claim_prompt",
-		style = {
-			drop_shadow = true,
-			font_size = 14,
-			horizontal_alignment = "left",
-			text_horizontal_alignment = "center",
-			text_vertical_alignment = "center",
-			vertical_alignment = "top",
-			offset = {
-				0,
-				36,
-				6,
-			},
-			size = {
-				live_event_text_width,
-				14,
-			},
-			font_type = UIFontSettings.hud_body.font_type,
-			text_color = HudElementMissionObjectiveFeedSettings.colors_by_category.overarching.bar,
-			alert_text_color = HudElementMissionObjectiveFeedSettings.alert_color,
-		},
-		visibility_function = function (content)
-			return content.show_claim_prompt
-		end,
-	},
 }, "live_event_text_area", nil, {
 	live_event_text_width,
 	_global_reward_counter_default_height,
 }, nil, {
 	init = function (self, context, ui_renderer)
+		self._hide_when_all_claimed = context.hide_when_all_claimed == true
 		self._track_name = context.track_name
 		self._stat_name = context.stat_name
 		self._stat_category = context.stat_category
-		self.content.title = Localize(context.title)
+		self._title = Localize(context.title)
+		self._claim_title = Localize("loc_objective_hub_contracts")
+		self.content.title = self._title
 
 		local title_style = self.style.title
-		local title_height = Text.text_height(ui_renderer, self.content.title, title_style, {
+		local title_bounds = {
 			title_style.size[1],
-		})
+		}
+		local default_title_height = Text.text_height(ui_renderer, self._title, title_style, title_bounds)
+		local claim_title_height = Text.text_height(ui_renderer, self._claim_title, title_style, title_bounds)
+		local title_height = math.max(default_title_height, claim_title_height)
 		local extra_height = math.max(0, title_height - title_style.size[2])
 
 		title_style.size[2] = title_style.size[2] + extra_height
@@ -1355,7 +1332,6 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 			"bar_background",
 			"bar",
 			"progress_text",
-			"claim_prompt",
 		}) do
 			local style = self.style[style_id]
 
@@ -1370,7 +1346,6 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 		self.content.progress_text = ""
 		self.content.has_currency_reward = false
 		self.content.currency_reward = ""
-		self.content.claim_prompt = Localize("loc_objective_hub_contracts")
 		self.content.show_claim_prompt = false
 		self.content.all_claimed = false
 		self._next_tier_stat_required = 0
@@ -1584,16 +1559,21 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 		local content = self.content
 
 		if self._all_claimed then
+			content.visible = not self._hide_when_all_claimed
 			content.all_claimed = true
 			content.has_currency_reward = false
 			self._can_claim = false
 			content.show_claim_prompt = false
+			content.title = self._title
 			content.progress_text = Text.format_currency(content.current or 0)
 			style.progress_text.text_horizontal_alignment = "left"
 
 			return
 		end
 
+		local track_state_loaded = self._track_state ~= nil
+
+		content.visible = track_state_loaded or not self._hide_when_all_claimed
 		content.all_claimed = false
 		style.progress_text.text_horizontal_alignment = "center"
 
@@ -1618,6 +1598,7 @@ local live_event_global_reward_counter = UIWidget.create_definition({
 		end
 
 		content.show_claim_prompt = self._can_claim
+		content.title = self._can_claim and self._claim_title or self._title
 	end,
 })
 local tug_o_war = UIWidget.create_definition({

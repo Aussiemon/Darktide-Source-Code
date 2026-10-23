@@ -3619,9 +3619,11 @@ do
 			horde = true,
 		}
 		local excluded_zones_for_destructible = {
-			depths = true,
 			horde = true,
 			operations = true,
+		}
+		local temp_hidden_zones_for_destructible = {
+			depths = true,
 		}
 
 		do
@@ -3790,6 +3792,12 @@ do
 			end
 
 			if not excluded_zones_for_destructible[zone.name] then
+				local flags_to_use = temp_hidden_zones_for_destructible[zone.name] and {
+					AchievementFlags.hide_missing,
+					AchievementFlags.hide_progress,
+					AchievementFlags.hide_from_carousel,
+				} or {}
+
 				target_family("mission_zone_" .. zone.name .. "_destructible_{index:%d}", {
 					description = "loc_achievement_zone_mission_destructibles_description",
 					title = "loc_achievement_zone_mission_destructibles_name",
@@ -3797,7 +3805,7 @@ do
 					icon = zone.icon.destructible,
 					stat_name = string.format("zone_%s_destructible", zone.name),
 					category = zone.category,
-					flags = {},
+					flags = flags_to_use,
 					loc_variables = {
 						zone_name = Localize(zone.local_variable),
 					},

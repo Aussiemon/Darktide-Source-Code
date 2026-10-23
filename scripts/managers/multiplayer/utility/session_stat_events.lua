@@ -71,21 +71,32 @@ SessionStatEvents.create_mission_events = function (mission_data, mission_result
 	return events
 end
 
-SessionStatEvents.create_player_events = function (mission_data, mission_result, player)
-	local stats_manager = Managers.stats
-	local stat_id = player.remote and player.stat_id or player:local_player_id()
+SessionStatEvents.player_share = function (total, share_index, share_count)
+	total = math.floor(total)
 
-	if not stats_manager:user_state(stat_id) then
-		return {}
+	local share = math.floor(total / share_count)
+	local remainder = total - share * share_count
+
+	if share_index <= remainder then
+		share = share + 1
 	end
 
+	return share
+end
+
+local function _stat_id(player)
+	return player.remote and player.stat_id or player:local_player_id()
+end
+
+local function _is_reporting_player(player)
+	return Managers.stats:user_state(_stat_id(player)) ~= nil and math.is_uuid(player:account_id()) and math.is_uuid(player:character_id())
+end
+
+SessionStatEvents.create_player_events = function (mission_data, mission_result, player, share_index, share_count)
+	local stats_manager = Managers.stats
+	local stat_id = _stat_id(player)
 	local account_id = player:account_id()
 	local character_id = player:character_id()
-
-	if not math.is_uuid(account_id) or not math.is_uuid(character_id) then
-		return {}
-	end
-
 	local events = SessionStatEvents.create_mission_events(mission_data, mission_result, account_id, character_id)
 	local event_size = #events
 
@@ -99,6 +110,10 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 				value = stats_manager:read_team_stat(stat_name)
 			else
 				value = stats_manager:read_user_stat(stat_id, stat_name)
+			end
+
+			if session_stat_config.split_across_players then
+				value = SessionStatEvents.player_share(value, share_index, share_count)
 			end
 
 			if value ~= 0 or session_stat_config.always_push then
@@ -133,10 +148,19 @@ SessionStatEvents.create_player_events = function (mission_data, mission_result,
 end
 
 SessionStatEvents.create_events = function (mission_data, mission_result, players)
-	local events = {}
+	local reporting_players = {}
 
 	for _, player in pairs(players) do
-		table.append(events, SessionStatEvents.create_player_events(mission_data, mission_result, player))
+		if _is_reporting_player(player) then
+			reporting_players[#reporting_players + 1] = player
+		end
+	end
+
+	local events = {}
+	local share_count = #reporting_players
+
+	for share_index, player in ipairs(reporting_players) do
+		table.append(events, SessionStatEvents.create_player_events(mission_data, mission_result, player, share_index, share_count))
 	end
 
 	return events

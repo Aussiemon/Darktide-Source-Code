@@ -133,6 +133,7 @@ SessionStats.skulls_guns = {
 }
 SessionStats.torment = {
 	fill_with_default = true,
+	split_across_players = true,
 	type = BackendTypes.statistic_by,
 	stats = {
 		witch_damage_dealt = "live_event_torment_witch_damage_dealt",

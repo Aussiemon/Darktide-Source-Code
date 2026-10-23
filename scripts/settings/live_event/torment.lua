@@ -20,6 +20,7 @@ local torment = {
 			{
 				template = "live_event_global_reward_counter",
 				context = {
+					hide_when_all_claimed = true,
 					mission_circumstance_family = "torment",
 					stat_category = "lw-mb",
 					stat_name = "live_event_torment_witch_damage_dealt",

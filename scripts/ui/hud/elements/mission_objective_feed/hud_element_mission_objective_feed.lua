@@ -115,10 +115,6 @@ HudElementMissionObjectiveFeed._add_live_event_widgets = function (self, event_i
 			widgets_for_event[local_index] = widget
 		end
 	end
-
-	if self:_has_any_live_event_widgets() then
-		self:_set_live_event_visible(true)
-	end
 end
 
 HudElementMissionObjectiveFeed._remove_live_event_widgets = function (self, event_id)
@@ -138,20 +134,6 @@ HudElementMissionObjectiveFeed._remove_live_event_widgets = function (self, even
 	end
 
 	self._live_event_widgets_by_event[event_id] = nil
-
-	if not self:_has_any_live_event_widgets() then
-		self:_set_live_event_visible(false)
-	end
-end
-
-HudElementMissionObjectiveFeed._has_any_live_event_widgets = function (self)
-	for _, widgets_for_event in pairs(self._live_event_widgets_by_event) do
-		if #widgets_for_event > 0 then
-			return true
-		end
-	end
-
-	return false
 end
 
 HudElementMissionObjectiveFeed._update_live_event = function (self, force, ui_renderer)
@@ -946,6 +928,7 @@ end
 
 HudElementMissionObjectiveFeed._update_live_event_size = function (self)
 	local total_height = 4
+	local any_visible = false
 	local sorted_ids = self:_sorted_live_event_ids()
 
 	for i = 1, #sorted_ids do
@@ -955,12 +938,15 @@ HudElementMissionObjectiveFeed._update_live_event_size = function (self)
 			for j = 1, #widgets_for_event do
 				local widget = widgets_for_event[j]
 
-				widget.offset = {
-					0,
-					total_height,
-					0,
-				}
-				total_height = total_height + widget.content.size[2] + 6
+				if widget.content.visible ~= false then
+					any_visible = true
+					widget.offset = {
+						0,
+						total_height,
+						0,
+					}
+					total_height = total_height + widget.content.size[2] + 6
+				end
 			end
 		end
 	end
@@ -968,6 +954,7 @@ HudElementMissionObjectiveFeed._update_live_event_size = function (self)
 	total_height = total_height + 4
 
 	self:_set_scenegraph_size("live_event_background", nil, total_height)
+	self:_set_live_event_visible(any_visible)
 end
 
 HudElementMissionObjectiveFeed._create_live_event_widget = function (self, event_id, local_index, template_name, context, ui_renderer)
@@ -987,6 +974,7 @@ HudElementMissionObjectiveFeed._create_live_event_widget = function (self, event
 end
 
 HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+	self:_update_live_event_size()
 	HudElementMissionObjectiveFeed.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
 
 	if self._objective_widgets_counter > 0 then
@@ -998,8 +986,6 @@ HudElementMissionObjectiveFeed._draw_widgets = function (self, dt, t, input_serv
 			end
 		end
 	end
-
-	self:_update_live_event_size()
 
 	local sorted_ids = self:_sorted_live_event_ids()
 
